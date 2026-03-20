@@ -31,7 +31,7 @@
     .font-body { font-family: 'IBM Plex Sans', sans-serif; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* Scroll-triggered fade-in */
+    /* Scroll-triggered fade-in — repeats */
     .fade-in {
       opacity: 0;
       transform: translateY(24px);
@@ -61,6 +61,62 @@
       margin-right: 12px;
     }
 
+    /* Gradient text */
+    .gradient-word {
+      background: linear-gradient(135deg, #111111 0%, #525252 40%, #111111 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer-text 4s ease-in-out infinite;
+    }
+    @keyframes shimmer-text {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Animated line divider */
+    .animated-divider {
+      position: relative;
+      height: 1px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .animated-divider::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: slide-line 4s ease-in-out infinite;
+    }
+    @keyframes slide-line {
+      0% { left: -60%; }
+      100% { left: 100%; }
+    }
+
+    /* Number ticker */
+    .ticker-value {
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Card hover reveal */
+    .card-detail {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+      margin-top: 0;
+    }
+    .card-hoverable:hover .card-detail {
+      max-height: 80px;
+      opacity: 1;
+      margin-top: 12px;
+    }
+
     /* Focus-visible for all interactive */
     a:focus-visible, button:focus-visible {
       outline: 2px solid var(--accent);
@@ -85,8 +141,7 @@
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
         </button>
       </div>
-      <!-- Thin accent line under nav -->
-      <div style="height: 1px; background: linear-gradient(to right, transparent, var(--accent), transparent); opacity: 0.15;" aria-hidden="true"></div>
+      <div class="animated-divider" aria-hidden="true"></div>
     </div>
     <div id="mobile-menu-a" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -105,7 +160,7 @@
         <div class="mx-auto max-w-3xl text-center">
           <span class="font-mono mb-6 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">Now with AI Automation</span>
           <h1 class="font-heading text-5xl md:text-7xl" style="font-weight: 500; letter-spacing: -0.03em; line-height: 1.05;">
-            Project management<br>that thinks ahead
+            Project management<br>that <span class="gradient-word">thinks</span> ahead
           </h1>
           <p class="mx-auto mt-8 max-w-xl text-lg" style="color: var(--muted); line-height: 1.7;">
             TaskFlow learns your team's workflow and automates repetitive tasks — routing, status updates, handoffs. Less busywork, more shipping.
@@ -130,6 +185,9 @@
       </div>
     </section>
 
+    <!-- Animated Divider -->
+    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
+
     <!-- Features Bento Grid -->
     <section id="features" class="py-24" style="background-color: var(--bg);">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -140,48 +198,66 @@
         </div>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <!-- Card 1: Large -->
-          <article class="fade-in group rounded-lg border p-8 transition-all duration-200 hover:border-black sm:col-span-2" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable group rounded-lg border p-8 transition-all duration-200 hover:border-black sm:col-span-2" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16l7-3 7 3V4a2 2 0 00-2-2z"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Smart Task Routing</h3>
             <p class="text-base leading-relaxed" style="color: var(--muted);">TaskFlow learns who handles what and automatically assigns tasks to the right person. No more manual triaging or bottleneck meetings.</p>
+            <div class="card-detail">
+              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">Avg. assignment time: &lt;2s</span>
+            </div>
           </article>
           <!-- Card 2 -->
-          <article class="fade-in group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.49 8.49l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.49-8.49l2.83-2.83"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Workflow Automation</h3>
             <p class="text-base leading-relaxed" style="color: var(--muted);">Repetitive sequences get detected and automated. Status updates, notifications, handoffs — all on autopilot.</p>
+            <div class="card-detail">
+              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">[N] automations triggered/week</span>
+            </div>
           </article>
           <!-- Card 3 -->
-          <article class="fade-in group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="3" y="13" width="7" height="7" rx="1"/><rect x="13" y="3" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Custom Views</h3>
             <p class="text-base leading-relaxed" style="color: var(--muted);">Board, list, timeline, calendar. Every team member sees their work the way they prefer.</p>
+            <div class="card-detail">
+              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">4 view modes + custom filters</span>
+            </div>
           </article>
           <!-- Card 4 -->
-          <article class="fade-in group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 5-9"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Predictive Analytics</h3>
             <p class="text-base leading-relaxed" style="color: var(--muted);">Know before deadlines slip. AI flags at-risk tasks and suggests rebalancing before problems surface.</p>
+            <div class="card-detail">
+              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">Risk scoring updated every [N]min</span>
+            </div>
           </article>
           <!-- Card 5 -->
-          <article class="fade-in group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Time Intelligence</h3>
             <p class="text-base leading-relaxed" style="color: var(--muted);">Automatic time estimates based on historical data. No more guessing — plan with real numbers.</p>
+            <div class="card-detail">
+              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">Estimate accuracy: [N]%</span>
+            </div>
           </article>
         </div>
       </div>
     </section>
+
+    <!-- Animated Divider -->
+    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
 
     <!-- Dot separator -->
     <div class="flex items-center justify-center py-2" style="background-color: var(--subtle-bg);" aria-hidden="true">
@@ -224,25 +300,31 @@
       </div>
     </section>
 
-    <!-- Metrics -->
+    <!-- Animated Divider -->
+    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
+
+    <!-- Metrics with Number Tickers -->
     <section class="py-20" style="background-color: var(--bg);">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="fade-in grid gap-8 sm:grid-cols-3 text-center">
           <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
-            <span class="font-heading text-5xl md:text-6xl font-medium block" style="letter-spacing: -0.03em;">[N]%</span>
+            <span class="font-heading text-5xl md:text-6xl font-medium block ticker-value" data-target="94" data-suffix="%" style="letter-spacing: -0.03em;">0%</span>
             <span class="mt-2 block text-sm" style="color: var(--muted);">On-time delivery rate</span>
           </div>
           <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
-            <span class="font-heading text-5xl md:text-6xl font-medium block" style="letter-spacing: -0.03em;">[N]h</span>
+            <span class="font-heading text-5xl md:text-6xl font-medium block ticker-value" data-target="12" data-suffix="h" style="letter-spacing: -0.03em;">0h</span>
             <span class="mt-2 block text-sm" style="color: var(--muted);">Saved per team per week</span>
           </div>
           <div>
-            <span class="font-heading text-5xl md:text-6xl font-medium block" style="letter-spacing: -0.03em;">[N]</span>
+            <span class="font-heading text-5xl md:text-6xl font-medium block ticker-value" data-target="847" data-suffix="" style="letter-spacing: -0.03em;">0</span>
             <span class="mt-2 block text-sm" style="color: var(--muted);">Teams using TaskFlow</span>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Animated Divider -->
+    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
 
     <!-- Testimonials -->
     <section class="py-20" style="background-color: var(--subtle-bg);">
@@ -291,6 +373,9 @@
         </div>
       </div>
     </section>
+
+    <!-- Animated Divider -->
+    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
 
     <!-- Pricing -->
     <section id="pricing" class="py-24" style="background-color: var(--bg);">
@@ -423,23 +508,60 @@
     </div>
   </footer>
 
-  <!-- Scroll-triggered fade-in animation -->
+  <!-- Scroll-triggered animations (repeat on scroll) + Number tickers -->
   <script>
     (function() {
-      var els = document.querySelectorAll('.fade-in');
+      // Repeating scroll animations
+      var fadeEls = document.querySelectorAll('.fade-in');
       if (!window.IntersectionObserver) {
-        els.forEach(function(el) { el.classList.add('visible'); });
+        fadeEls.forEach(function(el) { el.classList.add('visible'); });
         return;
       }
-      var observer = new IntersectionObserver(function(entries) {
+      var fadeObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove('visible');
           }
         });
       }, { threshold: 0.15 });
-      els.forEach(function(el) { observer.observe(el); });
+      fadeEls.forEach(function(el) { fadeObserver.observe(el); });
+
+      // Number tickers
+      var tickers = document.querySelectorAll('.ticker-value');
+      var tickerObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            animateTicker(entry.target);
+          } else {
+            // Reset when out of view so it replays
+            var suffix = entry.target.getAttribute('data-suffix') || '';
+            entry.target.textContent = '0' + suffix;
+          }
+        });
+      }, { threshold: 0.3 });
+      tickers.forEach(function(el) { tickerObserver.observe(el); });
+
+      function animateTicker(el) {
+        var target = parseInt(el.getAttribute('data-target'), 10);
+        var suffix = el.getAttribute('data-suffix') || '';
+        var duration = 1500;
+        var startTime = null;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = Math.floor(eased * target);
+          el.textContent = current + suffix;
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = target + suffix;
+          }
+        }
+        requestAnimationFrame(step);
+      }
     })();
   </script>
 

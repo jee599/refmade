@@ -68,6 +68,34 @@
       box-shadow: 0 12px 48px rgba(99, 102, 241, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
     }
 
+    /* Animated gradient border */
+    @property --gradient-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes rotateGradientBorder {
+      to { --gradient-angle: 360deg; }
+    }
+
+    .gradient-border-animated {
+      position: relative;
+    }
+    .gradient-border-animated::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      padding: 2px;
+      background: conic-gradient(from var(--gradient-angle), #818cf8, #c084fc, #60a5fa, #818cf8);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: rotateGradientBorder 4s linear infinite;
+      pointer-events: none;
+    }
+
     /* Glass nav */
     .glass-nav {
       background: rgba(255, 255, 255, 0.40);
@@ -76,7 +104,7 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.60);
     }
 
-    /* Fade-in on scroll */
+    /* Fade-in on scroll (repeatable) */
     .reveal {
       opacity: 0;
       transform: translateY(20px);
@@ -96,16 +124,72 @@
       background: rgba(99, 102, 241, 0.25);
       border-radius: 50%;
     }
+
+    /* Floating notification cards */
+    @keyframes notifDrift1 {
+      0%, 100% { transform: translate(0, 0) rotate(-2deg); opacity: 0.9; }
+      25% { transform: translate(8px, -12px) rotate(0deg); opacity: 1; }
+      50% { transform: translate(-4px, -20px) rotate(1deg); opacity: 0.85; }
+      75% { transform: translate(12px, -8px) rotate(-1deg); opacity: 0.95; }
+    }
+    @keyframes notifDrift2 {
+      0%, 100% { transform: translate(0, 0) rotate(1deg); opacity: 0.85; }
+      33% { transform: translate(-10px, -15px) rotate(-1deg); opacity: 1; }
+      66% { transform: translate(6px, -10px) rotate(2deg); opacity: 0.9; }
+    }
+
+    .notif-drift-1 { animation: notifDrift1 12s ease-in-out infinite; }
+    .notif-drift-2 { animation: notifDrift2 15s ease-in-out infinite; }
+
+    /* Animated app preview elements */
+    @keyframes barGrow {
+      0%, 100% { transform: scaleY(0.6); }
+      50% { transform: scaleY(1); }
+    }
+    .bar-animate {
+      transform-origin: bottom;
+      animation: barGrow 4s ease-in-out infinite;
+    }
+    .bar-animate:nth-child(2) { animation-delay: 0.3s; }
+    .bar-animate:nth-child(3) { animation-delay: 0.6s; }
+    .bar-animate:nth-child(4) { animation-delay: 0.9s; }
+
+    @keyframes cursorBlink {
+      0%, 49% { border-right-color: rgba(99,102,241,0.6); }
+      50%, 100% { border-right-color: transparent; }
+    }
+    .cursor-blink {
+      border-right: 2px solid rgba(99,102,241,0.6);
+      animation: cursorBlink 1s step-end infinite;
+    }
   </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
 
-  <!-- Background Blobs (persistent across page) -->
+  <!-- Background Blobs -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
     <div class="blob-1 absolute top-20 left-1/4 w-72 h-72 rounded-full" style="background: rgba(99, 102, 241, 0.15); filter: blur(80px);"></div>
     <div class="blob-2 absolute top-1/3 right-1/4 w-80 h-80 rounded-full" style="background: rgba(192, 132, 252, 0.12); filter: blur(90px);"></div>
     <div class="blob-3 absolute bottom-1/4 left-1/3 w-64 h-64 rounded-full" style="background: rgba(96, 165, 250, 0.10); filter: blur(70px);"></div>
     <div class="blob-4 absolute bottom-1/3 right-1/3 w-56 h-56 rounded-full" style="background: rgba(167, 139, 250, 0.10); filter: blur(75px);"></div>
+  </div>
+
+  <!-- Floating Glass Notification Cards -->
+  <div class="fixed pointer-events-none z-40 hidden lg:block" aria-hidden="true">
+    <div class="notif-drift-1 glass-card rounded-xl px-4 py-3 fixed top-32 right-12" style="width: 200px;">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+        <span class="text-xs text-gray-600">Note auto-linked</span>
+      </div>
+      <p class="text-[10px] text-gray-400 mt-1">3 connections found</p>
+    </div>
+    <div class="notif-drift-2 glass-card rounded-xl px-4 py-3 fixed bottom-40 left-10" style="width: 180px;">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+        <span class="text-xs text-gray-600">Synced</span>
+      </div>
+      <p class="text-[10px] text-gray-400 mt-1">847 notes updated</p>
+    </div>
   </div>
 
   <!-- Navigation -->
@@ -120,7 +204,6 @@
           Start Free
         </a>
       </div>
-      <!-- Mobile menu button -->
       <button class="md:hidden text-gray-600 hover:text-indigo-600 transition-colors" aria-label="Menu">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
@@ -151,8 +234,8 @@
         </a>
       </div>
 
-      <!-- Floating Product Preview Card -->
-      <div class="reveal float-1 glass-card rounded-2xl p-8 max-w-3xl mx-auto">
+      <!-- Hero Product Preview with animated gradient border -->
+      <div class="reveal float-1 glass-card gradient-border-animated rounded-2xl p-8 max-w-3xl mx-auto">
         <div class="flex items-center gap-2 mb-6">
           <div class="w-3 h-3 rounded-full bg-red-300/60"></div>
           <div class="w-3 h-3 rounded-full bg-yellow-300/60"></div>
@@ -160,7 +243,7 @@
           <div class="ml-auto text-xs text-gray-400">Aether Workspace</div>
         </div>
         <div class="grid grid-cols-12 gap-4">
-          <!-- Sidebar placeholder -->
+          <!-- Sidebar -->
           <div class="col-span-3 space-y-3">
             <div class="preview-line h-4 w-full"></div>
             <div class="preview-line h-3 w-4/5"></div>
@@ -169,28 +252,19 @@
             <div class="mt-6 preview-line h-3 w-full"></div>
             <div class="preview-line h-3 w-2/3"></div>
           </div>
-          <!-- Main content placeholder -->
+          <!-- Main content with animated elements -->
           <div class="col-span-9 space-y-4">
-            <div class="preview-line h-6 w-2/3"></div>
+            <div class="preview-line h-6 w-2/3 cursor-blink" style="display: inline-block;"></div>
             <div class="preview-line h-3 w-full"></div>
             <div class="preview-line h-3 w-full"></div>
             <div class="preview-line h-3 w-4/5"></div>
-            <div class="mt-4 grid grid-cols-3 gap-3">
-              <div class="glass-card rounded-xl p-3 space-y-2">
-                <div class="preview-dot w-8 h-8"></div>
-                <div class="preview-line h-2 w-full"></div>
-                <div class="preview-line h-2 w-3/4"></div>
-              </div>
-              <div class="glass-card rounded-xl p-3 space-y-2">
-                <div class="preview-dot w-8 h-8"></div>
-                <div class="preview-line h-2 w-full"></div>
-                <div class="preview-line h-2 w-2/3"></div>
-              </div>
-              <div class="glass-card rounded-xl p-3 space-y-2">
-                <div class="preview-dot w-8 h-8"></div>
-                <div class="preview-line h-2 w-full"></div>
-                <div class="preview-line h-2 w-4/5"></div>
-              </div>
+            <div class="mt-4 flex items-end gap-2 h-16 px-2">
+              <div class="flex-1 bg-indigo-200/60 rounded-t bar-animate" style="height: 60%;"></div>
+              <div class="flex-1 bg-indigo-300/60 rounded-t bar-animate" style="height: 80%;"></div>
+              <div class="flex-1 bg-indigo-200/60 rounded-t bar-animate" style="height: 45%;"></div>
+              <div class="flex-1 bg-indigo-400/60 rounded-t bar-animate" style="height: 90%;"></div>
+              <div class="flex-1 bg-indigo-200/60 rounded-t bar-animate" style="height: 55%;"></div>
+              <div class="flex-1 bg-indigo-300/60 rounded-t bar-animate" style="height: 70%;"></div>
             </div>
           </div>
         </div>
@@ -198,7 +272,7 @@
     </div>
   </section>
 
-  <!-- Features Section (staggered glass cards) -->
+  <!-- Features Section — Bento Layout -->
   <section id="features" class="relative py-24">
     <div class="max-w-6xl mx-auto px-6">
       <div class="text-center mb-16 reveal">
@@ -206,15 +280,15 @@
           Designed for deep work
         </h2>
         <p class="text-gray-500 max-w-xl mx-auto">
-          Every detail crafted to keep you in flow. No clutter, no distractions — just your best thinking.
+          Every detail crafted to keep you in flow. No clutter, no distractions.
         </p>
       </div>
 
-      <!-- Staggered cards — not a grid, offset vertically -->
-      <div class="relative max-w-4xl mx-auto">
-        <!-- Card 1: top-left -->
-        <div class="reveal float-1 glass-card rounded-2xl p-8 md:w-2/3 mb-8">
-          <div class="flex items-start gap-4">
+      <!-- Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Large card (2-col span) -->
+        <div class="reveal float-1 glass-card rounded-2xl p-8 md:col-span-2">
+          <div class="flex items-start gap-4 mb-6">
             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center">
               <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
             </div>
@@ -223,23 +297,58 @@
               <p class="text-gray-500 leading-relaxed">Write anywhere, anytime. Your ideas auto-link to related notes, building a personal knowledge graph while you think naturally.</p>
             </div>
           </div>
-        </div>
-
-        <!-- Card 2: center-right, overlaps card 1 slightly -->
-        <div class="reveal float-2 glass-card rounded-2xl p-8 md:w-2/3 md:ml-auto -mt-4 mb-8">
-          <div class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-              <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+          <!-- Internal mockup with animated elements -->
+          <div class="glass-card rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+              <span class="text-xs text-gray-500">Live connections</span>
             </div>
-            <div>
-              <h3 class="text-xl font-normal text-indigo-950 mb-2">Fluid Layout</h3>
-              <p class="text-gray-500 leading-relaxed">Drag blocks, resize panels, split views. Your workspace reshapes itself around your current task — not the other way around.</p>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="glass-card rounded-lg p-2 space-y-1">
+                <div class="preview-line h-2 w-full"></div>
+                <div class="preview-line h-2 w-3/4"></div>
+              </div>
+              <div class="glass-card rounded-lg p-2 space-y-1">
+                <div class="preview-line h-2 w-full"></div>
+                <div class="preview-line h-2 w-2/3"></div>
+              </div>
+              <div class="glass-card rounded-lg p-2 space-y-1">
+                <div class="preview-line h-2 w-4/5"></div>
+                <div class="preview-line h-2 w-full"></div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Card 3: bottom-left, overlaps card 2 -->
-        <div class="reveal float-3 glass-card rounded-2xl p-8 md:w-2/3 -mt-4">
+        <!-- Tall card (right) -->
+        <div class="reveal float-2 glass-card rounded-2xl p-8 md:row-span-2">
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+          </div>
+          <h3 class="text-xl font-normal text-indigo-950 mb-2">Fluid Layout</h3>
+          <p class="text-gray-500 leading-relaxed mb-6">Drag blocks, resize panels, split views. Your workspace reshapes itself around your current task.</p>
+          <!-- Simulated split-view -->
+          <div class="space-y-3">
+            <div class="glass-card rounded-xl p-3 space-y-2">
+              <div class="preview-line h-3 w-2/3"></div>
+              <div class="preview-line h-2 w-full"></div>
+              <div class="preview-line h-2 w-4/5"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="glass-card rounded-xl p-3 space-y-2">
+                <div class="preview-dot w-6 h-6"></div>
+                <div class="preview-line h-2 w-full"></div>
+              </div>
+              <div class="glass-card rounded-xl p-3 space-y-2">
+                <div class="preview-dot w-6 h-6"></div>
+                <div class="preview-line h-2 w-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wide bottom card -->
+        <div class="reveal float-3 glass-card rounded-2xl p-8 md:col-span-2">
           <div class="flex items-start gap-4">
             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
               <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -254,7 +363,7 @@
     </div>
   </section>
 
-  <!-- Product Showcase (overlapping glass panels) -->
+  <!-- Product Showcase with internal animated mockup -->
   <section id="showcase" class="relative py-20">
     <div class="max-w-6xl mx-auto px-6">
       <div class="reveal text-center mb-12">
@@ -264,13 +373,9 @@
       </div>
 
       <div class="reveal relative max-w-4xl mx-auto" style="min-height: 480px;">
-        <!-- Background panel (slightly rotated) -->
         <div class="float-3 glass-card rounded-2xl absolute inset-x-8 top-4 bottom-4 transform rotate-2 opacity-60"></div>
-        <!-- Middle panel -->
         <div class="float-2 glass-card rounded-2xl absolute inset-x-4 top-2 bottom-2 transform -rotate-1 opacity-80"></div>
-        <!-- Front panel -->
-        <div class="float-1 glass-card rounded-2xl relative z-10 p-8">
-          <!-- Simulated app interface -->
+        <div class="float-1 glass-card gradient-border-animated rounded-2xl relative z-10 p-8">
           <div class="flex items-center justify-between mb-8">
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
@@ -287,10 +392,9 @@
             </div>
           </div>
 
-          <!-- Content area -->
           <div class="grid grid-cols-12 gap-6">
             <div class="col-span-8 space-y-4">
-              <div class="preview-line h-8 w-3/4"></div>
+              <div class="preview-line h-8 w-3/4 cursor-blink" style="display: inline-block;"></div>
               <div class="preview-line h-3 w-full"></div>
               <div class="preview-line h-3 w-full"></div>
               <div class="preview-line h-3 w-5/6"></div>
@@ -368,7 +472,6 @@
       </div>
 
       <div class="max-w-4xl mx-auto">
-        <!-- Step 1 -->
         <div class="reveal flex flex-col md:flex-row items-start gap-6 mb-16">
           <div class="float-1 glass-card rounded-2xl p-6 flex-shrink-0 w-16 h-16 flex items-center justify-center">
             <span class="text-2xl font-light text-indigo-500">1</span>
@@ -389,7 +492,6 @@
           </div>
         </div>
 
-        <!-- Step 2 -->
         <div class="reveal flex flex-col md:flex-row items-start gap-6 mb-16">
           <div class="float-2 glass-card rounded-2xl p-6 flex-shrink-0 w-16 h-16 flex items-center justify-center">
             <span class="text-2xl font-light text-indigo-500">2</span>
@@ -397,7 +499,7 @@
           <div class="flex-1">
             <h3 class="text-xl font-normal text-indigo-950 mb-2">Watch connections form</h3>
             <p class="text-gray-500 leading-relaxed mb-4">
-              As you write, Aether surfaces related notes in a sidebar — not search results, but contextual connections. Your second brain builds itself.
+              As you write, Aether surfaces related notes in a sidebar — not search results, but contextual connections.
             </p>
             <div class="glass-card rounded-xl p-4">
               <div class="flex items-center gap-2 mb-2">
@@ -422,7 +524,6 @@
           </div>
         </div>
 
-        <!-- Step 3 -->
         <div class="reveal flex flex-col md:flex-row items-start gap-6">
           <div class="float-3 glass-card rounded-2xl p-6 flex-shrink-0 w-16 h-16 flex items-center justify-center">
             <span class="text-2xl font-light text-indigo-500">3</span>
@@ -430,7 +531,7 @@
           <div class="flex-1">
             <h3 class="text-xl font-normal text-indigo-950 mb-2">Share when ready</h3>
             <p class="text-gray-500 leading-relaxed mb-4">
-              Toggle a note to public with one click. It becomes a clean page with your custom domain. No export, no copy-paste, no formatting loss.
+              Toggle a note to public with one click. It becomes a clean page with your custom domain.
             </p>
             <div class="glass-card rounded-xl p-4 flex items-center justify-between">
               <div class="flex items-center gap-3">
@@ -445,7 +546,7 @@
     </div>
   </section>
 
-  <!-- Integration/Compatibility Section -->
+  <!-- Integration Section -->
   <section class="relative py-20">
     <div class="max-w-6xl mx-auto px-6">
       <div class="reveal glass-card rounded-2xl p-10 md:p-14">
@@ -515,7 +616,7 @@
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- CTA -->
   <section id="cta" class="relative py-24">
     <div class="max-w-6xl mx-auto px-6 text-center">
       <div class="reveal">
@@ -589,7 +690,7 @@
     </div>
   </footer>
 
-  <!-- Scroll Reveal Script -->
+  <!-- Scroll Reveal (repeats on scroll) -->
   <script>
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
     const observer = new IntersectionObserver((entries) => {
@@ -597,7 +698,6 @@
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         } else {
-          // Re-trigger on scroll back
           entry.target.classList.remove('visible');
         }
       });

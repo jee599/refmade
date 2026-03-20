@@ -45,16 +45,16 @@
       z-index: -1;
     }
 
-    /* Neon glow effect */
+    /* Neon glow effect — more dramatic */
     .neon-glow {
-      text-shadow: 0 0 40px rgba(6, 182, 212, 0.3), 0 0 80px rgba(6, 182, 212, 0.1);
+      text-shadow: 0 0 40px rgba(6, 182, 212, 0.4), 0 0 80px rgba(6, 182, 212, 0.15), 0 0 120px rgba(6, 182, 212, 0.05);
     }
 
     .neon-box-glow {
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(6, 182, 212, 0.1);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), 0 0 60px rgba(6, 182, 212, 0.15), 0 0 100px rgba(6, 182, 212, 0.05);
     }
 
-    /* Card hover glow */
+    /* Card hover glow — more dramatic */
     .card-neon {
       background: #141414;
       border: 1px solid #1f1f1f;
@@ -62,14 +62,14 @@
     }
     .card-neon:hover {
       border-color: #06b6d4;
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.2), 0 0 40px rgba(6, 182, 212, 0.05);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.3), 0 0 60px rgba(6, 182, 212, 0.1), 0 0 100px rgba(6, 182, 212, 0.05);
       transform: translateY(-2px);
     }
 
-    /* Pulsing CTA button */
+    /* Pulsing CTA button — more dramatic */
     @keyframes neonPulse {
-      0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.3), 0 0 20px rgba(6, 182, 212, 0.1); }
-      50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(6, 182, 212, 0.2), 0 0 60px rgba(6, 182, 212, 0.1); }
+      0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), 0 0 30px rgba(6, 182, 212, 0.15); }
+      50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.6), 0 0 50px rgba(6, 182, 212, 0.25), 0 0 80px rgba(6, 182, 212, 0.1); }
     }
     .neon-pulse {
       animation: neonPulse 2s ease-in-out infinite;
@@ -83,7 +83,7 @@
       background-size: 60px 60px;
     }
 
-    /* Fade-in reveal */
+    /* Fade-in reveal (repeatable) */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -94,10 +94,14 @@
       transform: translateY(0);
     }
 
-    /* Decorative scan line */
+    /* Scan line effect */
     @keyframes scanLine {
       0% { top: -2px; }
       100% { top: 100%; }
+    }
+    .scan-line {
+      position: relative;
+      overflow: hidden;
     }
     .scan-line::after {
       content: '';
@@ -105,7 +109,7 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.5), transparent);
       animation: scanLine 3s linear infinite;
       pointer-events: none;
     }
@@ -118,9 +122,9 @@
       border-bottom: 1px solid #1f1f1f;
     }
 
-    /* Pink accent glow */
+    /* Pink accent glow — more dramatic */
     .pink-glow {
-      text-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
+      text-shadow: 0 0 30px rgba(236, 72, 153, 0.5), 0 0 60px rgba(236, 72, 153, 0.2);
     }
 
     /* Code block style */
@@ -137,6 +141,31 @@
     .code-block .pink { color: #ec4899; }
     .code-block .white { color: #f0f0f0; }
 
+    /* Animated code typing */
+    @keyframes typewriter {
+      0% { width: 0; }
+      50% { width: 100%; }
+      90% { width: 100%; }
+      95% { width: 0; }
+      100% { width: 0; }
+    }
+    @keyframes caret {
+      50% { border-right-color: transparent; }
+    }
+
+    .type-line {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #06b6d4;
+      animation: typewriter 6s steps(30) infinite, caret 0.5s step-end infinite;
+    }
+    .type-line-2 {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #ec4899;
+      animation: typewriter 6s steps(25) infinite 2s, caret 0.5s step-end infinite;
+    }
+
     /* Floating particles */
     @keyframes particleFloat {
       0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
@@ -152,6 +181,22 @@
       border-radius: 50%;
       pointer-events: none;
     }
+
+    /* Pulse radar animation */
+    @keyframes radarPulse {
+      0% { transform: scale(0.5); opacity: 0.6; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+    .radar-ring {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: 50%;
+      animation: radarPulse 3s ease-out infinite;
+    }
+    .radar-ring:nth-child(2) { animation-delay: 1s; }
+    .radar-ring:nth-child(3) { animation-delay: 2s; }
   </style>
   <script>
     tailwind.config = {
@@ -174,7 +219,7 @@
 </head>
 <body class="grid-bg">
 
-  <!-- Floating Particles (decorative) -->
+  <!-- Floating Particles -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
     <div class="particle" style="top: 15%; left: 10%; animation: particleFloat 6s ease-in-out infinite 0s;"></div>
     <div class="particle" style="top: 25%; left: 80%; animation: particleFloat 8s ease-in-out infinite 1s;"></div>
@@ -186,13 +231,15 @@
     <div class="particle" style="top: 10%; left: 50%; animation: particleFloat 8.5s ease-in-out infinite 0.8s;"></div>
     <div class="particle" style="top: 50%; left: 90%; animation: particleFloat 6s ease-in-out infinite 1.2s;"></div>
     <div class="particle" style="top: 70%; left: 30%; animation: particleFloat 7s ease-in-out infinite 3.5s;"></div>
+    <div class="particle" style="top: 20%; left: 65%; animation: particleFloat 5.5s ease-in-out infinite 0.3s; width: 3px; height: 3px; background: #ec4899;"></div>
+    <div class="particle" style="top: 55%; left: 45%; animation: particleFloat 8s ease-in-out infinite 2s; width: 3px; height: 3px; background: #ec4899;"></div>
   </div>
 
   <!-- Navigation -->
   <nav class="nav-dark fixed top-0 left-0 right-0 z-50">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-md border border-neon-cyan flex items-center justify-center">
+        <div class="w-6 h-6 rounded-md border border-neon-cyan flex items-center justify-center" style="box-shadow: 0 0 8px rgba(6,182,212,0.3);">
           <div class="w-2 h-2 bg-neon-cyan rounded-sm"></div>
         </div>
         <span class="text-sm font-medium text-white" style="font-family: 'Space Grotesk', sans-serif;">FLUX</span>
@@ -216,7 +263,7 @@
     <div class="max-w-6xl mx-auto px-6 text-center">
       <div class="reveal">
         <p class="inline-flex items-center gap-2 px-4 py-1.5 border border-neon-border rounded-full text-xs text-gray-400 mb-8">
-          <span class="w-1.5 h-1.5 bg-neon-cyan rounded-full" style="box-shadow: 0 0 6px rgba(6,182,212,0.6);"></span>
+          <span class="w-1.5 h-1.5 bg-neon-cyan rounded-full" style="box-shadow: 0 0 8px rgba(6,182,212,0.7);"></span>
           v2.0 — Now with real-time collaboration
         </p>
       </div>
@@ -230,7 +277,7 @@
       </p>
 
       <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-        <a href="#" class="px-8 py-3.5 bg-neon-cyan text-black font-medium rounded-lg hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-500/25">
+        <a href="#" class="px-8 py-3.5 bg-neon-cyan text-black font-medium rounded-lg hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-500/25 neon-box-glow">
           Start building free
         </a>
         <a href="#" class="px-8 py-3.5 border border-neon-border text-gray-300 font-medium rounded-lg hover:border-gray-500 hover:text-white transition-all">
@@ -238,9 +285,8 @@
         </a>
       </div>
 
-      <!-- Animated gradient border card -->
-      <div class="reveal gradient-border max-w-3xl mx-auto p-8 relative overflow-hidden scan-line">
-        <!-- Code preview inside -->
+      <!-- Hero card with scan line + code -->
+      <div class="reveal gradient-border max-w-3xl mx-auto p-8 relative overflow-hidden scan-line neon-box-glow">
         <div class="code-block p-6 text-left">
           <p><span class="cyan">import</span> <span class="white">{ motion, stagger }</span> <span class="cyan">from</span> <span class="pink">'flux'</span></p>
           <p class="mt-2"><span class="cyan">const</span> <span class="white">scene</span> = <span class="cyan">new</span> <span class="white">Scene</span>({</p>
@@ -257,7 +303,7 @@
         </div>
         <div class="flex items-center justify-between mt-4 px-2">
           <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-green-500" style="box-shadow: 0 0 6px rgba(34,197,94,0.5);"></div>
+            <div class="w-2 h-2 rounded-full bg-green-500" style="box-shadow: 0 0 8px rgba(34,197,94,0.6);"></div>
             <span class="mono text-xs text-gray-500">scene.flux — 12 lines</span>
           </div>
           <span class="mono text-xs text-gray-500">0.3ms render</span>
@@ -266,7 +312,7 @@
     </div>
   </section>
 
-  <!-- Features Section -->
+  <!-- Features Section — Bento Grid with varied card sizes -->
   <section id="features" class="relative py-24">
     <div class="max-w-6xl mx-auto px-6">
       <div class="text-center mb-16 reveal">
@@ -274,48 +320,98 @@
           Engineered for <span class="text-neon-cyan">performance</span>
         </h2>
         <p class="text-gray-400 max-w-xl mx-auto">
-          Every API designed to be intuitive. Every animation buttery at 120fps. No compromises.
+          Every API designed to be intuitive. Every animation buttery at 120fps.
         </p>
       </div>
 
-      <!-- Cards: 1 large + 2 small (not all same size — constraint #2) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Large card (spans full width on left) -->
-        <div class="reveal card-neon rounded-xl p-8 md:row-span-2">
-          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6">
+      <!-- Bento Grid: varied sizes -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Large card: WebGPU (2-col span) -->
+        <div class="reveal card-neon rounded-xl p-8 md:col-span-2 relative overflow-hidden scan-line">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6" style="box-shadow: 0 0 15px rgba(6,182,212,0.15);">
             <svg class="w-6 h-6 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
           <h3 class="text-xl font-medium text-white mb-3" style="font-family: 'Space Grotesk', sans-serif;">WebGPU Renderer</h3>
           <p class="text-gray-400 leading-relaxed mb-6">
-            Native GPU acceleration for every animation. Complex particle systems, 3D transforms, and shader effects — all running on the GPU pipeline. No canvas fallback needed.
+            Native GPU acceleration for every animation. Complex particle systems, 3D transforms, and shader effects — all running on the GPU pipeline.
           </p>
-          <div class="code-block p-4 mt-auto">
+          <div class="code-block p-4">
             <p><span class="cyan">renderer</span>: <span class="pink">'webgpu'</span></p>
             <p><span class="cyan">particles</span>: <span class="pink">50_000</span></p>
             <p><span class="cyan">fps</span>: <span class="white">119.7</span> <span class="text-green-500">// stable</span></p>
           </div>
         </div>
 
-        <!-- Small card top-right -->
+        <!-- Tall card: Code Typing Demo (right side, 2-row span) -->
+        <div class="reveal card-neon rounded-xl p-8 md:row-span-2 relative overflow-hidden">
+          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center mb-6" style="box-shadow: 0 0 15px rgba(236,72,153,0.15);">
+            <svg class="w-6 h-6 text-neon-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-xl font-medium text-white mb-3" style="font-family: 'Space Grotesk', sans-serif;">Live Code</h3>
+          <p class="text-gray-400 leading-relaxed mb-6">
+            Write it, see it. Hot module replacement with instant preview. No refresh needed.
+          </p>
+          <!-- Animated code typing -->
+          <div class="code-block p-4 space-y-2">
+            <div class="type-line">
+              <span class="cyan">scene</span>.<span class="white">add</span>(<span class="pink">'particle-field'</span>)
+            </div>
+            <div class="type-line-2">
+              <span class="cyan">scene</span>.<span class="white">play</span>({ <span class="pink">loop</span>: <span class="cyan">true</span> })
+            </div>
+            <p class="mt-3"><span class="text-green-500">// Output:</span></p>
+            <p><span class="white">50,000 particles</span></p>
+            <p><span class="white">120fps</span> <span class="text-green-500">locked</span></p>
+          </div>
+          <!-- Pulse radar in corner -->
+          <div class="absolute bottom-6 right-6 w-20 h-20 flex items-center justify-center">
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="w-3 h-3 rounded-full bg-neon-cyan" style="box-shadow: 0 0 10px rgba(6,182,212,0.5);"></div>
+          </div>
+        </div>
+
+        <!-- Wide bottom-left: Smart Stagger -->
         <div class="reveal card-neon rounded-xl p-8">
-          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-neon-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6" style="box-shadow: 0 0 15px rgba(6,182,212,0.15);">
+            <svg class="w-6 h-6 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
           </div>
           <h3 class="text-xl font-medium text-white mb-3" style="font-family: 'Space Grotesk', sans-serif;">Smart Stagger</h3>
           <p class="text-gray-400 leading-relaxed">
-            Orchestrate complex sequences with one line. Elements animate in spatial order, not DOM order. The result feels organic, not mechanical.
+            Orchestrate complex sequences with one line. Elements animate in spatial order, not DOM order.
           </p>
         </div>
 
-        <!-- Small card bottom-right -->
+        <!-- Bottom center: Scroll Observer -->
         <div class="reveal card-neon rounded-xl p-8">
-          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6" style="box-shadow: 0 0 15px rgba(6,182,212,0.15);">
             <svg class="w-6 h-6 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
           </div>
           <h3 class="text-xl font-medium text-white mb-3" style="font-family: 'Space Grotesk', sans-serif;">Scroll Observer</h3>
           <p class="text-gray-400 leading-relaxed">
-            Pin, scrub, and trigger with scroll progress. Built-in viewport detection, parallax helpers, and smooth-scroll normalization across all browsers.
+            Pin, scrub, and trigger with scroll progress. Built-in viewport detection and parallax helpers.
           </p>
+        </div>
+
+        <!-- Full-width bottom: Deploy -->
+        <div class="reveal card-neon rounded-xl p-8 md:col-span-3 relative overflow-hidden">
+          <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+            <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center flex-shrink-0" style="box-shadow: 0 0 15px rgba(236,72,153,0.15);">
+              <svg class="w-6 h-6 text-neon-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-medium text-white mb-2" style="font-family: 'Space Grotesk', sans-serif;">One-Click Deploy</h3>
+              <p class="text-gray-400 leading-relaxed">
+                Push to production in seconds. Automatic CDN distribution, edge caching, and bundle optimization. Your animations load fast everywhere.
+              </p>
+            </div>
+            <div class="code-block px-4 py-2 flex-shrink-0">
+              <span class="cyan">flux deploy</span> <span class="text-green-500">-- done in 1.2s</span>
+            </div>
+          </div>
+          <!-- Subtle scan line on this card too -->
+          <div class="absolute inset-0 pointer-events-none" style="background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(6,182,212,0.015) 3px, rgba(6,182,212,0.015) 4px);"></div>
         </div>
       </div>
     </div>
@@ -333,29 +429,25 @@
         </p>
       </div>
 
-      <!-- Large showcase panel with rotating border -->
-      <div class="reveal gradient-border max-w-4xl mx-auto p-1">
+      <div class="reveal gradient-border max-w-4xl mx-auto p-1 neon-box-glow">
         <div class="bg-neon-card rounded-xl p-8 md:p-12" style="background: #141414;">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Showcase item 1 -->
             <div class="text-center md:text-left">
-              <div class="w-full aspect-video rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-neon-border mb-4 flex items-center justify-center">
+              <div class="w-full aspect-video rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-neon-border mb-4 flex items-center justify-center relative overflow-hidden scan-line">
                 <span class="mono text-xs text-gray-500">[project preview]</span>
               </div>
               <h4 class="text-sm font-medium text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">Orbital Landing</h4>
               <p class="text-xs text-gray-500">WebGL + Flux scroll triggers</p>
             </div>
-            <!-- Showcase item 2 -->
             <div class="text-center md:text-left">
-              <div class="w-full aspect-video rounded-lg bg-gradient-to-br from-pink-500/20 to-cyan-500/20 border border-neon-border mb-4 flex items-center justify-center">
+              <div class="w-full aspect-video rounded-lg bg-gradient-to-br from-pink-500/20 to-cyan-500/20 border border-neon-border mb-4 flex items-center justify-center relative overflow-hidden scan-line">
                 <span class="mono text-xs text-gray-500">[project preview]</span>
               </div>
               <h4 class="text-sm font-medium text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">Synth Interface</h4>
               <p class="text-xs text-gray-500">Drag physics + audio sync</p>
             </div>
-            <!-- Showcase item 3 -->
             <div class="text-center md:text-left">
-              <div class="w-full aspect-video rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-neon-border mb-4 flex items-center justify-center">
+              <div class="w-full aspect-video rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-neon-border mb-4 flex items-center justify-center relative overflow-hidden scan-line">
                 <span class="mono text-xs text-gray-500">[project preview]</span>
               </div>
               <h4 class="text-sm font-medium text-white mb-1" style="font-family: 'Space Grotesk', sans-serif;">Data Canvas</h4>
@@ -377,9 +469,9 @@
   <!-- Testimonial Section -->
   <section id="testimonial" class="relative py-24">
     <div class="max-w-6xl mx-auto px-6">
-      <div class="reveal card-neon rounded-xl p-10 md:p-14 max-w-3xl mx-auto">
+      <div class="reveal card-neon rounded-xl p-10 md:p-14 max-w-3xl mx-auto relative">
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-cyan to-neon-pink flex items-center justify-center text-black text-sm font-medium">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-cyan to-neon-pink flex items-center justify-center text-black text-sm font-medium" style="box-shadow: 0 0 15px rgba(6,182,212,0.3);">
             KR
           </div>
           <div>
@@ -392,6 +484,12 @@
         </blockquote>
         <div class="code-block inline-block px-3 py-1.5">
           <span class="cyan">time_saved</span>: <span class="pink">"~6hrs/week"</span>
+        </div>
+        <!-- Pulse radar decoration -->
+        <div class="absolute top-6 right-6 w-16 h-16 flex items-center justify-center opacity-30">
+          <div class="radar-ring" style="width: 40px; height: 40px;"></div>
+          <div class="radar-ring" style="width: 40px; height: 40px;"></div>
+          <div class="w-2 h-2 rounded-full bg-neon-cyan"></div>
         </div>
       </div>
     </div>
@@ -460,7 +558,7 @@
       </div>
       <div class="pt-6 border-t border-neon-border flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-2">
-          <div class="w-5 h-5 rounded-md border border-neon-cyan/50 flex items-center justify-center">
+          <div class="w-5 h-5 rounded-md border border-neon-cyan/50 flex items-center justify-center" style="box-shadow: 0 0 6px rgba(6,182,212,0.2);">
             <div class="w-1.5 h-1.5 bg-neon-cyan rounded-sm"></div>
           </div>
           <span class="text-xs text-gray-500">Flux Labs Inc.</span>
@@ -480,7 +578,7 @@
     </div>
   </footer>
 
-  <!-- Scroll Reveal Script -->
+  <!-- Scroll Reveal (repeats on scroll) -->
   <script>
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
     const observer = new IntersectionObserver((entries) => {

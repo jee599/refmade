@@ -37,14 +37,24 @@
       transform: translateY(-4px) scale(1.01);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
-    .btn-primary {
+
+    /* Gradient CTA button */
+    .btn-gradient {
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
       transition: box-shadow 0.2s ease, opacity 0.2s ease;
     }
-    .btn-primary:hover {
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    .btn-gradient:hover {
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
     }
 
-    /* Scroll-triggered fade-in */
+    /* Glass nav */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    /* Scroll-triggered fade-in — repeats */
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
@@ -58,6 +68,64 @@
     .fade-in-delay-2 { transition-delay: 0.2s; }
     .fade-in-delay-3 { transition-delay: 0.3s; }
 
+    /* Chart drawing animation */
+    @keyframes draw-bar {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+    .bar-animate {
+      transform-origin: bottom;
+      transform: scaleY(0);
+    }
+    .bar-animate.animate {
+      animation: draw-bar 0.8s ease-out forwards;
+    }
+    .bar-animate.animate.bar-d1 { animation-delay: 0.1s; }
+    .bar-animate.animate.bar-d2 { animation-delay: 0.2s; }
+    .bar-animate.animate.bar-d3 { animation-delay: 0.3s; }
+    .bar-animate.animate.bar-d4 { animation-delay: 0.4s; }
+    .bar-animate.animate.bar-d5 { animation-delay: 0.5s; }
+    .bar-animate.animate.bar-d6 { animation-delay: 0.6s; }
+    .bar-animate.animate.bar-d7 { animation-delay: 0.7s; }
+    .bar-animate.animate.bar-d8 { animation-delay: 0.8s; }
+
+    /* Progress bar fill animation */
+    @keyframes fill-progress {
+      from { width: 0%; }
+    }
+    .progress-animate {
+      width: 0%;
+    }
+    .progress-animate.animate {
+      animation: fill-progress 1.2s ease-out forwards;
+    }
+
+    /* Loading dot pulse */
+    @keyframes loading-pulse {
+      0%, 80%, 100% { opacity: 0.3; }
+      40% { opacity: 1; }
+    }
+    .loading-dot { animation: loading-pulse 1.4s infinite ease-in-out both; }
+    .loading-dot:nth-child(1) { animation-delay: 0s; }
+    .loading-dot:nth-child(2) { animation-delay: 0.16s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.32s; }
+
+    /* Checkbox check animation */
+    @keyframes check-in {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .check-animate {
+      transform: scale(0);
+      opacity: 0;
+    }
+    .check-animate.animate {
+      animation: check-in 0.3s ease-out forwards;
+    }
+    .check-animate.animate.check-d1 { animation-delay: 0.8s; }
+    .check-animate.animate.check-d2 { animation-delay: 1.2s; }
+    .check-animate.animate.check-d3 { animation-delay: 1.6s; }
+
     /* Focus-visible for all interactive */
     a:focus-visible, button:focus-visible {
       outline: 2px solid var(--accent);
@@ -67,8 +135,8 @@
 </head>
 <body class="font-body" style="background-color: var(--bg); color: var(--text);">
 
-  <!-- Nav -->
-  <nav class="sticky top-0 z-50 border-b backdrop-blur-md" style="background-color: rgba(255,255,255,0.88); border-color: var(--border);">
+  <!-- Glass Nav -->
+  <nav class="glass-nav sticky top-0 z-50 border-b" style="border-color: var(--border);">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <a href="/" class="font-heading text-xl font-bold tracking-tight" style="color: var(--text);">
@@ -79,7 +147,7 @@
           <a href="#how-it-works" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">How It Works</a>
           <a href="#pricing" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Pricing</a>
           <a href="#" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Docs</a>
-          <a href="#signup" class="btn-primary rounded-lg px-4 py-2 text-sm font-medium" style="background-color: var(--accent); color: #ffffff;">Start Free Trial</a>
+          <a href="#signup" class="btn-gradient rounded-lg px-4 py-2 text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
         </div>
         <button class="rounded-lg p-2 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-b').classList.toggle('hidden')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
@@ -90,7 +158,7 @@
         <a href="#how-it-works" class="block px-3 py-2 text-sm" style="color: var(--muted);">How It Works</a>
         <a href="#pricing" class="block px-3 py-2 text-sm" style="color: var(--muted);">Pricing</a>
         <a href="#" class="block px-3 py-2 text-sm" style="color: var(--muted);">Docs</a>
-        <a href="#signup" class="mt-2 block rounded-lg px-3 py-2 text-center text-sm font-medium" style="background-color: var(--accent); color: #ffffff;">Start Free Trial</a>
+        <a href="#signup" class="btn-gradient mt-2 block rounded-lg px-3 py-2 text-center text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
       </div>
     </div>
   </nav>
@@ -104,13 +172,13 @@
           <div class="fade-in">
             <span class="font-mono mb-6 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.2);">v2.4 — AI Workflows</span>
             <h1 class="font-heading text-5xl font-bold md:text-6xl" style="line-height: 1.08; letter-spacing: -0.02em;">
-              Ship projects faster with <span style="color: var(--accent);">AI-powered</span> task routing
+              Ship projects faster with <span style="background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">AI-powered</span> task routing
             </h1>
             <p class="mt-6 text-lg leading-relaxed" style="color: var(--muted);">
               TaskFlow learns your team's workflow and automates the repetitive parts — assignment, status updates, handoffs. Your team plans less and ships more.
             </p>
             <div class="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a href="#signup" class="btn-primary inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="background-color: var(--accent); color: #ffffff;">
+              <a href="#signup" class="btn-gradient inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
                 Start Free Trial
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
               </a>
@@ -120,8 +188,8 @@
             </div>
             <p class="mt-8 text-sm" style="color: var(--muted);">Free for up to 5 members. No credit card required.</p>
           </div>
-          <!-- Right: Browser Mockup (Enhanced Dashboard) -->
-          <div class="fade-in fade-in-delay-2 overflow-hidden rounded-lg border shadow-sm" style="border-color: var(--border); background-color: var(--subtle-bg);">
+          <!-- Right: Browser Mockup with Internal Animations -->
+          <div class="fade-in fade-in-delay-2 overflow-hidden rounded-lg border shadow-lg" id="browser-mockup" style="border-color: var(--border); background-color: var(--subtle-bg);">
             <!-- Browser chrome -->
             <div class="flex items-center gap-2 border-b px-4 py-3" style="border-color: var(--border); background-color: var(--bg);">
               <span class="h-3 w-3 rounded-full" style="background-color: #FF5F57;"></span>
@@ -150,36 +218,37 @@
                     <p class="font-mono text-xs" style="color: var(--muted);">Mar 18 — Mar 31</p>
                   </div>
                   <div class="flex items-center gap-2">
-                    <span class="font-mono rounded px-2 py-0.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.15);">Live</span>
+                    <span class="font-mono rounded px-2 py-0.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.15);">
+                      <span class="inline-block h-1.5 w-1.5 rounded-full mr-1" style="background-color: var(--accent); animation: loading-pulse 1.4s infinite ease-in-out;"></span>
+                      Live
+                    </span>
                   </div>
                 </div>
-                <!-- Stats row -->
+                <!-- Stats row with animated progress bars -->
                 <div class="grid grid-cols-3 gap-2 mb-3">
                   <div class="rounded-lg p-2.5" style="background-color: var(--bg); border: 1px solid var(--border);">
                     <p class="font-mono text-xs" style="color: var(--muted);">Tasks</p>
                     <p class="font-heading text-xl font-bold" style="color: var(--text);">24</p>
-                    <div class="mt-1 flex items-center gap-1">
-                      <svg width="10" height="10" fill="none" stroke="#22c55e" stroke-width="2"><path d="M1 7l3-4 3 2 2-3"/></svg>
-                      <p class="font-mono text-xs" style="color: #22c55e;">+12%</p>
+                    <div class="mt-1 h-1.5 w-full rounded-full" style="background-color: var(--border);">
+                      <div class="h-1.5 rounded-full progress-animate" style="width: 68%; background-color: var(--accent);"></div>
                     </div>
                   </div>
                   <div class="rounded-lg p-2.5" style="background-color: var(--bg); border: 1px solid var(--border);">
                     <p class="font-mono text-xs" style="color: var(--muted);">AI Auto</p>
                     <p class="font-heading text-xl font-bold" style="color: var(--text);">18</p>
                     <div class="mt-1 h-1.5 w-full rounded-full" style="background-color: var(--border);">
-                      <div class="h-1.5 rounded-full" style="width: 75%; background-color: var(--accent);"></div>
+                      <div class="h-1.5 rounded-full progress-animate" style="width: 75%; background-color: #22c55e;"></div>
                     </div>
                   </div>
                   <div class="rounded-lg p-2.5" style="background-color: var(--bg); border: 1px solid var(--border);">
                     <p class="font-mono text-xs" style="color: var(--muted);">On Track</p>
-                    <p class="font-heading text-xl font-bold" style="color: #22c55e;">—</p>
-                    <div class="mt-1 flex items-center gap-1">
-                      <svg width="10" height="10" fill="none" stroke="#22c55e" stroke-width="2"><path d="M1 7l3-4 3 2 2-3"/></svg>
-                      <p class="font-mono text-xs" style="color: #22c55e;">+8%</p>
+                    <p class="font-heading text-xl font-bold" style="color: #22c55e;">92%</p>
+                    <div class="mt-1 h-1.5 w-full rounded-full" style="background-color: var(--border);">
+                      <div class="h-1.5 rounded-full progress-animate" style="width: 92%; background-color: #22c55e;"></div>
                     </div>
                   </div>
                 </div>
-                <!-- Mini chart area -->
+                <!-- Animated chart area -->
                 <div class="mb-3 rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
                   <div class="mb-2 flex items-center justify-between">
                     <p class="text-xs font-medium" style="color: var(--text);">Velocity</p>
@@ -188,33 +257,43 @@
                       <span class="font-mono rounded px-1.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">30d</span>
                     </div>
                   </div>
-                  <div class="flex items-end gap-1" style="height: 32px;">
-                    <div class="flex-1 rounded-sm" style="height: 40%; background-color: var(--border);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 55%; background-color: var(--border);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 45%; background-color: var(--border);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 70%; background-color: rgba(37,99,235,0.3);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 60%; background-color: rgba(37,99,235,0.3);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 85%; background-color: rgba(37,99,235,0.5);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 75%; background-color: rgba(37,99,235,0.5);"></div>
-                    <div class="flex-1 rounded-sm" style="height: 95%; background-color: var(--accent);"></div>
+                  <div class="flex items-end gap-1" style="height: 40px;">
+                    <div class="flex-1 rounded-sm bar-animate bar-d1" style="height: 40%; background-color: var(--border);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d2" style="height: 55%; background-color: var(--border);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d3" style="height: 45%; background-color: var(--border);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d4" style="height: 70%; background-color: rgba(37,99,235,0.3);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d5" style="height: 60%; background-color: rgba(37,99,235,0.3);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d6" style="height: 85%; background-color: rgba(37,99,235,0.5);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d7" style="height: 75%; background-color: rgba(37,99,235,0.5);"></div>
+                    <div class="flex-1 rounded-sm bar-animate bar-d8" style="height: 95%; background-color: var(--accent);"></div>
                   </div>
                 </div>
-                <!-- Task list -->
+                <!-- Task list with animated checkboxes -->
                 <div class="space-y-1.5">
                   <div class="flex items-center gap-2 rounded-lg p-2" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <div class="h-2 w-2 rounded-full" style="background-color: var(--accent);"></div>
+                    <div class="flex h-4 w-4 items-center justify-center rounded border" style="border-color: var(--accent); background-color: rgba(37,99,235,0.08);">
+                      <svg class="check-animate check-d1" width="10" height="10" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
+                    </div>
                     <span class="flex-1 text-xs" style="color: var(--text);">Design review — Sprint 14</span>
-                    <span class="font-mono rounded-full px-2 py-0.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">Active</span>
+                    <span class="font-mono rounded-full px-2 py-0.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">Done</span>
                   </div>
                   <div class="flex items-center gap-2 rounded-lg p-2" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <div class="h-2 w-2 rounded-full" style="background-color: #22c55e;"></div>
+                    <div class="flex h-4 w-4 items-center justify-center rounded border" style="border-color: #22c55e; background-color: rgba(34,197,94,0.08);">
+                      <svg class="check-animate check-d2" width="10" height="10" fill="none" stroke="#22c55e" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
+                    </div>
                     <span class="flex-1 text-xs" style="color: var(--text);">API integration tests</span>
                     <span class="font-mono rounded-full px-2 py-0.5 text-xs" style="background-color: rgba(34,197,94,0.08); color: #22c55e;">Auto</span>
                   </div>
                   <div class="flex items-center gap-2 rounded-lg p-2" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <div class="h-2 w-2 rounded-full" style="background-color: #64748b;"></div>
+                    <div class="flex h-4 w-4 items-center justify-center rounded border" style="border-color: var(--border);">
+                      <svg class="check-animate check-d3" width="10" height="10" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
+                    </div>
                     <span class="flex-1 text-xs" style="color: var(--text);">Deploy staging env</span>
-                    <span class="font-mono rounded-full px-2 py-0.5 text-xs" style="background-color: rgba(100,116,139,0.08); color: #64748b;">Queue</span>
+                    <span class="font-mono rounded-full px-2 py-0.5 text-xs flex items-center gap-1" style="background-color: rgba(100,116,139,0.08); color: #64748b;">
+                      <span class="loading-dot inline-block h-1 w-1 rounded-full" style="background-color: #64748b;"></span>
+                      <span class="loading-dot inline-block h-1 w-1 rounded-full" style="background-color: #64748b;"></span>
+                      <span class="loading-dot inline-block h-1 w-1 rounded-full" style="background-color: #64748b;"></span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -239,41 +318,82 @@
           <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl">Built for teams that ship</h2>
           <p class="mt-4 text-base" style="color: var(--muted);">Powerful AI features that eliminate busywork and keep your team focused on what matters.</p>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <!-- Card 1: Large -->
-          <article class="card-hover group rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
+        <!-- Bento grid with varied sizing -->
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Card 1: Large (2x2) -->
+          <article class="card-hover fade-in group rounded-lg border p-8 shadow-sm sm:col-span-2 sm:row-span-2" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+              <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
             </div>
-            <h3 class="font-heading mb-2 text-lg font-semibold">Intelligent Task Routing</h3>
+            <h3 class="font-heading mb-3 text-xl font-semibold">Intelligent Task Routing</h3>
             <p class="text-base leading-relaxed" style="color: var(--muted);">Machine learning analyzes your team's expertise, availability, and past performance to automatically route tasks to the best person. Reduces assignment time from hours to seconds.</p>
+            <!-- Internal mockup: mini assignment flow -->
+            <div class="mt-6 rounded-lg border p-4 space-y-2" style="border-color: var(--border); background-color: var(--subtle-bg);">
+              <div class="flex items-center gap-2">
+                <div class="h-6 w-6 rounded-full" style="background-color: rgba(37,99,235,0.15);"></div>
+                <div class="h-2 flex-1 rounded-full" style="background-color: var(--border);"></div>
+                <svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+                <div class="h-6 w-6 rounded-full" style="background-color: rgba(34,197,94,0.15);"></div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="h-6 w-6 rounded-full" style="background-color: rgba(37,99,235,0.15);"></div>
+                <div class="h-2 w-3/4 rounded-full" style="background-color: var(--border);"></div>
+                <svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+                <div class="h-6 w-6 rounded-full" style="background-color: rgba(249,115,22,0.15);"></div>
+              </div>
+            </div>
           </article>
-          <!-- Card 2 -->
-          <article class="card-hover group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
+          <!-- Card 2: Medium -->
+          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-lg font-semibold">Workflow Automation</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">AI detects repetitive patterns and suggests automations. Status updates, handoffs, and notifications run on autopilot.</p>
+            <p class="text-sm leading-relaxed" style="color: var(--muted);">AI detects repetitive patterns and suggests automations. Status updates, handoffs, and notifications run on autopilot.</p>
           </article>
-          <!-- Card 3 -->
-          <article class="card-hover group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
+          <!-- Card 3: Medium -->
+          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             </div>
             <h3 class="font-heading mb-2 text-lg font-semibold">Predictive Analytics</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Real-time risk scoring flags at-risk deadlines before they slip. Rebalance workloads with one click.</p>
+            <p class="text-sm leading-relaxed" style="color: var(--muted);">Real-time risk scoring flags at-risk deadlines before they slip. Rebalance workloads with one click.</p>
           </article>
-          <!-- Card 4 -->
-          <article class="card-hover group rounded-lg border p-8 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          <!-- Card 4: Wide -->
+          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
+            <div class="flex items-start gap-6">
+              <div class="shrink-0">
+                <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
+                  <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </div>
+                <h3 class="font-heading mb-2 text-lg font-semibold">50+ Integrations</h3>
+                <p class="text-sm leading-relaxed" style="color: var(--muted);">Connect GitHub, Slack, Figma, and your entire stack. Two-way sync keeps everything aligned.</p>
+              </div>
+              <!-- Integration icons mockup -->
+              <div class="hidden sm:grid grid-cols-3 gap-2 shrink-0">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
+                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
+                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
+                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
+                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
+                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
+                </div>
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
+                  <span class="font-mono text-xs" style="color: var(--muted);">+44</span>
+                </div>
+              </div>
             </div>
-            <h3 class="font-heading mb-2 text-lg font-semibold">50+ Integrations</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Connect GitHub, Slack, Figma, and your entire stack. Two-way sync keeps everything aligned.</p>
           </article>
           <!-- Card 5 -->
-          <article class="card-hover group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
+          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             </div>
@@ -387,7 +507,7 @@
           </article>
           <!-- Pro (highlighted) -->
           <article class="fade-in rounded-lg border-2 p-8 shadow-sm sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
-            <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent); color: #ffffff;">Most Popular</span>
+            <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background: linear-gradient(135deg, #2563eb, #4f46e5); color: #ffffff;">Most Popular</span>
             <h3 class="font-heading text-lg font-semibold">Pro</h3>
             <p class="mt-1 text-sm" style="color: var(--muted);">For growing teams shipping fast.</p>
             <div class="mt-6 flex items-baseline gap-1">
@@ -402,7 +522,7 @@
               <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Priority support</li>
               <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Custom integrations</li>
             </ul>
-            <a href="#signup" class="btn-primary mt-8 block rounded-lg px-6 py-3 text-center text-sm font-medium" style="background-color: var(--accent); color: #ffffff;">Start Free Trial</a>
+            <a href="#signup" class="btn-gradient mt-8 block rounded-lg px-6 py-3 text-center text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
           </article>
           <!-- Enterprise -->
           <article class="fade-in card-hover rounded-lg border p-8 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
@@ -434,7 +554,7 @@
           <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: #ffffff;">Ready to automate your workflow?</h2>
           <p class="mt-4 text-base" style="color: rgba(255,255,255,0.55);">Free to start, no credit card required.</p>
           <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href="#signup" class="btn-primary inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="background-color: var(--accent); color: #ffffff;">
+            <a href="#signup" class="btn-gradient inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
               Start Free Trial
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </a>
@@ -498,23 +618,48 @@
     </div>
   </footer>
 
-  <!-- Scroll-triggered fade-in animation -->
+  <!-- Scroll-triggered animations (repeat on scroll) + mockup animations -->
   <script>
     (function() {
-      var els = document.querySelectorAll('.fade-in');
+      // Repeating scroll animations for fade-in
+      var fadeEls = document.querySelectorAll('.fade-in');
       if (!window.IntersectionObserver) {
-        els.forEach(function(el) { el.classList.add('visible'); });
+        fadeEls.forEach(function(el) { el.classList.add('visible'); });
         return;
       }
-      var observer = new IntersectionObserver(function(entries) {
+      var fadeObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove('visible');
           }
         });
       }, { threshold: 0.15 });
-      els.forEach(function(el) { observer.observe(el); });
+      fadeEls.forEach(function(el) { fadeObserver.observe(el); });
+
+      // Browser mockup internal animations (bars, progress, checks)
+      var mockup = document.getElementById('browser-mockup');
+      if (mockup) {
+        var bars = mockup.querySelectorAll('.bar-animate');
+        var progresses = mockup.querySelectorAll('.progress-animate');
+        var checks = mockup.querySelectorAll('.check-animate');
+
+        var mockupObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              bars.forEach(function(b) { b.classList.add('animate'); });
+              progresses.forEach(function(p) { p.classList.add('animate'); });
+              checks.forEach(function(c) { c.classList.add('animate'); });
+            } else {
+              bars.forEach(function(b) { b.classList.remove('animate'); });
+              progresses.forEach(function(p) { p.classList.remove('animate'); });
+              checks.forEach(function(c) { c.classList.remove('animate'); });
+            }
+          });
+        }, { threshold: 0.2 });
+        mockupObserver.observe(mockup);
+      }
     })();
   </script>
 

@@ -64,7 +64,6 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.6; }
     }
-
     .pulse-dot {
       animation: pulse-glow 2s ease-in-out infinite;
     }
@@ -73,7 +72,6 @@
       0% { transform: translateY(-100%); }
       100% { transform: translateY(100vh); }
     }
-
     .grid-scan-line {
       position: absolute;
       left: 0;
@@ -88,9 +86,81 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
-
     .cursor-blink {
       animation: blink 1.2s step-end infinite;
+    }
+
+    /* Matrix rain */
+    .matrix-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.06;
+    }
+
+    /* Typing animation */
+    .typing-line {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--accent);
+      width: 0;
+      opacity: 0;
+    }
+    .typing-line.typing {
+      opacity: 1;
+      animation: typing-expand 1.5s steps(40) forwards, blink-caret 0.8s step-end infinite;
+    }
+    @keyframes typing-expand {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
+    }
+    .typing-result {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .typing-result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Network activity */
+    @keyframes network-packet {
+      0% { transform: translateX(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateX(400%); opacity: 0; }
+    }
+    .network-packet {
+      animation: network-packet 2s ease-in-out infinite;
+    }
+    .network-packet:nth-child(2) { animation-delay: 0.4s; }
+    .network-packet:nth-child(3) { animation-delay: 0.8s; }
+    .network-packet:nth-child(4) { animation-delay: 1.2s; }
+
+    /* Live metric bar animation */
+    @keyframes metric-fill {
+      0% { width: 0%; }
+      100% { width: var(--fill-width); }
+    }
+    .metric-bar-fill {
+      animation: metric-fill 1.5s ease-out forwards;
+      width: 0%;
+    }
+    .metric-bar-fill.reset {
+      width: 0%;
+      animation: none;
+    }
+
+    /* Ticker animation for live metrics */
+    .live-ticker {
+      font-variant-numeric: tabular-nums;
     }
 
     .fade-up {
@@ -98,7 +168,6 @@
       transform: translateY(24px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-
     .fade-up.visible {
       opacity: 1;
       transform: translateY(0);
@@ -154,7 +223,9 @@
     <!-- Hero: Split — text left, terminal right -->
     <section class="grid-pattern relative overflow-hidden py-20 sm:py-28" style="background-color: var(--bg);">
       <div class="grid-scan-line" aria-hidden="true"></div>
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <!-- Matrix rain canvas -->
+      <canvas id="matrix-canvas" class="matrix-canvas" aria-hidden="true"></canvas>
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid items-center gap-12 lg:grid-cols-2">
           <div class="fade-up">
             <span class="mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs font-medium" style="border-color: var(--border); color: var(--accent); background-color: var(--accent-dim);">
@@ -191,36 +262,36 @@
             </div>
           </div>
 
-          <!-- Terminal mockup -->
-          <div class="fade-up overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: #0c0c0e; box-shadow: 0 0 80px rgba(16, 185, 129, 0.06);">
+          <!-- Terminal mockup with typing animation -->
+          <div class="fade-up overflow-hidden rounded-lg border" id="hero-terminal" style="border-color: var(--border); background-color: #0c0c0e; box-shadow: 0 0 80px rgba(16, 185, 129, 0.06);">
             <div class="flex items-center gap-2 border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
               <span class="h-3 w-3 rounded-full term-dot-red"></span>
               <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
               <span class="h-3 w-3 rounded-full term-dot-green"></span>
               <span class="ml-3 font-mono text-xs" style="color: var(--muted);">zsh — ~/src/billing-service</span>
             </div>
-            <div class="p-5 font-mono text-sm leading-loose">
+            <div class="p-5 font-mono text-sm leading-loose" id="typing-container">
               <div><span style="color: var(--accent);">~/src/billing-service</span> <span style="color: var(--muted);">on</span> <span style="color: #c084fc;">feat/stripe-webhooks</span></div>
-              <div><span style="color: var(--accent);">&#x276F;</span> <span style="color: var(--text);">pnpm dlx [your-cli] init --preset stripe</span></div>
-              <div class="mt-2" style="color: var(--muted);">
+              <div class="typing-line" data-delay="300"><span style="color: var(--accent);">&#x276F;</span> <span style="color: var(--text);">pnpm dlx [your-cli] init --preset stripe</span></div>
+              <div class="typing-result" data-delay="2000" style="color: var(--muted);">
                 <span style="color: var(--accent);">&#10003;</span> Detected tsconfig.json (strict mode)
               </div>
-              <div style="color: var(--muted);">
+              <div class="typing-result" data-delay="2400" style="color: var(--muted);">
                 <span style="color: var(--accent);">&#10003;</span> Linked webhook endpoint /api/webhooks/stripe
               </div>
-              <div style="color: var(--muted);">
-                <span style="color: var(--accent);">&#10003;</span> Generated 4 event handlers (invoice.paid, checkout.session.completed, customer.subscription.updated, charge.refunded)
+              <div class="typing-result" data-delay="2800" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Generated 4 event handlers
               </div>
-              <div style="color: var(--muted);">
+              <div class="typing-result" data-delay="3200" style="color: var(--muted);">
                 <span style="color: var(--accent);">&#10003;</span> Type-checked against stripe@14.21.0 — 0 errors
               </div>
-              <div class="mt-2" style="color: var(--muted);">
+              <div class="typing-result" data-delay="3600" style="color: var(--muted);">
                 <span style="color: var(--accent);">&#10003;</span> Dev server → <span style="color: var(--accent);">http://localhost:3847</span>
               </div>
-              <div class="mt-3">
+              <div class="typing-result" data-delay="4200">
                 <span style="color: var(--accent);">~/src/billing-service</span> <span style="color: var(--muted);">on</span> <span style="color: #c084fc;">feat/stripe-webhooks</span>
               </div>
-              <div><span style="color: var(--accent);">&#x276F;</span> <span class="cursor-blink" style="color: var(--text);">&#9608;</span></div>
+              <div class="typing-result" data-delay="4400"><span style="color: var(--accent);">&#x276F;</span> <span class="cursor-blink" style="color: var(--text);">&#9608;</span></div>
             </div>
           </div>
         </div>
@@ -233,15 +304,71 @@
         <div class="grid gap-6 sm:grid-cols-3">
           <div class="flex items-start gap-3">
             <span class="mt-0.5 font-mono text-xs font-medium shrink-0" style="color: var(--accent);">@handle_1</span>
-            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"API 레이턴시 p99 [N]ms로 떨어짐. 캐시 레이어 없이."</p>
+            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"API latency p99 [N]ms. No cache layer."</p>
           </div>
           <div class="flex items-start gap-3">
             <span class="mt-0.5 font-mono text-xs font-medium shrink-0" style="color: var(--accent);">@handle_2</span>
-            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"SDK 타입 추론 깔끔함. ReturnType 안 써도 됨."</p>
+            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"SDK type inference is clean. No ReturnType needed."</p>
           </div>
           <div class="flex items-start gap-3">
             <span class="mt-0.5 font-mono text-xs font-medium shrink-0" style="color: var(--accent);">@handle_3</span>
-            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"CI에서 [your-cli] check 돌렸더니 dead import [N]개 잡아줌."</p>
+            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"Ran [your-cli] check in CI — caught [N] dead imports."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Metrics Dashboard -->
+    <section class="py-16" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="fade-up rounded-lg border p-6" id="live-metrics" style="border-color: var(--border); background-color: var(--subtle-bg);">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+              <span class="font-mono text-xs font-medium" style="color: var(--accent);">LIVE METRICS</span>
+            </div>
+            <span class="font-mono text-xs" style="color: var(--muted);">Last 24h</span>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Metric 1 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">API Requests</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="2847" style="color: var(--text);">0</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 78%; background-color: var(--accent);"></div>
+              </div>
+              <!-- Network activity visualization -->
+              <div class="mt-2 h-3 overflow-hidden relative rounded" style="background-color: var(--bg);">
+                <div class="network-packet absolute top-0.5 h-2 w-4 rounded-full" style="background-color: var(--accent); opacity: 0.6;"></div>
+                <div class="network-packet absolute top-0.5 h-2 w-3 rounded-full" style="background-color: var(--accent); opacity: 0.4;"></div>
+                <div class="network-packet absolute top-0.5 h-2 w-5 rounded-full" style="background-color: var(--accent); opacity: 0.3;"></div>
+                <div class="network-packet absolute top-0.5 h-2 w-2 rounded-full" style="background-color: var(--accent); opacity: 0.5;"></div>
+              </div>
+            </div>
+            <!-- Metric 2 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">p99 Latency</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="23" data-suffix="ms" style="color: var(--accent);">0ms</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 23%; background-color: var(--accent);"></div>
+              </div>
+            </div>
+            <!-- Metric 3 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">Success Rate</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="99" data-suffix="." data-decimal="97" style="color: var(--accent);">0%</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 99%; background-color: var(--accent);"></div>
+              </div>
+            </div>
+            <!-- Metric 4 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">Active Connections</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="142" style="color: var(--text);">0</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 56%; background-color: var(--accent);"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -622,17 +749,164 @@
   </footer>
 
   <script>
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+    (function() {
+      // === Repeating scroll animations ===
+      var fadeEls = document.querySelectorAll('.fade-up');
+      if (!window.IntersectionObserver) {
+        fadeEls.forEach(function(el) { el.classList.add('visible'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+          } else {
+            entry.target.classList.remove('visible');
           }
         });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-    );
-    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      fadeEls.forEach(function(el) { observer.observe(el); });
+
+      // === Matrix rain background ===
+      var canvas = document.getElementById('matrix-canvas');
+      if (canvas) {
+        var ctx = canvas.getContext('2d');
+        var resizeCanvas = function() {
+          canvas.width = canvas.parentElement.offsetWidth;
+          canvas.height = canvas.parentElement.offsetHeight;
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        var chars = '01アイウエオカキクケコ{}[]<>/=+-*&%$#@!';
+        var fontSize = 14;
+        var columns = Math.floor(canvas.width / fontSize);
+        var drops = new Array(columns).fill(1);
+
+        function drawMatrix() {
+          ctx.fillStyle = 'rgba(9, 9, 11, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#10b981';
+          ctx.font = fontSize + 'px JetBrains Mono, monospace';
+
+          for (var i = 0; i < drops.length; i++) {
+            var char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+        setInterval(drawMatrix, 80);
+      }
+
+      // === Terminal typing animation (repeats on scroll) ===
+      var heroTerminal = document.getElementById('hero-terminal');
+      if (heroTerminal) {
+        var typingLine = heroTerminal.querySelector('.typing-line');
+        var typingResults = heroTerminal.querySelectorAll('.typing-result');
+        var typingTimers = [];
+
+        function startTyping() {
+          // Reset
+          typingTimers.forEach(clearTimeout);
+          typingTimers = [];
+          if (typingLine) {
+            typingLine.classList.remove('typing');
+            typingLine.style.width = '0';
+          }
+          typingResults.forEach(function(r) { r.classList.remove('show'); });
+
+          // Start typing line
+          requestAnimationFrame(function() {
+            if (typingLine) {
+              typingLine.classList.add('typing');
+            }
+            // Show results sequentially
+            typingResults.forEach(function(r) {
+              var delay = parseInt(r.getAttribute('data-delay') || '1000', 10);
+              var timer = setTimeout(function() { r.classList.add('show'); }, delay);
+              typingTimers.push(timer);
+            });
+          });
+        }
+
+        function stopTyping() {
+          typingTimers.forEach(clearTimeout);
+          typingTimers = [];
+          if (typingLine) {
+            typingLine.classList.remove('typing');
+            typingLine.style.width = '0';
+          }
+          typingResults.forEach(function(r) { r.classList.remove('show'); });
+        }
+
+        var termObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              startTyping();
+            } else {
+              stopTyping();
+            }
+          });
+        }, { threshold: 0.3 });
+        termObserver.observe(heroTerminal);
+      }
+
+      // === Live metrics ticker (repeats on scroll) ===
+      var metricsSection = document.getElementById('live-metrics');
+      if (metricsSection) {
+        var tickers = metricsSection.querySelectorAll('.live-ticker');
+        var bars = metricsSection.querySelectorAll('.metric-bar-fill');
+
+        var metricsObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              // Animate tickers
+              tickers.forEach(function(el) {
+                var target = parseInt(el.getAttribute('data-target'), 10);
+                var suffix = el.getAttribute('data-suffix') || '';
+                var decimal = el.getAttribute('data-decimal') || '';
+                var duration = 1500;
+                var startTime = null;
+                function step(timestamp) {
+                  if (!startTime) startTime = timestamp;
+                  var progress = Math.min((timestamp - startTime) / duration, 1);
+                  var eased = 1 - Math.pow(1 - progress, 3);
+                  var current = Math.floor(eased * target);
+                  if (decimal) {
+                    el.textContent = current + suffix + (progress >= 1 ? decimal + '%' : '%');
+                  } else {
+                    el.textContent = current + suffix;
+                  }
+                  if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+              });
+              // Animate bars
+              bars.forEach(function(bar) {
+                bar.classList.remove('reset');
+                bar.style.animation = 'none';
+                bar.offsetHeight; // force reflow
+                bar.style.animation = '';
+              });
+            } else {
+              // Reset
+              tickers.forEach(function(el) {
+                var suffix = el.getAttribute('data-suffix') || '';
+                var decimal = el.getAttribute('data-decimal');
+                el.textContent = '0' + (decimal ? '%' : suffix);
+              });
+              bars.forEach(function(bar) {
+                bar.classList.add('reset');
+              });
+            }
+          });
+        }, { threshold: 0.3 });
+        metricsObserver.observe(metricsSection);
+      }
+    })();
   </script>
 
 </body>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>016 — Neobrutalist SaaS Reference</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            body: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            cream: '#F4F4F0',
+            pink: '#FF90E8',
+            yellow: '#FFC900',
+            green: '#23C45E',
+            brutal: '#000000',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Space Grotesk', sans-serif; background: #F4F4F0; color: #000; }
+
+    /* Hard shadow utility */
+    .brutal-shadow { box-shadow: 4px 4px 0 #000; }
+    .brutal-shadow-sm { box-shadow: 2px 2px 0 #000; }
+    .brutal-border { border: 3px solid #000; }
+
+    /* Scroll reveal — hard snap */
+    @keyframes snapIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes snapLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes snapRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Button hover hard shift */
+    .brutal-btn {
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0 #000;
+      transition: all 0.15s ease-out;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .brutal-btn:hover {
+      box-shadow: 2px 2px 0 #000;
+      transform: translate(2px, 2px);
+    }
+    .brutal-btn:active {
+      box-shadow: 0px 0px 0 #000;
+      transform: translate(4px, 4px);
+    }
+
+    /* Card hover */
+    .brutal-card {
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0 #000;
+      transition: all 0.15s ease-out;
+    }
+    .brutal-card:hover {
+      box-shadow: 6px 6px 0 #000;
+      transform: translate(-2px, -2px);
+    }
+
+    /* Pricing card hover */
+    .pricing-card {
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0 #000;
+      transition: all 0.15s ease-out;
+    }
+    .pricing-card:hover {
+      box-shadow: 8px 8px 0 #000;
+      transform: translate(-4px, -4px);
+    }
+
+    /* Wiggle animation for hero illustration */
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+    }
+    .wiggle { animation: wiggle 3s ease-in-out infinite; }
+
+    /* Bounce arrow */
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+    .bounce-arrow { animation: bounceDown 1.5s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="bg-cream border-b-[3px] border-black sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="text-2xl font-bold tracking-tight">brutl.</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#features" class="font-medium hover:underline underline-offset-4 decoration-2">Features</a>
+        <a href="#pricing" class="font-medium hover:underline underline-offset-4 decoration-2">Pricing</a>
+        <a href="#how" class="font-medium hover:underline underline-offset-4 decoration-2">How It Works</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#" class="font-medium hidden sm:block hover:underline underline-offset-4 decoration-2">Log In</a>
+        <button class="brutal-btn bg-pink text-black px-5 py-2 rounded-sm text-sm">Start Free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="bg-pink py-16 md:py-24 border-b-[3px] border-black">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h1 class="text-5xl md:text-7xl font-bold leading-[1.05] mb-6">
+            Sell what you know.<br>
+            <span class="inline-block bg-black text-pink px-3 py-1 mt-2">Not your soul.</span>
+          </h1>
+          <p class="text-lg md:text-xl mb-8 max-w-lg leading-relaxed">
+            The anti-platform platform for creators who want to own their work, their audience, and their revenue. Zero middlemen, zero nonsense.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <button class="brutal-btn bg-black text-white px-8 py-4 rounded-sm text-lg">Start Selling Free</button>
+            <button class="brutal-btn bg-white text-black px-8 py-4 rounded-sm text-lg">See Examples</button>
+          </div>
+        </div>
+        <div class="reveal-right hidden md:block">
+          <!-- Stacked cards illustration -->
+          <div class="relative wiggle">
+            <div class="brutal-border bg-yellow rounded-none p-6 absolute top-4 left-4 w-72 h-48">
+              <div class="w-10 h-10 brutal-border bg-white rounded-sm mb-3 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="h-3 bg-black rounded-sm w-3/4 mb-2"></div>
+              <div class="h-3 bg-black rounded-sm w-1/2"></div>
+            </div>
+            <div class="brutal-border bg-green rounded-none p-6 absolute top-16 left-16 w-72 h-48">
+              <div class="w-10 h-10 brutal-border bg-white rounded-sm mb-3 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              </div>
+              <div class="h-3 bg-black rounded-sm w-2/3 mb-2"></div>
+              <div class="h-3 bg-black rounded-sm w-2/5"></div>
+            </div>
+            <div class="brutal-border bg-white rounded-none p-6 relative top-28 left-28 w-72 h-48">
+              <div class="w-10 h-10 brutal-border bg-pink rounded-sm mb-3 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </div>
+              <div class="h-3 bg-black rounded-sm w-4/5 mb-2"></div>
+              <div class="h-3 bg-black rounded-sm w-3/5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="bg-cream py-16 md:py-28 border-b-[3px] border-black">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <h2 class="text-3xl md:text-5xl font-bold mb-4">Everything you need.<br>Nothing you don't.</h2>
+        <p class="text-lg text-gray-700 max-w-2xl mx-auto">Built for creators who ship, not committees who deliberate.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Feature 1 — Pink -->
+        <div class="brutal-card bg-pink rounded-none p-8 reveal" style="transition-delay: 0ms">
+          <div class="w-14 h-14 brutal-border bg-white rounded-sm mb-5 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Instant Storefront</h3>
+          <p class="text-base leading-relaxed">Your page goes live in under a minute. Drag, drop, done. Custom domains included, no dev skills needed.</p>
+        </div>
+        <!-- Feature 2 — Yellow -->
+        <div class="brutal-card bg-yellow rounded-none p-8 reveal" style="transition-delay: 80ms">
+          <div class="w-14 h-14 brutal-border bg-white rounded-sm mb-5 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Direct Payments</h3>
+          <p class="text-base leading-relaxed">Money hits your account instantly. No net-30 purgatory. You keep what you earn, minus a flat [your %] fee.</p>
+        </div>
+        <!-- Feature 3 — Green -->
+        <div class="brutal-card bg-green rounded-none p-8 reveal" style="transition-delay: 160ms">
+          <div class="w-14 h-14 brutal-border bg-white rounded-sm mb-5 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Audience Ownership</h3>
+          <p class="text-base leading-relaxed">Email list, subscriber data, purchase history — all yours. Export anytime, no lock-in, no hostage games.</p>
+        </div>
+        <!-- Feature 4 — White -->
+        <div class="brutal-card bg-white rounded-none p-8 reveal" style="transition-delay: 0ms">
+          <div class="w-14 h-14 brutal-border bg-pink rounded-sm mb-5 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Real-Time Analytics</h3>
+          <p class="text-base leading-relaxed">See who bought what, when, from where. No vanity metrics — just the numbers that move your revenue.</p>
+        </div>
+        <!-- Feature 5 — Pink -->
+        <div class="brutal-card bg-pink rounded-none p-8 reveal" style="transition-delay: 80ms">
+          <div class="w-14 h-14 brutal-border bg-white rounded-sm mb-5 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Digital Products</h3>
+          <p class="text-base leading-relaxed">eBooks, courses, templates, presets, music, code — sell any file type. Automatic delivery, zero friction.</p>
+        </div>
+        <!-- Feature 6 — Yellow -->
+        <div class="brutal-card bg-yellow rounded-none p-8 reveal" style="transition-delay: 160ms">
+          <div class="w-14 h-14 brutal-border bg-white rounded-sm mb-5 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Subscriptions</h3>
+          <p class="text-base leading-relaxed">Recurring revenue on autopilot. Memberships, newsletters, ongoing access — set it once, earn monthly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="bg-cream py-12 md:py-20 border-b-[3px] border-black">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 reveal">Three steps. That's it.</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="reveal-left" style="transition-delay: 0ms">
+          <div class="w-16 h-16 brutal-border bg-pink rounded-sm flex items-center justify-center text-3xl font-bold mb-5">1</div>
+          <h3 class="text-xl font-bold mb-2">Upload your thing</h3>
+          <p class="text-base leading-relaxed text-gray-700">PDF, ZIP, video, audio — whatever you made. Drag it in, set a price (or free), add a cover image.</p>
+        </div>
+        <div class="reveal" style="transition-delay: 100ms">
+          <div class="w-16 h-16 brutal-border bg-yellow rounded-sm flex items-center justify-center text-3xl font-bold mb-5">2</div>
+          <h3 class="text-xl font-bold mb-2">Share the link</h3>
+          <p class="text-base leading-relaxed text-gray-700">Every product gets a clean URL. Post it on Twitter, embed it in your blog, send it in a DM. Done.</p>
+        </div>
+        <div class="reveal-right" style="transition-delay: 200ms">
+          <div class="w-16 h-16 brutal-border bg-green rounded-sm flex items-center justify-center text-3xl font-bold mb-5">3</div>
+          <h3 class="text-xl font-bold mb-2">Get paid</h3>
+          <p class="text-base leading-relaxed text-gray-700">Money lands in your bank. No invoicing, no chasing, no "payment processing in 14 business days."</p>
+        </div>
+      </div>
+      <div class="text-center mt-12 reveal">
+        <div class="bounce-arrow inline-block">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="bg-yellow py-16 md:py-28 border-b-[3px] border-black">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <h2 class="text-3xl md:text-5xl font-bold mb-4">Pricing that doesn't suck.</h2>
+        <p class="text-lg max-w-xl mx-auto">No hidden fees, no "contact sales", no enterprise upsell trap. Pick one.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 items-start">
+        <!-- Free -->
+        <div class="pricing-card bg-white rounded-none p-8 reveal" style="transition-delay: 0ms">
+          <div class="text-sm font-bold uppercase tracking-wider mb-2">Free</div>
+          <div class="text-5xl font-bold mb-1">$0</div>
+          <div class="text-sm text-gray-600 mb-6">+ [your %] per transaction</div>
+          <ul class="space-y-3 mb-8 text-base">
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Unlimited products
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom landing page
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Email delivery
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Basic analytics
+            </li>
+          </ul>
+          <button class="brutal-btn bg-cream text-black w-full py-3 rounded-sm text-base">Get Started</button>
+        </div>
+        <!-- Pro — featured -->
+        <div class="pricing-card bg-pink rounded-none p-8 reveal relative" style="transition-delay: 100ms">
+          <div class="absolute -top-4 left-6 brutal-border bg-black text-white text-xs font-bold px-3 py-1 rounded-sm">POPULAR</div>
+          <div class="text-sm font-bold uppercase tracking-wider mb-2">Pro</div>
+          <div class="text-5xl font-bold mb-1">$[X]</div>
+          <div class="text-sm mb-6">per month, billed yearly</div>
+          <ul class="space-y-3 mb-8 text-base">
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Free
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Lower transaction fee
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom domain
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Advanced analytics
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Affiliates system
+            </li>
+          </ul>
+          <button class="brutal-btn bg-black text-white w-full py-3 rounded-sm text-base">Go Pro</button>
+        </div>
+        <!-- Business -->
+        <div class="pricing-card bg-white rounded-none p-8 reveal" style="transition-delay: 200ms">
+          <div class="text-sm font-bold uppercase tracking-wider mb-2">Business</div>
+          <div class="text-5xl font-bold mb-1">$[X]</div>
+          <div class="text-sm text-gray-600 mb-6">per month, billed yearly</div>
+          <ul class="space-y-3 mb-8 text-base">
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Pro
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Zero transaction fee
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Team seats
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              Priority support
+            </li>
+            <li class="flex items-start gap-2">
+              <svg class="mt-1 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              API access
+            </li>
+          </ul>
+          <button class="brutal-btn bg-cream text-black w-full py-3 rounded-sm text-base">Go Business</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="bg-green py-12 md:py-20 border-b-[3px] border-black">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="brutal-card bg-white rounded-none p-10 md:p-14 text-center reveal">
+        <svg class="mx-auto mb-6" width="48" height="48" viewBox="0 0 24 24" fill="#000"><path d="M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z"/></svg>
+        <blockquote class="text-2xl md:text-3xl font-bold leading-snug mb-6">
+          [Your customer quote goes here. Make it raw, specific, and a little unpolished — that's how real people talk.]
+        </blockquote>
+        <div class="text-base text-gray-700">— [Customer Name], [what they do]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE GRID -->
+  <section class="bg-cream py-16 md:py-24 border-b-[3px] border-black">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl md:text-5xl font-bold text-center mb-6 reveal">What people are selling.</h2>
+      <p class="text-lg text-center text-gray-700 mb-14 max-w-xl mx-auto reveal" style="transition-delay: 60ms">Real products from real creators. Not mockups — actual storefronts generating actual revenue.</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Product 1 — tall -->
+        <div class="brutal-card bg-white rounded-none overflow-hidden reveal sm:row-span-2" style="transition-delay: 0ms">
+          <div class="bg-pink h-48 sm:h-full min-h-[200px] flex items-center justify-center p-6">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="0"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="p-5">
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Video Course</div>
+            <h4 class="font-bold text-base mb-1">[Your Course Title]</h4>
+            <p class="text-sm text-gray-600">$[X]</p>
+          </div>
+        </div>
+        <!-- Product 2 -->
+        <div class="brutal-card bg-white rounded-none overflow-hidden reveal" style="transition-delay: 60ms">
+          <div class="bg-yellow h-36 flex items-center justify-center p-4">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="p-5">
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Template Pack</div>
+            <h4 class="font-bold text-base mb-1">[Your Template]</h4>
+            <p class="text-sm text-gray-600">$[X]</p>
+          </div>
+        </div>
+        <!-- Product 3 -->
+        <div class="brutal-card bg-white rounded-none overflow-hidden reveal" style="transition-delay: 120ms">
+          <div class="bg-green h-36 flex items-center justify-center p-4">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <div class="p-5">
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Music</div>
+            <h4 class="font-bold text-base mb-1">[Your Album]</h4>
+            <p class="text-sm text-gray-600">$[X]</p>
+          </div>
+        </div>
+        <!-- Product 4 -->
+        <div class="brutal-card bg-white rounded-none overflow-hidden reveal" style="transition-delay: 180ms">
+          <div class="bg-pink h-36 flex items-center justify-center p-4">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          </div>
+          <div class="p-5">
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">eBook</div>
+            <h4 class="font-bold text-base mb-1">[Your eBook]</h4>
+            <p class="text-sm text-gray-600">$[X]</p>
+          </div>
+        </div>
+        <!-- Product 5 -->
+        <div class="brutal-card bg-white rounded-none overflow-hidden reveal" style="transition-delay: 240ms">
+          <div class="bg-yellow h-36 flex items-center justify-center p-4">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="p-5">
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Code</div>
+            <h4 class="font-bold text-base mb-1">[Your Snippet]</h4>
+            <p class="text-sm text-gray-600">$[X]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="bg-pink py-16 md:py-24 border-b-[3px] border-black">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold mb-6 reveal">Stop overthinking it.</h2>
+      <p class="text-lg md:text-xl mb-10 max-w-xl mx-auto reveal" style="transition-delay: 80ms">
+        You have something people want. Put it out there. The platform takes a minute to set up and zero minutes to maintain.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 reveal" style="transition-delay: 160ms">
+        <button class="brutal-btn bg-black text-white px-10 py-4 rounded-sm text-lg">Start Selling — It's Free</button>
+      </div>
+      <!-- Fun floating elements -->
+      <div class="mt-12 flex justify-center gap-6 reveal" style="transition-delay: 240ms">
+        <div class="brutal-border bg-yellow w-16 h-16 rounded-sm flex items-center justify-center wiggle" style="animation-delay: 0s">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="brutal-border bg-green w-16 h-16 rounded-sm flex items-center justify-center wiggle" style="animation-delay: 0.5s">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="brutal-border bg-pink w-16 h-16 rounded-sm flex items-center justify-center wiggle" style="animation-delay: 1s">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-black text-white py-10 md:py-14">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-10 mb-10">
+        <div>
+          <div class="text-2xl font-bold mb-4">brutl.</div>
+          <p class="text-gray-400 text-sm leading-relaxed">The platform that gets out of your way. Built by creators, for creators.</p>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4 text-sm uppercase tracking-wider">Product</h4>
+          <ul class="space-y-2 text-gray-400 text-sm">
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Features</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Pricing</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Examples</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4 text-sm uppercase tracking-wider">Resources</h4>
+          <ul class="space-y-2 text-gray-400 text-sm">
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Blog</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Help Center</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">API Docs</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Community</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4 text-sm uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2 text-gray-400 text-sm">
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Terms</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Privacy</a></li>
+            <li><a href="#" class="hover:text-pink transition-colors duration-150">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p class="text-gray-500 text-sm">[Your Company] [Year]. All rights reserved.</p>
+        <div class="flex gap-4">
+          <a href="#" class="text-gray-500 hover:text-pink transition-colors duration-150">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-pink transition-colors duration-150">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll reveal script -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

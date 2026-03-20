@@ -1,0 +1,24 @@
+{
+  "urls": [
+    { "url": "https://lusion.co", "category": "gallery-3d" },
+    { "url": "https://paffi.it", "category": "gallery-3d" },
+    { "url": "https://pudding.cool", "category": "gallery-data" },
+    { "url": "https://gumroad.com", "category": "gallery-brutalist" },
+    { "url": "https://kalmmoments.com", "category": "gallery-wellness" },
+    { "url": "https://eyes.nasa.gov", "category": "gallery-dataviz" },
+    { "url": "https://clearstreet.io", "category": "gallery-scroll" },
+    { "url": "https://problem.studio", "category": "gallery-brutalist" },
+    { "url": "https://immersive-g.com", "category": "gallery-3d" },
+    { "url": "https://siena.film", "category": "gallery-cinematic" },
+    { "url": "https://buttermax.net", "category": "gallery-3d" },
+    { "url": "https://arcturisdata.com", "category": "gallery-medical" },
+    { "url": "https://mont-fort.com", "category": "gallery-finance" },
+    { "url": "https://kidsuper.world", "category": "gallery-gaming" },
+    { "url": "https://tryboredcow.com", "category": "gallery-cartoon" },
+    { "url": "https://oxyz3.xyz", "category": "gallery-futurist" },
+    { "url": "https://daylightcomputer.com", "category": "gallery-hardware" },
+    { "url": "https://2023.driftime.com", "category": "gallery-narrative" },
+    { "url": "https://davidwhyte.com", "category": "gallery-art" },
+    { "url": "https://ctrl.xyz", "category": "gallery-crypto" }
+  ]
+}

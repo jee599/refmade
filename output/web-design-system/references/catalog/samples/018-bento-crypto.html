@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>018 — Bento Crypto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.10);
+      --card-hover-border: rgba(168, 85, 247, 0.40);
+      --text: #fafafa;
+      --muted: #737373;
+      --accent: #a855f7;
+      --accent-blue: #3b82f6;
+      --positive: #22c55e;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Gradient text animation */
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7, #3b82f6, #a855f7);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 3s ease infinite;
+    }
+
+    /* Glassmorphism card */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: var(--card-hover-border);
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.10);
+      transform: translateY(-4px);
+    }
+
+    /* Bar chart grow animation */
+    @keyframes bar-grow {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+
+    .bar {
+      transform-origin: bottom;
+      animation: bar-grow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .bar:nth-child(1) { animation-delay: 0.1s; }
+    .bar:nth-child(2) { animation-delay: 0.2s; }
+    .bar:nth-child(3) { animation-delay: 0.3s; }
+    .bar:nth-child(4) { animation-delay: 0.4s; }
+    .bar:nth-child(5) { animation-delay: 0.5s; }
+    .bar:nth-child(6) { animation-delay: 0.6s; }
+    .bar:nth-child(7) { animation-delay: 0.7s; }
+
+    /* Pulse animation for status dots */
+    @keyframes pulse-status {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    .pulse-dot {
+      animation: pulse-status 2s ease-in-out infinite;
+    }
+
+    /* Counter animation */
+    @keyframes count-fade {
+      0% { opacity: 0.4; transform: translateY(4px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .count-up {
+      animation: count-fade 0.5s ease forwards;
+    }
+
+    /* Scroll fade-up */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Code syntax colors */
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #a855f7; }
+    .code-comment { color: #525252; }
+    .code-fn { color: #60a5fa; }
+    .code-type { color: #2dd4bf; }
+    .code-punct { color: #737373; }
+    .code-num { color: #f472b6; }
+    .code-key { color: #93c5fd; }
+    .code-bool { color: #22c55e; }
+
+    /* Subtle grid bg */
+    .grid-dots {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Glow line */
+    .accent-line {
+      height: 2px;
+      background: linear-gradient(90deg, #a855f7, transparent);
+      width: 60px;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50" style="background: rgba(10,10,10,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06);">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-14">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" stroke="#a855f7" stroke-width="1.5" fill="none"/>
+            <circle cx="8" cy="8" r="2" fill="#a855f7"/>
+          </svg>
+        </div>
+        <span class="font-heading font-bold text-sm tracking-tight">NexusProtocol</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Protocol</a>
+        <a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Ecosystem</a>
+        <a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Developers</a>
+        <a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Governance</a>
+      </div>
+      <a href="#" class="bg-purple-500 hover:bg-purple-400 text-white text-sm font-semibold px-5 py-2 rounded-full transition-colors">
+        Launch App
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 px-6 grid-dots">
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 border border-white/10 rounded-full px-4 py-1.5 mb-8">
+        <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
+        <span class="font-mono text-xs text-neutral-400">Mainnet Live — Epoch 847</span>
+      </div>
+      <h1 class="font-heading font-bold text-5xl sm:text-6xl md:text-7xl tracking-tight leading-none mb-6">
+        The Liquidity Layer<br/>
+        <span class="gradient-text">for Everything</span>
+      </h1>
+      <p class="text-neutral-400 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+        Unified cross-chain infrastructure that connects fragmented liquidity across networks into a single programmable layer.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#" class="bg-purple-500 hover:bg-purple-400 text-white font-semibold px-8 py-3 rounded-full transition-colors text-base">
+          Start Building
+        </a>
+        <a href="#" class="border border-white/15 hover:border-white/30 text-white font-medium px-8 py-3 rounded-full transition-colors text-base">
+          Read Docs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Grid -->
+  <section class="py-24 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[200px]">
+
+        <!-- Card 1: Token Price (1x1) -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between fade-up">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-500 font-mono uppercase tracking-wider">NXS / USD</span>
+            <span class="text-xs font-mono text-green-500">+12.7%</span>
+          </div>
+          <div>
+            <div class="font-mono font-bold text-3xl text-white count-up" id="price-ticker">$47.83</div>
+            <div class="font-mono text-xs text-neutral-500 mt-1">24h Vol: $[your volume]</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Mini Bar Chart (1x1) -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between fade-up">
+          <span class="text-xs text-neutral-500 font-mono uppercase tracking-wider">7D Activity</span>
+          <div class="flex items-end gap-2 h-24">
+            <div class="bar flex-1 rounded-sm" style="height: 40%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+            <div class="bar flex-1 rounded-sm" style="height: 65%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+            <div class="bar flex-1 rounded-sm" style="height: 45%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+            <div class="bar flex-1 rounded-sm" style="height: 80%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+            <div class="bar flex-1 rounded-sm" style="height: 55%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+            <div class="bar flex-1 rounded-sm" style="height: 90%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+            <div class="bar flex-1 rounded-sm" style="height: 70%; background: linear-gradient(to top, #a855f7, #7c3aed); transform: scaleY(0);"></div>
+          </div>
+        </div>
+
+        <!-- Card 3: Feature Card (2x1) -->
+        <div class="glass-card rounded-2xl p-8 sm:col-span-2 flex flex-col justify-between fade-up">
+          <div>
+            <div class="accent-line mb-4"></div>
+            <h3 class="font-heading font-bold text-xl mb-2">Cross-Chain Composability</h3>
+            <p class="text-neutral-400 text-sm leading-relaxed max-w-md">
+              Execute atomic swaps and multi-leg transactions across any supported chain in a single call. No bridges. No wrapped tokens. Native liquidity everywhere.
+            </p>
+          </div>
+          <div class="flex items-center gap-3 mt-4">
+            <span class="px-3 py-1 rounded-full text-xs font-mono border border-white/10 text-neutral-400">EVM</span>
+            <span class="px-3 py-1 rounded-full text-xs font-mono border border-white/10 text-neutral-400">Solana</span>
+            <span class="px-3 py-1 rounded-full text-xs font-mono border border-white/10 text-neutral-400">Cosmos</span>
+            <span class="px-3 py-1 rounded-full text-xs font-mono border border-white/10 text-neutral-400">Move</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Large Metric (2x1) -->
+        <div class="glass-card rounded-2xl p-8 sm:col-span-2 flex flex-col justify-center fade-up">
+          <span class="text-xs text-neutral-500 font-mono uppercase tracking-wider mb-3">Total Value Locked</span>
+          <div class="font-mono font-bold text-5xl sm:text-6xl text-white count-up" id="tvl-counter">$[your TVL]</div>
+          <p class="text-neutral-500 text-sm font-mono mt-2">across [your count] integrated protocols</p>
+        </div>
+
+        <!-- Card 5: Code Snippet (1x2 tall) -->
+        <div class="glass-card rounded-2xl p-6 row-span-2 flex flex-col fade-up">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-2.5 h-2.5 rounded-full" style="background: #FF5F57;"></span>
+            <span class="w-2.5 h-2.5 rounded-full" style="background: #FEBC2E;"></span>
+            <span class="w-2.5 h-2.5 rounded-full" style="background: #28C840;"></span>
+            <span class="font-mono text-xs text-neutral-600 ml-2">connect.ts</span>
+          </div>
+          <pre class="font-mono text-xs leading-relaxed overflow-hidden flex-1"><code><span class="code-comment">// Connect wallet</span>
+<span class="code-keyword">import</span> <span class="code-punct">{</span>
+  <span class="code-fn">NexusSDK</span>
+<span class="code-punct">}</span> <span class="code-keyword">from</span> <span class="code-string">'@nexus/sdk'</span>
+
+<span class="code-keyword">const</span> <span class="code-fn">nexus</span> <span class="code-punct">=</span>
+  <span class="code-keyword">new</span> <span class="code-fn">NexusSDK</span><span class="code-punct">({</span>
+    <span class="code-key">chains</span><span class="code-punct">:</span> <span class="code-punct">[</span>
+      <span class="code-string">'ethereum'</span><span class="code-punct">,</span>
+      <span class="code-string">'solana'</span><span class="code-punct">,</span>
+      <span class="code-string">'cosmos'</span>
+    <span class="code-punct">],</span>
+    <span class="code-key">mode</span><span class="code-punct">:</span> <span class="code-string">'mainnet'</span>
+  <span class="code-punct">})</span>
+
+<span class="code-keyword">const</span> <span class="code-fn">swap</span> <span class="code-punct">=</span>
+  <span class="code-keyword">await</span> <span class="code-fn">nexus</span><span class="code-punct">.</span><span class="code-fn">swap</span><span class="code-punct">({</span>
+    <span class="code-key">from</span><span class="code-punct">:</span> <span class="code-string">'ETH'</span><span class="code-punct">,</span>
+    <span class="code-key">to</span><span class="code-punct">:</span> <span class="code-string">'SOL'</span><span class="code-punct">,</span>
+    <span class="code-key">amount</span><span class="code-punct">:</span> <span class="code-num">1.5</span>
+  <span class="code-punct">})</span>
+
+<span class="code-comment">// tx: 0x7f3a...</span></code></pre>
+        </div>
+
+        <!-- Card 6: Integration Logos (1x1) -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between fade-up">
+          <span class="text-xs text-neutral-500 font-mono uppercase tracking-wider">Integrations</span>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#737373" stroke-width="1"/><path d="M7 10L10 7L13 10L10 13Z" fill="#737373"/></svg>
+            </div>
+            <div class="aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="2" stroke="#737373" stroke-width="1"/><circle cx="10" cy="10" r="3" fill="#737373"/></svg>
+            </div>
+            <div class="aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polygon points="10,2 18,18 2,18" stroke="#737373" stroke-width="1" fill="none"/></svg>
+            </div>
+            <div class="aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L2 10L10 18L18 10Z" stroke="#737373" stroke-width="1" fill="none"/></svg>
+            </div>
+            <div class="aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#737373" stroke-width="1"/><line x1="10" y1="2" x2="10" y2="18" stroke="#737373" stroke-width="1"/></svg>
+            </div>
+            <div class="aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" stroke="#737373" stroke-width="1" fill="none"/><rect x="7" y="7" width="6" height="6" fill="#737373"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7: Status Card (1x1) -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between fade-up">
+          <span class="text-xs text-neutral-500 font-mono uppercase tracking-wider">Network</span>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
+                <span class="font-mono text-xs text-neutral-300">Ethereum</span>
+              </div>
+              <span class="font-mono text-xs text-green-500">~12s</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot" style="animation-delay: 0.3s;"></span>
+                <span class="font-mono text-xs text-neutral-300">Solana</span>
+              </div>
+              <span class="font-mono text-xs text-green-500">~0.4s</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot" style="animation-delay: 0.6s;"></span>
+                <span class="font-mono text-xs text-neutral-300">Cosmos</span>
+              </div>
+              <span class="font-mono text-xs text-green-500">~6s</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-dot" style="animation-delay: 0.9s;"></span>
+                <span class="font-mono text-xs text-neutral-300">Sui</span>
+              </div>
+              <span class="font-mono text-xs text-yellow-500">~2s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8: Transaction Feed (2x1) -->
+        <div class="glass-card rounded-2xl p-6 sm:col-span-2 flex flex-col fade-up">
+          <span class="text-xs text-neutral-500 font-mono uppercase tracking-wider mb-4">Live Transactions</span>
+          <div class="space-y-2 flex-1 overflow-hidden">
+            <div class="flex items-center justify-between py-2 border-b border-white/5">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                <span class="font-mono text-xs text-neutral-300 truncate">0x7f3a...e4b2</span>
+              </div>
+              <span class="font-mono text-xs text-neutral-500">ETH → SOL</span>
+              <span class="font-mono text-xs text-white">2.47 ETH</span>
+              <span class="font-mono text-xs text-neutral-600">3s ago</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-white/5">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                <span class="font-mono text-xs text-neutral-300 truncate">0xab12...9fc1</span>
+              </div>
+              <span class="font-mono text-xs text-neutral-500">USDC → ATOM</span>
+              <span class="font-mono text-xs text-white">$[amount]</span>
+              <span class="font-mono text-xs text-neutral-600">7s ago</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-white/5">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                <span class="font-mono text-xs text-neutral-300 truncate">cosmos1...qm8x</span>
+              </div>
+              <span class="font-mono text-xs text-neutral-500">OSMO → ETH</span>
+              <span class="font-mono text-xs text-white">[amount] OSMO</span>
+              <span class="font-mono text-xs text-neutral-600">12s ago</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Highlight -->
+  <section class="py-20 px-6" style="background: #111111;">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-16 items-center fade-up">
+        <div>
+          <div class="accent-line mb-6"></div>
+          <h2 class="font-heading font-bold text-3xl sm:text-4xl tracking-tight mb-6">
+            Built for the<br/>multi-chain future
+          </h2>
+          <p class="text-neutral-400 leading-relaxed mb-8 max-w-md">
+            Protocol-level liquidity aggregation that works at the speed of your users. No more fragmentation. No more failed routes. One API, every chain.
+          </p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm mb-1">Atomic execution</h4>
+                <p class="text-neutral-500 text-sm">All legs succeed or none do. No stuck funds, ever.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm mb-1">MEV protection built-in</h4>
+                <p class="text-neutral-500 text-sm">Private transaction submission via encrypted mempool.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm mb-1">Sub-second finality</h4>
+                <p class="text-neutral-500 text-sm">Optimistic confirmations with cryptographic guarantees.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-8">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="w-2.5 h-2.5 rounded-full" style="background: #FF5F57;"></span>
+            <span class="w-2.5 h-2.5 rounded-full" style="background: #FEBC2E;"></span>
+            <span class="w-2.5 h-2.5 rounded-full" style="background: #28C840;"></span>
+            <span class="font-mono text-xs text-neutral-600 ml-2">response.json</span>
+          </div>
+          <pre class="font-mono text-xs leading-relaxed"><code><span class="code-punct">{</span>
+  <span class="code-key">"status"</span><span class="code-punct">:</span> <span class="code-string">"confirmed"</span><span class="code-punct">,</span>
+  <span class="code-key">"route"</span><span class="code-punct">:</span> <span class="code-punct">{</span>
+    <span class="code-key">"from"</span><span class="code-punct">:</span> <span class="code-string">"ethereum"</span><span class="code-punct">,</span>
+    <span class="code-key">"to"</span><span class="code-punct">:</span> <span class="code-string">"solana"</span><span class="code-punct">,</span>
+    <span class="code-key">"hops"</span><span class="code-punct">:</span> <span class="code-num">1</span><span class="code-punct">,</span>
+    <span class="code-key">"latency_ms"</span><span class="code-punct">:</span> <span class="code-num">847</span>
+  <span class="code-punct">},</span>
+  <span class="code-key">"amount_in"</span><span class="code-punct">:</span> <span class="code-string">"1.5 ETH"</span><span class="code-punct">,</span>
+  <span class="code-key">"amount_out"</span><span class="code-punct">:</span> <span class="code-string">"28.41 SOL"</span><span class="code-punct">,</span>
+  <span class="code-key">"slippage"</span><span class="code-punct">:</span> <span class="code-string">"0.03%"</span><span class="code-punct">,</span>
+  <span class="code-key">"mev_protected"</span><span class="code-punct">:</span> <span class="code-bool">true</span><span class="code-punct">,</span>
+  <span class="code-key">"tx_hash"</span><span class="code-punct">:</span> <span class="code-string">"0x7f3a...e4b2"</span>
+<span class="code-punct">}</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Governance / Community -->
+  <section class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-4 fade-up">
+        <div class="glass-card rounded-2xl p-8 flex flex-col">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="#a855f7" stroke-width="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="#a855f7" stroke-width="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="#a855f7" stroke-width="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="#a855f7" stroke-width="1.5"/></svg>
+          </div>
+          <h3 class="font-heading font-bold text-lg mb-2">Modular Architecture</h3>
+          <p class="text-neutral-400 text-sm leading-relaxed flex-1">
+            Plug in custom settlement layers, fee models, and routing strategies. Every component is replaceable.
+          </p>
+          <div class="mt-6 pt-4 border-t border-white/5">
+            <span class="font-mono text-xs text-purple-400">nexus.config.ts →</span>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-8 flex flex-col">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#3b82f6" stroke-width="1.5"/><path d="M10 6V10L13 13" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-heading font-bold text-lg mb-2">Real-time Indexing</h3>
+          <p class="text-neutral-400 text-sm leading-relaxed flex-1">
+            Stream cross-chain events with sub-second latency. Build reactive dApps that respond to state changes instantly.
+          </p>
+          <div class="mt-6 pt-4 border-t border-white/5">
+            <span class="font-mono text-xs text-blue-400">WebSocket API →</span>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-8 flex flex-col">
+          <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center mb-6">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10C3 6.13 6.13 3 10 3C13.87 3 17 6.13 17 10" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><path d="M17 10C17 13.87 13.87 17 10 17C6.13 17 3 13.87 3 10" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 3"/><circle cx="10" cy="10" r="2" fill="#22c55e"/></svg>
+          </div>
+          <h3 class="font-heading font-bold text-lg mb-2">Governance</h3>
+          <p class="text-neutral-400 text-sm leading-relaxed flex-1">
+            NXS token holders govern protocol parameters, fee distribution, and chain integrations through on-chain proposals.
+          </p>
+          <div class="mt-6 pt-4 border-t border-white/5">
+            <span class="font-mono text-xs text-green-400">[your proposal count] active →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 px-6">
+    <div class="max-w-3xl mx-auto text-center fade-up">
+      <h2 class="font-heading font-bold text-3xl sm:text-4xl tracking-tight mb-6">
+        Ready to build on<br/>
+        <span class="gradient-text">unified liquidity</span>?
+      </h2>
+      <p class="text-neutral-400 leading-relaxed mb-10 max-w-lg mx-auto">
+        Join the developers shipping cross-chain products with a single integration point. Get started in under five minutes.
+      </p>
+      <div class="glass-card rounded-2xl p-4 inline-flex items-center gap-3 mb-8">
+        <span class="font-mono text-sm text-neutral-400">$</span>
+        <code class="font-mono text-sm text-white">npx create-nexus-app@latest</code>
+        <button class="text-neutral-500 hover:text-white transition-colors ml-2" onclick="navigator.clipboard.writeText('npx create-nexus-app@latest')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#" class="bg-purple-500 hover:bg-purple-400 text-white font-semibold px-8 py-3 rounded-full transition-colors">
+          Start Building
+        </a>
+        <a href="#" class="border border-white/15 hover:border-white/30 text-white font-medium px-8 py-3 rounded-full transition-colors flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Star on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-white/5">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div class="col-span-2 md:col-span-1">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" stroke="#a855f7" stroke-width="1.5" fill="none"/>
+                <circle cx="8" cy="8" r="2" fill="#a855f7"/>
+              </svg>
+            </div>
+            <span class="font-heading font-bold text-sm">NexusProtocol</span>
+          </div>
+          <p class="text-neutral-600 text-xs leading-relaxed">Unified cross-chain liquidity infrastructure.</p>
+        </div>
+        <div>
+          <h5 class="font-mono text-xs uppercase tracking-wider text-neutral-500 mb-4">Protocol</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Overview</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Whitepaper</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Audit Reports</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-mono text-xs uppercase tracking-wider text-neutral-500 mb-4">Developers</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Documentation</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">SDK Reference</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-mono text-xs uppercase tracking-wider text-neutral-500 mb-4">Community</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Discord</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Twitter</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Forum</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-mono text-xs uppercase tracking-wider text-neutral-500 mb-4">Legal</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Terms</a></li>
+            <li><a href="#" class="text-sm text-neutral-400 hover:text-white transition-colors">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span class="text-xs text-neutral-600 font-mono">&copy; 2026 NexusProtocol. All rights reserved.</span>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
+          <span class="font-mono text-xs text-neutral-500">All systems operational</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Animation Script -->
+  <script>
+    // Intersection Observer for fade-up
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            // Reset for repeat on scroll
+            entry.target.classList.remove('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '-40px' }
+    );
+
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+
+    // Bar chart re-trigger on scroll
+    const barObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const bars = entry.target.querySelectorAll('.bar');
+          if (entry.isIntersecting) {
+            bars.forEach((bar) => {
+              bar.style.transform = 'scaleY(0)';
+              void bar.offsetWidth; // force reflow
+              bar.style.transform = '';
+              bar.style.animation = 'none';
+              void bar.offsetWidth;
+              bar.style.animation = '';
+            });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    document.querySelectorAll('.bar').forEach((bar) => {
+      const parent = bar.closest('.glass-card');
+      if (parent) barObserver.observe(parent);
+    });
+
+    // Simple number ticker for price
+    function animateValue(el, start, end, duration) {
+      const startTime = performance.now();
+      const prefix = '$';
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = start + (end - start) * eased;
+        el.textContent = prefix + current.toFixed(2);
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const priceEl = document.getElementById('price-ticker');
+    const priceObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateValue(priceEl, 0, 47.83, 1500);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    if (priceEl) priceObserver.observe(priceEl);
+  </script>
+
+</body>
+</html>

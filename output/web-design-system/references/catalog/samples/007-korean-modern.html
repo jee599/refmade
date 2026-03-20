@@ -14,12 +14,12 @@
             sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'sans-serif'],
           },
           colors: {
-            toss: {
+            t: {
               text: '#191f28',
-              sub: '#333d4b',
+              sub: '#4e5968',
               muted: '#8b95a1',
-              border: '#d1d6db',
-              bg: '#f2f4f6',
+              border: '#e5e8eb',
+              bg: '#f9fafb',
               blue: '#3182f6',
               dark: '#191f28',
             }
@@ -30,251 +30,227 @@
   </script>
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif; color: #191f28; }
+    body {
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+      color: #191f28;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    /* --- Reduced motion: kill all animations/transitions --- */
+    h1, h2, h3 { letter-spacing: -0.02em; }
+    p { line-height: 1.7; }
+
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
       }
       .reveal { opacity: 1 !important; transform: none !important; }
-      .reveal-left { opacity: 1 !important; transform: none !important; }
-      .reveal-right { opacity: 1 !important; transform: none !important; }
       .phone-float { animation: none !important; }
     }
 
-    /* --- Phone mockup --- */
-    .phone-frame {
-      width: 280px;
-      height: 560px;
-      border: 6px solid #191f28;
-      border-radius: 2.5rem;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-      position: relative;
-    }
-    .phone-frame::before {
-      content: '';
-      position: absolute;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 24px;
-      background: #191f28;
-      border-radius: 12px;
-      z-index: 10;
-    }
-    .phone-screen {
-      padding-top: 48px;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    /* --- Scroll-triggered reveal base states --- */
+    /* Scroll reveal */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(32px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .reveal.is-visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .reveal-left {
-      opacity: 0;
-      transform: translateX(-40px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal-left.is-visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .reveal-right {
-      opacity: 0;
-      transform: translateX(40px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal-right.is-visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
 
-    /* Hero phone: slide up + scale */
-    .reveal-phone {
-      opacity: 0;
-      transform: translateY(60px) scale(0.95);
-      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal-phone.is-visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    /* --- Phone float animation --- */
+    /* Phone float */
     @keyframes phoneFloat {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-10px); }
     }
     .phone-float {
-      animation: phoneFloat 4s ease-in-out infinite;
+      animation: phoneFloat 3s ease-in-out infinite;
     }
 
-    /* --- Phone task check-off animation --- */
-    @keyframes checkFill {
-      0% { background-color: transparent; border-color: #d1d6db; }
-      50% { background-color: transparent; border-color: #3182f6; }
-      100% { background-color: #3182f6; border-color: #3182f6; }
+    /* Phone frame */
+    .phone-frame {
+      width: 320px;
+      height: 640px;
+      border: 5px solid #191f28;
+      border-radius: 3rem;
+      overflow: hidden;
+      background: #fff;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.04),
+        0 30px 60px -15px rgba(0,0,0,0.2),
+        0 50px 100px -30px rgba(0,0,0,0.1);
+      position: relative;
     }
-    @keyframes strikethrough {
-      0% { text-decoration: none; opacity: 1; }
-      100% { text-decoration: line-through; opacity: 0.5; }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 26px;
+      background: #191f28;
+      border-radius: 13px;
+      z-index: 10;
     }
-    .task-animate-check {
-      animation: checkFill 0.6s ease-out 3s forwards;
-    }
-    .task-animate-text {
-      animation: strikethrough 0.4s ease-out 3.4s forwards;
-    }
-    @keyframes checkmarkAppear {
-      0% { opacity: 0; transform: scale(0); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    .task-animate-checkmark {
-      opacity: 0;
-      animation: checkmarkAppear 0.3s ease-out 3.5s forwards;
+    .phone-screen {
+      padding-top: 52px;
+      height: 100%;
+      overflow: hidden;
     }
 
-    /* --- Button hover --- */
-    .cta-btn {
+    /* CTA button */
+    .cta-primary {
       transition: all 0.2s ease;
     }
-    .cta-btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
+    .cta-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px -4px rgba(0,0,0,0.18);
     }
 
-    /* --- Count-up number placeholder --- */
-    .stat-number {
-      font-feature-settings: 'tnum';
+    /* Feature mockup containers */
+    .mockup-wide {
+      background: #f9fafb;
+      border-radius: 1.25rem;
+      border: 1px solid #e5e8eb;
+      overflow: hidden;
+    }
+
+    /* Subtle gradient behind hero phone */
+    .hero-glow {
+      background: radial-gradient(ellipse 600px 400px at 50% 60%, rgba(49,130,246,0.06) 0%, transparent 70%);
     }
   </style>
 </head>
-<body class="antialiased bg-white">
+<body class="bg-white">
 
   <!-- Nav -->
-  <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-toss-border/50">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="font-bold text-xl text-toss-text tracking-tight">태스크<span class="text-toss-blue">플로우</span></a>
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-toss-sub">
-        <a href="#" class="hover:text-toss-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 rounded">기능</a>
-        <a href="#" class="hover:text-toss-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 rounded">고객사례</a>
-        <a href="#" class="hover:text-toss-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 rounded">요금제</a>
+  <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl">
+    <div class="max-w-[1100px] mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-extrabold text-xl text-t-text tracking-tight">태스크플로우</a>
+      <div class="hidden md:flex items-center gap-8 text-[15px] font-medium text-t-sub">
+        <a href="#" class="hover:text-t-text transition-colors">기능</a>
+        <a href="#" class="hover:text-t-text transition-colors">요금제</a>
       </div>
-      <a href="#" class="cta-btn bg-toss-dark hover:bg-toss-sub text-white text-sm font-semibold px-5 py-2.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2">앱 다운로드</a>
+      <a href="#" class="cta-primary bg-t-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl">시작하기</a>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="pt-20 md:pt-28 pb-12 md:pb-20">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-8 md:gap-12">
-      <div class="flex-1 text-center md:text-left">
-        <p class="reveal text-toss-blue font-semibold text-sm mb-4" style="transition-delay: 0ms;">팀 협업의 새로운 기준</p>
-        <h1 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.15] text-toss-text mb-5" style="transition-delay: 200ms;">
-          일하는 방식을<br>간결하게 바꾸다
-        </h1>
-        <p class="reveal text-toss-muted text-lg leading-relaxed mb-6 max-w-md mx-auto md:mx-0" style="transition-delay: 400ms;">
-          태스크, 일정, 문서를 하나로. 팀이 함께 쓰는 업무 플랫폼.
-        </p>
-        <div class="reveal flex flex-col sm:flex-row gap-3 justify-center md:justify-start" style="transition-delay: 600ms;">
-          <a href="#" class="cta-btn bg-toss-dark hover:bg-toss-sub text-white font-semibold px-8 py-4 rounded-xl text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2">무료로 시작하기</a>
-          <a href="#" class="cta-btn text-toss-sub hover:text-toss-text font-semibold px-8 py-4 rounded-xl text-lg border border-toss-border hover:border-toss-sub focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2">데모 보기</a>
-        </div>
+  <!-- ===== HERO ===== -->
+  <section class="pt-32 md:pt-40 pb-0 relative">
+    <div class="hero-glow absolute inset-0 pointer-events-none"></div>
+    <div class="max-w-[1100px] mx-auto px-6 text-center relative z-10">
+      <!-- Badge -->
+      <p class="reveal inline-block text-t-blue text-sm font-semibold mb-6" style="transition-delay:0ms;">
+        새로운 업무 도구
+      </p>
+      <!-- Heading -->
+      <h1 class="reveal font-extrabold text-4xl md:text-6xl lg:text-7xl tracking-tight leading-[1.08] text-t-text mb-6" style="transition-delay:150ms;">
+        일하는 방식을<br>간결하게 바꾸다
+      </h1>
+      <!-- Subtitle -->
+      <p class="reveal text-t-muted text-lg md:text-xl max-w-lg mx-auto mb-10" style="transition-delay:300ms;">
+        태스크, 일정, 문서를 하나로 묶은 팀 협업 플랫폼.
+      </p>
+      <!-- Single CTA -->
+      <div class="reveal mb-16 md:mb-20" style="transition-delay:450ms;">
+        <a href="#" class="cta-primary inline-block bg-t-dark text-white font-semibold text-lg px-10 py-4 rounded-xl">
+          무료로 시작하기
+        </a>
       </div>
-      <!-- Phone mockup -->
-      <div class="flex-shrink-0 reveal-phone" style="transition-delay: 800ms;">
+      <!-- Phone mockup — centered, large -->
+      <div class="reveal flex justify-center" style="transition-delay:600ms;">
         <div class="phone-float">
           <div class="phone-frame">
             <div class="phone-screen bg-white">
-              <!-- App UI inside phone -->
-              <div class="px-5 pt-2">
+              <div class="px-5 pt-1">
+                <!-- App header -->
                 <div class="flex items-center justify-between mb-5">
-                  <span class="font-bold text-base text-toss-text">내 태스크</span>
-                  <div class="w-8 h-8 rounded-full bg-toss-blue flex items-center justify-center text-white text-xs font-bold">+</div>
+                  <div>
+                    <p class="text-[10px] text-t-muted font-medium">3월 20일 목요일</p>
+                    <p class="font-bold text-base text-t-text mt-0.5">오늘의 태스크</p>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-t-blue/10 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-t-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                  </div>
                 </div>
-                <div class="space-y-3">
-                  <!-- Completed task -->
-                  <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
-                    <div class="w-5 h-5 rounded-md border-2 border-toss-blue flex items-center justify-center" style="background-color: #3182f6;">
+                <!-- Progress bar -->
+                <div class="mb-5">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-semibold text-t-sub">진행률</span>
+                    <span class="text-[11px] font-bold text-t-blue">3/5</span>
+                  </div>
+                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-t-blue rounded-full" style="width:60%"></div>
+                  </div>
+                </div>
+                <!-- Task list -->
+                <div class="space-y-2.5">
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-t-blue bg-t-blue flex items-center justify-center">
                       <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                     </div>
-                    <div class="flex-1">
-                      <p class="text-xs font-medium text-toss-text line-through opacity-50">디자인 시안 검토</p>
-                      <p class="text-[10px] text-toss-muted">김지은 · 완료</p>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-muted line-through">디자인 시안 리뷰</p>
                     </div>
-                    <div class="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center text-[10px]">👩</div>
+                    <div class="w-5 h-5 rounded-full bg-pink-100"></div>
                   </div>
-                  <!-- Animating task: checkbox fills, text strikes through -->
-                  <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
-                    <div class="task-animate-check w-5 h-5 rounded-md border-2 border-toss-border flex items-center justify-center">
-                      <svg class="task-animate-checkmark w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-t-blue bg-t-blue flex items-center justify-center">
+                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                     </div>
-                    <div class="flex-1">
-                      <p class="task-animate-text text-xs font-medium text-toss-text">API 연동 테스트</p>
-                      <p class="text-[10px] text-toss-muted">박민수 · 오늘 마감</p>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-muted line-through">API 연동 테스트</p>
                     </div>
-                    <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px]">👨</div>
+                    <div class="w-5 h-5 rounded-full bg-blue-100"></div>
                   </div>
-                  <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
-                    <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
-                    <div class="flex-1">
-                      <p class="text-xs font-medium text-toss-text">유저 인터뷰 정리</p>
-                      <p class="text-[10px] text-toss-muted">이수진 · 내일 마감</p>
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-t-blue bg-t-blue flex items-center justify-center">
+                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                     </div>
-                    <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-[10px]">👩</div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-muted line-through">스프린트 회고 정리</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-green-100"></div>
                   </div>
-                  <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
-                    <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
-                    <div class="flex-1">
-                      <p class="text-xs font-medium text-toss-text">마케팅 보고서 작성</p>
-                      <p class="text-[10px] text-toss-muted">최현우 · 3일 후</p>
+                  <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-gray-200"></div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-text">배포 스크립트 작성</p>
+                      <p class="text-[10px] text-t-muted mt-0.5">오늘 6시 마감</p>
                     </div>
-                    <div class="w-6 h-6 rounded-full bg-yellow-100 flex items-center justify-center text-[10px]">👨</div>
+                    <div class="w-5 h-5 rounded-full bg-amber-100"></div>
                   </div>
-                  <div class="flex items-center gap-3 p-3 bg-white border border-toss-border rounded-2xl">
-                    <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
-                    <div class="flex-1">
-                      <p class="text-xs font-medium text-toss-text">주간 회의 안건 준비</p>
-                      <p class="text-[10px] text-toss-muted">나 · 금요일</p>
+                  <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-gray-200"></div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-text">주간 보고서 작성</p>
+                      <p class="text-[10px] text-t-muted mt-0.5">내일 오전</p>
                     </div>
-                    <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-[10px]">🙋</div>
+                    <div class="w-5 h-5 rounded-full bg-purple-100"></div>
                   </div>
                 </div>
-                <!-- Bottom tab bar -->
-                <div class="flex items-center justify-around mt-5 pt-3 border-t border-toss-border/50">
+                <!-- Bottom nav -->
+                <div class="flex items-center justify-around mt-4 pt-3 border-t border-gray-100">
                   <div class="text-center">
-                    <svg class="w-5 h-5 mx-auto text-toss-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
-                    <span class="text-[10px] font-medium text-toss-blue">홈</span>
+                    <div class="w-5 h-5 mx-auto rounded-md bg-t-blue/10"></div>
+                    <span class="text-[9px] font-medium text-t-blue mt-1 block">태스크</span>
                   </div>
                   <div class="text-center">
-                    <svg class="w-5 h-5 mx-auto text-toss-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                    <span class="text-[10px] text-toss-muted">일정</span>
+                    <div class="w-5 h-5 mx-auto rounded-md bg-gray-100"></div>
+                    <span class="text-[9px] text-t-muted mt-1 block">일정</span>
                   </div>
                   <div class="text-center">
-                    <svg class="w-5 h-5 mx-auto text-toss-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
-                    <span class="text-[10px] text-toss-muted">채팅</span>
+                    <div class="w-5 h-5 mx-auto rounded-md bg-gray-100"></div>
+                    <span class="text-[9px] text-t-muted mt-1 block">문서</span>
                   </div>
                   <div class="text-center">
-                    <svg class="w-5 h-5 mx-auto text-toss-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                    <span class="text-[10px] text-toss-muted">내 정보</span>
+                    <div class="w-5 h-5 mx-auto rounded-md bg-gray-100"></div>
+                    <span class="text-[9px] text-t-muted mt-1 block">설정</span>
                   </div>
                 </div>
               </div>
@@ -285,227 +261,331 @@
     </div>
   </section>
 
-  <!-- Social Proof -->
-  <section class="bg-toss-bg py-10">
-    <div class="max-w-6xl mx-auto px-6">
-      <p class="reveal text-center text-toss-muted text-sm">사전 등록 오픈 3일 만에 대기자 2,000명 돌파</p>
-    </div>
-  </section>
+  <!-- Spacer to let phone breathe -->
+  <div class="h-24 md:h-32"></div>
 
-  <!-- Feature 1 -->
-  <section class="py-16 md:py-28">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 md:gap-20">
-      <div class="flex-1 reveal-left">
-        <span class="inline-block bg-blue-50 text-toss-blue text-xs font-bold px-3 py-1 rounded-lg mb-4">태스크 관리</span>
-        <h2 class="font-bold text-2xl sm:text-4xl tracking-tight leading-[1.15] text-toss-text mb-4">할 일을 한눈에.<br>놓치는 건 없게.</h2>
-        <p class="text-toss-muted text-lg leading-relaxed max-w-md">드래그 한 번으로 우선순위를 바꾸고, 멘션으로 팀원에게 바로 공유하세요. 마감일 알림까지 자동으로.</p>
+  <!-- ===== FEATURE 1 — Task Management ===== -->
+  <section class="py-32 md:py-40">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+        <p class="reveal text-t-blue text-sm font-semibold mb-4" style="transition-delay:0ms;">태스크 관리</p>
+        <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.12] text-t-text mb-5" style="transition-delay:100ms;">
+          할 일을 한눈에.<br>놓치는 건 없게.
+        </h2>
+        <p class="reveal text-t-muted text-lg" style="transition-delay:200ms;">
+          드래그 한 번으로 우선순위를 바꾸고, 마감일 알림까지 자동으로.
+        </p>
       </div>
-      <div class="flex-shrink-0 reveal-right">
-        <div class="w-72 h-48 bg-toss-bg rounded-2xl border border-toss-border p-5 flex flex-col justify-between">
-          <div class="space-y-2">
-            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-toss-blue"></div><div class="h-3 bg-toss-border rounded-full w-32"></div></div>
-            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-amber-400"></div><div class="h-3 bg-toss-border rounded-full w-24"></div></div>
-            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-emerald-400"></div><div class="h-3 bg-toss-border rounded-full w-28"></div></div>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="flex -space-x-2">
-              <div class="w-6 h-6 rounded-full bg-pink-200 border-2 border-white"></div>
-              <div class="w-6 h-6 rounded-full bg-blue-200 border-2 border-white"></div>
-              <div class="w-6 h-6 rounded-full bg-green-200 border-2 border-white"></div>
+      <!-- Wide mockup: Kanban board -->
+      <div class="reveal mockup-wide p-6 md:p-10" style="transition-delay:300ms;">
+        <div class="grid grid-cols-3 gap-4 md:gap-6">
+          <!-- Column: To Do -->
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+              <span class="text-sm font-semibold text-t-sub">할 일</span>
+              <span class="text-xs text-t-muted ml-auto">3</span>
             </div>
-            <span class="text-xs text-toss-muted">3명 참여 중</span>
+            <div class="space-y-3">
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <p class="text-sm font-medium text-t-text mb-2">온보딩 플로우 설계</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-t-blue font-medium">디자인</span>
+                  <div class="w-4 h-4 rounded-full bg-pink-100 ml-auto"></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <p class="text-sm font-medium text-t-text mb-2">에러 핸들링 개선</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-red-50 text-red-500 font-medium">버그</span>
+                  <div class="w-4 h-4 rounded-full bg-blue-100 ml-auto"></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 shadow-sm opacity-60">
+                <p class="text-sm font-medium text-t-text mb-2">주간 회의 안건</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-gray-100 text-t-muted font-medium">기타</span>
+                  <div class="w-4 h-4 rounded-full bg-green-100 ml-auto"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Column: In Progress -->
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-2.5 h-2.5 rounded-full bg-t-blue"></div>
+              <span class="text-sm font-semibold text-t-sub">진행 중</span>
+              <span class="text-xs text-t-muted ml-auto">2</span>
+            </div>
+            <div class="space-y-3">
+              <div class="bg-white rounded-xl p-4 shadow-sm border-l-2 border-t-blue">
+                <p class="text-sm font-medium text-t-text mb-2">결제 모듈 연동</p>
+                <div class="h-1 bg-gray-100 rounded-full mb-2 overflow-hidden">
+                  <div class="h-full bg-t-blue rounded-full" style="width:70%"></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-t-blue font-medium">개발</span>
+                  <div class="flex -space-x-1 ml-auto">
+                    <div class="w-4 h-4 rounded-full bg-amber-100 border border-white"></div>
+                    <div class="w-4 h-4 rounded-full bg-blue-100 border border-white"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 shadow-sm border-l-2 border-t-blue">
+                <p class="text-sm font-medium text-t-text mb-2">푸시 알림 기획</p>
+                <div class="h-1 bg-gray-100 rounded-full mb-2 overflow-hidden">
+                  <div class="h-full bg-t-blue rounded-full" style="width:40%"></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-t-blue font-medium">기획</span>
+                  <div class="w-4 h-4 rounded-full bg-purple-100 ml-auto"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Column: Done -->
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+              <span class="text-sm font-semibold text-t-sub">완료</span>
+              <span class="text-xs text-t-muted ml-auto">4</span>
+            </div>
+            <div class="space-y-3">
+              <div class="bg-white rounded-xl p-4 shadow-sm opacity-50">
+                <p class="text-sm font-medium text-t-text line-through mb-2">랜딩페이지 배포</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-green-50 text-emerald-600 font-medium">완료</span>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 shadow-sm opacity-50">
+                <p class="text-sm font-medium text-t-text line-through mb-2">DB 스키마 설계</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-green-50 text-emerald-600 font-medium">완료</span>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 shadow-sm opacity-50">
+                <p class="text-sm font-medium text-t-text line-through mb-2">GA 이벤트 세팅</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-green-50 text-emerald-600 font-medium">완료</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Feature 2 -->
-  <section class="bg-toss-bg py-16 md:py-28">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20">
-      <div class="flex-1 reveal-right">
-        <span class="inline-block bg-blue-50 text-toss-blue text-xs font-bold px-3 py-1 rounded-lg mb-4">실시간 협업</span>
-        <h2 class="font-bold text-2xl sm:text-4xl tracking-tight leading-[1.15] text-toss-text mb-4">같이 보고,<br>같이 만들고.</h2>
-        <p class="text-toss-muted text-lg leading-relaxed max-w-md">문서, 시트, 슬라이드를 한 공간에서 동시 편집. 히스토리 걱정 없이 자유롭게 작업하세요.</p>
+  <!-- ===== FEATURE 2 — Real-time Collab ===== -->
+  <section class="bg-t-bg py-32 md:py-40">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+        <p class="reveal text-t-blue text-sm font-semibold mb-4" style="transition-delay:0ms;">실시간 협업</p>
+        <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.12] text-t-text mb-5" style="transition-delay:100ms;">
+          같이 보고,<br>같이 만들고.
+        </h2>
+        <p class="reveal text-t-muted text-lg" style="transition-delay:200ms;">
+          문서와 시트를 동시에 편집하고, 변경사항을 실시간으로 확인하세요.
+        </p>
       </div>
-      <div class="flex-shrink-0 reveal-left">
-        <div class="w-72 h-48 bg-white rounded-2xl border border-toss-border p-5 relative overflow-hidden">
-          <div class="space-y-2 mb-4">
-            <div class="h-4 bg-toss-text rounded w-40"></div>
-            <div class="h-3 bg-toss-border rounded-full w-full"></div>
-            <div class="h-3 bg-toss-border rounded-full w-3/4"></div>
-            <div class="h-3 bg-toss-border rounded-full w-5/6"></div>
-          </div>
-          <div class="absolute bottom-3 right-3 flex -space-x-1">
-            <div class="w-5 h-5 rounded-full bg-toss-blue border-2 border-white"></div>
-            <div class="w-5 h-5 rounded-full bg-rose-400 border-2 border-white"></div>
-          </div>
-          <div class="absolute top-12 left-24 w-0.5 h-5 bg-toss-blue animate-pulse"></div>
-          <div class="absolute top-16 left-48 w-0.5 h-5 bg-rose-400 animate-pulse"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Feature 3 -->
-  <section class="py-16 md:py-28">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 md:gap-20">
-      <div class="flex-1 reveal-left">
-        <span class="inline-block bg-blue-50 text-toss-blue text-xs font-bold px-3 py-1 rounded-lg mb-4">스마트 알림</span>
-        <h2 class="font-bold text-2xl sm:text-4xl tracking-tight leading-[1.15] text-toss-text mb-4">중요한 건 바로.<br>나머진 나중에.</h2>
-        <p class="text-toss-muted text-lg leading-relaxed max-w-md">AI가 알림을 분류해서 정말 필요한 것만 즉시 전달합니다. 집중 모드로 방해 없이 몰입하세요.</p>
-      </div>
-      <div class="flex-shrink-0 reveal-right">
-        <div class="w-72 space-y-2">
-          <div class="stagger-child bg-white rounded-2xl border border-toss-border p-4 flex items-center gap-3" style="transition-delay: 0ms;">
-            <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-sm">🔴</div>
-            <div class="flex-1">
-              <p class="text-xs font-semibold text-toss-text">긴급: 서버 장애 감지</p>
-              <p class="text-[10px] text-toss-muted">2분 전</p>
+      <!-- Wide mockup: Document editor -->
+      <div class="reveal mockup-wide bg-white p-6 md:p-10" style="transition-delay:300ms;">
+        <div class="max-w-2xl mx-auto">
+          <!-- Doc toolbar -->
+          <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-300"></div>
+              <div class="w-3 h-3 rounded-full bg-amber-300"></div>
+              <div class="w-3 h-3 rounded-full bg-green-300"></div>
+            </div>
+            <div class="flex-1"></div>
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-2">
+                <div class="w-6 h-6 rounded-full bg-t-blue border-2 border-white"></div>
+                <div class="w-6 h-6 rounded-full bg-rose-400 border-2 border-white"></div>
+                <div class="w-6 h-6 rounded-full bg-amber-400 border-2 border-white"></div>
+              </div>
+              <span class="text-xs text-t-muted font-medium">3명 편집 중</span>
             </div>
           </div>
-          <div class="stagger-child bg-toss-bg rounded-2xl border border-toss-border/50 p-4 flex items-center gap-3 opacity-60" style="transition-delay: 100ms;">
-            <div class="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm">💬</div>
-            <div class="flex-1">
-              <p class="text-xs font-medium text-toss-sub">팀 채팅: 점심 메뉴 투표</p>
-              <p class="text-[10px] text-toss-muted">나중에 보기</p>
+          <!-- Document content -->
+          <div class="space-y-4">
+            <div class="h-6 bg-t-text rounded w-64"></div>
+            <div class="space-y-2.5">
+              <div class="h-3.5 bg-gray-200 rounded-full w-full"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-11/12"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-4/5 relative">
+                <!-- Cursor 1 -->
+                <div class="absolute -top-1 left-[60%] w-0.5 h-5 bg-t-blue animate-pulse"></div>
+                <div class="absolute -top-5 left-[60%] text-[9px] bg-t-blue text-white px-1.5 py-0.5 rounded font-medium whitespace-nowrap">민수</div>
+              </div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-full"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-3/4 relative">
+                <!-- Cursor 2 -->
+                <div class="absolute -top-1 left-[40%] w-0.5 h-5 bg-rose-400 animate-pulse"></div>
+                <div class="absolute -top-5 left-[40%] text-[9px] bg-rose-400 text-white px-1.5 py-0.5 rounded font-medium whitespace-nowrap">지은</div>
+              </div>
             </div>
-          </div>
-          <div class="stagger-child bg-toss-bg rounded-2xl border border-toss-border/50 p-4 flex items-center gap-3 opacity-60" style="transition-delay: 200ms;">
-            <div class="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm">📋</div>
-            <div class="flex-1">
-              <p class="text-xs font-medium text-toss-sub">주간 리포트 자동 생성됨</p>
-              <p class="text-[10px] text-toss-muted">나중에 보기</p>
+            <div class="mt-6 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+              <div class="h-3.5 bg-gray-200 rounded-full w-2/3 mb-2"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-1/2"></div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- User Reviews -->
-  <section class="py-16 md:py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="reveal font-bold text-2xl sm:text-4xl tracking-tight text-center text-toss-text mb-4">실제 사용자 후기</h2>
-      <p class="reveal text-sm text-toss-muted text-center mb-12" style="transition-delay: 100ms;">앱스토어, Product Hunt, 트위터에서 수집한 리뷰</p>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Review 1 -->
-        <div class="reveal bg-white rounded-2xl border border-toss-border p-6 hover:shadow-lg transition-shadow duration-200" style="transition-delay: 0ms;">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-toss-bg flex items-center justify-center font-bold text-sm text-toss-sub">@</div>
-            <div>
-              <p class="font-semibold text-sm text-toss-text">@jpark</p>
-              <p class="text-xs text-toss-muted">시리즈A 스타트업 · PM</p>
+            <div class="space-y-2.5">
+              <div class="h-3.5 bg-gray-200 rounded-full w-full"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-5/6"></div>
             </div>
-          </div>
-          <p class="text-sm text-toss-sub leading-relaxed">"3주 만에 스프린트 속도 27% 올랐음. 칸반 뷰에서 바로 서브태스크 만들 수 있는 게 핵심. 다만 캘린더 싱크는 구글만 되고 아웃룩은 아직 안 됨."</p>
-          <div class="flex items-center justify-between mt-4">
-            <div class="flex gap-0.5 text-amber-400 text-sm">★★★★<span class="text-toss-border">★</span></div>
-            <span class="text-[11px] text-toss-muted">Product Hunt 리뷰</span>
-          </div>
-        </div>
-        <!-- Review 2 -->
-        <div class="reveal bg-white rounded-2xl border border-toss-border p-6 hover:shadow-lg transition-shadow duration-200" style="transition-delay: 150ms;">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center font-bold text-sm text-toss-blue">민</div>
-            <div>
-              <p class="font-semibold text-sm text-toss-text">민규 K.</p>
-              <p class="text-xs text-toss-muted">8인 개발팀 리드</p>
-            </div>
-          </div>
-          <p class="text-sm text-toss-sub leading-relaxed">"UI가 처음에 좀 낯선데 이틀 쓰면 적응됨. 그 뒤로는 진짜 빠름. 특히 모바일에서 코드리뷰 코멘트 바로 확인되는 거 좋고, 웹훅 설정도 깔끔함."</p>
-          <div class="flex items-center justify-between mt-4">
-            <div class="flex gap-0.5 text-amber-400 text-sm">★★★★★</div>
-            <span class="text-[11px] text-toss-muted">앱스토어 리뷰</span>
-          </div>
-        </div>
-        <!-- Review 3 -->
-        <div class="reveal bg-white rounded-2xl border border-toss-border p-6 hover:shadow-lg transition-shadow duration-200 sm:col-span-2 lg:col-span-1" style="transition-delay: 300ms;">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center font-bold text-sm text-emerald-600">은</div>
-            <div>
-              <p class="font-semibold text-sm text-toss-text">은지 L.</p>
-              <p class="text-xs text-toss-muted">마케팅 에이전시 · 팀장</p>
-            </div>
-          </div>
-          <p class="text-sm text-toss-sub leading-relaxed">"온보딩이 좀 걸리는데 적응하면 진짜 좋음. 클라이언트별 워크스페이스 분리가 되니까 6개 프로젝트 동시에 돌려도 안 헷갈림. 무료 플랜으로도 꽤 많이 됨."</p>
-          <div class="flex items-center justify-between mt-4">
-            <div class="flex gap-0.5 text-amber-400 text-sm">★★★★<span class="text-toss-border">★</span></div>
-            <span class="text-[11px] text-toss-muted">트위터 @eunji_mkt</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Download CTA -->
-  <section class="bg-toss-dark py-20">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="reveal font-bold text-2xl sm:text-4xl tracking-tight text-white mb-4">지금 시작하세요</h2>
-      <p class="reveal text-gray-400 text-lg mb-10" style="transition-delay: 100ms;">무료 플랜으로 시작하고, 팀이 커지면 업그레이드하세요.</p>
-      <div class="reveal flex flex-col sm:flex-row gap-4 justify-center" style="transition-delay: 200ms;">
-        <a href="#" class="cta-btn inline-flex items-center gap-3 bg-white text-toss-text font-semibold px-7 py-4 rounded-xl hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 focus-visible:ring-offset-toss-dark">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+  <!-- ===== FEATURE 3 — Smart Notifications ===== -->
+  <section class="py-32 md:py-40">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+        <p class="reveal text-t-blue text-sm font-semibold mb-4" style="transition-delay:0ms;">스마트 알림</p>
+        <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.12] text-t-text mb-5" style="transition-delay:100ms;">
+          중요한 건 바로.<br>나머진 조용히.
+        </h2>
+        <p class="reveal text-t-muted text-lg" style="transition-delay:200ms;">
+          AI가 알림을 분류해서 정말 필요한 것만 즉시 전달합니다.
+        </p>
+      </div>
+      <!-- Wide mockup: Notification center -->
+      <div class="reveal mockup-wide p-6 md:p-10" style="transition-delay:300ms;">
+        <div class="max-w-xl mx-auto">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-sm font-bold text-t-text">알림 센터</span>
+            <span class="text-[11px] text-t-muted ml-auto">지금</span>
+          </div>
+          <!-- Urgent notification -->
+          <div class="bg-white rounded-2xl p-5 mb-3 shadow-sm border border-gray-100">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-red-50 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-t-text mb-0.5">서버 응답 속도 저하 감지</p>
+                <p class="text-xs text-t-muted">p95 레이턴시 800ms 초과 -- 확인이 필요합니다</p>
+              </div>
+              <span class="text-[10px] text-red-500 font-semibold bg-red-50 px-2 py-1 rounded-md flex-shrink-0">긴급</span>
+            </div>
+          </div>
+          <!-- Normal notification -->
+          <div class="bg-white rounded-2xl p-5 mb-3 shadow-sm border border-gray-100">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-5 h-5 text-t-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-t-text mb-0.5">민수님이 댓글을 남겼습니다</p>
+                <p class="text-xs text-t-muted">"결제 모듈 연동" 태스크에 새 코멘트</p>
+              </div>
+              <span class="text-[10px] text-t-muted flex-shrink-0">5분 전</span>
+            </div>
+          </div>
+          <!-- Muted notifications -->
+          <div class="bg-gray-50 rounded-2xl p-5 opacity-50">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-gray-100 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-5 h-5 text-t-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-t-sub mb-0.5">조용한 알림 2건</p>
+                <p class="text-xs text-t-muted">팀 채팅, 주간 리포트 생성 -- 나중에 확인</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Social Proof — one line ===== -->
+  <section class="pb-8">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <p class="reveal text-center text-t-muted text-sm">사전 등록 3일 만에 대기자 [N]명</p>
+    </div>
+  </section>
+
+  <!-- ===== Reviews ===== -->
+  <section class="py-24 md:py-32">
+    <div class="max-w-[900px] mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+        <div class="reveal" style="transition-delay:0ms;">
+          <p class="text-xl md:text-2xl font-medium text-t-text leading-relaxed mb-6">
+            "3주 만에 스프린트 속도 27% 올랐어요. 칸반 뷰에서 서브태스크 바로 만드는 게 핵심인데, 캘린더 싱크는 아직 구글만 돼서 아쉬움."
+          </p>
+          <div>
+            <p class="text-sm font-semibold text-t-text">@jpark</p>
+            <p class="text-sm text-t-muted">시리즈A 스타트업 PM -- Product Hunt</p>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay:150ms;">
+          <p class="text-xl md:text-2xl font-medium text-t-text leading-relaxed mb-6">
+            "클라이언트별 워크스페이스 분리가 되니까 6개 프로젝트 동시에 돌려도 안 헷갈려요. 무료 플랜으로도 꽤 많이 됩니다."
+          </p>
+          <div>
+            <p class="text-sm font-semibold text-t-text">은지 L.</p>
+            <p class="text-sm text-t-muted">마케팅 에이전시 팀장 -- 앱스토어</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="bg-t-dark py-24 md:py-32">
+    <div class="max-w-[800px] mx-auto px-6 text-center">
+      <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight text-white leading-[1.12] mb-5">
+        지금 시작하세요
+      </h2>
+      <p class="reveal text-gray-400 text-lg mb-12" style="transition-delay:100ms;">
+        무료 플랜으로 시작하고, 팀이 커지면 업그레이드하세요.
+      </p>
+      <div class="reveal mb-10" style="transition-delay:200ms;">
+        <a href="#" class="cta-primary inline-block bg-white text-t-text font-semibold text-lg px-10 py-4 rounded-xl hover:bg-gray-100">
+          무료로 시작하기
+        </a>
+      </div>
+      <div class="reveal flex justify-center gap-4" style="transition-delay:300ms;">
+        <a href="#" class="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm font-medium transition-colors">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
           App Store
         </a>
-        <a href="#" class="cta-btn inline-flex items-center gap-3 bg-white text-toss-text font-semibold px-7 py-4 rounded-xl hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 focus-visible:ring-offset-toss-dark">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 1.328c.864.5.864 1.828 0 2.328l-2.302 1.328-2.536-2.536 2.536-2.448zM5.864 3.458L16.8 9.79l-2.302 2.302-8.635-8.635z"/></svg>
+        <span class="text-gray-600">|</span>
+        <a href="#" class="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm font-medium transition-colors">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 1.328c.864.5.864 1.828 0 2.328l-2.302 1.328-2.536-2.536 2.536-2.448zM5.864 3.458L16.8 9.79l-2.302 2.302-8.635-8.635z"/></svg>
           Google Play
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="bg-toss-dark py-12 border-t border-gray-800">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="grid sm:grid-cols-4 gap-8 mb-10">
-        <div>
-          <h4 class="font-bold text-white mb-4">제품</h4>
-          <ul class="space-y-2 text-sm text-gray-400">
-            <li><a href="#" class="hover:text-white transition-colors duration-200">기능 소개</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">요금제</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">업데이트</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold text-white mb-4">고객</h4>
-          <ul class="space-y-2 text-sm text-gray-400">
-            <li><a href="#" class="hover:text-white transition-colors duration-200">고객사례</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">도움말</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">커뮤니티</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold text-white mb-4">회사</h4>
-          <ul class="space-y-2 text-sm text-gray-400">
-            <li><a href="#" class="hover:text-white transition-colors duration-200">소개</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">채용</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">블로그</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold text-white mb-4">법적 고지</h4>
-          <ul class="space-y-2 text-sm text-gray-400">
-            <li><a href="#" class="hover:text-white transition-colors duration-200">이용약관</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">개인정보처리방침</a></li>
-          </ul>
+  <!-- ===== Footer ===== -->
+  <footer class="bg-t-dark py-12 border-t border-gray-800">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <a href="#" class="font-extrabold text-lg text-white tracking-tight">태스크플로우</a>
+        <div class="flex gap-6 text-sm text-gray-400">
+          <a href="#" class="hover:text-white transition-colors">이용약관</a>
+          <a href="#" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <a href="#" class="hover:text-white transition-colors">고객센터</a>
         </div>
       </div>
-      <div class="border-t border-gray-800 pt-6 text-sm text-gray-500 text-center">
-        &copy; 2026 태스크플로우 주식회사. All rights reserved.
+      <div class="mt-8 text-sm text-gray-600 text-center md:text-left">
+        &copy; 2026 태스크플로우 주식회사
       </div>
     </div>
   </footer>
 
-  <!-- Scroll-triggered animation script -->
+  <!-- Scroll reveal script -->
   <script>
     (function() {
-      // Respect prefers-reduced-motion
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) {
-        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-phone').forEach(function(el) {
+        document.querySelectorAll('.reveal').forEach(function(el) {
           el.classList.add('is-visible');
         });
         return;
@@ -518,43 +598,11 @@
             observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-phone').forEach(function(el) {
+      document.querySelectorAll('.reveal').forEach(function(el) {
         observer.observe(el);
       });
-
-      // Stagger children within Feature 3 notification cards
-      var staggerObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            var children = entry.target.querySelectorAll('.stagger-child');
-            children.forEach(function(child, i) {
-              child.style.opacity = '0';
-              child.style.transform = 'translateY(20px)';
-              child.style.transition = 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
-              child.style.transitionDelay = (i * 120) + 'ms';
-              requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                  child.style.opacity = '';
-                  child.style.transform = 'translateY(0)';
-                });
-              });
-            });
-            staggerObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-
-      var notifContainer = document.querySelector('.w-72.space-y-2');
-      if (notifContainer) {
-        // Hide stagger children initially
-        notifContainer.querySelectorAll('.stagger-child').forEach(function(child) {
-          child.style.opacity = '0';
-          child.style.transform = 'translateY(20px)';
-        });
-        staggerObserver.observe(notifContainer);
-      }
     })();
   </script>
 

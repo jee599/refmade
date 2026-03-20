@@ -64,17 +64,6 @@
       animation: keystrokePulse 0.35s ease-out forwards;
     }
 
-    /* Hero response fade-in (controlled by JS) */
-    .hero-response {
-      opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .hero-response.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     /* Scroll reveal */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(24px); }
@@ -127,7 +116,6 @@
         transition-duration: 0.01ms !important;
       }
       .reveal, .reveal-left, .reveal-right, .reveal-line { opacity: 1; transform: none; }
-      .hero-response { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -179,15 +167,11 @@
             <!-- Code with typing — starts empty, JS fills it -->
             <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto typing-code-area" id="heroCodeArea" style="position:relative;">
             </div>
-            <!-- Response fades in after typing -->
-            <div class="hero-response border-t border-border p-5 bg-[#0d0d0d]" id="heroResponse">
+            <!-- Response typing area — types simultaneously with request -->
+            <div class="border-t border-border p-5 bg-[#0d0d0d]" id="heroResponseWrapper">
               <p class="text-xs font-mono text-muted mb-3"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5"></span>Response — 143ms</p>
-              <pre class="font-mono text-sm leading-relaxed text-[#a3a3a3]"><code>{
-  <span class="syn-str">"type"</span>: <span class="syn-str">"limitation_of_liability"</span>,
-  <span class="syn-str">"confidence"</span>: <span class="syn-num">0.97</span>,
-  <span class="syn-str">"entities"</span>: [<span class="syn-str">"Party A"</span>, <span class="syn-str">"Party B"</span>],
-  <span class="syn-str">"risk_level"</span>: <span class="syn-str">"medium"</span>
-}</code></pre>
+              <div class="font-mono text-sm leading-relaxed overflow-x-auto typing-code-area" id="heroResponseArea" style="position:relative;">
+              </div>
             </div>
           </div>
         </div>
@@ -744,13 +728,23 @@
         });
       }
 
-      // ─── Hero code lines ───
+      // ─── Hero code lines (request) ───
       var heroLines = [
         { text: 'const response = await nexus.analyze({', delay: 0 },
         { text: '  model: "nexus-v4",', delay: 300 },
         { text: '  input: "Classify this contract clause",', delay: 300 },
         { text: '  schema: ClauseSchema,', delay: 300 },
         { text: '});', delay: 300 }
+      ];
+
+      // ─── Hero response lines (types simultaneously with request) ───
+      var heroResponseLines = [
+        { text: '{', delay: 0 },
+        { text: '  "type": "limitation_of_liability",', delay: 200 },
+        { text: '  "confidence": 0.97,', delay: 200 },
+        { text: '  "entities": ["Party A", "Party B"],', delay: 200 },
+        { text: '  "risk_level": "medium"', delay: 200 },
+        { text: '}', delay: 200 }
       ];
 
       // ─── "See it in action" request lines ───
@@ -788,7 +782,8 @@
       if (reducedMotion) {
         var heroArea = document.getElementById('heroCodeArea');
         showCodeImmediate(heroArea, heroLines);
-        document.getElementById('heroResponse').classList.add('visible');
+        var heroRespArea = document.getElementById('heroResponseArea');
+        showCodeImmediate(heroRespArea, heroResponseLines);
 
         var actionArea = document.getElementById('actionCodeArea');
         showCodeImmediate(actionArea, actionRequestLines);
@@ -807,40 +802,45 @@
         entries.forEach(function(entry) {
           if (!entry.isIntersecting) return;
 
-          // Hero code area
+          // Hero section — request and response type simultaneously
           if (entry.target.id === 'heroCodeArea' && !heroTyped) {
             heroTyped = true;
-            var anim = createTypingAnimation(entry.target, heroLines, {
+            var reqAnim = createTypingAnimation(entry.target, heroLines, {
               baseSpeed: 30,
               speedVariance: 30,
-              onComplete: function() {
-                document.getElementById('heroResponse').classList.add('visible');
-              }
+              onComplete: function() {}
             });
-            anim.start(500);
+            var heroRespArea = document.getElementById('heroResponseArea');
+            var respAnim = createTypingAnimation(heroRespArea, heroResponseLines, {
+              baseSpeed: 35,
+              speedVariance: 25,
+              onComplete: function() {}
+            });
+            // Fire both at the same time
+            reqAnim.start(500);
+            respAnim.start(500);
             typingObserver.unobserve(entry.target);
           }
 
-          // Action request code area
+          // "See it in action" section — request and response type simultaneously
           if (entry.target.id === 'actionCodeArea' && !actionTyped) {
             actionTyped = true;
-            var anim = createTypingAnimation(entry.target, actionRequestLines, {
+            var reqAnim = createTypingAnimation(entry.target, actionRequestLines, {
               baseSpeed: 15,
               speedVariance: 10,
+              onComplete: function() {}
+            });
+            var responseArea = document.getElementById('actionResponseArea');
+            var respAnim = createTypingAnimation(responseArea, actionResponseLines, {
+              baseSpeed: 18,
+              speedVariance: 12,
               onComplete: function() {
-                // After request typed, type the response
-                var responseArea = document.getElementById('actionResponseArea');
-                var respAnim = createTypingAnimation(responseArea, actionResponseLines, {
-                  baseSpeed: 12,
-                  speedVariance: 8,
-                  onComplete: function() {
-                    document.getElementById('actionTokenFooter').style.opacity = '1';
-                  }
-                });
-                respAnim.start(400);
+                document.getElementById('actionTokenFooter').style.opacity = '1';
               }
             });
-            anim.start(300);
+            // Fire both at the same time
+            reqAnim.start(300);
+            respAnim.start(300);
             typingObserver.unobserve(entry.target);
           }
         });

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — AI-Powered Project Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --bg: #09090b;
+      --text: #fafafa;
+      --subtle-bg: #18181b;
+      --border: #27272a;
+      --muted: #a1a1aa;
+      --accent: #10b981;
+      --accent-dim: rgba(16, 185, 129, 0.08);
+      --accent-glow: rgba(16, 185, 129, 0.15);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    .grid-pattern {
+      background-image:
+        linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* Terminal title bar dots */
+    .term-dot-red { background-color: #FF5F57; }
+    .term-dot-yellow { background-color: #FEBC2E; }
+    .term-dot-green { background-color: #28C840; }
+
+    /* Syntax highlighting */
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #10b981; }
+    .code-comment { color: #52525b; }
+    .code-fn { color: #60a5fa; }
+    .code-const { color: #e879f9; }
+    .code-type { color: #2dd4bf; }
+    .code-punct { color: #71717a; }
+    .code-num { color: #f472b6; }
+    .code-key { color: #93c5fd; }
+    .code-bool { color: #fbbf24; }
+
+    /* Subtle pulse on accent elements */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .pulse-dot {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    /* Grid line scan animation */
+    @keyframes grid-scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    .grid-scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(16, 185, 129, 0.03) 50%,
+        transparent 100%
+      );
+      animation: grid-scan 8s linear infinite;
+      pointer-events: none;
+    }
+
+    /* Cursor blink */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .cursor-blink {
+      animation: blink 1.2s step-end infinite;
+    }
+
+    /* Fade in on scroll */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .fade-up { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 border-b" style="background-color: rgba(9,9,11,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-color: var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 font-heading text-lg font-bold" style="color: var(--text);">
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg" style="background-color: var(--accent);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#09090b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          TaskFlow
+        </a>
+
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#features" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Features</a>
+          <a href="#docs" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Docs</a>
+          <a href="#pricing" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Pricing</a>
+          <a href="#" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Changelog</a>
+          <a href="#cta" class="rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #09090b;">
+            Get Started
+          </a>
+        </div>
+
+        <button class="rounded-lg p-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
+        <a href="#features" class="block rounded-lg px-3 py-2 text-sm" style="color: var(--muted);">Features</a>
+        <a href="#docs" class="block rounded-lg px-3 py-2 text-sm" style="color: var(--muted);">Docs</a>
+        <a href="#pricing" class="block rounded-lg px-3 py-2 text-sm" style="color: var(--muted);">Pricing</a>
+        <a href="#cta" class="mt-2 block rounded-lg px-3 py-2 text-center text-sm font-medium" style="background-color: var(--accent); color: #09090b;">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero: Split — text left, terminal right -->
+    <section class="grid-pattern relative overflow-hidden py-28" style="background-color: var(--bg);">
+      <div class="grid-scan-line" aria-hidden="true"></div>
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="grid items-center gap-12 lg:grid-cols-2">
+          <div class="fade-up">
+            <span class="mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs font-medium" style="border-color: var(--border); color: var(--accent); background-color: var(--accent-dim);">
+              <span class="h-1.5 w-1.5 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+              v2.0 now available
+            </span>
+
+            <h1 class="font-heading text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl" style="color: var(--text);">
+              Project management<br>
+              that <span style="color: var(--accent);">thinks</span> for you
+            </h1>
+
+            <p class="mt-6 max-w-lg text-lg leading-relaxed" style="color: var(--muted);">
+              AI-powered project management that learns your team's workflow and automates repetitive tasks. Stop managing work. Start shipping it.
+            </p>
+
+            <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+              <a href="#cta" class="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #09090b;">
+                Start Building Free
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+              <a href="#docs" class="inline-flex items-center justify-center gap-2 rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+                View Docs
+              </a>
+            </div>
+
+            <!-- Install command -->
+            <div class="mt-8 inline-flex items-center gap-3 rounded-lg border px-4 py-2.5 font-mono text-sm" style="border-color: var(--border); background-color: var(--subtle-bg);">
+              <span style="color: var(--accent);">$</span>
+              <span style="color: var(--text);">npx create-taskflow@latest</span>
+              <button class="ml-2 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" style="color: var(--muted);" aria-label="Copy command">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Terminal mockup -->
+          <div class="fade-up overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: #0c0c0e; box-shadow: 0 0 80px rgba(16, 185, 129, 0.06);">
+            <!-- Terminal title bar -->
+            <div class="flex items-center gap-2 border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
+              <span class="h-3 w-3 rounded-full term-dot-red"></span>
+              <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+              <span class="h-3 w-3 rounded-full term-dot-green"></span>
+              <span class="ml-3 font-mono text-xs" style="color: var(--muted);">taskflow — ~/projects/my-app</span>
+            </div>
+            <!-- Terminal content -->
+            <div class="p-5 font-mono text-sm leading-loose">
+              <div><span style="color: var(--accent);">~/projects/my-app</span> <span style="color: var(--muted);">on</span> <span style="color: #c084fc;">main</span></div>
+              <div><span style="color: var(--accent);">&#x276F;</span> <span style="color: var(--text);">npx create-taskflow@latest</span></div>
+              <div class="mt-2" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Initializing TaskFlow v2.0.3...
+              </div>
+              <div style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Connected to GitHub (3 repos detected)
+              </div>
+              <div style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> AI engine calibrated (47ms latency)
+              </div>
+              <div style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> 12 workflow patterns learned
+              </div>
+              <div class="mt-2" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Dashboard → <span style="color: var(--accent);">http://localhost:3400</span>
+              </div>
+              <div class="mt-3">
+                <span style="color: var(--accent);">~/projects/my-app</span> <span style="color: var(--muted);">on</span> <span style="color: #c084fc;">main</span>
+              </div>
+              <div><span style="color: var(--accent);">&#x276F;</span> <span class="cursor-blink" style="color: var(--text);">&#9608;</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="py-12" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p class="mb-8 text-center font-mono text-xs font-medium uppercase tracking-wider" style="color: var(--muted);">
+          Trusted by engineering teams at
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          <span class="font-heading text-lg font-semibold opacity-40 transition-opacity duration-200 hover:opacity-80" style="color: var(--muted);">Vercel</span>
+          <span class="font-heading text-lg font-semibold opacity-40 transition-opacity duration-200 hover:opacity-80" style="color: var(--muted);">Stripe</span>
+          <span class="font-heading text-lg font-semibold opacity-40 transition-opacity duration-200 hover:opacity-80" style="color: var(--muted);">Linear</span>
+          <span class="font-heading text-lg font-semibold opacity-40 transition-opacity duration-200 hover:opacity-80" style="color: var(--muted);">Supabase</span>
+          <span class="font-heading text-lg font-semibold opacity-40 transition-opacity duration-200 hover:opacity-80" style="color: var(--muted);">Planetscale</span>
+          <span class="font-heading text-lg font-semibold opacity-40 transition-opacity duration-200 hover:opacity-80" style="color: var(--muted);">Railway</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features: Bento Grid -->
+    <section id="features" class="py-20" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Built for how developers actually work</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Every feature designed with your CLI, your IDE, and your Git workflow in mind.</p>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Card 1: Large -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 sm:col-span-2 fade-up" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">AI Workflow Engine</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">TaskFlow observes how your team moves tasks, assigns work, and ships features. After 48 hours, it starts automating the patterns it finds. No manual rules needed.</p>
+            <!-- Mini terminal -->
+            <div class="mt-4 rounded-lg border p-3 font-mono text-xs" style="border-color: var(--border); background-color: var(--bg);">
+              <span style="color: var(--accent);">&#x276F;</span> <span style="color: var(--muted);">3 workflows learned from your last 50 tasks</span>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">Git-Native Sync</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Tasks update automatically when PRs merge, branches are created, or commits reference issues. Zero context switching.</p>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">API-First Design</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Full REST and GraphQL APIs. Build custom integrations, dashboards, or CLI tools on top of TaskFlow.</p>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">SOC 2 Compliant</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Enterprise-grade security with SSO, RBAC, audit logs, and end-to-end encryption. Your data stays yours.</p>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">Smart Analytics</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Cycle time, throughput, bottleneck detection. Know exactly where your sprint is stuck before standup.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Example: API Call + Response -->
+    <section id="docs" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Ship in minutes, not meetings</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">A few lines of code to automate your entire project lifecycle.</p>
+        </div>
+
+        <div class="grid items-start gap-6 lg:grid-cols-2 fade-up">
+          <!-- Request code block -->
+          <div>
+            <div class="overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: var(--bg);">
+              <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
+                <div class="flex items-center gap-2">
+                  <span class="h-3 w-3 rounded-full term-dot-red"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-green"></span>
+                  <span class="ml-3 font-mono text-xs" style="color: var(--muted);">api-example.ts</span>
+                </div>
+                <span class="inline-flex items-center rounded-full px-2 py-0.5 font-mono text-xs" style="color: var(--accent); background-color: var(--accent-dim);">TypeScript</span>
+              </div>
+              <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed"><code><span class="code-keyword">import</span> <span class="code-punct">{</span> <span class="code-type">TaskFlow</span> <span class="code-punct">}</span> <span class="code-keyword">from</span> <span class="code-string">'@taskflow/sdk'</span>
+
+<span class="code-keyword">const</span> <span class="code-const">tf</span> <span class="code-punct">=</span> <span class="code-keyword">new</span> <span class="code-fn">TaskFlow</span><span class="code-punct">({</span>
+  <span class="code-key">apiKey</span><span class="code-punct">:</span> process<span class="code-punct">.</span>env<span class="code-punct">.</span><span class="code-const">TASKFLOW_KEY</span><span class="code-punct">,</span>
+  <span class="code-key">ai</span><span class="code-punct">:</span> <span class="code-string">'auto'</span>
+<span class="code-punct">})</span>
+
+<span class="code-comment">// Create sprint from GitHub milestone</span>
+<span class="code-keyword">const</span> <span class="code-const">sprint</span> <span class="code-punct">=</span> <span class="code-keyword">await</span> tf<span class="code-punct">.</span><span class="code-fn">createSprint</span><span class="code-punct">({</span>
+  <span class="code-key">source</span><span class="code-punct">:</span> <span class="code-string">'github'</span><span class="code-punct">,</span>
+  <span class="code-key">milestone</span><span class="code-punct">:</span> <span class="code-string">'v2.1'</span><span class="code-punct">,</span>
+  <span class="code-key">autoAssign</span><span class="code-punct">:</span> <span class="code-bool">true</span><span class="code-punct">,</span>
+  <span class="code-key">optimize</span><span class="code-punct">:</span> <span class="code-string">'velocity'</span>
+<span class="code-punct">})</span>
+
+<span class="code-comment">// AI distributes by capacity + history</span>
+<span class="code-keyword">const</span> <span class="code-const">plan</span> <span class="code-punct">=</span> <span class="code-keyword">await</span> sprint<span class="code-punct">.</span><span class="code-fn">optimize</span><span class="code-punct">()</span></code></pre>
+            </div>
+          </div>
+
+          <!-- Response block -->
+          <div>
+            <div class="overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: var(--bg);">
+              <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
+                <div class="flex items-center gap-2">
+                  <span class="h-3 w-3 rounded-full term-dot-red"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-green"></span>
+                  <span class="ml-3 font-mono text-xs" style="color: var(--muted);">response.json</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-xs" style="color: var(--accent); background-color: var(--accent-dim);">
+                  <span class="h-1.5 w-1.5 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+                  200 OK
+                </span>
+              </div>
+              <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed"><code><span class="code-punct">{</span>
+  <span class="code-key">"id"</span><span class="code-punct">:</span> <span class="code-string">"spr_8x2kf9a"</span><span class="code-punct">,</span>
+  <span class="code-key">"status"</span><span class="code-punct">:</span> <span class="code-string">"active"</span><span class="code-punct">,</span>
+  <span class="code-key">"milestone"</span><span class="code-punct">:</span> <span class="code-string">"v2.1"</span><span class="code-punct">,</span>
+  <span class="code-key">"tasks"</span><span class="code-punct">:</span> <span class="code-num">12</span><span class="code-punct">,</span>
+  <span class="code-key">"assigned_to"</span><span class="code-punct">:</span> <span class="code-num">4</span><span class="code-punct">,</span>
+  <span class="code-key">"ai_confidence"</span><span class="code-punct">:</span> <span class="code-num">0.94</span><span class="code-punct">,</span>
+  <span class="code-key">"estimated_days"</span><span class="code-punct">:</span> <span class="code-num">8</span><span class="code-punct">,</span>
+  <span class="code-key">"optimizations"</span><span class="code-punct">: [</span>
+    <span class="code-string">"Moved TF-42 to @alex (capacity)"</span><span class="code-punct">,</span>
+    <span class="code-string">"Parallelized TF-38 + TF-39"</span><span class="code-punct">,</span>
+    <span class="code-string">"Flagged TF-45 as blocker"</span>
+  <span class="code-punct">],</span>
+  <span class="code-key">"latency_ms"</span><span class="code-punct">:</span> <span class="code-num">47</span>
+<span class="code-punct">}</span></code></pre>
+            </div>
+
+            <!-- Latency stat -->
+            <div class="mt-4 rounded-lg border p-4" style="border-color: var(--border); background-color: var(--bg);">
+              <div class="flex items-center gap-2 font-mono text-xs" style="color: var(--muted);">
+                <span class="h-2 w-2 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+                Response time
+              </div>
+              <p class="mt-1 font-mono text-2xl font-bold" style="color: var(--accent);">~47ms <span class="text-sm font-normal" style="color: var(--muted);">avg latency</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-20" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">From zero to automated in 3 steps</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">No lengthy onboarding. Connect, configure, ship.</p>
+        </div>
+
+        <div class="relative grid gap-8 sm:grid-cols-3 fade-up">
+          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background: linear-gradient(90deg, transparent, var(--accent), transparent);" aria-hidden="true"></div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--accent); border: 2px solid var(--accent);">01</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Install the SDK</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">One npm install. One env variable. You're connected to TaskFlow's engine in under 60 seconds.</p>
+          </div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--accent); border: 2px solid var(--border);">02</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Define triggers</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Set up events like PR merges, deploy completions, or Slack commands. Use code or the visual builder.</p>
+          </div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--accent); border: 2px solid var(--border);">03</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Watch AI learn</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">TaskFlow studies your patterns for 48 hours, then suggests automations. Approve once, run forever.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Predictable pricing. No per-seat tax.</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Start free. Scale when you're ready. No credit card required.</p>
+        </div>
+
+        <div class="grid items-start gap-6 sm:grid-cols-3 fade-up">
+          <!-- Starter -->
+          <article class="group rounded-lg border p-8 transition-all duration-200 hover:border-zinc-600" style="border-color: var(--border); background-color: var(--bg);">
+            <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">Starter</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For side projects and small teams.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">$0</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Up to 3 projects
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                5 team members
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                1,000 API calls/mo
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Community support
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+              Get Started Free
+            </a>
+          </article>
+
+          <!-- Pro (highlighted) -->
+          <article class="group rounded-lg border-2 p-8 transition-all duration-200 sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
+            <div class="flex items-center justify-between">
+              <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--accent);">Pro</h3>
+              <span class="rounded-full px-2.5 py-0.5 font-mono text-xs font-medium" style="background-color: var(--accent); color: #09090b;">Popular</span>
+            </div>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For teams shipping real products.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">$29</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited projects
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited members
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                100K API calls/mo
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                AI workflow automation
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Priority support
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Custom integrations
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #09090b;">
+              Start Free Trial
+            </a>
+          </article>
+
+          <!-- Enterprise -->
+          <article class="group rounded-lg border p-8 transition-all duration-200 hover:border-zinc-600" style="border-color: var(--border); background-color: var(--bg);">
+            <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">Enterprise</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For orgs with advanced needs.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">Custom</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Everything in Pro
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited API calls
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                SSO &amp; SAML
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                SLA guarantee
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Audit logs
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Dedicated support
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+              Contact Sales
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="py-24" style="background-color: var(--accent);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: #09090b;">
+            Stop managing. Start shipping.
+          </h2>
+          <p class="mt-4 text-base" style="color: #09090b; opacity: 0.7;">
+            Join 2,400+ engineering teams already automating their workflows with TaskFlow. Free to start, no credit card required.
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#" class="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" style="background-color: #09090b; color: #fafafa;">
+              Get Started Free
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="#" class="inline-flex items-center gap-2 rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-900" style="border-color: rgba(9,9,11,0.3); color: #09090b;">
+              Star on GitHub
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-16" style="background-color: #09090b; border-top: 1px solid var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="lg:col-span-1">
+          <span class="flex items-center gap-2 font-heading text-lg font-bold" style="color: var(--text);">
+            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background-color: var(--accent);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#09090b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </span>
+            TaskFlow
+          </span>
+          <p class="mt-3 text-sm" style="color: var(--muted);">AI-powered project management for teams that ship.</p>
+        </div>
+
+        <nav aria-label="Product">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Product</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Features</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Pricing</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Changelog</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Roadmap</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Developers">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Developers</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Documentation</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">API Reference</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">SDKs</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Status</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Company">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Company</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">About</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Blog</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Careers</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Legal">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Legal</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Privacy</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Terms</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Security</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="mt-12 border-t pt-8" style="border-color: var(--border);">
+        <p class="text-center text-sm" style="color: var(--muted); opacity: 0.5;">&copy; 2026 TaskFlow, Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll fade-in observer -->
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — AI-Powered Project Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --subtle-bg: #f5f5f5;
+      --border: #e5e5e5;
+      --muted: #737373;
+      --accent: #000000;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    .dot-pattern {
+      background-image: radial-gradient(circle, #d4d4d4 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+    .font-body { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background-color: var(--accent);
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+
+    @keyframes bounce-chevron {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(8px); opacity: 1; }
+    }
+    .scroll-indicator {
+      animation: bounce-chevron 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="font-body" style="background-color: var(--bg); color: var(--text);">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md" style="background-color: rgba(255,255,255,0.85);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="/" class="font-heading text-xl font-semibold" style="color: var(--text); letter-spacing: -0.02em;">TaskFlow</a>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#features" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Features</a>
+          <a href="#how-it-works" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">How It Works</a>
+          <a href="#pricing" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Pricing</a>
+          <a href="#signup" class="rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="background-color: var(--accent); color: var(--bg);">Get Started</a>
+        </div>
+        <button class="rounded-lg p-2 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-a3').classList.toggle('hidden')">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+        </button>
+      </div>
+      <div style="height: 1px; background: linear-gradient(to right, transparent, var(--accent), transparent); opacity: 0.15;" aria-hidden="true"></div>
+    </div>
+    <div id="mobile-menu-a3" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <a href="#features" class="block px-3 py-2 text-sm" style="color: var(--muted);">Features</a>
+        <a href="#how-it-works" class="block px-3 py-2 text-sm" style="color: var(--muted);">How It Works</a>
+        <a href="#pricing" class="block px-3 py-2 text-sm" style="color: var(--muted);">Pricing</a>
+        <a href="#signup" class="mt-2 block rounded-full px-3 py-2 text-center text-sm font-medium" style="background-color: var(--accent); color: var(--bg);">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Fullscreen Hero -->
+    <section class="relative flex min-h-screen items-center justify-center dot-pattern" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+        <span class="font-mono mb-8 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">Now with AI Automation</span>
+        <h1 class="font-heading text-6xl sm:text-7xl md:text-8xl" style="font-weight: 500; letter-spacing: -0.04em; line-height: 1.0;">
+          Project management<br>that thinks ahead
+        </h1>
+        <p class="mx-auto mt-8 max-w-lg text-lg" style="color: var(--muted); line-height: 1.7;">
+          AI that learns your workflow and automates the busywork.
+        </p>
+        <div class="mt-12">
+          <a href="#signup" class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-medium transition-all duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="background-color: var(--accent); color: var(--bg);">
+            Start Free
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator" aria-hidden="true">
+        <svg width="24" height="24" fill="none" stroke="var(--muted)" stroke-width="1.5" opacity="0.6">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="py-14" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p class="section-label mb-8 text-center">Trusted by teams at</p>
+        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          <span class="font-heading text-lg font-medium opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--text);">Vercel</span>
+          <span class="font-heading text-lg font-medium opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--text);">Stripe</span>
+          <span class="font-heading text-lg font-medium opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--text);">Linear</span>
+          <span class="font-heading text-lg font-medium opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--text);">Notion</span>
+          <span class="font-heading text-lg font-medium opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--text);">Figma</span>
+          <span class="font-heading text-lg font-medium opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--text);">Raycast</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features: Alternating Left-Right -->
+    <section id="features" class="py-24" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-20 max-w-2xl text-center fade-in">
+          <span class="section-label mb-4 inline-block">Features</span>
+          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">Everything your team needs</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">AI-powered features that adapt to how your team actually works.</p>
+        </div>
+
+        <!-- Feature 1: Image Left, Text Right -->
+        <div class="fade-in grid items-center gap-12 lg:grid-cols-2 mb-20">
+          <div class="rounded-lg border p-6" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="h-3 w-3 rounded-full" style="background-color: #FF5F57;"></span>
+              <span class="h-3 w-3 rounded-full" style="background-color: #FEBC2E;"></span>
+              <span class="h-3 w-3 rounded-full" style="background-color: #28C840;"></span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
+                <div class="h-2 w-2 rounded-full" style="background-color: var(--accent);"></div>
+                <span class="flex-1 text-sm">Design review assigned to Sarah</span>
+                <span class="font-mono text-xs rounded-full px-2 py-0.5" style="background-color: var(--subtle-bg); color: var(--muted);">Auto</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
+                <div class="h-2 w-2 rounded-full" style="background-color: var(--accent);"></div>
+                <span class="flex-1 text-sm">API tests routed to backend team</span>
+                <span class="font-mono text-xs rounded-full px-2 py-0.5" style="background-color: var(--subtle-bg); color: var(--muted);">Auto</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
+                <div class="h-2 w-2 rounded-full" style="background-color: #737373;"></div>
+                <span class="flex-1 text-sm">Deploy staging queued</span>
+                <span class="font-mono text-xs rounded-full px-2 py-0.5" style="background-color: var(--subtle-bg); color: var(--muted);">Pending</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16l7-3 7 3V4a2 2 0 00-2-2z"/></svg>
+            </div>
+            <h3 class="font-heading text-2xl font-semibold mb-3" style="letter-spacing: -0.01em;">Smart Task Routing</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">TaskFlow learns who handles what and automatically assigns tasks to the right person. No more manual triaging or bottleneck meetings.</p>
+          </div>
+        </div>
+
+        <!-- Feature 2: Text Left, Image Right -->
+        <div class="fade-in grid items-center gap-12 lg:grid-cols-2 mb-20">
+          <div class="order-2 lg:order-1">
+            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.49 8.49l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.49-8.49l2.83-2.83"/></svg>
+            </div>
+            <h3 class="font-heading text-2xl font-semibold mb-3" style="letter-spacing: -0.01em;">Workflow Automation</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Repetitive sequences get detected and automated. Status updates, notifications, handoffs — all on autopilot after 48 hours of AI observation.</p>
+          </div>
+          <div class="order-1 lg:order-2 rounded-lg border p-6" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <p class="font-mono text-xs mb-3" style="color: var(--muted);">Detected patterns</p>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm">PR merged → move to QA</span>
+                <span class="font-mono text-xs" style="color: var(--accent);">Active</span>
+              </div>
+              <div style="height: 1px; background-color: var(--border);"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm">Bug tagged → assign on-call</span>
+                <span class="font-mono text-xs" style="color: var(--accent);">Active</span>
+              </div>
+              <div style="height: 1px; background-color: var(--border);"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm">Sprint end → generate report</span>
+                <span class="font-mono text-xs" style="color: var(--muted);">Suggested</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3: Image Left, Text Right -->
+        <div class="fade-in grid items-center gap-12 lg:grid-cols-2 mb-20">
+          <div class="rounded-lg border p-6" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <p class="font-mono text-xs mb-4" style="color: var(--muted);">Sprint velocity</p>
+            <div class="flex items-end gap-1.5" style="height: 64px;">
+              <div class="flex-1 rounded-sm" style="height: 35%; background-color: var(--border);"></div>
+              <div class="flex-1 rounded-sm" style="height: 50%; background-color: var(--border);"></div>
+              <div class="flex-1 rounded-sm" style="height: 42%; background-color: var(--border);"></div>
+              <div class="flex-1 rounded-sm" style="height: 65%; background-color: #a3a3a3;"></div>
+              <div class="flex-1 rounded-sm" style="height: 55%; background-color: #a3a3a3;"></div>
+              <div class="flex-1 rounded-sm" style="height: 78%; background-color: #737373;"></div>
+              <div class="flex-1 rounded-sm" style="height: 70%; background-color: #737373;"></div>
+              <div class="flex-1 rounded-sm" style="height: 90%; background-color: var(--accent);"></div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="font-heading text-3xl font-medium" style="letter-spacing: -0.02em;">94%</span>
+              <span class="text-sm" style="color: var(--muted);">On-time delivery</span>
+            </div>
+          </div>
+          <div>
+            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 5-9"/></svg>
+            </div>
+            <h3 class="font-heading text-2xl font-semibold mb-3" style="letter-spacing: -0.01em;">Predictive Analytics</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Know before deadlines slip. AI flags at-risk tasks and suggests rebalancing before problems surface.</p>
+          </div>
+        </div>
+
+        <!-- Feature 4: Text Left, Image Right -->
+        <div class="fade-in grid items-center gap-12 lg:grid-cols-2">
+          <div class="order-2 lg:order-1">
+            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="3" y="13" width="7" height="7" rx="1"/><rect x="13" y="3" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
+            </div>
+            <h3 class="font-heading text-2xl font-semibold mb-3" style="letter-spacing: -0.01em;">Custom Views</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Board, list, timeline, calendar. Every team member sees their work the way they prefer. Switch views in one click.</p>
+          </div>
+          <div class="order-1 lg:order-2 rounded-lg border p-6" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="flex gap-2 mb-4">
+              <span class="rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent); color: var(--bg);">Board</span>
+              <span class="rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--bg); color: var(--muted); border: 1px solid var(--border);">List</span>
+              <span class="rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--bg); color: var(--muted); border: 1px solid var(--border);">Timeline</span>
+              <span class="rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--bg); color: var(--muted); border: 1px solid var(--border);">Calendar</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
+                <p class="font-mono text-xs mb-2" style="color: var(--muted);">To Do</p>
+                <div class="h-3 w-full rounded" style="background-color: var(--border);"></div>
+                <div class="h-3 w-3/4 rounded mt-1.5" style="background-color: var(--border);"></div>
+              </div>
+              <div class="rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
+                <p class="font-mono text-xs mb-2" style="color: var(--muted);">In Progress</p>
+                <div class="h-3 w-full rounded" style="background-color: #a3a3a3;"></div>
+                <div class="h-3 w-2/3 rounded mt-1.5" style="background-color: #a3a3a3;"></div>
+                <div class="h-3 w-4/5 rounded mt-1.5" style="background-color: #a3a3a3;"></div>
+              </div>
+              <div class="rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
+                <p class="font-mono text-xs mb-2" style="color: var(--muted);">Done</p>
+                <div class="h-3 w-full rounded" style="background-color: var(--accent);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dot separator -->
+    <div class="flex items-center justify-center py-2" style="background-color: var(--subtle-bg);" aria-hidden="true">
+      <span style="width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent); opacity: 0.25;"></span>
+      <span style="width: 32px; height: 1px; background-color: var(--border); margin: 0 12px;"></span>
+      <span style="width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent); opacity: 0.25;"></span>
+      <span style="width: 32px; height: 1px; background-color: var(--border); margin: 0 12px;"></span>
+      <span style="width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent); opacity: 0.25;"></span>
+    </div>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
+          <span class="section-label mb-4 inline-block">Process</span>
+          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">Three steps to smarter projects</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Set up in minutes. See results in days.</p>
+        </div>
+        <div class="relative grid gap-8 sm:grid-cols-3">
+          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background-color: var(--border);" aria-hidden="true"></div>
+          <div class="fade-in relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 1px solid var(--border);">01</div>
+            <h3 class="font-heading mb-3 text-lg font-semibold" style="letter-spacing: -0.01em;">Import your projects</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Connect Jira, Asana, Trello, or start fresh. Your data migrates in one click.</p>
+          </div>
+          <div class="fade-in relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 1px solid var(--border);">02</div>
+            <h3 class="font-heading mb-3 text-lg font-semibold" style="letter-spacing: -0.01em;">Let AI observe</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">TaskFlow watches your team's patterns for 48 hours and maps your real workflow.</p>
+          </div>
+          <div class="fade-in relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 1px solid var(--border);">03</div>
+            <h3 class="font-heading mb-3 text-lg font-semibold" style="letter-spacing: -0.01em;">Automate everything</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Approve the suggested automations and watch hours of manual work disappear.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrics -->
+    <section class="py-20" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="fade-in grid gap-8 sm:grid-cols-3 text-center">
+          <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
+            <span class="font-heading text-5xl md:text-6xl font-medium block" style="letter-spacing: -0.03em;">94%</span>
+            <span class="mt-2 block text-sm" style="color: var(--muted);">On-time delivery rate</span>
+          </div>
+          <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
+            <span class="font-heading text-5xl md:text-6xl font-medium block" style="letter-spacing: -0.03em;">12h</span>
+            <span class="mt-2 block text-sm" style="color: var(--muted);">Saved per team per week</span>
+          </div>
+          <div>
+            <span class="font-heading text-5xl md:text-6xl font-medium block" style="letter-spacing: -0.03em;">2.4k</span>
+            <span class="mt-2 block text-sm" style="color: var(--muted);">Teams using TaskFlow</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-24" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
+          <span class="section-label mb-4 inline-block">Pricing</span>
+          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">Simple pricing</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">No hidden fees. No per-seat surprises. Cancel anytime.</p>
+        </div>
+        <div class="grid items-start gap-6 sm:grid-cols-3">
+          <article class="fade-in rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border); background-color: var(--bg);">
+            <h3 class="font-heading text-lg font-semibold" style="letter-spacing: -0.01em;">Free</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For small teams getting started.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-medium" style="letter-spacing: -0.02em;">$0</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Up to 5 team members</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>3 active projects</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Basic AI suggestions</li>
+            </ul>
+            <a href="#signup" class="mt-8 block rounded-full border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="border-color: var(--border); color: var(--text);">Get Started</a>
+          </article>
+          <article class="fade-in rounded-lg border-2 p-8 sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
+            <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent); color: var(--bg);">Popular</span>
+            <h3 class="font-heading text-lg font-semibold" style="letter-spacing: -0.01em;">Pro</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For teams shipping real products.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-medium" style="letter-spacing: -0.02em;">$18</span>
+              <span class="text-sm" style="color: var(--muted);">/user/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Unlimited members</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Full AI automation</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Predictive analytics</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Priority support</li>
+            </ul>
+            <a href="#signup" class="mt-8 block rounded-full px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="background-color: var(--accent); color: var(--bg);">Start Free Trial</a>
+          </article>
+          <article class="fade-in rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border); background-color: var(--bg);">
+            <h3 class="font-heading text-lg font-semibold" style="letter-spacing: -0.01em;">Enterprise</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For organizations at scale.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-medium" style="letter-spacing: -0.02em;">Custom</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Everything in Pro</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>SSO & SAML</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>SLA guarantee</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Audit logs</li>
+            </ul>
+            <a href="#contact" class="mt-8 block rounded-full border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="border-color: var(--border); color: var(--text);">Contact Sales</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24" style="background-color: #111111; color: #ffffff;">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center fade-in">
+          <h2 class="font-heading text-3xl font-medium sm:text-5xl" style="color: #ffffff; letter-spacing: -0.03em; line-height: 1.1;">Stop managing tasks.<br>Start shipping products.</h2>
+          <p class="mt-6 text-base" style="color: rgba(255,255,255,0.5);">Free for teams up to 5. No credit card required.</p>
+          <a href="#signup" class="mt-10 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-medium transition-all duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="background-color: #ffffff; color: #111111;">
+            Get Started Free
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-16" style="background-color: #0a0a0a; color: #ffffff; border-top: 1px solid rgba(255,255,255,0.08);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <span class="font-heading text-lg font-semibold" style="letter-spacing: -0.02em;">TaskFlow</span>
+          <p class="mt-3 text-sm" style="color: rgba(255,255,255,0.4);">AI-powered project management for modern teams.</p>
+        </div>
+        <nav aria-label="Product">
+          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Product</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#features" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Features</a></li>
+            <li><a href="#pricing" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Pricing</a></li>
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Changelog</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Company">
+          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Company</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">About</a></li>
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Blog</a></li>
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Careers</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Legal">
+          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Legal</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Privacy</a></li>
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Terms</a></li>
+            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Security</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mt-12 border-t pt-8" style="border-color: rgba(255,255,255,0.08);">
+        <p class="text-center text-sm" style="color: rgba(255,255,255,0.25);">&copy; 2026 TaskFlow. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var els = document.querySelectorAll('.fade-in');
+      if (!window.IntersectionObserver) {
+        els.forEach(function(el) { el.classList.add('visible'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      els.forEach(function(el) { observer.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>

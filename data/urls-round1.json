@@ -1,0 +1,230 @@
+{
+  "urls": [
+    {
+      "url": "https://linear.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://vercel.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://stripe.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://notion.so",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://figma.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://slack.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://github.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://railway.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://planetscale.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://supabase.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://resend.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://cal.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://dub.co",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://clerk.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://convex.dev",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://turso.tech",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://neon.tech",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://upstash.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://axiom.co",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://posthog.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://plausible.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://mintlify.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://tailwindcss.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://ui.shadcn.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://framer.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://webflow.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://retool.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://airtable.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://pitch.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://rows.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://coda.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://zapier.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://n8n.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://inngest.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://trigger.dev",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://fly.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://render.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://sentry.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://auth0.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://stytch.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://workos.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://knock.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://loops.so",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://intercom.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://algolia.com",
+      "category": "saas",
+      "control_group": false
+    }
+  ],
+  "round": 1
+}

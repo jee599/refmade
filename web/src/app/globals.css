@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #09090b;
+  --text: #fafafa;
+  --subtle: #18181b;
+  --border: #27272a;
+  --muted: #a1a1aa;
+  --accent: #3b82f6;
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-space-grotesk);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}

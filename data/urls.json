@@ -1,0 +1,894 @@
+{
+  "urls": [
+    {
+      "url": "https://linear.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://vercel.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://stripe.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://notion.so",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://figma.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://slack.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://github.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://railway.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://planetscale.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://supabase.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://resend.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://cal.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://dub.co",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://clerk.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://convex.dev",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://turso.tech",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://neon.tech",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://upstash.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://axiom.co",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://posthog.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://plausible.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://mintlify.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://tailwindcss.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://ui.shadcn.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://framer.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://webflow.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://retool.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://airtable.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://pitch.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://rows.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://coda.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://zapier.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://n8n.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://inngest.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://trigger.dev",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://fly.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://render.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://sentry.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://auth0.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://stytch.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://workos.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://knock.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://loops.so",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://intercom.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://algolia.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://sanity.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://contentful.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://ghost.org",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://beehiiv.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://lemonsqueezy.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://paddle.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://attio.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://clay.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://instantly.ai",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://height.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://amie.so",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://huly.io",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://plane.so",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://monday.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://clickup.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://asana.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://loom.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://miro.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://craft.do",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://superhuman.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://raycast.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://arc.net",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://warp.dev",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://zed.dev",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://cursor.com",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://tauri.app",
+      "category": "saas",
+      "control_group": false
+    },
+    {
+      "url": "https://nextjs.org",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://react.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://vuejs.org",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://svelte.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://astro.build",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://remix.run",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://nuxt.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://solidjs.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://angular.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://vitejs.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://turbo.build",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://biomejs.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://prisma.io",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://drizzle.team",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://trpc.io",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://hono.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://elysiajs.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://bun.sh",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://deno.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://effect.website",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://tailwindui.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://headlessui.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://radix-ui.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://mantine.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://chakra-ui.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://ant.design",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://mui.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://storybook.js.org",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://chromatic.com",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://playwright.dev",
+      "category": "devtools",
+      "control_group": false
+    },
+    {
+      "url": "https://openai.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://anthropic.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://huggingface.co",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://replicate.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://together.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://modal.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://fireworks.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://groq.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://perplexity.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://midjourney.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://stability.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://runway.ml",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://pika.art",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://elevenlabs.io",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://descript.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://otter.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://dust.tt",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://langchain.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://llamaindex.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://pinecone.io",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://weaviate.io",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://qdrant.tech",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://cohere.com",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://mistral.ai",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://deepmind.google",
+      "category": "ai",
+      "control_group": false
+    },
+    {
+      "url": "https://mercury.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://brex.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://ramp.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://deel.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://rippling.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://gusto.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://wise.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://revolut.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://robinhood.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://coinbase.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://shopify.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://gumroad.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://plaid.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://moov.io",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://square.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://affirm.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://klarna.com",
+      "category": "fintech",
+      "control_group": false
+    },
+    {
+      "url": "https://toss.im",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://kakaocorp.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://about.daangn.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://baemin.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://channel.io",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://sendbird.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://ab180.co",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://bucketplace.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://ridi.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://class101.net",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://musinsa.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://wadiz.kr",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://wanted.co.kr",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://rallit.com",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://disquiet.io",
+      "category": "korean",
+      "control_group": false
+    },
+    {
+      "url": "https://apple.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://google.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://microsoft.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://amazon.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://netflix.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://spotify.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://airbnb.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://uber.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://dropbox.com",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://twitch.tv",
+      "category": "bigtech",
+      "control_group": false
+    },
+    {
+      "url": "https://canva.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://spline.design",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://rive.app",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://lottiefiles.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://readymag.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://tldraw.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://excalidraw.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://diagram.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://magicpatterns.com",
+      "category": "design",
+      "control_group": false
+    },
+    {
+      "url": "https://coolors.co",
+      "category": "design",
+      "control_group": false
+    }
+  ]
+}

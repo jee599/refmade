@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — AI-Powered Project Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #fafaf9;
+      --text: #1c1917;
+      --subtle-bg: #f5f5f4;
+      --border: #e7e5e4;
+      --muted: #78716c;
+      --accent: #f97316;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body style="background-color: var(--bg); color: var(--text);">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 border-b backdrop-blur-md" style="background-color: rgba(250, 250, 249, 0.85); border-color: var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="/" class="text-lg font-bold" style="color: var(--text);">
+          TaskFlow <span style="color: var(--accent);">~</span>
+        </a>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#features" class="text-sm font-normal transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">Features</a>
+          <a href="#how-it-works" class="text-sm font-normal transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">How It Works</a>
+          <a href="#pricing" class="text-sm font-normal transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">Pricing</a>
+          <a href="#testimonials" class="text-sm font-normal transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">Stories</a>
+          <a href="#cta" class="rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2" style="background-color: var(--accent); color: #fff;">
+            Try Free
+          </a>
+        </div>
+        <button class="rounded-xl p-2 transition-colors duration-200 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-d').classList.toggle('hidden')">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+      <div id="mobile-menu-d" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
+        <a href="#features" class="block rounded-xl px-3 py-2 text-sm transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">Features</a>
+        <a href="#how-it-works" class="block rounded-xl px-3 py-2 text-sm transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">How It Works</a>
+        <a href="#pricing" class="block rounded-xl px-3 py-2 text-sm transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">Pricing</a>
+        <a href="#testimonials" class="block rounded-xl px-3 py-2 text-sm transition-colors duration-200 hover:text-stone-900" style="color: var(--muted);">Stories</a>
+        <a href="#cta" class="mt-2 block rounded-xl px-3 py-2 text-center text-sm font-medium transition-all duration-200 hover:opacity-90" style="background-color: var(--accent); color: #fff;">Try Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="py-24 sm:py-28" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+          <span class="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium" style="background-color: #fff7ed; color: var(--accent); border: 1px solid #fed7aa;">
+            <span>&#127881;</span> Now in Public Beta
+          </span>
+          <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl" style="color: var(--text);">
+            Your team's best work,<br />
+            <span style="color: var(--accent);">on autopilot</span>
+          </h1>
+          <p class="mx-auto mt-6 max-w-2xl text-lg sm:text-xl" style="color: var(--muted);">
+            TaskFlow is the AI project manager that learns how your team works and takes care of the busywork. Less status updates, more actual progress.
+          </p>
+          <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#cta" class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-medium shadow-sm transition-all duration-200 hover:shadow-md hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2" style="background-color: var(--accent); color: #fff;">
+              Start for Free
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </a>
+            <a href="#how-it-works" class="inline-flex items-center gap-2 rounded-xl border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2" style="border-color: var(--border); color: var(--text);">
+              See How It Works
+            </a>
+          </div>
+        </div>
+
+        <!-- Browser mockup -->
+        <div class="mx-auto mt-16 max-w-4xl overflow-hidden rounded-xl border shadow-sm" style="border-color: var(--border); background-color: #fff;">
+          <div class="flex items-center gap-2 border-b px-4 py-3" style="border-color: var(--border);">
+            <span class="h-3 w-3 rounded-full" style="background-color: #FF5F57;"></span>
+            <span class="h-3 w-3 rounded-full" style="background-color: #FEBC2E;"></span>
+            <span class="h-3 w-3 rounded-full" style="background-color: #28C840;"></span>
+            <div class="ml-2 flex-1 rounded-xl px-3 py-1 text-xs" style="background-color: var(--subtle-bg); color: var(--muted);">
+              app.taskflow.ai
+            </div>
+          </div>
+          <div class="aspect-video w-full" style="background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 50%, #fce7f3 100%);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="py-12" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p class="mb-8 text-center text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">
+          Loved by 2,000+ happy teams
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          <span class="text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Shopify</span>
+          <span class="text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Notion</span>
+          <span class="text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Loom</span>
+          <span class="text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Beehiiv</span>
+          <span class="text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Webflow</span>
+          <span class="text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Framer</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section id="features" class="py-20" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center">
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Everything your team needs &#9889;</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Powerful features, wrapped in a tool that feels simple from day one.</p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Card 1: Large -->
+          <article class="group rounded-xl border p-8 shadow-sm transition-all duration-200 hover:shadow-md sm:col-span-2" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 inline-flex rounded-xl p-3" style="background-color: #fff7ed;">
+              <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="mb-2 text-xl font-semibold">&#129302; AI Workflow Automation</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">TaskFlow watches how your team works and suggests smart automations. Sprint planning, standup prep, task assignments — it handles the routine so your team can focus on creative work.</p>
+          </article>
+          <!-- Card 2 -->
+          <article class="group rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 inline-flex rounded-xl p-3" style="background-color: #fff7ed;">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6m14 0v-9a2 2 0 00-2-2h-2a2 2 0 00-2 2v9m10 0V8a2 2 0 00-2-2h-2a2 2 0 00-2 2v11"/></svg>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold">&#127919; Smart Prioritization</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">AI ranks tasks by impact, urgency, and your team's capacity. Always know what to tackle next.</p>
+          </article>
+          <!-- Card 3 -->
+          <article class="group rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 inline-flex rounded-xl p-3" style="background-color: #fff7ed;">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold">&#9200; Time Estimates That Work</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Delivery predictions that actually get better over time. No more guessing when things will ship.</p>
+          </article>
+          <!-- Card 4 -->
+          <article class="group rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 inline-flex rounded-xl p-3" style="background-color: #fff7ed;">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold">&#128101; Workload Balance</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">See who has room and who's swamped. Rebalance work with a simple drag-and-drop.</p>
+          </article>
+          <!-- Card 5 -->
+          <article class="group rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 inline-flex rounded-xl p-3" style="background-color: #fff7ed;">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm10 0a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold">&#127912; Flexible Views</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Kanban, timeline, table, or calendar. Switch views in one click. Your workspace, your rules.</p>
+          </article>
+          <!-- Card 6 -->
+          <article class="group rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 inline-flex rounded-xl p-3" style="background-color: #fff7ed;">
+              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold">&#128274; Safe & Secure</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">SOC 2 certified, end-to-end encryption, and role-based access. Your data is always protected.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center">
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Getting started is easy &#128075;</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Three simple steps. No lengthy onboarding. You'll be up and running in minutes.</p>
+        </div>
+        <div class="relative grid gap-8 sm:grid-cols-3">
+          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background: linear-gradient(to right, transparent, var(--border), transparent);" aria-hidden="true"></div>
+          <!-- Step 1 -->
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-2xl font-semibold" style="background-color: #fff; color: var(--accent); border: 2px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.06);">01</div>
+            <h3 class="mb-3 text-lg font-semibold">Import your projects</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Connect Jira, Asana, Trello, or GitHub. Your existing data migrates in under 2 minutes.</p>
+          </div>
+          <!-- Step 2 -->
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-2xl font-semibold" style="background-color: #fff; color: var(--accent); border: 2px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.06);">02</div>
+            <h3 class="mb-3 text-lg font-semibold">Let TaskFlow learn</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Our AI observes your team for one sprint. It maps patterns, dependencies, and recurring tasks.</p>
+          </div>
+          <!-- Step 3 -->
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-2xl font-semibold" style="background-color: #fff; color: var(--accent); border: 2px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.06);">03</div>
+            <h3 class="mb-3 text-lg font-semibold">Watch the magic happen</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Review and approve automations. Your team saves 8+ hours per week. More time for the work that matters.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-20" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center">
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Teams love TaskFlow &#128150;</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Don't just take our word for it. Here's what our users say.</p>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-3">
+          <!-- Testimonial 1 -->
+          <blockquote class="rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 text-2xl">&#11088;</div>
+            <p class="mb-6 text-base leading-relaxed" style="color: var(--text);">"Sprint planning went from a 3-hour ordeal to a 45-minute breeze. The AI suggestions are surprisingly on point."</p>
+            <footer class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium" style="background-color: #fff7ed; color: var(--accent);" aria-hidden="true">SC</div>
+              <div>
+                <cite class="block text-sm font-semibold not-italic">Sarah Chen</cite>
+                <span class="text-xs" style="color: var(--muted);">CTO, Acme Corp</span>
+              </div>
+            </footer>
+          </blockquote>
+          <!-- Testimonial 2: Highlighted -->
+          <blockquote class="rounded-xl border-2 p-6 shadow-sm transition-all duration-200 hover:shadow-md sm:scale-105" style="border-color: var(--accent); background-color: #fff;">
+            <div class="mb-4 text-2xl">&#128640;</div>
+            <p class="mb-6 text-base leading-relaxed" style="color: var(--text);">"We ditched three separate tools for TaskFlow. The unified experience is a game-changer, and our team actually enjoys using it."</p>
+            <footer class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium" style="background-color: #fff7ed; color: var(--accent);" aria-hidden="true">MR</div>
+              <div>
+                <cite class="block text-sm font-semibold not-italic">Marcus Rivera</cite>
+                <span class="text-xs" style="color: var(--muted);">VP Engineering, Globex</span>
+              </div>
+            </footer>
+          </blockquote>
+          <!-- Testimonial 3 -->
+          <blockquote class="rounded-xl border p-6 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <div class="mb-4 text-2xl">&#128522;</div>
+            <p class="mb-6 text-base leading-relaxed" style="color: var(--text);">"The workload view saved us from burnout. We finally caught imbalances before they became problems."</p>
+            <footer class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium" style="background-color: #fff7ed; color: var(--accent);" aria-hidden="true">AP</div>
+              <div>
+                <cite class="block text-sm font-semibold not-italic">Aisha Patel</cite>
+                <span class="text-xs" style="color: var(--muted);">Lead PM, Initech</span>
+              </div>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center">
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Pick the plan that fits &#128176;</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Start free, upgrade anytime. No credit card needed. No surprise fees.</p>
+        </div>
+        <div class="grid items-start gap-6 sm:grid-cols-3">
+          <!-- Starter -->
+          <article class="rounded-xl border p-8 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <h3 class="text-lg font-semibold">Starter</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">Perfect for small teams exploring.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="text-4xl font-bold" style="color: var(--text);">$0</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Up to 5 team members</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>3 active projects</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Basic AI suggestions</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Community support</li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-xl border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2" style="border-color: var(--border); color: var(--text);">
+              Get Started Free
+            </a>
+          </article>
+          <!-- Pro: Highlighted -->
+          <article class="rounded-xl border-2 p-8 shadow-sm transition-all duration-200 hover:shadow-md sm:scale-105" style="border-color: var(--accent); background-color: #fff;">
+            <span class="mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent); color: #fff;">Most Popular</span>
+            <h3 class="text-lg font-semibold">Pro</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For growing teams doing great work.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="text-4xl font-bold" style="color: var(--text);">$19</span>
+              <span class="text-sm" style="color: var(--muted);">/user/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Unlimited members</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Unlimited projects</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Full AI automation</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Priority support</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Advanced analytics</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>50+ integrations</li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-xl px-6 py-3 text-center text-sm font-medium shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2" style="background-color: var(--accent); color: #fff;">
+              Start Free Trial
+            </a>
+          </article>
+          <!-- Enterprise -->
+          <article class="rounded-xl border p-8 shadow-sm transition-all duration-200 hover:shadow-md" style="border-color: var(--border); background-color: #fff;">
+            <h3 class="text-lg font-semibold">Enterprise</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For larger teams with bigger needs.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="text-4xl font-bold" style="color: var(--text);">Custom</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Everything in Pro</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>SSO & SAML</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Dedicated success manager</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>SLA guarantee</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Audit logs</li>
+              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Custom contracts</li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-xl border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2" style="border-color: var(--border); color: var(--text);">
+              Let's Talk
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="py-24" style="background-color: #1c1917; color: #fafaf9;">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl" style="color: #fafaf9;">Ready to give your team superpowers? &#128170;</h2>
+          <p class="mt-4 text-base" style="color: #a8a29e;">
+            Join 2,000+ teams saving 8 hours a week. Free to start, no credit card required.
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#" class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-medium shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900" style="background-color: var(--accent); color: #fff;">
+              Start for Free
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="inline-flex items-center gap-2 rounded-xl border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900" style="border-color: #44403c; color: #fafaf9;">
+              Schedule a Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-16" style="background-color: #1c1917; color: #fafaf9; border-top: 1px solid #292524;">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="lg:col-span-1">
+          <span class="text-lg font-bold" style="color: #fafaf9;">TaskFlow <span style="color: var(--accent);">~</span></span>
+          <p class="mt-3 text-sm" style="color: #a8a29e;">AI-powered project management for happy, productive teams.</p>
+        </div>
+        <nav aria-label="Product">
+          <h4 class="mb-4 text-sm font-semibold" style="color: #fafaf9; opacity: 0.8;">Product</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Features</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Pricing</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Changelog</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Integrations</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Company">
+          <h4 class="mb-4 text-sm font-semibold" style="color: #fafaf9; opacity: 0.8;">Company</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">About</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Blog</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Careers</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Contact</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Resources">
+          <h4 class="mb-4 text-sm font-semibold" style="color: #fafaf9; opacity: 0.8;">Resources</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Help Center</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">API Docs</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Guides</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Community</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Legal">
+          <h4 class="mb-4 text-sm font-semibold" style="color: #fafaf9; opacity: 0.8;">Legal</h4>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Privacy</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Terms</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">Security</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: #a8a29e;">GDPR</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mt-12 border-t pt-8" style="border-color: #292524;">
+        <p class="text-center text-sm" style="color: #a8a29e; opacity: 0.5;">&copy; 2026 TaskFlow. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

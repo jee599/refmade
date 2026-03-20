@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — AI-Powered Project Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c14;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --text: #e8e8ef;
+      --subtle-bg: #12121c;
+      --border: #1e1e2e;
+      --muted: #8888a0;
+      --accent: #22c55e;
+      --accent-dim: rgba(34, 197, 94, 0.08);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+    .font-body { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Code rain effect — very subtle */
+    .code-rain {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .code-rain-col {
+      position: absolute;
+      top: -100%;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--accent);
+      opacity: 0.04;
+      animation: rain-fall linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes rain-fall {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    /* Glassmorphism card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    /* Terminal dots */
+    .term-dot-red { background-color: #FF5F57; }
+    .term-dot-yellow { background-color: #FEBC2E; }
+    .term-dot-green { background-color: #28C840; }
+
+    /* Cursor blink */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1.2s step-end infinite;
+    }
+
+    /* Pulse for status dot */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .pulse-dot {
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    /* Scroll fade-in */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .fade-up { opacity: 1; transform: none; }
+      .code-rain-col { display: none; }
+    }
+  </style>
+</head>
+<body class="font-body antialiased">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 border-b" style="background-color: rgba(12,12,20,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-color: var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 font-heading text-lg font-bold" style="color: var(--text);">
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg" style="background-color: var(--accent);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0c0c14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          TaskFlow
+        </a>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#features" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Features</a>
+          <a href="#code" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">API</a>
+          <a href="#pricing" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Pricing</a>
+          <a href="#" class="text-sm font-normal transition-colors duration-200 hover:text-white" style="color: var(--muted);">Docs</a>
+          <a href="#cta" class="rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #0c0c14;">
+            Get Started
+          </a>
+        </div>
+        <button class="rounded-lg p-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-e3').classList.toggle('hidden')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="mobile-menu-e3" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
+        <a href="#features" class="block rounded-lg px-3 py-2 text-sm" style="color: var(--muted);">Features</a>
+        <a href="#code" class="block rounded-lg px-3 py-2 text-sm" style="color: var(--muted);">API</a>
+        <a href="#pricing" class="block rounded-lg px-3 py-2 text-sm" style="color: var(--muted);">Pricing</a>
+        <a href="#cta" class="mt-2 block rounded-lg px-3 py-2 text-center text-sm font-medium" style="background-color: var(--accent); color: #0c0c14;">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Fullscreen Hero with Code Rain -->
+    <section class="relative flex min-h-screen items-center justify-center overflow-hidden" style="background-color: var(--bg);">
+      <!-- Code rain background -->
+      <div class="code-rain" aria-hidden="true">
+        <div class="code-rain-col" style="left: 5%; animation-duration: 18s; animation-delay: 0s;">async await fetch deploy merge push commit rebase stash pull request review approve ship</div>
+        <div class="code-rain-col" style="left: 15%; animation-duration: 22s; animation-delay: -4s;">const let function return import export class interface type enum sprint task flow auto</div>
+        <div class="code-rain-col" style="left: 28%; animation-duration: 16s; animation-delay: -8s;">npm yarn pnpm build test lint format deploy ci cd pipeline workflow trigger event hook</div>
+        <div class="code-rain-col" style="left: 42%; animation-duration: 20s; animation-delay: -2s;">git branch checkout merge rebase squash amend reset cherry-pick bisect blame log diff</div>
+        <div class="code-rain-col" style="left: 55%; animation-duration: 24s; animation-delay: -6s;">route assign prioritize estimate track predict automate optimize schedule allocate</div>
+        <div class="code-rain-col" style="left: 68%; animation-duration: 19s; animation-delay: -10s;">sprint velocity throughput cycle-time lead-time burndown burnup capacity utilization</div>
+        <div class="code-rain-col" style="left: 82%; animation-duration: 21s; animation-delay: -3s;">webhook api rest graphql sdk client server auth token session middleware handler</div>
+        <div class="code-rain-col" style="left: 92%; animation-duration: 17s; animation-delay: -7s;">create read update delete query mutation subscription stream batch queue worker job</div>
+      </div>
+
+      <div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+        <span class="mb-8 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs font-medium" style="border-color: var(--border); color: var(--accent); background-color: var(--accent-dim);">
+          <span class="h-1.5 w-1.5 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+          v2.0 now available
+        </span>
+
+        <h1 class="font-heading text-5xl font-bold tracking-tight sm:text-7xl md:text-8xl" style="color: var(--text); line-height: 1.0; letter-spacing: -0.04em;">
+          Project management<br>that thinks for you
+        </h1>
+
+        <p class="mx-auto mt-8 max-w-lg text-lg leading-relaxed" style="color: var(--muted);">
+          AI-powered project management that learns your team's workflow and automates repetitive tasks.
+        </p>
+
+        <div class="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href="#cta" class="inline-flex items-center justify-center gap-2 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #0c0c14;">
+            Start Building Free
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#code" class="inline-flex items-center justify-center gap-2 rounded-lg border px-7 py-3.5 text-base font-medium transition-all duration-200 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+            View Docs
+          </a>
+        </div>
+
+        <!-- Install command -->
+        <div class="mt-10 inline-flex items-center gap-3 rounded-lg border px-4 py-2.5 font-mono text-sm" style="border-color: var(--border); background-color: var(--subtle-bg);">
+          <span style="color: var(--accent);">$</span>
+          <span style="color: var(--text);">npx create-taskflow@latest</span>
+          <button class="ml-2 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" style="color: var(--muted);" aria-label="Copy command">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2" aria-hidden="true" style="animation: pulse-glow 2s ease-in-out infinite;">
+        <svg width="24" height="24" fill="none" stroke="var(--muted)" stroke-width="1.5" opacity="0.5">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="py-12" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p class="mb-8 text-center font-mono text-xs font-medium uppercase tracking-wider" style="color: var(--muted);">
+          Trusted by engineering teams at
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          <span class="font-heading text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Vercel</span>
+          <span class="font-heading text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Stripe</span>
+          <span class="font-heading text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Linear</span>
+          <span class="font-heading text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Supabase</span>
+          <span class="font-heading text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Railway</span>
+          <span class="font-heading text-lg font-semibold opacity-30 transition-opacity duration-200 hover:opacity-70" style="color: var(--muted);">Planetscale</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features: Clean Grid with Glassmorphism -->
+    <section id="features" class="py-24" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Built for how developers actually work</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Every feature designed with your CLI, your IDE, and your Git workflow in mind.</p>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Card 1: Large -->
+          <article class="glass-card rounded-lg p-6 sm:col-span-2 fade-up">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">AI Workflow Engine</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">TaskFlow observes how your team moves tasks, assigns work, and ships features. After 48 hours, it starts automating the patterns it finds. No manual rules needed.</p>
+            <div class="mt-4 rounded-lg border p-3 font-mono text-xs" style="border-color: var(--border); background-color: rgba(0,0,0,0.3);">
+              <span style="color: var(--accent);">></span> <span style="color: var(--muted);">3 workflows learned from your last 50 tasks</span>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="glass-card rounded-lg p-6 fade-up">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">Git-Native Sync</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Tasks update when PRs merge, branches are created, or commits reference issues. Zero context switching.</p>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="glass-card rounded-lg p-6 fade-up">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">API-First Design</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Full REST and GraphQL APIs. Build custom integrations, dashboards, or CLI tools on top of TaskFlow.</p>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="glass-card rounded-lg p-6 fade-up">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">SOC 2 Compliant</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Enterprise-grade security with SSO, RBAC, audit logs, and end-to-end encryption.</p>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="glass-card rounded-lg p-6 fade-up">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">Smart Analytics</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Cycle time, throughput, bottleneck detection. Know exactly where your sprint is stuck.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Example -->
+    <section id="code" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Ship in minutes, not meetings</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">A few lines of code to automate your entire project lifecycle.</p>
+        </div>
+
+        <div class="grid items-start gap-6 lg:grid-cols-2 fade-up">
+          <!-- Request -->
+          <div class="overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: rgba(0,0,0,0.3);">
+            <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: var(--border); background-color: rgba(0,0,0,0.4);">
+              <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full term-dot-red"></span>
+                <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+                <span class="h-3 w-3 rounded-full term-dot-green"></span>
+                <span class="ml-3 font-mono text-xs" style="color: var(--muted);">setup.ts</span>
+              </div>
+              <span class="inline-flex items-center rounded-full px-2 py-0.5 font-mono text-xs" style="color: var(--muted); background-color: rgba(255,255,255,0.05);">TypeScript</span>
+            </div>
+            <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed"><code><span style="color: #c084fc;">import</span> <span style="color: #71717a;">{</span> <span style="color: #2dd4bf;">TaskFlow</span> <span style="color: #71717a;">}</span> <span style="color: #c084fc;">from</span> <span style="color: var(--accent);">'@taskflow/sdk'</span>
+
+<span style="color: #c084fc;">const</span> <span style="color: #e879f9;">tf</span> <span style="color: #71717a;">=</span> <span style="color: #c084fc;">new</span> <span style="color: #60a5fa;">TaskFlow</span><span style="color: #71717a;">({</span>
+  <span style="color: #93c5fd;">apiKey</span><span style="color: #71717a;">:</span> process<span style="color: #71717a;">.</span>env<span style="color: #71717a;">.</span><span style="color: #e879f9;">TASKFLOW_KEY</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">ai</span><span style="color: #71717a;">:</span> <span style="color: var(--accent);">'auto'</span>
+<span style="color: #71717a;">})</span>
+
+<span style="color: #52525b;">// Create sprint from GitHub milestone</span>
+<span style="color: #c084fc;">const</span> <span style="color: #e879f9;">sprint</span> <span style="color: #71717a;">=</span> <span style="color: #c084fc;">await</span> tf<span style="color: #71717a;">.</span><span style="color: #60a5fa;">createSprint</span><span style="color: #71717a;">({</span>
+  <span style="color: #93c5fd;">source</span><span style="color: #71717a;">:</span> <span style="color: var(--accent);">'github'</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">milestone</span><span style="color: #71717a;">:</span> <span style="color: var(--accent);">'v2.1'</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">autoAssign</span><span style="color: #71717a;">:</span> <span style="color: #fbbf24;">true</span>
+<span style="color: #71717a;">})</span></code></pre>
+          </div>
+
+          <!-- Response -->
+          <div>
+            <div class="overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: rgba(0,0,0,0.3);">
+              <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: var(--border); background-color: rgba(0,0,0,0.4);">
+                <div class="flex items-center gap-2">
+                  <span class="h-3 w-3 rounded-full term-dot-red"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-green"></span>
+                  <span class="ml-3 font-mono text-xs" style="color: var(--muted);">response.json</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-xs" style="color: var(--accent); background-color: var(--accent-dim);">
+                  <span class="h-1.5 w-1.5 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+                  200 OK
+                </span>
+              </div>
+              <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed"><code><span style="color: #71717a;">{</span>
+  <span style="color: #93c5fd;">"id"</span><span style="color: #71717a;">:</span> <span style="color: var(--accent);">"spr_8x2kf9a"</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">"status"</span><span style="color: #71717a;">:</span> <span style="color: var(--accent);">"active"</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">"tasks"</span><span style="color: #71717a;">:</span> <span style="color: #f472b6;">12</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">"ai_confidence"</span><span style="color: #71717a;">:</span> <span style="color: #f472b6;">0.94</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">"estimated_days"</span><span style="color: #71717a;">:</span> <span style="color: #f472b6;">8</span><span style="color: #71717a;">,</span>
+  <span style="color: #93c5fd;">"latency_ms"</span><span style="color: #71717a;">:</span> <span style="color: #f472b6;">47</span>
+<span style="color: #71717a;">}</span></code></pre>
+            </div>
+
+            <div class="mt-4 glass-card rounded-lg p-4">
+              <div class="flex items-center gap-2 font-mono text-xs" style="color: var(--muted);">
+                <span class="h-2 w-2 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+                Response time
+              </div>
+              <p class="mt-1 font-mono text-2xl font-bold" style="color: var(--accent);">~47ms <span class="text-sm font-normal" style="color: var(--muted);">avg latency</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-20" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">From zero to automated in 3 steps</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">No lengthy onboarding. Connect, configure, ship.</p>
+        </div>
+
+        <div class="relative grid gap-8 sm:grid-cols-3 fade-up">
+          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background: linear-gradient(90deg, transparent, var(--border), transparent);" aria-hidden="true"></div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--text); border: 1px solid var(--border);">01</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Install the SDK</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">One npm install. One env variable. Connected in under 60 seconds.</p>
+          </div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--text); border: 1px solid var(--border);">02</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Define triggers</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Set up events like PR merges, deploy completions, or Slack commands.</p>
+          </div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--text); border: 1px solid var(--border);">03</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Watch AI learn</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">TaskFlow studies patterns for 48 hours, then suggests automations. Approve once, run forever.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-20" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Predictable pricing. No per-seat tax.</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Start free. Scale when you're ready. No credit card required.</p>
+        </div>
+
+        <div class="grid items-start gap-6 sm:grid-cols-3 fade-up">
+          <article class="glass-card rounded-lg p-8">
+            <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">Starter</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For side projects and small teams.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">$0</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Up to 3 projects
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                5 team members
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                1,000 API calls/mo
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+              Get Started Free
+            </a>
+          </article>
+
+          <article class="glass-card rounded-lg p-8 sm:scale-105" style="border-color: var(--accent) !important;">
+            <div class="flex items-center justify-between">
+              <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--accent);">Pro</h3>
+              <span class="rounded-full px-2.5 py-0.5 font-mono text-xs font-medium" style="background-color: var(--accent); color: #0c0c14;">Popular</span>
+            </div>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For teams shipping real products.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">$29</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited projects
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited members
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                AI workflow automation
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Priority support
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #0c0c14;">
+              Start Free Trial
+            </a>
+          </article>
+
+          <article class="glass-card rounded-lg p-8">
+            <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">Enterprise</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For orgs with advanced needs.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">Custom</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Everything in Pro
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                SSO &amp; SAML
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                SLA guarantee
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+              Contact Sales
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="py-24" style="background-color: var(--bg); border-top: 1px solid var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-5xl" style="color: var(--text);">
+            Stop managing.<br>Start shipping.
+          </h2>
+          <p class="mt-6 text-base" style="color: var(--muted);">
+            Join 2,400+ engineering teams automating their workflows. Free to start, no credit card required.
+          </p>
+          <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#" class="inline-flex items-center gap-2 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" style="background-color: var(--accent); color: #0c0c14;">
+              Get Started Free
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="#" class="inline-flex items-center gap-2 rounded-lg border px-7 py-3.5 text-base font-medium transition-all duration-200 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" style="border-color: var(--border); color: var(--text);">
+              Star on GitHub
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-16" style="background-color: #08080e; border-top: 1px solid var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <span class="flex items-center gap-2 font-heading text-lg font-bold" style="color: var(--text);">
+            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background-color: var(--accent);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0c0c14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </span>
+            TaskFlow
+          </span>
+          <p class="mt-3 text-sm" style="color: var(--muted);">AI-powered project management for teams that ship.</p>
+        </div>
+        <nav aria-label="Product">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Product</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Features</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Pricing</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Changelog</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Developers">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Developers</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Documentation</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">API Reference</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">SDKs</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Legal">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Legal</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Privacy</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Terms</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white" style="color: var(--muted);">Security</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="mt-12 border-t pt-8" style="border-color: var(--border);">
+        <p class="text-center text-sm" style="color: var(--muted); opacity: 0.5;">&copy; 2026 TaskFlow, Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>

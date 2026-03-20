@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>011 — Dark Luxury</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            luxury: {
+              bg: '#050505',
+              subtle: '#0e0e0e',
+              border: '#1f1f1f',
+              text: '#e8e8e8',
+              muted: '#6b6b6b',
+              accent: '#d4a574',
+            }
+          },
+          fontFamily: {
+            heading: ['Fraunces', 'Georgia', 'serif'],
+            body: ['DM Sans', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { background: #050505; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    .animate-fade-up-delay-1 { animation-delay: 0.3s; }
+    .animate-fade-up-delay-2 { animation-delay: 0.6s; }
+    .animate-fade-up-delay-3 { animation-delay: 0.9s; }
+
+    /* Thin gold decorative line */
+    .gold-line {
+      width: 48px;
+      height: 1px;
+      background: #d4a574;
+    }
+  </style>
+</head>
+<body class="bg-luxury-bg text-luxury-text antialiased selection:bg-luxury-accent/20 selection:text-luxury-text">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-luxury-bg/80 backdrop-blur-md border-b border-luxury-border/50">
+    <div class="max-w-4xl mx-auto px-6 flex items-center justify-between h-16">
+      <a href="#" class="font-heading text-lg tracking-tight text-luxury-text transition-colors duration-300 hover:text-luxury-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">Lumière</a>
+      <div class="flex items-center gap-8">
+        <a href="#craft" class="text-sm text-luxury-muted hover:text-luxury-accent transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">Craft</a>
+        <a href="#story" class="text-sm text-luxury-muted hover:text-luxury-accent transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">Story</a>
+        <a href="#request" class="text-sm border border-luxury-accent text-luxury-accent px-5 py-2 hover:bg-luxury-accent hover:text-luxury-bg transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">Request Access</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero — 100vh, massive text, extreme emptiness -->
+  <section class="min-h-screen flex flex-col items-center justify-center px-6 py-36 md:py-48">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="font-heading font-normal text-7xl md:text-8xl leading-none tracking-[-0.04em] text-luxury-text animate-fade-up">
+        Design without<br>compromise
+      </h1>
+      <p class="mt-8 text-sm text-luxury-muted tracking-widest uppercase animate-fade-up animate-fade-up-delay-1">
+        A new standard in digital craft
+      </p>
+      <div class="mt-14 animate-fade-up animate-fade-up-delay-2">
+        <a href="#request" class="inline-block text-sm border border-luxury-accent text-luxury-accent px-8 py-3.5 hover:bg-luxury-accent hover:text-luxury-bg transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+          Request Access
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="flex justify-center">
+    <div class="gold-line"></div>
+  </div>
+
+  <!-- Feature 1 — One feature per viewport -->
+  <section id="craft" class="py-24 md:py-36 bg-luxury-bg">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <p class="text-xs text-luxury-muted tracking-[0.2em] uppercase mb-6">01 — Precision</p>
+      <h2 class="font-heading font-normal text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] leading-tight text-luxury-text">
+        Every pixel exists<br>for a reason
+      </h2>
+      <p class="mt-10 text-luxury-muted text-base leading-relaxed max-w-lg mx-auto">
+        We removed everything unnecessary. What remains is pure intention —
+        interfaces so refined they feel inevitable.
+      </p>
+    </div>
+  </section>
+
+  <!-- Product Visual -->
+  <section class="py-20 md:py-32 bg-luxury-subtle">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="relative aspect-video rounded-sm overflow-hidden shadow-2xl shadow-black/20">
+        <!-- Simulated product screenshot -->
+        <div class="absolute inset-0 bg-luxury-bg flex items-center justify-center">
+          <div class="w-full max-w-md px-8">
+            <div class="h-3 w-16 bg-luxury-border rounded-sm mb-8"></div>
+            <div class="h-2 w-full bg-luxury-border/50 rounded-sm mb-3"></div>
+            <div class="h-2 w-3/4 bg-luxury-border/50 rounded-sm mb-3"></div>
+            <div class="h-2 w-5/6 bg-luxury-border/50 rounded-sm mb-8"></div>
+            <div class="flex gap-4">
+              <div class="h-24 flex-1 bg-luxury-subtle rounded-sm border border-luxury-border"></div>
+              <div class="h-24 flex-1 bg-luxury-subtle rounded-sm border border-luxury-border"></div>
+            </div>
+            <div class="mt-8 h-10 w-32 border border-luxury-accent rounded-sm"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial — single large quote -->
+  <section class="py-24 md:py-32 bg-luxury-bg">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <blockquote>
+        <p class="font-heading italic font-normal text-2xl sm:text-3xl md:text-4xl leading-snug tracking-tight text-luxury-text">
+          "The moment I opened it, I understood what design could feel like.
+          Nothing competes."
+        </p>
+        <footer class="mt-10">
+          <p class="text-sm text-luxury-muted">— Elise Moreau, Creative Director at Vellum</p>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="flex justify-center">
+    <hr class="border-t border-luxury-border w-24">
+  </div>
+
+  <!-- Feature 2 — One feature, full viewport feel -->
+  <section id="story" class="py-24 md:py-36 bg-luxury-subtle">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <p class="text-xs text-luxury-muted tracking-[0.2em] uppercase mb-6">02 — Stillness</p>
+      <h2 class="font-heading font-normal text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] leading-tight text-luxury-text">
+        Silence is the<br>ultimate luxury
+      </h2>
+      <p class="mt-10 text-luxury-muted text-base leading-relaxed max-w-lg mx-auto">
+        No notifications. No noise. Only what matters,
+        presented at the pace you choose.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="request" class="py-28 md:py-40 bg-luxury-bg">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="font-heading font-normal text-3xl sm:text-5xl tracking-[-0.02em] text-luxury-text">
+        Ready to experience it?
+      </h2>
+      <p class="mt-6 text-sm text-luxury-muted">
+        Limited access. By invitation only.
+      </p>
+      <div class="mt-12">
+        <a href="#" class="inline-block text-sm border border-luxury-accent text-luxury-accent px-10 py-4 hover:bg-luxury-accent hover:text-luxury-bg transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+          Request Access
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer — minimal -->
+  <footer class="py-16 bg-luxury-bg border-t border-luxury-border/50">
+    <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span class="font-heading text-sm text-luxury-muted">Lumière</span>
+      <div class="flex items-center gap-6">
+        <a href="#" class="text-xs text-luxury-muted hover:text-luxury-text transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">Privacy</a>
+        <a href="#" class="text-xs text-luxury-muted hover:text-luxury-text transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-luxury-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black">Terms</a>
+      </div>
+      <span class="text-xs text-luxury-muted/50">&copy; 2026 Lumière</span>
+    </div>
+  </footer>
+
+</body>
+</html>

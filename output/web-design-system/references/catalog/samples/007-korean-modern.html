@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>007 — Korean Modern Reference</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            toss: {
+              text: '#191f28',
+              sub: '#333d4b',
+              muted: '#8b95a1',
+              border: '#d1d6db',
+              bg: '#f2f4f6',
+              blue: '#3182f6',
+              dark: '#191f28',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif; color: #191f28; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    .phone-frame {
+      width: 280px;
+      height: 560px;
+      border: 6px solid #191f28;
+      border-radius: 2.5rem;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 24px;
+      background: #191f28;
+      border-radius: 12px;
+      z-index: 10;
+    }
+    .phone-screen {
+      padding-top: 48px;
+      height: 100%;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="antialiased bg-white">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-toss-border/50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-bold text-xl text-toss-text tracking-tight">태스크<span class="text-toss-blue">플로우</span></a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-toss-sub">
+        <a href="#" class="hover:text-toss-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 rounded">기능</a>
+        <a href="#" class="hover:text-toss-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 rounded">고객사례</a>
+        <a href="#" class="hover:text-toss-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 rounded">요금제</a>
+      </div>
+      <a href="#" class="bg-toss-dark hover:bg-toss-sub text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2">앱 다운로드</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-20 md:pt-32 pb-16 md:pb-28">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 md:gap-20">
+      <div class="flex-1 text-center md:text-left">
+        <p class="text-toss-blue font-semibold text-sm mb-4">팀 협업의 새로운 기준</p>
+        <h1 class="font-bold text-3xl md:text-5xl tracking-tight leading-[1.15] text-toss-text mb-6">
+          일하는 방식을<br>간결하게 바꾸다
+        </h1>
+        <p class="text-toss-muted text-lg leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
+          태스크, 일정, 문서를 하나의 앱에서. 100만 팀이 선택한 업무 플랫폼.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+          <a href="#" class="bg-toss-dark hover:bg-toss-sub text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2">무료로 시작하기</a>
+          <a href="#" class="text-toss-sub hover:text-toss-text font-semibold px-8 py-4 rounded-xl text-lg border border-toss-border hover:border-toss-sub transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2">데모 보기</a>
+        </div>
+      </div>
+      <!-- Phone mockup -->
+      <div class="flex-shrink-0">
+        <div class="phone-frame">
+          <div class="phone-screen bg-white">
+            <!-- App UI inside phone -->
+            <div class="px-5 pt-2">
+              <div class="flex items-center justify-between mb-5">
+                <span class="font-bold text-base text-toss-text">내 태스크</span>
+                <div class="w-8 h-8 rounded-full bg-toss-blue flex items-center justify-center text-white text-xs font-bold">+</div>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
+                  <div class="w-5 h-5 rounded-md border-2 border-toss-blue flex items-center justify-center">
+                    <svg class="w-3 h-3 text-toss-blue" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-toss-text line-through opacity-50">디자인 시안 검토</p>
+                    <p class="text-[10px] text-toss-muted">김지은 · 완료</p>
+                  </div>
+                  <div class="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center text-[10px]">👩</div>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
+                  <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-toss-text">API 연동 테스트</p>
+                    <p class="text-[10px] text-toss-muted">박민수 · 오늘 마감</p>
+                  </div>
+                  <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px]">👨</div>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
+                  <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-toss-text">유저 인터뷰 정리</p>
+                    <p class="text-[10px] text-toss-muted">이수진 · 내일 마감</p>
+                  </div>
+                  <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-[10px]">👩</div>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-toss-bg rounded-2xl">
+                  <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-toss-text">마케팅 보고서 작성</p>
+                    <p class="text-[10px] text-toss-muted">최현우 · 3일 후</p>
+                  </div>
+                  <div class="w-6 h-6 rounded-full bg-yellow-100 flex items-center justify-center text-[10px]">👨</div>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-white border border-toss-border rounded-2xl">
+                  <div class="w-5 h-5 rounded-md border-2 border-toss-border"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-toss-text">주간 회의 안건 준비</p>
+                    <p class="text-[10px] text-toss-muted">나 · 금요일</p>
+                  </div>
+                  <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-[10px]">🙋</div>
+                </div>
+              </div>
+              <!-- Bottom tab bar -->
+              <div class="flex items-center justify-around mt-5 pt-3 border-t border-toss-border/50">
+                <div class="text-center">
+                  <svg class="w-5 h-5 mx-auto text-toss-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                  <span class="text-[10px] font-medium text-toss-blue">홈</span>
+                </div>
+                <div class="text-center">
+                  <svg class="w-5 h-5 mx-auto text-toss-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                  <span class="text-[10px] text-toss-muted">일정</span>
+                </div>
+                <div class="text-center">
+                  <svg class="w-5 h-5 mx-auto text-toss-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+                  <span class="text-[10px] text-toss-muted">채팅</span>
+                </div>
+                <div class="text-center">
+                  <svg class="w-5 h-5 mx-auto text-toss-muted" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                  <span class="text-[10px] text-toss-muted">내 정보</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="bg-toss-bg py-10">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="text-sm text-toss-muted text-center mb-6">국내 대표 기업들이 함께합니다</p>
+      <div class="flex flex-wrap justify-center items-center gap-8 md:gap-14">
+        <div class="px-5 py-2 bg-white rounded-xl border border-toss-border text-sm font-bold text-toss-sub">삼성전자</div>
+        <div class="px-5 py-2 bg-white rounded-xl border border-toss-border text-sm font-bold text-toss-sub">현대자동차</div>
+        <div class="px-5 py-2 bg-white rounded-xl border border-toss-border text-sm font-bold text-toss-sub">LG전자</div>
+        <div class="px-5 py-2 bg-white rounded-xl border border-toss-border text-sm font-bold text-toss-sub">카카오</div>
+        <div class="px-5 py-2 bg-white rounded-xl border border-toss-border text-sm font-bold text-toss-sub">네이버</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 1 -->
+  <section class="py-16 md:py-28">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 md:gap-20">
+      <div class="flex-1">
+        <span class="inline-block bg-blue-50 text-toss-blue text-xs font-bold px-3 py-1 rounded-lg mb-4">태스크 관리</span>
+        <h2 class="font-bold text-2xl sm:text-4xl tracking-tight leading-[1.15] text-toss-text mb-4">할 일을 한눈에.<br>놓치는 건 없게.</h2>
+        <p class="text-toss-muted text-lg leading-relaxed max-w-md">드래그 한 번으로 우선순위를 바꾸고, 멘션으로 팀원에게 바로 공유하세요. 마감일 알림까지 자동으로.</p>
+      </div>
+      <div class="flex-shrink-0">
+        <div class="w-72 h-48 bg-toss-bg rounded-2xl border border-toss-border p-5 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-toss-blue"></div><div class="h-3 bg-toss-border rounded-full w-32"></div></div>
+            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-amber-400"></div><div class="h-3 bg-toss-border rounded-full w-24"></div></div>
+            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-emerald-400"></div><div class="h-3 bg-toss-border rounded-full w-28"></div></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex -space-x-2">
+              <div class="w-6 h-6 rounded-full bg-pink-200 border-2 border-white"></div>
+              <div class="w-6 h-6 rounded-full bg-blue-200 border-2 border-white"></div>
+              <div class="w-6 h-6 rounded-full bg-green-200 border-2 border-white"></div>
+            </div>
+            <span class="text-xs text-toss-muted">3명 참여 중</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 2 -->
+  <section class="bg-toss-bg py-16 md:py-28">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20">
+      <div class="flex-1">
+        <span class="inline-block bg-blue-50 text-toss-blue text-xs font-bold px-3 py-1 rounded-lg mb-4">실시간 협업</span>
+        <h2 class="font-bold text-2xl sm:text-4xl tracking-tight leading-[1.15] text-toss-text mb-4">같이 보고,<br>같이 만들고.</h2>
+        <p class="text-toss-muted text-lg leading-relaxed max-w-md">문서, 시트, 슬라이드를 한 공간에서 동시 편집. 히스토리 걱정 없이 자유롭게 작업하세요.</p>
+      </div>
+      <div class="flex-shrink-0">
+        <div class="w-72 h-48 bg-white rounded-2xl border border-toss-border p-5 relative overflow-hidden">
+          <div class="space-y-2 mb-4">
+            <div class="h-4 bg-toss-text rounded w-40"></div>
+            <div class="h-3 bg-toss-border rounded-full w-full"></div>
+            <div class="h-3 bg-toss-border rounded-full w-3/4"></div>
+            <div class="h-3 bg-toss-border rounded-full w-5/6"></div>
+          </div>
+          <div class="absolute bottom-3 right-3 flex -space-x-1">
+            <div class="w-5 h-5 rounded-full bg-toss-blue border-2 border-white"></div>
+            <div class="w-5 h-5 rounded-full bg-rose-400 border-2 border-white"></div>
+          </div>
+          <div class="absolute top-12 left-24 w-0.5 h-5 bg-toss-blue animate-pulse"></div>
+          <div class="absolute top-16 left-48 w-0.5 h-5 bg-rose-400 animate-pulse"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 3 -->
+  <section class="py-16 md:py-28">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 md:gap-20">
+      <div class="flex-1">
+        <span class="inline-block bg-blue-50 text-toss-blue text-xs font-bold px-3 py-1 rounded-lg mb-4">스마트 알림</span>
+        <h2 class="font-bold text-2xl sm:text-4xl tracking-tight leading-[1.15] text-toss-text mb-4">중요한 건 바로.<br>나머진 나중에.</h2>
+        <p class="text-toss-muted text-lg leading-relaxed max-w-md">AI가 알림을 분류해서 정말 필요한 것만 즉시 전달합니다. 집중 모드로 방해 없이 몰입하세요.</p>
+      </div>
+      <div class="flex-shrink-0">
+        <div class="w-72 space-y-2">
+          <div class="bg-white rounded-2xl border border-toss-border p-4 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-sm">🔴</div>
+            <div class="flex-1">
+              <p class="text-xs font-semibold text-toss-text">긴급: 서버 장애 감지</p>
+              <p class="text-[10px] text-toss-muted">2분 전</p>
+            </div>
+          </div>
+          <div class="bg-toss-bg rounded-2xl border border-toss-border/50 p-4 flex items-center gap-3 opacity-60">
+            <div class="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm">💬</div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-toss-sub">팀 채팅: 점심 메뉴 투표</p>
+              <p class="text-[10px] text-toss-muted">나중에 보기</p>
+            </div>
+          </div>
+          <div class="bg-toss-bg rounded-2xl border border-toss-border/50 p-4 flex items-center gap-3 opacity-60">
+            <div class="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm">📋</div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-toss-sub">주간 리포트 자동 생성됨</p>
+              <p class="text-[10px] text-toss-muted">나중에 보기</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="bg-toss-bg py-14 md:py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <p class="text-4xl font-bold text-toss-blue tracking-tight" style="font-feature-settings: 'tnum';">100만+</p>
+          <p class="text-sm text-toss-muted mt-1">사용자</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold text-toss-blue tracking-tight" style="font-feature-settings: 'tnum';">4.9★</p>
+          <p class="text-sm text-toss-muted mt-1">앱스토어 평점</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold text-toss-blue tracking-tight" style="font-feature-settings: 'tnum';">50만+</p>
+          <p class="text-sm text-toss-muted mt-1">다운로드</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold text-toss-blue tracking-tight" style="font-feature-settings: 'tnum';">99.9%</p>
+          <p class="text-sm text-toss-muted mt-1">서비스 안정성</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Reviews -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="font-bold text-2xl sm:text-4xl tracking-tight text-center text-toss-text mb-12">사용자 리뷰</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-toss-border p-6 hover:shadow-lg transition-all duration-200">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center font-bold text-sm text-pink-600">김</div>
+            <div>
+              <p class="font-semibold text-sm text-toss-text">김서연</p>
+              <p class="text-xs text-toss-muted">스타트업 PM</p>
+            </div>
+          </div>
+          <p class="text-sm text-toss-sub leading-relaxed">"슬랙, 노션, 지라를 왔다갔다 하던 시간이 사라졌어요. 이제 태스크플로우 하나로 충분합니다."</p>
+          <div class="flex gap-0.5 mt-3 text-amber-400 text-sm">★★★★★</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-toss-border p-6 hover:shadow-lg transition-all duration-200">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-sm text-blue-600">이</div>
+            <div>
+              <p class="font-semibold text-sm text-toss-text">이준호</p>
+              <p class="text-xs text-toss-muted">개발팀 리드</p>
+            </div>
+          </div>
+          <p class="text-sm text-toss-sub leading-relaxed">"API 연동이 깔끔하고 웹훅 설정도 직관적이에요. 개발자 경험을 잘 이해하는 서비스입니다."</p>
+          <div class="flex gap-0.5 mt-3 text-amber-400 text-sm">★★★★★</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-toss-border p-6 hover:shadow-lg transition-all duration-200 sm:col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center font-bold text-sm text-green-600">박</div>
+            <div>
+              <p class="font-semibold text-sm text-toss-text">박하은</p>
+              <p class="text-xs text-toss-muted">마케팅 매니저</p>
+            </div>
+          </div>
+          <p class="text-sm text-toss-sub leading-relaxed">"모바일 앱이 정말 잘 만들어져 있어요. 출퇴근길에도 업무 확인하고 바로 피드백 줄 수 있어요."</p>
+          <div class="flex gap-0.5 mt-3 text-amber-400 text-sm">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download CTA -->
+  <section class="bg-toss-dark py-20">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="font-bold text-2xl sm:text-4xl tracking-tight text-white mb-4">지금 시작하세요</h2>
+      <p class="text-gray-400 text-lg mb-10">무료 플랜으로 시작하고, 팀이 커지면 업그레이드하세요.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#" class="inline-flex items-center gap-3 bg-white text-toss-text font-semibold px-7 py-4 rounded-xl hover:bg-gray-100 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 focus-visible:ring-offset-toss-dark">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          App Store
+        </a>
+        <a href="#" class="inline-flex items-center gap-3 bg-white text-toss-text font-semibold px-7 py-4 rounded-xl hover:bg-gray-100 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-toss-blue focus-visible:ring-offset-2 focus-visible:ring-offset-toss-dark">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 1.328c.864.5.864 1.828 0 2.328l-2.302 1.328-2.536-2.536 2.536-2.448zM5.864 3.458L16.8 9.79l-2.302 2.302-8.635-8.635z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-toss-dark py-12 border-t border-gray-800">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid sm:grid-cols-4 gap-8 mb-10">
+        <div>
+          <h4 class="font-bold text-white mb-4">제품</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors duration-200">기능 소개</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">요금제</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">업데이트</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-4">고객</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors duration-200">고객사례</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">도움말</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">커뮤니티</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-4">회사</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors duration-200">소개</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">채용</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">블로그</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-4">법적 고지</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors duration-200">이용약관</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">개인정보처리방침</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-6 text-sm text-gray-500 text-center">
+        &copy; 2026 태스크플로우 주식회사. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

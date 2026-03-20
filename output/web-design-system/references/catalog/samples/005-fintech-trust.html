@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>005 — Fintech Trust</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#0f172a',
+            'navy-light': '#1e293b',
+            accent: '#1e40af',
+            subtle: '#f1f5f9',
+            border: '#cbd5e1',
+            muted: '#64748b',
+          },
+          fontFamily: {
+            heading: ['DM Sans', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          borderRadius: {
+            card: '0.75rem',
+            btn: '0.5rem',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-white text-navy antialiased font-body">
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-border">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <!-- Logo mark -->
+        <div class="w-8 h-8 bg-navy rounded-btn flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="white"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity="0.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity="0.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="white" opacity="0.3"/></svg>
+        </div>
+        <span class="font-heading text-xl font-semibold tracking-tight">Vaultline</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#" class="font-body text-sm text-muted hover:text-navy transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Products</a>
+        <a href="#" class="font-body text-sm text-muted hover:text-navy transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Pricing</a>
+        <a href="#" class="font-body text-sm text-muted hover:text-navy transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Security</a>
+        <a href="#" class="font-body text-sm text-muted hover:text-navy transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Company</a>
+        <a href="#" class="font-body text-sm text-muted hover:text-navy transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Log in</a>
+        <a href="#" class="bg-navy text-white font-heading text-sm font-medium px-5 py-2.5 rounded-btn hover:bg-navy-light transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">Open an Account</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: Split -->
+  <section class="py-24 md:py-36 bg-white">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div>
+        <h1 class="font-heading text-5xl md:text-7xl font-semibold leading-[1.08] tracking-tight mb-6">
+          Banking built for<br />growing businesses.
+        </h1>
+        <p class="font-body text-lg text-muted leading-[1.7] mb-8 max-w-lg">
+          Vaultline combines checking, savings, and treasury management in one platform — with the security your finance team demands.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="#" class="inline-flex items-center justify-center bg-navy text-white font-heading text-sm font-medium px-6 py-3 rounded-btn hover:bg-navy-light transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">Open an Account</a>
+          <a href="#" class="inline-flex items-center justify-center border border-border text-navy font-heading text-sm font-medium px-6 py-3 rounded-btn hover:border-muted transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">Talk to Sales</a>
+        </div>
+      </div>
+      <!-- Dashboard mockup -->
+      <div class="bg-subtle border border-border rounded-card p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <p class="font-body text-xs text-muted mb-1">Operating Account</p>
+            <p class="font-mono text-3xl font-medium text-navy">$847,291<span class="text-lg text-muted">.34</span></p>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-10 h-6 bg-navy rounded-sm"></div>
+            <div class="w-10 h-6 bg-accent/20 rounded-sm"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-btn border border-border divide-y divide-border">
+          <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div>
+                <p class="font-body text-sm font-medium">Stripe Payout</p>
+                <p class="font-body text-xs text-muted">Mar 19, 2026</p>
+              </div>
+            </div>
+            <span class="font-mono text-sm text-green-600">+$24,800.00</span>
+          </div>
+          <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h12" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div>
+                <p class="font-body text-sm font-medium">AWS Infrastructure</p>
+                <p class="font-body text-xs text-muted">Mar 18, 2026</p>
+              </div>
+            </div>
+            <span class="font-mono text-sm text-red-600">-$3,247.50</span>
+          </div>
+          <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h12" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div>
+                <p class="font-body text-sm font-medium">Gusto Payroll</p>
+                <p class="font-body text-xs text-muted">Mar 15, 2026</p>
+              </div>
+            </div>
+            <span class="font-mono text-sm text-red-600">-$68,400.00</span>
+          </div>
+          <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div>
+                <p class="font-body text-sm font-medium">Invoice #1042 — Acme Corp</p>
+                <p class="font-body text-xs text-muted">Mar 14, 2026</p>
+              </div>
+            </div>
+            <span class="font-mono text-sm text-green-600">+$12,500.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof Logos -->
+  <section class="py-12 bg-subtle">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="font-body text-xs text-muted text-center uppercase tracking-widest mb-8">Trusted by finance teams at</p>
+      <div class="flex flex-wrap items-center justify-center gap-12">
+        <span class="font-heading text-lg font-semibold text-navy/30 hover:text-navy/60 transition-opacity duration-200">Notion</span>
+        <span class="font-heading text-lg font-semibold text-navy/30 hover:text-navy/60 transition-opacity duration-200">Linear</span>
+        <span class="font-heading text-lg font-semibold text-navy/30 hover:text-navy/60 transition-opacity duration-200">Vercel</span>
+        <span class="font-heading text-lg font-semibold text-navy/30 hover:text-navy/60 transition-opacity duration-200">Resend</span>
+        <span class="font-heading text-lg font-semibold text-navy/30 hover:text-navy/60 transition-opacity duration-200">Cal.com</span>
+        <span class="font-heading text-lg font-semibold text-navy/30 hover:text-navy/60 transition-opacity duration-200">Dub</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Badges -->
+  <section class="py-10 bg-white border-b border-border">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-wrap items-center justify-center gap-10">
+        <div class="flex items-center gap-3">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div>
+            <p class="font-heading text-sm font-semibold text-navy">SOC 2 Type II</p>
+            <p class="font-body text-xs text-muted">Certified compliant</p>
+          </div>
+        </div>
+        <div class="w-px h-8 bg-border hidden sm:block" aria-hidden="true"></div>
+        <div class="flex items-center gap-3">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <div>
+            <p class="font-heading text-sm font-semibold text-navy">256-bit Encryption</p>
+            <p class="font-body text-xs text-muted">Bank-grade security</p>
+          </div>
+        </div>
+        <div class="w-px h-8 bg-border hidden sm:block" aria-hidden="true"></div>
+        <div class="flex items-center gap-3">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
+          <div>
+            <p class="font-heading text-sm font-semibold text-navy">FDIC Insured</p>
+            <p class="font-body text-xs text-muted">Up to $5M per account</p>
+          </div>
+        </div>
+        <div class="w-px h-8 bg-border hidden sm:block" aria-hidden="true"></div>
+        <div class="flex items-center gap-3">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div>
+            <p class="font-heading text-sm font-semibold text-navy">PCI DSS Level 1</p>
+            <p class="font-body text-xs text-muted">Card data protection</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features: 3-column grid -->
+  <section class="py-20 md:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="font-heading text-3xl md:text-5xl font-semibold tracking-tight mb-4">Everything your finance team needs.</h2>
+        <p class="font-body text-lg text-muted max-w-2xl mx-auto">One platform for treasury, spend management, and corporate cards — built with security from day one.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="border border-border rounded-card p-8 hover:border-muted transition-colors duration-200">
+          <div class="w-10 h-10 bg-accent/10 rounded-btn flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-medium mb-2">Treasury Management</h3>
+          <p class="font-body text-sm text-muted leading-relaxed">Earn yield on idle cash with automated sweeps into FDIC-insured partner banks. No lockups, no minimums.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="border border-border rounded-card p-8 hover:border-muted transition-colors duration-200">
+          <div class="w-10 h-10 bg-accent/10 rounded-btn flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-medium mb-2">Corporate Cards</h3>
+          <p class="font-body text-sm text-muted leading-relaxed">Issue physical and virtual cards with per-card spend limits, merchant locks, and real-time notifications.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="border border-border rounded-card p-8 hover:border-muted transition-colors duration-200">
+          <div class="w-10 h-10 bg-accent/10 rounded-btn flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-medium mb-2">Automated Accounting</h3>
+          <p class="font-body text-sm text-muted leading-relaxed">Auto-categorize transactions, sync with QuickBooks or NetSuite, and close books 5x faster.</p>
+        </div>
+        <!-- Feature 4 -->
+        <div class="border border-border rounded-card p-8 hover:border-muted transition-colors duration-200">
+          <div class="w-10 h-10 bg-accent/10 rounded-btn flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-medium mb-2">Real-time Analytics</h3>
+          <p class="font-body text-sm text-muted leading-relaxed">Track burn rate, runway, and cash flow with dashboards that update as transactions clear.</p>
+        </div>
+        <!-- Feature 5 -->
+        <div class="border border-border rounded-card p-8 hover:border-muted transition-colors duration-200">
+          <div class="w-10 h-10 bg-accent/10 rounded-btn flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-medium mb-2">Team Permissions</h3>
+          <p class="font-body text-sm text-muted leading-relaxed">Role-based access with approval workflows. Admins, bookkeepers, and employees each get exactly the access they need.</p>
+        </div>
+        <!-- Feature 6 -->
+        <div class="border border-border rounded-card p-8 hover:border-muted transition-colors duration-200">
+          <div class="w-10 h-10 bg-accent/10 rounded-btn flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-medium mb-2">Global Payments</h3>
+          <p class="font-body text-sm text-muted leading-relaxed">Send wires in 40+ currencies with transparent FX rates. No hidden markups, no intermediary fees.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics -->
+  <section class="py-16 bg-subtle">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <p class="font-mono text-4xl md:text-5xl font-medium text-navy">$2.4B</p>
+          <p class="font-body text-sm text-muted mt-2">Processed annually</p>
+        </div>
+        <div>
+          <p class="font-mono text-4xl md:text-5xl font-medium text-navy">15k+</p>
+          <p class="font-body text-sm text-muted mt-2">Business accounts</p>
+        </div>
+        <div>
+          <p class="font-mono text-4xl md:text-5xl font-medium text-navy">99.99%</p>
+          <p class="font-body text-sm text-muted mt-2">Platform uptime</p>
+        </div>
+        <div>
+          <p class="font-mono text-4xl md:text-5xl font-medium text-navy">&lt;1s</p>
+          <p class="font-body text-sm text-muted mt-2">Transaction speed</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 md:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-center mb-16">What finance leaders say.</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="border border-border rounded-card p-8 border-l-4 border-l-accent">
+          <p class="font-body text-sm text-navy/80 leading-relaxed mb-6">"Vaultline replaced three separate tools for us — our bank, our card program, and our expense tracker. Month-end close went from 5 days to 1."</p>
+          <div>
+            <p class="font-heading text-sm font-semibold">Sarah Chen</p>
+            <p class="font-body text-xs text-muted">CFO, Lattice Systems</p>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="border border-border rounded-card p-8 border-l-4 border-l-accent">
+          <p class="font-body text-sm text-navy/80 leading-relaxed mb-6">"The security posture alone justified the switch. SOC 2, FDIC insurance to $5M, and their fraud detection caught two unauthorized charges in our first month."</p>
+          <div>
+            <p class="font-heading text-sm font-semibold">David Park</p>
+            <p class="font-body text-xs text-muted">VP Finance, Meridian Health</p>
+          </div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="border border-border rounded-card p-8 border-l-4 border-l-accent">
+          <p class="font-body text-sm text-navy/80 leading-relaxed mb-6">"We were paying $400/mo in wire fees alone. Vaultline's transparent pricing saved us $12k in the first year — and the treasury yield more than covers the subscription."</p>
+          <div>
+            <p class="font-heading text-sm font-semibold">Maria Torres</p>
+            <p class="font-body text-xs text-muted">Head of Finance, Copilot AI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-navy">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="font-heading text-3xl md:text-5xl font-semibold text-white tracking-tight mb-4">Ready to upgrade your financial stack?</h2>
+      <p class="font-body text-lg text-white/60 mb-8 max-w-xl mx-auto">Open an account in 10 minutes. No minimums, no monthly fees for your first year.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="#" class="inline-flex items-center justify-center bg-white text-navy font-heading text-sm font-semibold px-6 py-3 rounded-btn hover:bg-gray-100 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy">Open an Account</a>
+        <a href="#" class="inline-flex items-center justify-center border border-white/30 text-white font-heading text-sm font-medium px-6 py-3 rounded-btn hover:border-white/60 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy">Schedule a Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-14 bg-navy border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <h4 class="font-heading text-sm font-semibold text-white mb-4">Product</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Checking</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Treasury</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Corporate Cards</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Payments</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading text-sm font-semibold text-white mb-4">Company</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">About</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Careers</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Blog</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Press</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading text-sm font-semibold text-white mb-4">Security</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">SOC 2 Report</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">PCI DSS</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Privacy Policy</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Bug Bounty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading text-sm font-semibold text-white mb-4">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Terms of Service</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Privacy</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Cookie Policy</a></li>
+            <li><a href="#" class="font-body text-sm text-white/50 hover:text-white/80 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-btn">Licenses</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 bg-white/20 rounded-sm flex items-center justify-center">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="white"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity="0.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity="0.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="white" opacity="0.3"/></svg>
+          </div>
+          <span class="font-heading text-sm font-semibold text-white/60">Vaultline</span>
+        </div>
+        <p class="font-body text-xs text-white/30 text-center md:text-right max-w-lg">
+          Vaultline is a financial technology company, not a bank. Banking services provided by Thread Bank, Member FDIC. Deposits are FDIC insured up to $5,000,000 through partner banks.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>032 — Agency Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #06070a;
+      color: #e8eaed;
+      overflow-x: hidden;
+    }
+
+    /* Dot grid pattern */
+    .dot-grid {
+      background-image: radial-gradient(circle, #2a2d36 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Card hover */
+    .case-card {
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .case-card:hover {
+      transform: translateY(-4px);
+    }
+    .case-card:hover .case-img {
+      transform: scale(1.05);
+    }
+    .case-card .case-img {
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .case-card:hover .case-overlay {
+      opacity: 1;
+    }
+    .case-overlay {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Service card hover */
+    .service-card {
+      background: #111318;
+      border: 1px solid #2a2d36;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .service-card:hover {
+      border-color: #4f46e5;
+      box-shadow: 0 0 30px rgba(79, 70, 229, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Timeline line */
+    .timeline-line {
+      position: relative;
+    }
+    .timeline-line::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, #2a2d36, #4f46e5, #2a2d36);
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* Nav scroll */
+    .nav-scrolled {
+      background: rgba(6, 7, 10, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #2a2d36;
+    }
+
+    /* CTA button */
+    .btn-primary {
+      background: #4f46e5;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: #818cf8;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      border: 1px solid #2a2d36;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .btn-outline:hover {
+      border-color: #4f46e5;
+      color: #818cf8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="#" class="text-lg font-bold tracking-tight text-white">STUDIO<span class="text-[#4f46e5]">.</span></a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#work" class="text-sm text-[#666c7a] hover:text-white transition-colors">Work</a>
+        <a href="#services" class="text-sm text-[#666c7a] hover:text-white transition-colors">Services</a>
+        <a href="#process" class="text-sm text-[#666c7a] hover:text-white transition-colors">Process</a>
+        <a href="#contact" class="btn-primary text-sm font-medium px-5 py-2.5 rounded-xl text-white">Start a Project</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="min-h-screen flex items-center dot-grid relative pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-6 w-full">
+      <div class="reveal">
+        <p class="text-[#4f46e5] text-sm font-medium tracking-wider uppercase mb-6">Digital Studio — Est. 2019</p>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight mb-8 reveal">
+        We craft digital<br>
+        experiences that<br>
+        <span class="text-[#666c7a]">move people.</span>
+      </h1>
+      <div class="reveal">
+        <p class="text-lg text-[#666c7a] max-w-xl leading-relaxed mb-10">
+          A multidisciplinary studio building brands, products, and platforms
+          for companies that refuse to blend in.
+        </p>
+      </div>
+      <div class="flex gap-4 reveal">
+        <a href="#work" class="btn-primary text-sm font-medium px-8 py-3.5 rounded-xl text-white inline-block">View Our Work</a>
+        <a href="#contact" class="btn-outline text-sm font-medium px-8 py-3.5 rounded-xl text-[#e8eaed] inline-block">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Studies -->
+  <section id="work" class="py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="border-t border-[#2a2d36] pt-8 mb-16 reveal">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase">Selected Work</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Case 1: Large -->
+        <div class="case-card rounded-xl overflow-hidden relative group md:col-span-2 reveal">
+          <div class="aspect-[16/7] bg-gradient-to-br from-[#1e1b4b] to-[#312e81] case-img flex items-center justify-center">
+            <div class="text-center">
+              <div class="w-20 h-20 mx-auto mb-4 rounded-xl bg-[#4f46e5]/30 flex items-center justify-center">
+                <svg class="w-10 h-10 text-[#818cf8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z"/></svg>
+              </div>
+              <p class="text-[#818cf8] text-sm">Product Dashboard</p>
+            </div>
+          </div>
+          <div class="case-overlay absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent flex items-end p-8">
+            <div>
+              <p class="text-xs text-[#818cf8] font-medium tracking-wider uppercase mb-2">Brand + Product</p>
+              <h3 class="text-2xl font-bold text-white mb-1">Meridian Analytics</h3>
+              <p class="text-sm text-[#9ca3af]">Full rebrand and product design for a Series B analytics platform</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2 -->
+        <div class="case-card rounded-xl overflow-hidden relative group reveal reveal-delay-1">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#1c1917] to-[#292524] case-img flex items-center justify-center">
+            <div class="w-16 h-16 rounded-xl bg-[#4f46e5]/20 flex items-center justify-center">
+              <svg class="w-8 h-8 text-[#818cf8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+            </div>
+          </div>
+          <div class="case-overlay absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent flex items-end p-6">
+            <div>
+              <p class="text-xs text-[#818cf8] font-medium tracking-wider uppercase mb-1">Website</p>
+              <h3 class="text-xl font-bold text-white">Nomad Health</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 3 -->
+        <div class="case-card rounded-xl overflow-hidden relative group reveal reveal-delay-2">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#0f2027] to-[#203a43] case-img flex items-center justify-center">
+            <div class="w-16 h-16 rounded-xl bg-[#4f46e5]/20 flex items-center justify-center">
+              <svg class="w-8 h-8 text-[#818cf8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
+            </div>
+          </div>
+          <div class="case-overlay absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent flex items-end p-6">
+            <div>
+              <p class="text-xs text-[#818cf8] font-medium tracking-wider uppercase mb-1">Mobile App</p>
+              <h3 class="text-xl font-bold text-white">Pulse Fitness</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 4 -->
+        <div class="case-card rounded-xl overflow-hidden relative group reveal reveal-delay-1">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#1a1a2e] to-[#16213e] case-img flex items-center justify-center">
+            <div class="w-16 h-16 rounded-xl bg-[#4f46e5]/20 flex items-center justify-center">
+              <svg class="w-8 h-8 text-[#818cf8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/></svg>
+            </div>
+          </div>
+          <div class="case-overlay absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent flex items-end p-6">
+            <div>
+              <p class="text-xs text-[#818cf8] font-medium tracking-wider uppercase mb-1">Brand Identity</p>
+              <h3 class="text-xl font-bold text-white">Crestview Capital</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 5 -->
+        <div class="case-card rounded-xl overflow-hidden relative group reveal reveal-delay-2">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#0d1117] to-[#161b22] case-img flex items-center justify-center">
+            <div class="w-16 h-16 rounded-xl bg-[#4f46e5]/20 flex items-center justify-center">
+              <svg class="w-8 h-8 text-[#818cf8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+            </div>
+          </div>
+          <div class="case-overlay absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent flex items-end p-6">
+            <div>
+              <p class="text-xs text-[#818cf8] font-medium tracking-wider uppercase mb-1">Design System</p>
+              <h3 class="text-xl font-bold text-white">Arclight OS</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="border-t border-[#2a2d36] pt-8 mb-16 reveal">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase">What We Do</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="service-card rounded-xl p-8 reveal reveal-delay-1">
+          <div class="w-12 h-12 rounded-xl bg-[#4f46e5]/10 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-[#4f46e5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Brand Strategy</h3>
+          <p class="text-[#666c7a] text-sm leading-relaxed">Positioning, naming, visual identity, and brand guidelines that give your company a distinctive voice in the market.</p>
+        </div>
+
+        <div class="service-card rounded-xl p-8 reveal reveal-delay-2">
+          <div class="w-12 h-12 rounded-xl bg-[#4f46e5]/10 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-[#4f46e5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Product Design</h3>
+          <p class="text-[#666c7a] text-sm leading-relaxed">UX research, interface design, prototyping, and design systems. From zero to shipped, we handle the entire design lifecycle.</p>
+        </div>
+
+        <div class="service-card rounded-xl p-8 reveal reveal-delay-3">
+          <div class="w-12 h-12 rounded-xl bg-[#4f46e5]/10 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-[#4f46e5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Development</h3>
+          <p class="text-[#666c7a] text-sm leading-relaxed">Front-end engineering, headless CMS integration, and performance optimization. We build what we design — pixel-perfect.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section id="process" class="py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="border-t border-[#2a2d36] pt-8 mb-16 reveal">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase">How We Work</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto">
+        <div class="timeline-line pl-16 space-y-16">
+          <div class="relative reveal">
+            <div class="absolute left-[-40px] top-1 w-12 h-12 rounded-xl bg-[#111318] border border-[#4f46e5] flex items-center justify-center">
+              <span class="text-sm font-bold text-[#4f46e5]">01</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Discovery & Audit</h3>
+            <p class="text-[#666c7a] leading-relaxed">We dig into your goals, audience, and competitive landscape. No assumptions — just evidence-based strategy from day one.</p>
+          </div>
+
+          <div class="relative reveal">
+            <div class="absolute left-[-40px] top-1 w-12 h-12 rounded-xl bg-[#111318] border border-[#4f46e5] flex items-center justify-center">
+              <span class="text-sm font-bold text-[#4f46e5]">02</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Concept & Direction</h3>
+            <p class="text-[#666c7a] leading-relaxed">Two to three creative directions, each grounded in research. You pick the one that resonates — we refine it until it clicks.</p>
+          </div>
+
+          <div class="relative reveal">
+            <div class="absolute left-[-40px] top-1 w-12 h-12 rounded-xl bg-[#111318] border border-[#4f46e5] flex items-center justify-center">
+              <span class="text-sm font-bold text-[#4f46e5]">03</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Design & Prototype</h3>
+            <p class="text-[#666c7a] leading-relaxed">High-fidelity screens, interactive prototypes, and micro-interactions. Every pixel has a reason; every animation serves the story.</p>
+          </div>
+
+          <div class="relative reveal">
+            <div class="absolute left-[-40px] top-1 w-12 h-12 rounded-xl bg-[#111318] border border-[#4f46e5] flex items-center justify-center">
+              <span class="text-sm font-bold text-[#4f46e5]">04</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Build & Launch</h3>
+            <p class="text-[#666c7a] leading-relaxed">Clean code, performance-first engineering, and a smooth handoff. We stay involved post-launch to iterate based on real data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="py-28">
+    <div class="max-w-4xl mx-auto px-6 text-center reveal">
+      <div class="border-t border-[#2a2d36] pt-8 mb-16">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase">Client Words</p>
+      </div>
+      <blockquote class="text-2xl md:text-3xl font-medium leading-snug mb-8 text-[#e8eaed]">
+        "They didn't just redesign our website — they rewired how we think about our brand. Our inbound leads jumped 3.2x in the first quarter after launch, and the design team still references the system they built."
+      </blockquote>
+      <div>
+        <p class="text-sm font-medium text-white">J. Park, Head of Growth</p>
+        <p class="text-sm text-[#666c7a]">Series A Developer Tools Startup</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clients / Social Proof -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="border-t border-[#2a2d36] pt-8 mb-16 reveal">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase">Recognition</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div class="reveal">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">Results speak.<br><span class="text-[#666c7a]">So do our clients.</span></h2>
+          <p class="text-[#666c7a] leading-relaxed">
+            We've shipped 47 projects across fintech, developer tools, health tech, and consumer brands. Here's what a few of them had to say after working with us.
+          </p>
+        </div>
+
+        <div class="space-y-8 reveal reveal-delay-1">
+          <div class="service-card rounded-xl p-6">
+            <p class="text-sm text-[#e8eaed] leading-relaxed mb-4">"We came with a Figma file and a vague brand direction. They came back with a system so tight our engineering team could build from it without a single design QA ticket. That never happens."</p>
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#4f46e5]/20 flex items-center justify-center text-xs font-bold text-[#818cf8]">SL</div>
+              <div>
+                <p class="text-sm font-medium text-white">S. Lee, CTO</p>
+                <p class="text-xs text-[#666c7a]">Series B Developer Tools</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-card rounded-xl p-6">
+            <p class="text-sm text-[#e8eaed] leading-relaxed mb-4">"Conversion rate on our pricing page went from 2.1% to 5.8% after the redesign. They didn't just make it prettier — they restructured the entire decision flow."</p>
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#4f46e5]/20 flex items-center justify-center text-xs font-bold text-[#818cf8]">RK</div>
+              <div>
+                <p class="text-sm font-medium text-white">R. Kim, VP Product</p>
+                <p class="text-xs text-[#666c7a]">Health Tech SaaS</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Awards -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="border-t border-[#2a2d36] pt-8 mb-12 reveal">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase">Awards & Press</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+        <div class="service-card rounded-xl p-6 text-center">
+          <p class="text-3xl font-bold text-[#4f46e5] mb-2">3x</p>
+          <p class="text-xs text-[#666c7a] tracking-wider uppercase">Site of the Day</p>
+          <p class="text-xs text-[#4a4d56] mt-1">Awwwards</p>
+        </div>
+        <div class="service-card rounded-xl p-6 text-center">
+          <p class="text-3xl font-bold text-[#4f46e5] mb-2">47</p>
+          <p class="text-xs text-[#666c7a] tracking-wider uppercase">Projects Shipped</p>
+          <p class="text-xs text-[#4a4d56] mt-1">Since 2019</p>
+        </div>
+        <div class="service-card rounded-xl p-6 text-center">
+          <p class="text-3xl font-bold text-[#4f46e5] mb-2">92%</p>
+          <p class="text-xs text-[#666c7a] tracking-wider uppercase">Return Clients</p>
+          <p class="text-xs text-[#4a4d56] mt-1">Come back for more</p>
+        </div>
+        <div class="service-card rounded-xl p-6 text-center">
+          <p class="text-3xl font-bold text-[#4f46e5] mb-2">FWA</p>
+          <p class="text-xs text-[#666c7a] tracking-wider uppercase">Featured Studio</p>
+          <p class="text-xs text-[#4a4d56] mt-1">2024</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact" class="py-24">
+    <div class="max-w-4xl mx-auto px-6 text-center reveal">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6">Have a project<br>in mind?</h2>
+      <p class="text-lg text-[#666c7a] mb-10 max-w-xl mx-auto">We take on a limited number of projects each quarter. Tell us what you're building — we'll tell you if we're the right fit.</p>
+      <a href="#" class="btn-primary text-sm font-medium px-10 py-4 rounded-xl text-white inline-block">Start a Conversation</a>
+    </div>
+  </section>
+
+  <!-- Logos / Trust -->
+  <section class="py-16 border-t border-[#2a2d36]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center reveal">
+        <p class="text-xs text-[#666c7a] tracking-widest uppercase mb-8">Trusted by teams building the future</p>
+        <div class="flex flex-wrap justify-center gap-12 items-center opacity-40">
+          <span class="text-sm text-[#666c7a] font-medium tracking-wider">[Your Logo]</span>
+          <span class="text-sm text-[#666c7a] font-medium tracking-wider">[Your Logo]</span>
+          <span class="text-sm text-[#666c7a] font-medium tracking-wider">[Your Logo]</span>
+          <span class="text-sm text-[#666c7a] font-medium tracking-wider">[Your Logo]</span>
+          <span class="text-sm text-[#666c7a] font-medium tracking-wider">[Your Logo]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 border-t border-[#2a2d36]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-12">
+        <div>
+          <p class="text-lg font-bold text-white mb-4">STUDIO<span class="text-[#4f46e5]">.</span></p>
+          <p class="text-sm text-[#666c7a] leading-relaxed">A multidisciplinary digital studio crafting brands and products since 2019.</p>
+        </div>
+        <div>
+          <p class="text-xs text-[#666c7a] tracking-widest uppercase mb-4">Navigation</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">Work</a>
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">Services</a>
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">Process</a>
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">Contact</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-[#666c7a] tracking-widest uppercase mb-4">Connect</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">Twitter</a>
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">Dribbble</a>
+            <a href="#" class="block text-sm text-[#9ca3af] hover:text-white transition-colors">LinkedIn</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-[#666c7a] tracking-widest uppercase mb-4">Say Hello</p>
+          <a href="mailto:hello@studio.co" class="text-sm text-[#4f46e5] hover:text-[#818cf8] transition-colors">hello@studio.co</a>
+        </div>
+      </div>
+      <div class="mt-16 pt-8 border-t border-[#2a2d36] text-center">
+        <p class="text-xs text-[#666c7a]">&copy; 2026 Studio. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // IntersectionObserver — animations repeat on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav scroll effect
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>

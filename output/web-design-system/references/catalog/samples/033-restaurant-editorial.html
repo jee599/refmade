@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>033 — Restaurant Editorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: #faf6f1;
+      color: #1a1714;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, blockquote { font-family: 'Playfair Display', serif; }
+
+    /* Hero parallax-lite */
+    .hero-bg {
+      background: linear-gradient(to top, rgba(26,23,20,0.7), rgba(26,23,20,0.2)),
+        linear-gradient(135deg, #78716c 0%, #44403c 50%, #292524 100%);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+
+    /* Menu item hover */
+    .menu-item {
+      border-bottom: 1px solid #e0d8cc;
+      transition: background 0.3s ease, padding-left 0.3s ease;
+    }
+    .menu-item:hover {
+      background: rgba(180, 83, 9, 0.04);
+      padding-left: 8px;
+    }
+
+    /* Gallery image hover */
+    .gallery-img {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+    }
+    .gallery-img:hover {
+      transform: scale(1.03);
+    }
+
+    /* Ornament */
+    .ornament::after {
+      content: '\2666';
+      display: block;
+      text-align: center;
+      color: #b45309;
+      font-size: 10px;
+      margin-top: 24px;
+      letter-spacing: 12px;
+    }
+
+    /* Nav scroll */
+    .nav-scrolled {
+      background: rgba(250, 246, 241, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e0d8cc;
+    }
+
+    /* Button */
+    .btn-warm {
+      background: #b45309;
+      color: #faf6f1;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-warm:hover {
+      background: #92400e;
+      transform: translateY(-1px);
+    }
+
+    /* Dotted leader for pricing */
+    .dotted-leader {
+      flex: 1;
+      border-bottom: 1px dotted #d4c9b8;
+      margin: 0 12px;
+      position: relative;
+      top: -4px;
+    }
+
+    /* Form input */
+    .form-input {
+      background: #ffffff;
+      border: 1px solid #e0d8cc;
+      transition: border-color 0.3s ease;
+    }
+    .form-input:focus {
+      border-color: #b45309;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="#" class="font-bold text-lg tracking-tight" style="font-family: 'Playfair Display', serif;">Terre <span class="text-[#b45309]">&</span> Table</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#about" class="text-sm text-[#78716c] hover:text-[#1a1714] transition-colors">Our Story</a>
+        <a href="#menu" class="text-sm text-[#78716c] hover:text-[#1a1714] transition-colors">Menu</a>
+        <a href="#gallery" class="text-sm text-[#78716c] hover:text-[#1a1714] transition-colors">Gallery</a>
+        <a href="#reserve" class="btn-warm text-sm font-medium px-5 py-2.5 rounded-lg">Reserve a Table</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-bg min-h-screen flex items-end">
+    <div class="max-w-6xl mx-auto px-6 pb-20 pt-40 w-full">
+      <div class="reveal">
+        <p class="text-[#d4a574] text-sm tracking-widest uppercase mb-4" style="font-family: 'Source Sans 3', sans-serif;">Est. 2017 &mdash; Seasonal Kitchen</p>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-semibold text-[#faf6f1] leading-[0.95] mb-6 reveal">
+        Where the land<br>meets the plate.
+      </h1>
+      <div class="reveal reveal-delay-1">
+        <p class="text-lg text-[#d4c9b8] max-w-lg leading-relaxed mb-8" style="font-family: 'Source Sans 3', sans-serif;">
+          A restaurant rooted in the seasons. Every dish reflects what the earth offers today — nothing more, nothing forced.
+        </p>
+      </div>
+      <div class="flex gap-4 reveal reveal-delay-2">
+        <a href="#reserve" class="btn-warm text-sm font-medium px-8 py-3.5 rounded-lg inline-block">Reserve a Table</a>
+        <a href="#menu" class="text-sm font-medium px-8 py-3.5 rounded-lg text-[#faf6f1] border border-[#faf6f1]/30 hover:border-[#faf6f1]/60 transition-colors inline-block">View Menu</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="py-28">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="ornament mb-12 reveal">
+        <p class="text-xs text-[#78716c] tracking-[0.3em] uppercase">Our Philosophy</p>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-semibold leading-snug mb-8 reveal">
+        We don't write a menu and then source ingredients. We visit the farm first — and let the harvest decide.
+      </h2>
+      <p class="text-[#78716c] leading-relaxed text-lg reveal" style="font-family: 'Source Sans 3', sans-serif;">
+        Every week, our team drives 40 minutes north to three family farms in Gyeonggi Province. What comes back in the truck becomes dinner. The result is a menu that changes constantly — sometimes daily — and a kitchen that stays honest about what "seasonal" actually means.
+      </p>
+    </div>
+  </section>
+
+  <!-- Menu Highlights -->
+  <section id="menu" class="py-24 bg-[#f0ebe3]">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="ornament mb-12 text-center reveal">
+        <p class="text-xs text-[#78716c] tracking-[0.3em] uppercase">Current Season</p>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-semibold text-center mb-16 reveal">Spring Menu</h2>
+
+      <!-- Starters -->
+      <div class="mb-14 reveal">
+        <p class="text-xs text-[#b45309] tracking-[0.2em] uppercase font-medium mb-6" style="font-family: 'Source Sans 3', sans-serif;">To Begin</p>
+        <div class="space-y-0">
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Spring Pea Broth</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">18</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Charred leek, smoked crema, dill oil, sourdough crumble</p>
+
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Burrata & Stone Fruit</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">24</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Roasted nectarine, pistachio, aged balsamic, wild arugula</p>
+
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Tartare of Hanwoo Beef</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">32</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Egg yolk confit, caper berries, mustard ice, rye toast</p>
+        </div>
+      </div>
+
+      <!-- Mains -->
+      <div class="mb-14 reveal">
+        <p class="text-xs text-[#b45309] tracking-[0.2em] uppercase font-medium mb-6" style="font-family: 'Source Sans 3', sans-serif;">Main Plates</p>
+        <div class="space-y-0">
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Whole Grilled Branzino</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">42</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Fennel pollen, crushed olive, charred lemon, sea salt flakes</p>
+
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Lamb Shoulder, Slow-Roasted</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">48</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Root vegetable gratin, rosemary jus, pickled turnip, black garlic</p>
+
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Wild Mushroom Risotto</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">36</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Truffle butter, aged parmesan, chive, toasted pine nuts</p>
+        </div>
+      </div>
+
+      <!-- Desserts -->
+      <div class="reveal">
+        <p class="text-xs text-[#b45309] tracking-[0.2em] uppercase font-medium mb-6" style="font-family: 'Source Sans 3', sans-serif;">Sweet</p>
+        <div class="space-y-0">
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Dark Chocolate Terrine</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">16</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Sea salt caramel, cocoa nib tuile, crème fraîche</p>
+
+          <div class="menu-item py-4 flex items-baseline">
+            <h3 class="text-lg font-medium" style="font-family: 'Playfair Display', serif;">Seasonal Fruit Tart</h3>
+            <span class="dotted-leader"></span>
+            <span class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">14</span>
+          </div>
+          <p class="text-sm text-[#78716c] pb-4 -mt-1">Almond frangipane, vanilla custard, powdered sugar</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="ornament mb-12 text-center reveal">
+        <p class="text-xs text-[#78716c] tracking-[0.3em] uppercase">Glimpses</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="overflow-hidden rounded-lg reveal">
+          <div class="aspect-square bg-gradient-to-br from-[#d4c9b8] to-[#a89984] gallery-img flex items-center justify-center">
+            <svg class="w-8 h-8 text-[#faf6f1]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="overflow-hidden rounded-lg md:row-span-2 reveal reveal-delay-1">
+          <div class="aspect-[3/4] md:h-full bg-gradient-to-br from-[#c4b5a0] to-[#8b7d6b] gallery-img flex items-center justify-center">
+            <svg class="w-8 h-8 text-[#faf6f1]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="overflow-hidden rounded-lg reveal reveal-delay-2">
+          <div class="aspect-square bg-gradient-to-br from-[#bfb3a0] to-[#9c8b73] gallery-img flex items-center justify-center">
+            <svg class="w-8 h-8 text-[#faf6f1]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="overflow-hidden rounded-lg reveal">
+          <div class="aspect-square bg-gradient-to-br from-[#cdc2b2] to-[#a39482] gallery-img flex items-center justify-center">
+            <svg class="w-8 h-8 text-[#faf6f1]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="overflow-hidden rounded-lg reveal reveal-delay-1">
+          <div class="aspect-square bg-gradient-to-br from-[#b8a892] to-[#8c7b66] gallery-img flex items-center justify-center">
+            <svg class="w-8 h-8 text-[#faf6f1]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chef Section -->
+  <section class="py-28 bg-[#f0ebe3]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="reveal">
+          <div class="aspect-[3/4] bg-gradient-to-br from-[#a89984] to-[#78716c] rounded-lg flex items-center justify-center">
+            <svg class="w-16 h-16 text-[#faf6f1]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <p class="text-xs text-[#b45309] tracking-[0.2em] uppercase font-medium mb-4" style="font-family: 'Source Sans 3', sans-serif;">The Chef</p>
+          <h2 class="text-3xl md:text-4xl font-semibold mb-6" style="font-family: 'Playfair Display', serif;">Jiyeon Park</h2>
+          <p class="text-[#78716c] leading-relaxed mb-4" style="font-family: 'Source Sans 3', sans-serif;">
+            After six years in Copenhagen kitchens — two of them at a two-Michelin-star Nordic restaurant — Jiyeon returned to Seoul with a question: what happens when you apply Nordic discipline to Korean ingredients?
+          </p>
+          <p class="text-[#78716c] leading-relaxed mb-6" style="font-family: 'Source Sans 3', sans-serif;">
+            Terre & Table is her answer. The menu is small — never more than 12 dishes — and it changes whenever the farms tell her something new has come in. "The best meal I can serve," she says, "is one I couldn't have planned last week."
+          </p>
+          <blockquote class="border-l-2 border-[#b45309] pl-6 italic text-lg text-[#44403c]" style="font-family: 'Playfair Display', serif;">
+            "I cook what the soil gives me. If that means three courses instead of seven, then three courses it is."
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="py-24">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="ornament mb-12 reveal">
+        <p class="text-xs text-[#78716c] tracking-[0.3em] uppercase">What People Say</p>
+      </div>
+      <blockquote class="text-2xl md:text-3xl font-medium leading-snug mb-8 reveal" style="font-family: 'Playfair Display', serif;">
+        "I've eaten at plenty of 'farm-to-table' restaurants. This is the first one where I could actually taste the difference. The spring pea broth was the simplest thing on the menu and the most memorable dish I had all year."
+      </blockquote>
+      <div class="reveal reveal-delay-1">
+        <p class="text-sm font-medium text-[#1a1714]" style="font-family: 'Source Sans 3', sans-serif;">H. Kim, food writer</p>
+        <p class="text-sm text-[#78716c]" style="font-family: 'Source Sans 3', sans-serif;">Seoul Magazine, March 2026 review</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wine Pairings -->
+  <section class="py-20 bg-[#1a1714]">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <p class="text-xs text-[#b45309] tracking-[0.3em] uppercase mb-4">From the Cellar</p>
+        <h2 class="text-3xl md:text-4xl font-semibold text-[#faf6f1] mb-6" style="font-family: 'Playfair Display', serif;">Wine Pairings</h2>
+        <p class="text-[#a89984] leading-relaxed max-w-2xl mx-auto mb-10" style="font-family: 'Source Sans 3', sans-serif;">
+          Our sommelier curates a rotating selection of natural and biodynamic wines, mostly from small European producers. Each pairing is chosen to complement the season's menu — not overpower it.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 text-left reveal">
+        <div class="border border-[#2a2520] rounded-lg p-6">
+          <p class="text-xs text-[#b45309] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">White</p>
+          <h3 class="text-lg font-medium text-[#faf6f1] mb-2" style="font-family: 'Playfair Display', serif;">Domaine Huet Vouvray</h3>
+          <p class="text-sm text-[#a89984]" style="font-family: 'Source Sans 3', sans-serif;">Loire Valley, France &mdash; Chenin Blanc, biodynamic, honeyed minerality</p>
+        </div>
+        <div class="border border-[#2a2520] rounded-lg p-6">
+          <p class="text-xs text-[#b45309] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Red</p>
+          <h3 class="text-lg font-medium text-[#faf6f1] mb-2" style="font-family: 'Playfair Display', serif;">Envinate Tinto</h3>
+          <p class="text-sm text-[#a89984]" style="font-family: 'Source Sans 3', sans-serif;">Canary Islands, Spain &mdash; Listán Negro, volcanic terroir, bright acidity</p>
+        </div>
+        <div class="border border-[#2a2520] rounded-lg p-6">
+          <p class="text-xs text-[#b45309] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Orange</p>
+          <h3 class="text-lg font-medium text-[#faf6f1] mb-2" style="font-family: 'Playfair Display', serif;">Radikon Oslavje</h3>
+          <p class="text-sm text-[#a89984]" style="font-family: 'Source Sans 3', sans-serif;">Friuli, Italy &mdash; Skin-contact blend, amber, dried apricot, tannic structure</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reservation -->
+  <section id="reserve" class="py-24 bg-[#f0ebe3]">
+    <div class="max-w-2xl mx-auto px-6">
+      <div class="ornament mb-12 text-center reveal">
+        <p class="text-xs text-[#78716c] tracking-[0.3em] uppercase">Reserve</p>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-semibold text-center mb-4 reveal">Book Your Table</h2>
+      <p class="text-center text-[#78716c] mb-12 reveal">Dinner service: Tuesday through Saturday, 6pm &ndash; 10pm</p>
+
+      <form class="space-y-6 reveal">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs text-[#78716c] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Name</label>
+            <input type="text" placeholder="Your full name" class="form-input w-full px-4 py-3 rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs text-[#78716c] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Email</label>
+            <input type="email" placeholder="your@email.com" class="form-input w-full px-4 py-3 rounded-lg text-sm">
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <label class="block text-xs text-[#78716c] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Date</label>
+            <input type="date" class="form-input w-full px-4 py-3 rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs text-[#78716c] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Time</label>
+            <select class="form-input w-full px-4 py-3 rounded-lg text-sm">
+              <option>6:00 PM</option>
+              <option>6:30 PM</option>
+              <option>7:00 PM</option>
+              <option>7:30 PM</option>
+              <option>8:00 PM</option>
+              <option>8:30 PM</option>
+              <option>9:00 PM</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-[#78716c] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Guests</label>
+            <select class="form-input w-full px-4 py-3 rounded-lg text-sm">
+              <option>2 guests</option>
+              <option>3 guests</option>
+              <option>4 guests</option>
+              <option>5 guests</option>
+              <option>6+ guests</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-[#78716c] tracking-wider uppercase mb-2" style="font-family: 'Source Sans 3', sans-serif;">Special Requests</label>
+          <textarea rows="3" placeholder="Allergies, celebrations, seating preferences..." class="form-input w-full px-4 py-3 rounded-lg text-sm resize-none"></textarea>
+        </div>
+        <div class="text-center pt-4">
+          <button type="submit" class="btn-warm text-sm font-medium px-10 py-3.5 rounded-lg">Request Reservation</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Private Dining -->
+  <section class="py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="ornament mb-12 text-center reveal">
+        <p class="text-xs text-[#78716c] tracking-[0.3em] uppercase">Private Events</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-3xl font-semibold mb-6" style="font-family: 'Playfair Display', serif;">The Cellar Room</h2>
+          <p class="text-[#78716c] leading-relaxed mb-4" style="font-family: 'Source Sans 3', sans-serif;">
+            Our private dining room seats 8-12 guests in a stone-walled cellar beneath the main restaurant. Chef Jiyeon designs a bespoke tasting menu for each event — no printed menus, just a conversation about what you love to eat.
+          </p>
+          <p class="text-[#78716c] leading-relaxed mb-6" style="font-family: 'Source Sans 3', sans-serif;">
+            Available Tuesday through Thursday evenings. Wine pairing included. Minimum 8 guests.
+          </p>
+          <a href="mailto:events@terretable.kr" class="text-sm font-medium text-[#b45309] hover:text-[#92400e] transition-colors" style="font-family: 'Source Sans 3', sans-serif;">Inquire &rarr; events@terretable.kr</a>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#44403c] to-[#292524] rounded-lg flex items-center justify-center">
+            <svg class="w-12 h-12 text-[#faf6f1]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 bg-[#1a1714] text-[#d4c9b8]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-12">
+        <div>
+          <p class="text-xl font-semibold text-[#faf6f1] mb-4" style="font-family: 'Playfair Display', serif;">Terre <span class="text-[#b45309]">&</span> Table</p>
+          <p class="text-sm text-[#a89984] leading-relaxed">A seasonal kitchen where the harvest decides the menu. Gyeonggi Province sourced, Seoul served.</p>
+        </div>
+        <div>
+          <p class="text-xs text-[#a89984] tracking-[0.2em] uppercase mb-4">Visit</p>
+          <p class="text-sm text-[#d4c9b8] leading-relaxed">42-3 Hannam-daero<br>Yongsan-gu, Seoul<br>Tue — Sat, 6pm — 10pm</p>
+        </div>
+        <div>
+          <p class="text-xs text-[#a89984] tracking-[0.2em] uppercase mb-4">Contact</p>
+          <p class="text-sm text-[#d4c9b8] mb-2">reservations@terretable.kr</p>
+          <p class="text-sm text-[#d4c9b8]">02-793-0042</p>
+          <div class="flex gap-4 mt-6">
+            <a href="#" class="text-sm text-[#a89984] hover:text-[#faf6f1] transition-colors">Instagram</a>
+            <a href="#" class="text-sm text-[#a89984] hover:text-[#faf6f1] transition-colors">Naver</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-[#2a2520] text-center">
+        <p class="text-xs text-[#78716c]">&copy; 2026 Terre & Table. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>

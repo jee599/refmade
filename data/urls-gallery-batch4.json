@@ -1,0 +1,484 @@
+{
+  "urls": [
+    {
+      "url": "https://clay.global",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Award-winning UI/UX agency with bold 3D elements and premium dark layout"
+    },
+    {
+      "url": "https://basicagency.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Digital agency with clean grid layouts and cinematic case studies"
+    },
+    {
+      "url": "https://hugeinc.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Global design agency with immersive scroll and editorial typography"
+    },
+    {
+      "url": "https://fantasy.co",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Product design consultancy with minimal layout and bold case study imagery"
+    },
+    {
+      "url": "https://dogstudio.co",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Creative studio with WebGL transitions and immersive dark aesthetic"
+    },
+    {
+      "url": "https://resn.co.nz",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Interactive agency with playful 3D experiences and bold color"
+    },
+    {
+      "url": "https://hellomondaycom.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "International agency with innovative UX and creative digital design"
+    },
+    {
+      "url": "https://active-theory.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "WebGL-focused studio with cinematic 3D experiences"
+    },
+    {
+      "url": "https://makemepulse.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "French creative tech agency with experimental web experiences"
+    },
+    {
+      "url": "https://heyday.xyz",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Brand agency with bold typography and scroll-driven animations"
+    },
+    {
+      "url": "https://noomostudio.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Agency integrating AI, 3D, and AR into innovative web design"
+    },
+    {
+      "url": "https://heightsagency.com",
+      "category": "agency",
+      "source": "awwwards",
+      "style_note": "Award-winning agency with clean modern layouts and interaction design"
+    },
+    {
+      "url": "https://spotify.design",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Spotify design team blog with bold editorial layout and green accent"
+    },
+    {
+      "url": "https://bandcamp.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Independent music marketplace with grid-heavy layout and vibrant covers"
+    },
+    {
+      "url": "https://tidal.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Hi-fi streaming with dark immersive layout and premium feel"
+    },
+    {
+      "url": "https://soundcloud.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Music sharing platform with waveform UI and orange accent on white"
+    },
+    {
+      "url": "https://pitchfork.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Music criticism with bold editorial typography and review grids"
+    },
+    {
+      "url": "https://boilerroom.tv",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Underground music platform with raw dark aesthetic and video-first"
+    },
+    {
+      "url": "https://ableton.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Music production tool with clean product UI and educational layout"
+    },
+    {
+      "url": "https://native-instruments.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Music tech with dark product showcase and detailed feature grids"
+    },
+    {
+      "url": "https://splice.com",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Music creation platform with dark UI and sample waveform visuals"
+    },
+    {
+      "url": "https://ditto.fm",
+      "category": "music",
+      "source": "curated",
+      "style_note": "Music distribution with bold gradients and artist-focused layout"
+    },
+    {
+      "url": "https://masterclass.com",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Premium learning with cinematic dark UI and celebrity instructor cards"
+    },
+    {
+      "url": "https://brilliant.org",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Interactive STEM learning with playful illustrations and green accent"
+    },
+    {
+      "url": "https://duolingo.com",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Gamified language learning with bright green, playful character illustrations"
+    },
+    {
+      "url": "https://codecademy.com",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Coding education with dark code editor aesthetic and structured layout"
+    },
+    {
+      "url": "https://skillshare.com",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Creative learning platform with warm tones and community-focused grid"
+    },
+    {
+      "url": "https://khan.academy",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Free education with clean layout, blue accent, and progress-tracking UI"
+    },
+    {
+      "url": "https://edx.org",
+      "category": "education",
+      "source": "curated",
+      "style_note": "University courses with grid-based layout and academic blue palette"
+    },
+    {
+      "url": "https://domestika.org",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Creative courses with rich photography and dark premium layout"
+    },
+    {
+      "url": "https://egghead.io",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Dev education with illustrated characters and clean minimal design"
+    },
+    {
+      "url": "https://mimo.org",
+      "category": "education",
+      "source": "curated",
+      "style_note": "Mobile coding education with gradient hero and app-focused layout"
+    },
+    {
+      "url": "https://sweetgreen.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Fresh fast-casual with earth green palette and organic photography"
+    },
+    {
+      "url": "https://chipotle.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Bold red/brown palette with large food imagery and ordering CTA"
+    },
+    {
+      "url": "https://noma.dk",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Michelin restaurant with editorial minimalism and nature photography"
+    },
+    {
+      "url": "https://dishoom.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Indian restaurant with vintage typography and warm nostalgic palette"
+    },
+    {
+      "url": "https://noburestaurants.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Luxury Japanese dining with dark elegant layout and gold accents"
+    },
+    {
+      "url": "https://momofuku.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Modern Asian dining with clean grid layout and bold typography"
+    },
+    {
+      "url": "https://bluebottlecoffee.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Specialty coffee with minimal white layout and craft aesthetic"
+    },
+    {
+      "url": "https://ottolenghi.co.uk",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Chef brand with warm earthy palette and recipe-focused editorial layout"
+    },
+    {
+      "url": "https://shakestack.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Burger chain with playful bold green brand and energetic layout"
+    },
+    {
+      "url": "https://intelligentsia.com",
+      "category": "food",
+      "source": "curated",
+      "style_note": "Coffee roaster with red/black brand, minimal product showcase"
+    },
+    {
+      "url": "https://blacktomato.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Luxury travel with full-screen hero imagery and elegant serif typography"
+    },
+    {
+      "url": "https://intrepidtravel.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Adventure travel with bold photography and accessible booking UI"
+    },
+    {
+      "url": "https://scottsdunn.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Luxury travel with soft neutral palette and editorial destination guides"
+    },
+    {
+      "url": "https://atlasandboots.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Adventure travel blog with editorial layout and destination photography"
+    },
+    {
+      "url": "https://lonelyplanet.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Travel guides with blue accent, destination cards, and editorial content"
+    },
+    {
+      "url": "https://visiticeland.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Tourism board with immersive landscape photography and nature-first design"
+    },
+    {
+      "url": "https://hostelworld.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Budget travel with energetic purple/teal palette and social proof UI"
+    },
+    {
+      "url": "https://theinfatuation.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "City guide with bold editorial layout and honest review typography"
+    },
+    {
+      "url": "https://designhotels.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Curated hotels with architectural photography and gallery-style layout"
+    },
+    {
+      "url": "https://awaraexperience.com",
+      "category": "travel",
+      "source": "curated",
+      "style_note": "Luxury retreats with cinematic full-width imagery and serif headings"
+    },
+    {
+      "url": "https://compass.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Modern real estate with geometric design and black/white clean layout"
+    },
+    {
+      "url": "https://sothebysrealty.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Luxury real estate with premium blue palette and elegant serif headers"
+    },
+    {
+      "url": "https://theagencyre.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Boutique luxury real estate with dark theme and property showcase"
+    },
+    {
+      "url": "https://elliman.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Luxury NYC real estate with map-first search and editorial listings"
+    },
+    {
+      "url": "https://knight-frank.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Global property with navy/gold palette and premium brand identity"
+    },
+    {
+      "url": "https://engelvoeelkers.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "European luxury real estate with red accent and property grid layout"
+    },
+    {
+      "url": "https://side.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Real estate tech platform with clean modern SaaS-style layout"
+    },
+    {
+      "url": "https://pacaso.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Luxury co-ownership with warm palette and lifestyle photography"
+    },
+    {
+      "url": "https://opendoor.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Real estate marketplace with friendly UI and purple/teal accents"
+    },
+    {
+      "url": "https://redfin.com",
+      "category": "real-estate",
+      "source": "curated",
+      "style_note": "Real estate search with red accent and data-rich property listings"
+    },
+    {
+      "url": "https://jacquemus.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Mediterranean minimalist luxury with white space and bold imagery"
+    },
+    {
+      "url": "https://ganni.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Scandinavian playful fashion with bold patterns and colorful grid"
+    },
+    {
+      "url": "https://cos.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Minimalist Scandinavian fashion with clean white layout and editorial photos"
+    },
+    {
+      "url": "https://pangaia.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Sustainable fashion with nature-inspired colors and eco-focused layout"
+    },
+    {
+      "url": "https://ssense.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Luxury fashion marketplace with monochrome grid and editorial curation"
+    },
+    {
+      "url": "https://acnestudios.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Scandinavian luxury with ultra-minimal white layout and product focus"
+    },
+    {
+      "url": "https://stussy.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Streetwear brand with bold graphics and grid-based product layout"
+    },
+    {
+      "url": "https://gymshark.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Athletic brand with dark hero, high-impact visuals and smart filtering"
+    },
+    {
+      "url": "https://everlane.com",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Transparent pricing fashion with clean white layout and honest copy"
+    },
+    {
+      "url": "https://rapha.cc",
+      "category": "fashion",
+      "source": "curated",
+      "style_note": "Cycling fashion with cinematic photography and premium dark palette"
+    },
+    {
+      "url": "https://charitywater.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Water charity with warm/cool tones, cartoon animations, and transparency maps"
+    },
+    {
+      "url": "https://malala.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Girls education fund with vibrant colors and youthful clean typography"
+    },
+    {
+      "url": "https://conservation.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Nature conservation with cinematic video hero and green palette"
+    },
+    {
+      "url": "https://water.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Water access charity with blue palette and impact-focused data"
+    },
+    {
+      "url": "https://worldwildlife.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Wildlife conservation with bold black/white panda branding and nature imagery"
+    },
+    {
+      "url": "https://acumen.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Social impact investing with teal palette and editorial storytelling"
+    },
+    {
+      "url": "https://one.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Anti-poverty nonprofit with red accent and bold activist typography"
+    },
+    {
+      "url": "https://dosomething.org",
+      "category": "nonprofit",
+      "source": "curated",
+      "style_note": "Youth activism with playful bold colors and energetic layout"
+    }
+  ]
+}

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>036 — Fashion Editorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Work+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 300;
+      background: #ffffff;
+      color: #0a0a0a;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.24s; }
+    .reveal-delay-3 { transition-delay: 0.36s; }
+
+    /* Image hover */
+    .img-hover {
+      overflow: hidden;
+    }
+    .img-hover .img-inner {
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .img-hover:hover .img-inner {
+      transform: scale(1.03);
+    }
+
+    /* Grid divider */
+    .grid-divider {
+      border-top: 1px solid #e5e5e5;
+    }
+
+    /* Lookbook scroll */
+    .lookbook-scroll {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .lookbook-scroll::-webkit-scrollbar { display: none; }
+    .lookbook-card {
+      scroll-snap-align: start;
+      min-width: 320px;
+    }
+
+    /* Nav */
+    .nav-scrolled {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    /* Button */
+    .btn-black {
+      background: #0a0a0a;
+      color: #ffffff;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-black:hover {
+      background: #404040;
+      transform: translateY(-1px);
+    }
+
+    /* Newsletter input */
+    .input-minimal {
+      border-bottom: 1px solid #0a0a0a;
+      background: transparent;
+      transition: border-color 0.3s ease;
+    }
+    .input-minimal:focus {
+      outline: none;
+      border-color: #737373;
+    }
+
+    /* Arrow link */
+    .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: gap 0.3s ease;
+    }
+    .arrow-link:hover {
+      gap: 14px;
+    }
+
+    /* Category label */
+    .category-label {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #737373;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="#" class="text-xl font-semibold tracking-[0.15em] uppercase" style="font-family: 'Syne', sans-serif;">MAISON</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#collection" class="category-label hover:text-[#0a0a0a] transition-colors">Collection</a>
+        <a href="#about" class="category-label hover:text-[#0a0a0a] transition-colors">About</a>
+        <a href="#editorial" class="category-label hover:text-[#0a0a0a] transition-colors">Editorial</a>
+        <a href="#" class="btn-black text-xs font-medium tracking-[0.15em] uppercase px-6 py-2.5">Shop</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: Image Grid -->
+  <section class="pt-24 pb-0">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <!-- Large image (spans 2 cols, 2 rows) -->
+        <div class="col-span-2 row-span-2 img-hover reveal">
+          <div class="aspect-[3/4] bg-gradient-to-br from-[#d4d4d4] to-[#a3a3a3] img-inner flex items-center justify-center">
+            <svg class="w-12 h-12 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <!-- Top right -->
+        <div class="img-hover reveal reveal-delay-1">
+          <div class="aspect-square bg-gradient-to-br from-[#e5e5e5] to-[#b3b3b3] img-inner flex items-center justify-center">
+            <svg class="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <!-- Far right top -->
+        <div class="img-hover reveal reveal-delay-2">
+          <div class="aspect-square bg-gradient-to-br from-[#c4c4c4] to-[#8a8a8a] img-inner flex items-center justify-center">
+            <svg class="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <!-- Bottom right pair -->
+        <div class="img-hover reveal reveal-delay-2">
+          <div class="aspect-square bg-gradient-to-br from-[#bfbfbf] to-[#999999] img-inner flex items-center justify-center">
+            <svg class="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="img-hover reveal reveal-delay-3">
+          <div class="aspect-square bg-gradient-to-br from-[#d1d1d1] to-[#a8a8a8] img-inner flex items-center justify-center">
+            <svg class="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero text below grid -->
+      <div class="pt-16 pb-8 reveal">
+        <p class="category-label mb-4">Spring / Summer 2026</p>
+        <h1 class="text-5xl md:text-7xl font-semibold leading-[0.95] tracking-tight uppercase">
+          Between<br>silence &amp;<br>structure.
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- Collection: Horizontal Scroll Lookbook -->
+  <section id="collection" class="py-32">
+    <div class="max-w-7xl mx-auto px-6 mb-12">
+      <div class="grid-divider pt-8 reveal">
+        <p class="category-label">Collection</p>
+      </div>
+    </div>
+
+    <div class="lookbook-scroll flex gap-6 px-6 pb-6 reveal">
+      <!-- Card 1 -->
+      <div class="lookbook-card flex-shrink-0">
+        <div class="img-hover mb-4">
+          <div class="aspect-[3/4] bg-gradient-to-b from-[#e0e0e0] to-[#c0c0c0] img-inner flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <p class="category-label mb-1">01/ Outerwear</p>
+        <h3 class="text-lg font-medium uppercase tracking-wide" style="font-family: 'Syne', sans-serif;">Deconstructed Trench</h3>
+        <p class="text-sm text-[#737373] mt-1" style="font-weight: 300;">&euro; 890</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="lookbook-card flex-shrink-0">
+        <div class="img-hover mb-4">
+          <div class="aspect-[3/4] bg-gradient-to-b from-[#d4d4d4] to-[#b0b0b0] img-inner flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <p class="category-label mb-1">02/ Knitwear</p>
+        <h3 class="text-lg font-medium uppercase tracking-wide" style="font-family: 'Syne', sans-serif;">Ribbed Column Dress</h3>
+        <p class="text-sm text-[#737373] mt-1" style="font-weight: 300;">&euro; 520</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="lookbook-card flex-shrink-0">
+        <div class="img-hover mb-4">
+          <div class="aspect-[3/4] bg-gradient-to-b from-[#cccccc] to-[#a0a0a0] img-inner flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <p class="category-label mb-1">03/ Tailoring</p>
+        <h3 class="text-lg font-medium uppercase tracking-wide" style="font-family: 'Syne', sans-serif;">Oversized Blazer</h3>
+        <p class="text-sm text-[#737373] mt-1" style="font-weight: 300;">&euro; 1,240</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="lookbook-card flex-shrink-0">
+        <div class="img-hover mb-4">
+          <div class="aspect-[3/4] bg-gradient-to-b from-[#c8c8c8] to-[#969696] img-inner flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <p class="category-label mb-1">04/ Accessories</p>
+        <h3 class="text-lg font-medium uppercase tracking-wide" style="font-family: 'Syne', sans-serif;">Leather Tote</h3>
+        <p class="text-sm text-[#737373] mt-1" style="font-weight: 300;">&euro; 680</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="lookbook-card flex-shrink-0">
+        <div class="img-hover mb-4">
+          <div class="aspect-[3/4] bg-gradient-to-b from-[#dbdbdb] to-[#ababab] img-inner flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <p class="category-label mb-1">05/ Footwear</p>
+        <h3 class="text-lg font-medium uppercase tracking-wide" style="font-family: 'Syne', sans-serif;">Square-Toe Mule</h3>
+        <p class="text-sm text-[#737373] mt-1" style="font-weight: 300;">&euro; 430</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About: Split Layout -->
+  <section id="about" class="py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid-divider pt-8 mb-16 reveal">
+        <p class="category-label">About</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div class="reveal">
+          <h2 class="text-3xl md:text-4xl font-semibold leading-tight tracking-tight uppercase mb-8" style="font-family: 'Syne', sans-serif;">
+            Clothing that<br>doesn't announce<br>itself.
+          </h2>
+          <p class="text-[#737373] leading-relaxed mb-6" style="font-weight: 300;">
+            Founded in Copenhagen in 2018, Maison exists at the intersection of architecture and wardrobe. Each piece begins as a shape study — how fabric falls, how seams create shadow, how a collar frames the jaw. We design for the person who gets dressed without performing.
+          </p>
+          <p class="text-[#737373] leading-relaxed mb-8" style="font-weight: 300;">
+            All production happens within 400 km of our studio. We work with three mills in Portugal and two ateliers in northern Italy. Every garment ships in recycled packaging with full supply chain transparency.
+          </p>
+          <a href="#" class="arrow-link text-sm font-medium tracking-[0.1em] uppercase">
+            <span>Read Our Story</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+        </div>
+
+        <div class="img-hover reveal reveal-delay-1">
+          <div class="aspect-[4/5] bg-gradient-to-br from-[#d4d4d4] to-[#a3a3a3] img-inner flex items-center justify-center">
+            <svg class="w-16 h-16 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial: Masonry Grid -->
+  <section id="editorial" class="py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid-divider pt-8 mb-16 reveal">
+        <p class="category-label">Editorial</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Article 1 -->
+        <div class="reveal">
+          <div class="img-hover mb-5">
+            <div class="aspect-[4/5] bg-gradient-to-br from-[#c0c0c0] to-[#909090] img-inner flex items-center justify-center">
+              <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+            </div>
+          </div>
+          <p class="category-label mb-2">Process</p>
+          <h3 class="text-lg font-medium tracking-tight mb-2" style="font-family: 'Syne', sans-serif;">The mill in Guimaraes that weaves our cotton</h3>
+          <p class="text-sm text-[#737373]" style="font-weight: 300;">A visit to the family-run mill where our organic cotton is woven, dyed, and finished — all under one roof.</p>
+          <a href="#" class="arrow-link text-xs font-medium tracking-[0.1em] uppercase mt-4 inline-flex">
+            <span>Read</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Article 2 (taller) -->
+        <div class="reveal reveal-delay-1">
+          <div class="img-hover mb-5">
+            <div class="aspect-[3/5] bg-gradient-to-br from-[#b8b8b8] to-[#888888] img-inner flex items-center justify-center">
+              <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+            </div>
+          </div>
+          <p class="category-label mb-2">Campaign</p>
+          <h3 class="text-lg font-medium tracking-tight mb-2" style="font-family: 'Syne', sans-serif;">SS26: Shot in an abandoned greenhouse outside Malmo</h3>
+          <p class="text-sm text-[#737373]" style="font-weight: 300;">Photographer Lina Rask captures the new collection in natural light, no retouching.</p>
+        </div>
+
+        <!-- Article 3 -->
+        <div class="reveal reveal-delay-2">
+          <div class="img-hover mb-5">
+            <div class="aspect-square bg-gradient-to-br from-[#d0d0d0] to-[#a0a0a0] img-inner flex items-center justify-center">
+              <svg class="w-10 h-10 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+            </div>
+          </div>
+          <p class="category-label mb-2">Interview</p>
+          <h3 class="text-lg font-medium tracking-tight mb-2" style="font-family: 'Syne', sans-serif;">On uniforms, repetition, and getting dressed with intention</h3>
+          <p class="text-sm text-[#737373]" style="font-weight: 300;">Creative director Maren Holst on why she wears the same silhouette every day.</p>
+          <a href="#" class="arrow-link text-xs font-medium tracking-[0.1em] uppercase mt-4 inline-flex">
+            <span>Read</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid-divider pt-8 mb-16 reveal">
+        <p class="category-label">Values</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-16">
+        <div class="reveal">
+          <h2 class="text-2xl md:text-3xl font-medium tracking-tight uppercase mb-8" style="font-family: 'Syne', sans-serif;">
+            Made slowly,<br>worn for years.
+          </h2>
+          <p class="text-[#737373] leading-relaxed mb-4" style="font-weight: 300;">
+            We produce two collections per year instead of four. Each piece is tested for 300 wash cycles before it enters production. We'd rather make fewer things that last than more things that don't.
+          </p>
+          <p class="text-[#737373] leading-relaxed" style="font-weight: 300;">
+            Full supply chain data is printed on every garment tag. Scan the QR code and you'll see where the cotton was grown, where the fabric was woven, who sewed the seams, and how far it traveled to reach you.
+          </p>
+        </div>
+
+        <div class="space-y-8 reveal reveal-delay-1">
+          <div class="grid-divider pt-6">
+            <p class="category-label mb-2">Materials</p>
+            <p class="text-sm text-[#0a0a0a]" style="font-weight: 400;">100% organic or recycled fibers. Zero virgin polyester since 2022.</p>
+          </div>
+          <div class="grid-divider pt-6">
+            <p class="category-label mb-2">Production</p>
+            <p class="text-sm text-[#0a0a0a]" style="font-weight: 400;">Three mills in Portugal, two ateliers in Italy. All within 400km of Copenhagen.</p>
+          </div>
+          <div class="grid-divider pt-6">
+            <p class="category-label mb-2">Packaging</p>
+            <p class="text-sm text-[#0a0a0a]" style="font-weight: 400;">Recycled cardboard, compostable garment bags, zero single-use plastic.</p>
+          </div>
+          <div class="grid-divider pt-6">
+            <p class="category-label mb-2">Repair</p>
+            <p class="text-sm text-[#0a0a0a]" style="font-weight: 400;">Free repairs for life on all tailored pieces. Bring it in; we'll fix it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stockists -->
+  <section class="py-20 bg-[#f5f5f5]">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <p class="category-label mb-4">Stockists</p>
+        <h2 class="text-2xl md:text-3xl font-medium tracking-tight uppercase mb-12" style="font-family: 'Syne', sans-serif;">Find us in</h2>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 reveal">
+        <div>
+          <p class="text-sm font-medium" style="font-weight: 500;">Copenhagen</p>
+          <p class="text-xs text-[#737373] mt-1" style="font-weight: 300;">Maison Flagship</p>
+        </div>
+        <div>
+          <p class="text-sm font-medium" style="font-weight: 500;">Stockholm</p>
+          <p class="text-xs text-[#737373] mt-1" style="font-weight: 300;">Nitty Gritty</p>
+        </div>
+        <div>
+          <p class="text-sm font-medium" style="font-weight: 500;">Berlin</p>
+          <p class="text-xs text-[#737373] mt-1" style="font-weight: 300;">Voo Store</p>
+        </div>
+        <div>
+          <p class="text-sm font-medium" style="font-weight: 500;">Seoul</p>
+          <p class="text-xs text-[#737373] mt-1" style="font-weight: 300;">Boon The Shop</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="py-28">
+    <div class="max-w-xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <p class="category-label mb-6">Stay Informed</p>
+        <h2 class="text-2xl md:text-3xl font-medium tracking-tight uppercase mb-4" style="font-family: 'Syne', sans-serif;">New drops, essays, studio updates.</h2>
+        <p class="text-sm text-[#737373] mb-10" style="font-weight: 300;">No noise. One email, twice a month.</p>
+      </div>
+      <div class="flex items-center gap-4 reveal">
+        <input type="email" placeholder="your@email.com" class="input-minimal flex-1 py-3 text-sm" style="font-weight: 300;">
+        <button class="btn-black text-xs font-medium tracking-[0.1em] uppercase px-6 py-3">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote -->
+  <section class="py-24 bg-[#f5f5f5]">
+    <div class="max-w-3xl mx-auto px-6 text-center reveal">
+      <div class="w-8 h-px bg-[#0a0a0a] mx-auto mb-8"></div>
+      <blockquote class="text-2xl md:text-3xl font-medium leading-snug mb-6 tracking-tight" style="font-family: 'Syne', sans-serif;">
+        "We don't design for trends. We design for the person who opens their closet at 6am and wants to feel certain about what they pick."
+      </blockquote>
+      <p class="category-label">Maren Holst, Creative Director</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-20 border-t border-[#e5e5e5]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-12">
+        <div>
+          <p class="text-lg font-semibold tracking-[0.15em] uppercase mb-4" style="font-family: 'Syne', sans-serif;">MAISON</p>
+          <p class="text-sm text-[#737373] leading-relaxed" style="font-weight: 300;">Copenhagen, 2018.<br>Clothing that doesn't announce itself.</p>
+        </div>
+        <div>
+          <p class="category-label mb-4">Shop</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">New Arrivals</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Women</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Men</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Accessories</a>
+          </div>
+        </div>
+        <div>
+          <p class="category-label mb-4">Info</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">About</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Sustainability</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Stockists</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Contact</a>
+          </div>
+        </div>
+        <div>
+          <p class="category-label mb-4">Social</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Instagram</a>
+            <a href="#" class="block text-sm text-[#737373] hover:text-[#0a0a0a] transition-colors" style="font-weight: 300;">Pinterest</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-16 pt-8 border-t border-[#e5e5e5] text-center">
+        <p class="text-xs text-[#a3a3a3]" style="font-weight: 300;">&copy; 2026 Maison. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>

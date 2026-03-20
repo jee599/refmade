@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>037 — Nonprofit Impact</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: #faf7f2;
+      color: #152d44;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, blockquote { font-family: 'Libre Baskerville', serif; }
+
+    /* Hero overlay */
+    .hero-gradient {
+      background: linear-gradient(to top, #152d44 0%, rgba(21,45,68,0.6) 40%, rgba(21,45,68,0.2) 100%);
+    }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.24s; }
+    .reveal-delay-3 { transition-delay: 0.36s; }
+
+    /* Story card */
+    .story-card {
+      background: #ffffff;
+      border: 1px solid #e0d8cc;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .story-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(21, 45, 68, 0.08);
+    }
+
+    /* Donation pill */
+    .donate-pill {
+      border: 2px solid #e0d8cc;
+      background: #ffffff;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+      cursor: pointer;
+    }
+    .donate-pill:hover, .donate-pill.active {
+      border-color: #0e7490;
+      background: #0e7490;
+      color: #ffffff;
+    }
+
+    /* Progress bar */
+    @keyframes campaignFill {
+      from { width: 0; }
+      to { width: 73%; }
+    }
+    .campaign-fill {
+      animation: campaignFill 2s ease-out forwards;
+    }
+
+    /* Step number */
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #0e7490;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Nav */
+    .nav-scrolled {
+      background: rgba(250, 247, 242, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e0d8cc;
+    }
+
+    /* Buttons */
+    .btn-teal {
+      background: #0e7490;
+      color: #ffffff;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-teal:hover {
+      background: #0c5e74;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-teal {
+      border: 1px solid #0e7490;
+      color: #0e7490;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .btn-outline-teal:hover {
+      background: #0e7490;
+      color: #ffffff;
+    }
+
+    /* Counter animation */
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .counter-animate {
+      animation: fadeInScale 0.6s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-[#0e7490] flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+        </div>
+        <span class="text-lg font-bold" style="font-family: 'Libre Baskerville', serif;">Riverlight</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#mission" class="text-sm text-[#5b6c7c] hover:text-[#152d44] transition-colors">Mission</a>
+        <a href="#impact" class="text-sm text-[#5b6c7c] hover:text-[#152d44] transition-colors">Impact</a>
+        <a href="#how" class="text-sm text-[#5b6c7c] hover:text-[#152d44] transition-colors">How It Works</a>
+        <a href="#donate" class="btn-teal text-sm font-semibold px-6 py-2.5 rounded-xl">Donate</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: Fullscreen -->
+  <section class="relative min-h-screen flex items-center">
+    <div class="absolute inset-0 bg-gradient-to-br from-[#27455c] via-[#1a3a4f] to-[#0c2d42]"></div>
+    <div class="hero-gradient absolute inset-0"></div>
+    <!-- Decorative nature element -->
+    <div class="absolute inset-0 flex items-center justify-center opacity-5">
+      <svg class="w-[600px] h-[600px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.3" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+      </svg>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <p class="text-[#06b6d4] text-sm tracking-wider uppercase mb-6 font-medium">Clean water changes everything</p>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-8 reveal" style="font-family: 'Libre Baskerville', serif;">
+        Every river tells a story.<br>
+        <span class="text-[#06b6d4]">Help us write a better one.</span>
+      </h1>
+      <div class="reveal reveal-delay-1">
+        <p class="text-lg text-[#9ca3af] leading-relaxed max-w-2xl mx-auto mb-10">
+          Since 2018, Riverlight has restored 47 waterways across Southeast Asia, providing clean water access to communities that had none. Your support makes the next river possible.
+        </p>
+      </div>
+      <div class="flex justify-center gap-4 reveal reveal-delay-2">
+        <a href="#donate" class="btn-teal text-sm font-semibold px-8 py-3.5 rounded-xl inline-block">Donate Now</a>
+        <a href="#impact" class="text-sm font-medium px-8 py-3.5 rounded-xl text-white border border-white/30 hover:border-white/60 transition-colors inline-block">See Our Impact</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section id="mission" class="py-28 bg-white">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <p class="text-xs text-[#0e7490] tracking-[0.2em] uppercase font-semibold mb-4">Our Mission</p>
+      </div>
+      <blockquote class="text-2xl md:text-3xl leading-snug mb-8 reveal" style="font-family: 'Libre Baskerville', serif; font-weight: 400;">
+        "We don't just build wells. We restore entire river ecosystems — from source to village — so communities can sustain clean water for generations, not just seasons."
+      </blockquote>
+      <div class="reveal reveal-delay-1">
+        <p class="text-[#5b6c7c] leading-relaxed text-lg">
+          Riverlight works with local engineers, environmental scientists, and village councils to design water systems that fit the land and the people. Every project takes 8-14 months. We stay involved for 5 years after completion to ensure the system thrives.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Stories -->
+  <section id="impact" class="py-24 bg-[#faf7f2]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <p class="text-xs text-[#0e7490] tracking-[0.2em] uppercase font-semibold mb-3">Impact Stories</p>
+        <h2 class="text-3xl font-bold" style="font-family: 'Libre Baskerville', serif;">The people behind the numbers</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="story-card rounded-xl overflow-hidden reveal reveal-delay-1">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#27455c] to-[#1a3a4f] flex items-center justify-center">
+            <svg class="w-12 h-12 text-[#06b6d4] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="p-6">
+            <p class="text-xs text-[#0e7490] font-semibold tracking-wider uppercase mb-2">Mekong Delta, Vietnam</p>
+            <h3 class="text-lg font-bold mb-2" style="font-family: 'Libre Baskerville', serif;">The village that stopped boiling</h3>
+            <p class="text-sm text-[#5b6c7c] leading-relaxed mb-4">
+              In Tan Hiep, families spent 3 hours daily boiling river water. After our filtration system, that time went to school, farming, and rest. Waterborne illness dropped 89% in year one.
+            </p>
+            <a href="#" class="text-sm font-semibold text-[#0e7490] hover:text-[#0c5e74] transition-colors">Read more &rarr;</a>
+          </div>
+        </div>
+
+        <div class="story-card rounded-xl overflow-hidden reveal reveal-delay-2">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#2d4a22] to-[#1a3318] flex items-center justify-center">
+            <svg class="w-12 h-12 text-[#06b6d4] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="p-6">
+            <p class="text-xs text-[#0e7490] font-semibold tracking-wider uppercase mb-2">Shan State, Myanmar</p>
+            <h3 class="text-lg font-bold mb-2" style="font-family: 'Libre Baskerville', serif;">A school that finally has running water</h3>
+            <p class="text-sm text-[#5b6c7c] leading-relaxed mb-4">
+              The school in Hsipaw served 340 students with two buckets from a contaminated creek. Now a gravity-fed system provides clean water to classrooms, kitchens, and latrines.
+            </p>
+            <a href="#" class="text-sm font-semibold text-[#0e7490] hover:text-[#0c5e74] transition-colors">Read more &rarr;</a>
+          </div>
+        </div>
+
+        <div class="story-card rounded-xl overflow-hidden reveal reveal-delay-3">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#3b2d1a] to-[#2a1f0e] flex items-center justify-center">
+            <svg class="w-12 h-12 text-[#06b6d4] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="p-6">
+            <p class="text-xs text-[#0e7490] font-semibold tracking-wider uppercase mb-2">Siem Reap, Cambodia</p>
+            <h3 class="text-lg font-bold mb-2" style="font-family: 'Libre Baskerville', serif;">When the river came back</h3>
+            <p class="text-sm text-[#5b6c7c] leading-relaxed mb-4">
+              Industrial runoff had killed the Srok Sar tributary. After 14 months of wetland restoration, fish returned. Then the fishing families returned. Then the market reopened.
+            </p>
+            <a href="#" class="text-sm font-semibold text-[#0e7490] hover:text-[#0c5e74] transition-colors">Read more &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how" class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <p class="text-xs text-[#0e7490] tracking-[0.2em] uppercase font-semibold mb-3">How It Works</p>
+        <h2 class="text-3xl font-bold" style="font-family: 'Libre Baskerville', serif;">From donation to clean water</h2>
+      </div>
+
+      <div class="space-y-12">
+        <div class="flex gap-6 items-start reveal">
+          <div class="step-num">1</div>
+          <div>
+            <h3 class="text-lg font-bold mb-2" style="font-family: 'Libre Baskerville', serif;">Assessment</h3>
+            <p class="text-[#5b6c7c] leading-relaxed">Our team spends 2-4 weeks with the community, mapping water sources, testing contamination levels, and understanding daily usage patterns. Nothing starts without local partnership.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-6 items-start reveal reveal-delay-1">
+          <div class="step-num">2</div>
+          <div>
+            <h3 class="text-lg font-bold mb-2" style="font-family: 'Libre Baskerville', serif;">Design & Build</h3>
+            <p class="text-[#5b6c7c] leading-relaxed">Engineers design a system specific to the terrain — gravity-fed, solar-powered, or filtration-based. Local workers are hired and trained. Construction takes 4-8 months depending on complexity.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-6 items-start reveal reveal-delay-2">
+          <div class="step-num">3</div>
+          <div>
+            <h3 class="text-lg font-bold mb-2" style="font-family: 'Libre Baskerville', serif;">Monitor & Maintain</h3>
+            <p class="text-[#5b6c7c] leading-relaxed">We install IoT water quality sensors and train a local maintenance team. Quarterly check-ins continue for 5 years. If something breaks, we fix it — that's the commitment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Donate -->
+  <section id="donate" class="py-28 bg-[#f0ebe3]">
+    <div class="max-w-2xl mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-xs text-[#0e7490] tracking-[0.2em] uppercase font-semibold mb-3">Support</p>
+        <h2 class="text-3xl font-bold mb-4" style="font-family: 'Libre Baskerville', serif;">Fund the next river</h2>
+        <p class="text-[#5b6c7c]">93 cents of every dollar goes directly to project work. We publish full financials annually.</p>
+      </div>
+
+      <!-- Campaign progress -->
+      <div class="bg-white rounded-xl p-6 border border-[#e0d8cc] mb-8 reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-semibold text-[#152d44]">Current Campaign: Battambang River, Cambodia</span>
+          <span class="text-sm font-bold text-[#0e7490]">73%</span>
+        </div>
+        <div class="w-full h-3 bg-[#f0ebe3] rounded-full overflow-hidden mb-2">
+          <div class="campaign-fill h-full bg-[#0e7490] rounded-full"></div>
+        </div>
+        <p class="text-xs text-[#5b6c7c]">$219,847 raised of $300,000 goal &mdash; 1,247 donors</p>
+      </div>
+
+      <!-- Donation box -->
+      <div class="bg-white rounded-xl p-8 border border-[#e0d8cc] reveal">
+        <p class="text-sm font-semibold text-[#152d44] mb-4">Choose an amount</p>
+        <div class="grid grid-cols-4 gap-3 mb-6">
+          <button class="donate-pill rounded-xl py-3 text-sm font-semibold" onclick="selectAmount(this)">$25</button>
+          <button class="donate-pill active rounded-xl py-3 text-sm font-semibold" onclick="selectAmount(this)">$50</button>
+          <button class="donate-pill rounded-xl py-3 text-sm font-semibold" onclick="selectAmount(this)">$100</button>
+          <button class="donate-pill rounded-xl py-3 text-sm font-semibold" onclick="selectAmount(this)">Custom</button>
+        </div>
+
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="block text-xs text-[#5b6c7c] tracking-wider uppercase mb-2 font-medium">Email</label>
+            <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl border border-[#e0d8cc] bg-[#faf7f2] text-sm focus:border-[#0e7490] focus:outline-none transition-colors">
+          </div>
+        </div>
+
+        <p class="text-xs text-[#5b6c7c] mb-6 leading-relaxed">
+          $50 provides clean water access for one family for an entire year. Tax-deductible in the US, UK, and EU.
+        </p>
+
+        <button class="btn-teal w-full text-sm font-semibold py-4 rounded-xl">Donate $50</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="py-24 bg-[#faf7f2]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <p class="text-xs text-[#0e7490] tracking-[0.2em] uppercase font-semibold mb-3">Our Team</p>
+        <h2 class="text-3xl font-bold" style="font-family: 'Libre Baskerville', serif;">The people behind the work</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center reveal reveal-delay-1">
+          <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-[#27455c] to-[#0e7490] mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-1" style="font-family: 'Libre Baskerville', serif;">David Kwan</h3>
+          <p class="text-sm text-[#0e7490] font-medium mb-2">Founder & Director</p>
+          <p class="text-sm text-[#5b6c7c] leading-relaxed">Former environmental engineer at WHO. Started Riverlight after seeing broken wells across rural Vietnam firsthand.</p>
+        </div>
+
+        <div class="text-center reveal reveal-delay-2">
+          <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-[#27455c] to-[#0e7490] mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-1" style="font-family: 'Libre Baskerville', serif;">Anh Nguyen</h3>
+          <p class="text-sm text-[#0e7490] font-medium mb-2">Head of Projects</p>
+          <p class="text-sm text-[#5b6c7c] leading-relaxed">Manages all field operations across 3 countries. Speaks Vietnamese, Khmer, and enough Burmese to negotiate a water permit.</p>
+        </div>
+
+        <div class="text-center reveal reveal-delay-3">
+          <div class="w-24 h-24 rounded-xl bg-gradient-to-br from-[#27455c] to-[#0e7490] mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-10 h-10 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-1" style="font-family: 'Libre Baskerville', serif;">Sarah Odum</h3>
+          <p class="text-sm text-[#0e7490] font-medium mb-2">Partnerships</p>
+          <p class="text-sm text-[#5b6c7c] leading-relaxed">Builds relationships with foundations and corporate sponsors. Previously at UNICEF and Water.org for 7 years.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transparency -->
+  <section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <p class="text-xs text-[#0e7490] tracking-[0.2em] uppercase font-semibold mb-3">Transparency</p>
+        <h2 class="text-3xl font-bold mb-8" style="font-family: 'Libre Baskerville', serif;">Where your money goes</h2>
+      </div>
+
+      <div class="grid grid-cols-3 gap-6 reveal">
+        <div class="bg-[#f0fdfa] rounded-xl p-6 border border-[#ccfbf1]">
+          <p class="text-3xl font-bold text-[#0e7490] mb-2">93%</p>
+          <p class="text-sm text-[#5b6c7c]">Direct project costs: engineering, materials, local labor, monitoring equipment</p>
+        </div>
+        <div class="bg-[#faf7f2] rounded-xl p-6 border border-[#e0d8cc]">
+          <p class="text-3xl font-bold text-[#152d44] mb-2">4%</p>
+          <p class="text-sm text-[#5b6c7c]">Administration: staff salaries, office, legal, accounting</p>
+        </div>
+        <div class="bg-[#faf7f2] rounded-xl p-6 border border-[#e0d8cc]">
+          <p class="text-3xl font-bold text-[#152d44] mb-2">3%</p>
+          <p class="text-sm text-[#5b6c7c]">Fundraising: website, events, donor communications</p>
+        </div>
+      </div>
+      <p class="text-xs text-[#5b6c7c] mt-6 reveal">Full audited financials published annually at riverlight.org/transparency</p>
+    </div>
+  </section>
+
+  <!-- CTA: Dark -->
+  <section class="py-24 bg-[#152d44]">
+    <div class="max-w-3xl mx-auto px-6 text-center reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" style="font-family: 'Libre Baskerville', serif;">
+        Clean water isn't charity.<br>It's the foundation of everything else.
+      </h2>
+      <p class="text-lg text-[#9ca3af] mb-10">Education, health, economic growth — they all start at the river.</p>
+      <div class="flex justify-center gap-4">
+        <a href="#donate" class="btn-teal text-sm font-semibold px-10 py-4 rounded-xl inline-block">Donate Now</a>
+        <a href="#" class="btn-outline-teal text-sm font-semibold px-10 py-4 rounded-xl inline-block">Volunteer</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 bg-[#152d44]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-12">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-7 h-7 rounded-lg bg-[#0e7490] flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-lg font-bold text-white" style="font-family: 'Libre Baskerville', serif;">Riverlight</span>
+          </div>
+          <p class="text-sm text-[#7a8fa0] leading-relaxed">Restoring waterways and providing clean water access since 2018.</p>
+        </div>
+        <div>
+          <p class="text-xs text-[#7a8fa0] tracking-[0.15em] uppercase mb-4 font-medium">About</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Our Mission</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Team</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Financials</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Annual Report</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-[#7a8fa0] tracking-[0.15em] uppercase mb-4 font-medium">Get Involved</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Donate</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Volunteer</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Corporate Partners</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Events</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-[#7a8fa0] tracking-[0.15em] uppercase mb-4 font-medium">Follow</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Instagram</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">Twitter</a>
+            <a href="#" class="block text-sm text-[#7a8fa0] hover:text-white transition-colors">YouTube</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-16 pt-8 border-t border-[#1e3d55] text-center">
+        <p class="text-xs text-[#5b6c7c]">&copy; 2026 Riverlight Foundation. 501(c)(3) nonprofit. EIN: 83-4291057</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // IntersectionObserver
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    });
+
+    // Donation pill selection
+    function selectAmount(el) {
+      document.querySelectorAll('.donate-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

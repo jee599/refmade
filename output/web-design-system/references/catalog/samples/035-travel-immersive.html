@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>035 — Travel Immersive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      background: #0c0c0c;
+      color: #f5f0eb;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, blockquote { font-family: 'Cormorant Garamond', serif; }
+
+    /* Hero gradient overlay */
+    .hero-overlay {
+      background: linear-gradient(to top, #0c0c0c 0%, rgba(12,12,12,0.4) 40%, rgba(12,12,12,0.1) 100%);
+    }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    /* Destination card */
+    .dest-card {
+      min-width: 380px;
+      scroll-snap-align: start;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dest-card:hover {
+      transform: scale(1.02);
+    }
+    .dest-card:hover .dest-img {
+      transform: scale(1.08);
+    }
+    .dest-img {
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Horizontal scroll */
+    .scroll-h {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-h::-webkit-scrollbar { display: none; }
+
+    /* Experience parallax offset */
+    .exp-offset {
+      transform: translateY(60px);
+    }
+
+    /* Thin line before heading */
+    .section-line::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: #c2956a;
+      margin-bottom: 16px;
+    }
+
+    /* Nav */
+    .nav-transparent {
+      background: transparent;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    .nav-scrolled {
+      background: rgba(12, 12, 12, 0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    /* Gold button */
+    .btn-gold {
+      background: #c2956a;
+      color: #0c0c0c;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-gold:hover {
+      background: #d4a574;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      border: 1px solid rgba(245, 240, 235, 0.3);
+      transition: border-color 0.3s ease;
+    }
+    .btn-ghost:hover {
+      border-color: #c2956a;
+    }
+
+    /* Form */
+    .form-dark {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      color: #f5f0eb;
+      transition: border-color 0.3s ease;
+    }
+    .form-dark:focus {
+      border-color: #c2956a;
+      outline: none;
+    }
+    .form-dark::placeholder {
+      color: #666666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 nav-transparent">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+      <a href="#" class="text-xl font-medium tracking-wider" style="font-family: 'Cormorant Garamond', serif; letter-spacing: 0.15em;">MERIDIAN</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#destinations" class="text-sm text-[#9ca3af] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Destinations</a>
+        <a href="#experiences" class="text-sm text-[#9ca3af] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Experiences</a>
+        <a href="#booking" class="text-sm text-[#9ca3af] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Booking</a>
+        <a href="#booking" class="btn-gold text-sm px-6 py-2.5" style="font-family: 'Outfit', sans-serif;">Plan Your Journey</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: Fullscreen -->
+  <section class="relative min-h-screen flex items-end">
+    <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]"></div>
+    <div class="hero-overlay absolute inset-0"></div>
+    <!-- Decorative elements representing a landscape -->
+    <div class="absolute inset-0 flex items-center justify-center opacity-10">
+      <svg class="w-96 h-96 text-[#c2956a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+      </svg>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 pb-24 pt-40 w-full">
+      <div class="reveal">
+        <p class="text-[#c2956a] text-sm tracking-[0.3em] uppercase mb-6" style="font-family: 'Outfit', sans-serif; font-weight: 400;">Curated Journeys Since 2008</p>
+      </div>
+      <h1 class="text-6xl md:text-8xl font-medium leading-[0.9] tracking-tight mb-8 reveal" style="font-family: 'Cormorant Garamond', serif;">
+        The world is<br>
+        not a destination.<br>
+        <span class="text-[#9ca3af]" style="font-weight: 300;">It's a feeling.</span>
+      </h1>
+      <div class="max-w-lg reveal reveal-delay-1">
+        <p class="text-lg text-[#9ca3af] leading-relaxed mb-10" style="font-weight: 300;">
+          Handcrafted itineraries for travelers who want more than landmarks. We design journeys around connection, silence, and the unexpected.
+        </p>
+      </div>
+      <div class="flex gap-4 reveal reveal-delay-2">
+        <a href="#destinations" class="btn-gold text-sm px-8 py-3.5 inline-block">Explore Destinations</a>
+        <a href="#booking" class="btn-ghost text-sm px-8 py-3.5 text-[#f5f0eb] inline-block">Plan a Journey</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destinations: Horizontal Scroll -->
+  <section id="destinations" class="py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="section-line mb-4 reveal">
+        <p class="text-xs text-[#9ca3af] tracking-[0.3em] uppercase" style="font-weight: 400;">Destinations</p>
+      </div>
+      <h2 class="text-4xl md:text-5xl font-medium mb-16 reveal" style="font-family: 'Cormorant Garamond', serif;">Where we go</h2>
+    </div>
+
+    <div class="scroll-h flex gap-6 px-6 pb-4 reveal">
+      <!-- Card 1 -->
+      <div class="dest-card flex-shrink-0">
+        <div class="aspect-[3/4] relative overflow-hidden">
+          <div class="dest-img absolute inset-0 bg-gradient-to-br from-[#2d3436] to-[#636e72]"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent"></div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-20">
+            <svg class="w-24 h-24 text-[#c2956a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-2" style="font-weight: 400;">01/</p>
+            <h3 class="text-2xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">Kyoto, Japan</h3>
+            <p class="text-sm text-[#9ca3af]" style="font-weight: 300;">Temples, tea ceremonies, forest walks. 7 days.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="dest-card flex-shrink-0">
+        <div class="aspect-[3/4] relative overflow-hidden">
+          <div class="dest-img absolute inset-0 bg-gradient-to-br from-[#4a6741] to-[#2d4a22]"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent"></div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-20">
+            <svg class="w-24 h-24 text-[#c2956a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-2" style="font-weight: 400;">02/</p>
+            <h3 class="text-2xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">Patagonia, Argentina</h3>
+            <p class="text-sm text-[#9ca3af]" style="font-weight: 300;">Glaciers, horseback, silence. 12 days.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="dest-card flex-shrink-0">
+        <div class="aspect-[3/4] relative overflow-hidden">
+          <div class="dest-img absolute inset-0 bg-gradient-to-br from-[#c2956a] to-[#8b6914]"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent"></div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-20">
+            <svg class="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-2" style="font-weight: 400;">03/</p>
+            <h3 class="text-2xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">Marrakech, Morocco</h3>
+            <p class="text-sm text-[#9ca3af]" style="font-weight: 300;">Souks, riads, desert nights. 9 days.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="dest-card flex-shrink-0">
+        <div class="aspect-[3/4] relative overflow-hidden">
+          <div class="dest-img absolute inset-0 bg-gradient-to-br from-[#1a4570] to-[#0d2137]"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent"></div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-20">
+            <svg class="w-24 h-24 text-[#c2956a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-2" style="font-weight: 400;">04/</p>
+            <h3 class="text-2xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">Lofoten, Norway</h3>
+            <p class="text-sm text-[#9ca3af]" style="font-weight: 300;">Northern lights, fjords, fishing villages. 8 days.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy -->
+  <section class="py-32">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="reveal">
+        <div class="w-12 h-px bg-[#c2956a] mx-auto mb-8"></div>
+      </div>
+      <blockquote class="text-3xl md:text-4xl font-light leading-snug mb-8 reveal" style="font-family: 'Cormorant Garamond', serif; font-weight: 300;">
+        "We don't sell vacations. We design the kind of stillness that changes how you see your own life when you come back."
+      </blockquote>
+      <div class="reveal reveal-delay-1">
+        <p class="text-sm text-[#c2956a] tracking-wider" style="font-weight: 400;">Elena Voss, Founder</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experiences: Staggered 2-col -->
+  <section id="experiences" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="section-line mb-4 reveal">
+        <p class="text-xs text-[#9ca3af] tracking-[0.3em] uppercase" style="font-weight: 400;">Experiences</p>
+      </div>
+      <h2 class="text-4xl md:text-5xl font-medium mb-20 reveal" style="font-family: 'Cormorant Garamond', serif;">Beyond the itinerary</h2>
+
+      <!-- Experience 1 -->
+      <div class="grid md:grid-cols-2 gap-12 mb-24 items-center">
+        <div class="reveal">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#2d3436] to-[#636e72] flex items-center justify-center">
+            <svg class="w-16 h-16 text-[#c2956a] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-4" style="font-weight: 400;">Private Access</p>
+          <h3 class="text-2xl md:text-3xl font-medium mb-4" style="font-family: 'Cormorant Garamond', serif;">Dawn at the temple, alone</h3>
+          <p class="text-[#9ca3af] leading-relaxed" style="font-weight: 300;">
+            Through relationships built over 15 years, we arrange private access to spaces that are normally closed. A tea ceremony at sunrise in a 400-year-old garden. A guided walk through a monastery before the tourists arrive.
+          </p>
+        </div>
+      </div>
+
+      <!-- Experience 2 (reversed, offset) -->
+      <div class="grid md:grid-cols-2 gap-12 mb-24 items-center">
+        <div class="reveal md:order-2">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#4a6741] to-[#2d4a22] exp-offset flex items-center justify-center">
+            <svg class="w-16 h-16 text-[#c2956a] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-1 md:order-1">
+          <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-4" style="font-weight: 400;">Local Connection</p>
+          <h3 class="text-2xl md:text-3xl font-medium mb-4" style="font-family: 'Cormorant Garamond', serif;">Dinner in someone's home</h3>
+          <p class="text-[#9ca3af] leading-relaxed" style="font-weight: 300;">
+            Forget restaurants. We connect you with local families who open their kitchens. You'll cook together, eat together, and hear stories that no guidebook carries. These moments become the trip.
+          </p>
+        </div>
+      </div>
+
+      <!-- Experience 3 -->
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <div class="aspect-[4/3] bg-gradient-to-br from-[#1a1a2e] to-[#16213e] flex items-center justify-center">
+            <svg class="w-16 h-16 text-[#c2956a] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <p class="text-xs text-[#c2956a] tracking-[0.2em] uppercase mb-4" style="font-weight: 400;">Intentional Stillness</p>
+          <h3 class="text-2xl md:text-3xl font-medium mb-4" style="font-family: 'Cormorant Garamond', serif;">One day with nothing planned</h3>
+          <p class="text-[#9ca3af] leading-relaxed" style="font-weight: 300;">
+            Every itinerary includes at least one empty day. No transfers, no guides, no agenda. Just you, the place, and whatever happens. Our travelers consistently say this is the day they remember most.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journal / Testimonials -->
+  <section class="py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="section-line mb-4 reveal">
+        <p class="text-xs text-[#9ca3af] tracking-[0.3em] uppercase" style="font-weight: 400;">From the Journal</p>
+      </div>
+      <h2 class="text-4xl md:text-5xl font-medium mb-16 reveal" style="font-family: 'Cormorant Garamond', serif;">Travelers' words</h2>
+
+      <div class="grid md:grid-cols-2 gap-12">
+        <div class="reveal">
+          <div class="border border-[#333333] p-8 mb-8">
+            <blockquote class="text-xl font-light leading-relaxed mb-6" style="font-family: 'Cormorant Garamond', serif; font-weight: 300;">
+              "The empty day in Kyoto changed me. I sat in a moss garden for four hours and didn't look at my phone once. I didn't plan that — they just built space for it to happen."
+            </blockquote>
+            <div>
+              <p class="text-sm text-[#c2956a]" style="font-weight: 400;">A. Chen, software engineer</p>
+              <p class="text-xs text-[#666666]" style="font-weight: 300;">Kyoto + Naoshima, 9 days, March 2025</p>
+            </div>
+          </div>
+          <div class="border border-[#333333] p-8">
+            <blockquote class="text-xl font-light leading-relaxed mb-6" style="font-family: 'Cormorant Garamond', serif; font-weight: 300;">
+              "We've done the big luxury trips — Aman, Four Seasons. This was different. Smaller, quieter, and somehow more memorable than any of them."
+            </blockquote>
+            <div>
+              <p class="text-sm text-[#c2956a]" style="font-weight: 400;">M. & L. Johannsen</p>
+              <p class="text-xs text-[#666666]" style="font-weight: 300;">Patagonia, 12 days, January 2026</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-1">
+          <div class="aspect-[3/4] bg-gradient-to-br from-[#2d3436] to-[#636e72] flex items-center justify-center">
+            <svg class="w-16 h-16 text-[#c2956a] opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-16 border-t border-b border-[#333333]">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="flex flex-wrap justify-between items-center gap-8 reveal">
+        <div class="text-center">
+          <p class="text-3xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">847</p>
+          <p class="text-xs text-[#9ca3af] tracking-[0.15em] uppercase" style="font-weight: 300;">Travelers guided</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">23</p>
+          <p class="text-xs text-[#9ca3af] tracking-[0.15em] uppercase" style="font-weight: 300;">Countries</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">97%</p>
+          <p class="text-xs text-[#9ca3af] tracking-[0.15em] uppercase" style="font-weight: 300;">Book again</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-medium mb-1" style="font-family: 'Cormorant Garamond', serif;">18</p>
+          <p class="text-xs text-[#9ca3af] tracking-[0.15em] uppercase" style="font-weight: 300;">Years of journeys</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking -->
+  <section id="booking" class="py-28">
+    <div class="max-w-2xl mx-auto px-6">
+      <div class="section-line text-center mb-4 reveal">
+        <div class="w-10 h-px bg-[#c2956a] mx-auto mb-4"></div>
+        <p class="text-xs text-[#9ca3af] tracking-[0.3em] uppercase" style="font-weight: 400;">Begin</p>
+      </div>
+      <h2 class="text-4xl md:text-5xl font-medium text-center mb-4 reveal" style="font-family: 'Cormorant Garamond', serif;">Start your journey</h2>
+      <p class="text-center text-[#9ca3af] mb-12 reveal" style="font-weight: 300;">Tell us where your curiosity leads. We'll design the rest.</p>
+
+      <form class="space-y-6 reveal">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs text-[#9ca3af] tracking-wider uppercase mb-2" style="font-weight: 400;">Name</label>
+            <input type="text" placeholder="Your name" class="form-dark w-full px-4 py-3.5 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs text-[#9ca3af] tracking-wider uppercase mb-2" style="font-weight: 400;">Email</label>
+            <input type="email" placeholder="your@email.com" class="form-dark w-full px-4 py-3.5 text-sm">
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs text-[#9ca3af] tracking-wider uppercase mb-2" style="font-weight: 400;">Preferred dates</label>
+            <input type="text" placeholder="e.g. October 2026" class="form-dark w-full px-4 py-3.5 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs text-[#9ca3af] tracking-wider uppercase mb-2" style="font-weight: 400;">Travelers</label>
+            <select class="form-dark w-full px-4 py-3.5 text-sm">
+              <option>Solo</option>
+              <option>2 travelers</option>
+              <option>3-4 travelers</option>
+              <option>5+ travelers</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-[#9ca3af] tracking-wider uppercase mb-2" style="font-weight: 400;">What draws you?</label>
+          <textarea rows="4" placeholder="A place, a feeling, a kind of experience..." class="form-dark w-full px-4 py-3.5 text-sm resize-none"></textarea>
+        </div>
+        <div class="text-center pt-4">
+          <button type="submit" class="btn-gold text-sm px-12 py-4">Begin Planning</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 border-t border-[#333333]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-12">
+        <div>
+          <p class="text-xl font-medium tracking-wider mb-4" style="font-family: 'Cormorant Garamond', serif; letter-spacing: 0.1em;">MERIDIAN</p>
+          <p class="text-sm text-[#9ca3af] leading-relaxed" style="font-weight: 300;">Curated journeys for the curious. Since 2008.</p>
+        </div>
+        <div>
+          <p class="text-xs text-[#9ca3af] tracking-[0.2em] uppercase mb-4" style="font-weight: 400;">Explore</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">All Destinations</a>
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Experiences</a>
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Journal</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-[#9ca3af] tracking-[0.2em] uppercase mb-4" style="font-weight: 400;">Company</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Our Story</a>
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Team</a>
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Careers</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs text-[#9ca3af] tracking-[0.2em] uppercase mb-4" style="font-weight: 400;">Follow</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Instagram</a>
+            <a href="#" class="block text-sm text-[#666666] hover:text-[#f5f0eb] transition-colors" style="font-weight: 300;">Pinterest</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-16 pt-8 border-t border-[#333333] text-center">
+        <p class="text-xs text-[#666666]" style="font-weight: 300;">&copy; 2026 Meridian Travel. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>034 — Education Gamified</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #ffffff;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* Course node */
+    .course-node {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .course-node:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(13, 148, 136, 0.2);
+    }
+    .course-node.completed {
+      background: #0d9488;
+      color: white;
+    }
+    .course-node.current {
+      background: #ffffff;
+      border: 3px solid #0d9488;
+      box-shadow: 0 0 0 6px rgba(13, 148, 136, 0.15);
+    }
+    .course-node.locked {
+      background: #e2e8f0;
+      color: #94a3b8;
+    }
+
+    /* Dashed connector */
+    .connector {
+      border-left: 2px dashed #ccfbf1;
+    }
+
+    /* Bento card */
+    .bento-card {
+      background: #ffffff;
+      border: 1px solid #ccfbf1;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .bento-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(13, 148, 136, 0.1);
+      border-color: #14b8a6;
+    }
+
+    /* Quiz option */
+    .quiz-option {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+      cursor: pointer;
+    }
+    .quiz-option:hover {
+      border-color: #14b8a6;
+      background: #f0fdfa;
+      transform: translateX(4px);
+    }
+    .quiz-option.correct {
+      border-color: #0d9488;
+      background: #ccfbf1;
+    }
+
+    /* Progress bar animation */
+    @keyframes progressFill {
+      from { width: 0; }
+      to { width: 67%; }
+    }
+    .progress-fill {
+      animation: progressFill 1.5s ease-out forwards;
+    }
+
+    /* Bounce for mascot */
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .mascot-bounce {
+      animation: gentleBounce 3s ease-in-out infinite;
+    }
+
+    /* Streak flame */
+    @keyframes flicker {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .flame-flicker {
+      animation: flicker 1.5s ease-in-out infinite;
+    }
+
+    /* Nav */
+    .nav-scrolled {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .btn-teal {
+      background: #0d9488;
+      color: white;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-teal:hover {
+      background: #0f766e;
+      transform: translateY(-1px);
+    }
+
+    /* Scroll cards */
+    .scroll-container {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-container::-webkit-scrollbar { display: none; }
+    .scroll-card {
+      scroll-snap-align: start;
+      min-width: 280px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-2xl bg-[#0d9488] flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838l-3.014 1.292 2.226.953a1 1 0 00.788 0l7-3a1 1 0 000-1.84l-7-3z"/><path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/></svg>
+        </div>
+        <span class="text-lg font-extrabold tracking-tight">Learnly</span>
+      </div>
+      <div class="hidden md:flex items-center gap-6">
+        <a href="#curriculum" class="text-sm text-[#64748b] hover:text-[#0f172a] font-medium transition-colors">Courses</a>
+        <a href="#features" class="text-sm text-[#64748b] hover:text-[#0f172a] font-medium transition-colors">Features</a>
+        <a href="#demo" class="text-sm text-[#64748b] hover:text-[#0f172a] font-medium transition-colors">Try It</a>
+        <a href="#" class="btn-teal text-sm font-bold px-5 py-2.5 rounded-2xl">Start Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-[#f0fdfa] border border-[#ccfbf1] rounded-2xl px-4 py-2 mb-6 reveal">
+            <span class="flame-flicker text-lg">&#128293;</span>
+            <span class="text-sm font-bold text-[#0d9488]">Join 2.3M learners worldwide</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6 reveal">
+            Learn anything.<br>
+            <span class="text-[#0d9488]">Actually remember it.</span>
+          </h1>
+          <p class="text-lg text-[#64748b] leading-relaxed mb-6 reveal">
+            Interactive lessons, real-time feedback, and a learning path that adapts to how your brain works. Not another video course you'll never finish.
+          </p>
+          <!-- Progress bar -->
+          <div class="mb-8 reveal">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-[#64748b] uppercase tracking-wider">Your Progress</span>
+              <span class="text-xs font-bold text-[#0d9488]">67%</span>
+            </div>
+            <div class="w-full h-3 bg-[#f0fdfa] rounded-full overflow-hidden">
+              <div class="progress-fill h-full bg-[#0d9488] rounded-full"></div>
+            </div>
+          </div>
+          <div class="flex gap-4 reveal">
+            <a href="#" class="btn-teal text-sm font-bold px-8 py-3.5 rounded-2xl inline-block">Start Learning Free</a>
+            <a href="#demo" class="text-sm font-bold px-8 py-3.5 rounded-2xl border-2 border-[#e2e8f0] text-[#0f172a] hover:border-[#0d9488] transition-colors inline-block">Try a Lesson</a>
+          </div>
+        </div>
+
+        <!-- Mascot / Illustration placeholder -->
+        <div class="flex justify-center reveal">
+          <div class="mascot-bounce relative">
+            <div class="w-64 h-64 rounded-[3rem] bg-gradient-to-br from-[#ccfbf1] to-[#99f6e4] flex items-center justify-center">
+              <svg class="w-32 h-32 text-[#0d9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>
+              </svg>
+            </div>
+            <!-- Floating badge -->
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-2xl bg-white shadow-lg border border-[#ccfbf1] flex items-center justify-center">
+              <span class="text-2xl">&#127942;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curriculum Path -->
+  <section id="curriculum" class="py-24 bg-[#f0fdfa]">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <p class="text-xs font-bold text-[#0d9488] tracking-widest uppercase mb-3">Learning Path</p>
+        <h2 class="text-3xl font-bold">Your journey, step by step</h2>
+      </div>
+
+      <div class="space-y-0">
+        <!-- Node 1: Completed -->
+        <div class="flex items-start gap-6 reveal">
+          <div class="flex flex-col items-center">
+            <div class="course-node completed w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <div class="connector h-16"></div>
+          </div>
+          <div class="pt-2">
+            <h3 class="text-lg font-bold mb-1">Fundamentals</h3>
+            <p class="text-sm text-[#64748b]">Core concepts, vocabulary, and your first 50 practice problems.</p>
+            <span class="inline-block mt-2 text-xs font-bold text-[#0d9488] bg-[#ccfbf1] px-3 py-1 rounded-2xl">Completed</span>
+          </div>
+        </div>
+
+        <!-- Node 2: Completed -->
+        <div class="flex items-start gap-6 reveal reveal-delay-1">
+          <div class="flex flex-col items-center">
+            <div class="course-node completed w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <div class="connector h-16"></div>
+          </div>
+          <div class="pt-2">
+            <h3 class="text-lg font-bold mb-1">Pattern Recognition</h3>
+            <p class="text-sm text-[#64748b]">Identify structures, solve puzzles, build intuition through 120 exercises.</p>
+            <span class="inline-block mt-2 text-xs font-bold text-[#0d9488] bg-[#ccfbf1] px-3 py-1 rounded-2xl">Completed</span>
+          </div>
+        </div>
+
+        <!-- Node 3: Current -->
+        <div class="flex items-start gap-6 reveal reveal-delay-2">
+          <div class="flex flex-col items-center">
+            <div class="course-node current w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg text-[#0d9488]">3</div>
+            <div class="connector h-16"></div>
+          </div>
+          <div class="pt-2">
+            <h3 class="text-lg font-bold mb-1">Applied Problem Solving</h3>
+            <p class="text-sm text-[#64748b]">Real-world scenarios with multi-step challenges. You're 67% through.</p>
+            <span class="inline-block mt-2 text-xs font-bold text-[#0f766e] bg-[#f0fdfa] border border-[#0d9488] px-3 py-1 rounded-2xl">In Progress</span>
+          </div>
+        </div>
+
+        <!-- Node 4: Locked -->
+        <div class="flex items-start gap-6 reveal reveal-delay-3">
+          <div class="flex flex-col items-center">
+            <div class="course-node locked w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <div class="connector h-16"></div>
+          </div>
+          <div class="pt-2">
+            <h3 class="text-lg font-bold text-[#94a3b8] mb-1">Advanced Concepts</h3>
+            <p class="text-sm text-[#94a3b8]">Deep dives, edge cases, and expert-level challenges. Unlocks at 100%.</p>
+          </div>
+        </div>
+
+        <!-- Node 5: Locked -->
+        <div class="flex items-start gap-6 reveal reveal-delay-4">
+          <div class="flex flex-col items-center">
+            <div class="course-node locked w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            </div>
+          </div>
+          <div class="pt-2">
+            <h3 class="text-lg font-bold text-[#94a3b8] mb-1">Certification</h3>
+            <p class="text-sm text-[#94a3b8]">Final assessment and verified certificate of completion.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Bento Grid -->
+  <section id="features" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <p class="text-xs font-bold text-[#0d9488] tracking-widest uppercase mb-3">Why It Works</p>
+        <h2 class="text-3xl font-bold">Built for how your brain actually learns</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="bento-card rounded-2xl p-7 reveal reveal-delay-1">
+          <div class="w-11 h-11 rounded-2xl bg-[#f0fdfa] flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-[#0d9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Spaced Repetition</h3>
+          <p class="text-sm text-[#64748b] leading-relaxed">We resurface concepts right before you'd forget them. Retention goes from 23% to 87% in controlled tests.</p>
+        </div>
+
+        <div class="bento-card rounded-2xl p-7 reveal reveal-delay-2">
+          <div class="w-11 h-11 rounded-2xl bg-[#f0fdfa] flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-[#0d9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Instant Feedback</h3>
+          <p class="text-sm text-[#64748b] leading-relaxed">Every answer gets an explanation in under 200ms. No waiting for a teacher — the system tells you exactly why.</p>
+        </div>
+
+        <div class="bento-card rounded-2xl p-7 reveal reveal-delay-3">
+          <div class="w-11 h-11 rounded-2xl bg-[#f0fdfa] flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-[#0d9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Streak Rewards</h3>
+          <p class="text-sm text-[#64748b] leading-relaxed">Daily practice builds momentum. At 7 days you unlock challenges; at 30 you get exclusive content packs.</p>
+        </div>
+
+        <div class="bento-card rounded-2xl p-7 md:col-span-2 reveal">
+          <div class="w-11 h-11 rounded-2xl bg-[#f0fdfa] flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-[#0d9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Adaptive Difficulty</h3>
+          <p class="text-sm text-[#64748b] leading-relaxed">The system tracks your weak spots and adjusts lesson difficulty in real-time. Struggling with a concept? You'll see it more. Mastered it? We move on. No wasted time on things you already know.</p>
+        </div>
+
+        <div class="bento-card rounded-2xl p-7 reveal reveal-delay-1">
+          <div class="w-11 h-11 rounded-2xl bg-[#f0fdfa] flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-[#0d9488]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Study Groups</h3>
+          <p class="text-sm text-[#64748b] leading-relaxed">Challenge friends, share progress, and tackle group problems together.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Demo -->
+  <section id="demo" class="py-28 bg-[#f0fdfa]">
+    <div class="max-w-2xl mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-xs font-bold text-[#0d9488] tracking-widest uppercase mb-3">Try It Now</p>
+        <h2 class="text-3xl font-bold">Sample Lesson</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-[#ccfbf1] p-8 shadow-sm reveal">
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-xs font-bold text-[#0d9488] bg-[#f0fdfa] px-3 py-1 rounded-2xl">Lesson 3.4</span>
+          <span class="text-xs text-[#64748b]">Question 7 of 12</span>
+        </div>
+
+        <h3 class="text-xl font-bold mb-2">Which pattern best describes this sequence?</h3>
+        <p class="text-sm text-[#64748b] mb-6">2, 6, 18, 54, 162, ...</p>
+
+        <div class="space-y-3 mb-6">
+          <div class="quiz-option rounded-2xl px-5 py-4 flex items-center gap-3" onclick="this.classList.toggle('border-[#e2e8f0]')">
+            <span class="w-7 h-7 rounded-full border-2 border-[#e2e8f0] flex items-center justify-center text-xs font-bold">A</span>
+            <span class="text-sm font-medium">Arithmetic (+4 each step)</span>
+          </div>
+          <div class="quiz-option correct rounded-2xl px-5 py-4 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-[#0d9488] text-white flex items-center justify-center text-xs font-bold">B</span>
+            <span class="text-sm font-bold text-[#0d9488]">Geometric (x3 each step)</span>
+            <svg class="w-5 h-5 text-[#0d9488] ml-auto" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="quiz-option rounded-2xl px-5 py-4 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full border-2 border-[#e2e8f0] flex items-center justify-center text-xs font-bold">C</span>
+            <span class="text-sm font-medium">Fibonacci (sum of previous two)</span>
+          </div>
+          <div class="quiz-option rounded-2xl px-5 py-4 flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full border-2 border-[#e2e8f0] flex items-center justify-center text-xs font-bold">D</span>
+            <span class="text-sm font-medium">Quadratic (n&sup2; pattern)</span>
+          </div>
+        </div>
+
+        <div class="bg-[#f0fdfa] rounded-2xl p-5 border border-[#ccfbf1]">
+          <p class="text-sm font-bold text-[#0d9488] mb-1">Correct!</p>
+          <p class="text-sm text-[#64748b]">Each term is multiplied by 3. This is a geometric sequence with common ratio r=3. The next term would be 162 x 3 = 486.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof Scroll -->
+  <section class="py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <p class="text-xs font-bold text-[#0d9488] tracking-widest uppercase mb-3">Learner Stories</p>
+        <h2 class="text-3xl font-bold">Real results from real people</h2>
+      </div>
+
+      <div class="scroll-container flex gap-5 pb-4 reveal">
+        <div class="scroll-card bg-[#f0fdfa] rounded-2xl p-6 border border-[#ccfbf1] flex-shrink-0">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-[#0d9488] flex items-center justify-center text-white font-bold text-sm">MK</div>
+            <div>
+              <p class="text-sm font-bold">Min-kyung</p>
+              <p class="text-xs text-[#64748b]">42-day streak</p>
+            </div>
+          </div>
+          <p class="text-sm text-[#64748b] leading-relaxed">"I kept dropping out of online courses after week 2. The streak system here is genuinely addictive — I've done 42 days straight without thinking about it."</p>
+        </div>
+
+        <div class="scroll-card bg-[#f0fdfa] rounded-2xl p-6 border border-[#ccfbf1] flex-shrink-0">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-[#14b8a6] flex items-center justify-center text-white font-bold text-sm">JR</div>
+            <div>
+              <p class="text-sm font-bold">James R.</p>
+              <p class="text-xs text-[#64748b]">Completed Advanced</p>
+            </div>
+          </div>
+          <p class="text-sm text-[#64748b] leading-relaxed">"The instant feedback loop changed everything for me. I'd get stuck on a concept for hours with textbooks — here it clicks in minutes because the explanation lands right after the mistake."</p>
+        </div>
+
+        <div class="scroll-card bg-[#f0fdfa] rounded-2xl p-6 border border-[#ccfbf1] flex-shrink-0">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-[#0d9488] flex items-center justify-center text-white font-bold text-sm">SY</div>
+            <div>
+              <p class="text-sm font-bold">Seo-yeon</p>
+              <p class="text-xs text-[#64748b]">89-day streak</p>
+            </div>
+          </div>
+          <p class="text-sm text-[#64748b] leading-relaxed">"Used it to prep for a technical interview. The adaptive difficulty meant I wasn't wasting time on easy stuff — it kept pushing me right at the edge of what I could handle."</p>
+        </div>
+
+        <div class="scroll-card bg-[#f0fdfa] rounded-2xl p-6 border border-[#ccfbf1] flex-shrink-0">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-[#14b8a6] flex items-center justify-center text-white font-bold text-sm">AL</div>
+            <div>
+              <p class="text-sm font-bold">Alex L.</p>
+              <p class="text-xs text-[#64748b]">Study group leader</p>
+            </div>
+          </div>
+          <p class="text-sm text-[#64748b] leading-relaxed">"My study group of 5 completed the entire curriculum in 11 weeks. The group challenges kept us accountable in a way no Discord server ever has."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-[#f0fdfa]">
+    <div class="max-w-3xl mx-auto px-6 text-center reveal">
+      <div class="mascot-bounce inline-block mb-6">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#ccfbf1] to-[#99f6e4] flex items-center justify-center">
+          <span class="text-3xl">&#127891;</span>
+        </div>
+      </div>
+      <h2 class="text-3xl font-bold mb-4">Ready to start learning?</h2>
+      <p class="text-lg text-[#64748b] mb-8">Free forever for the first two courses. No credit card needed.</p>
+      <a href="#" class="btn-teal text-sm font-bold px-10 py-4 rounded-2xl inline-block">Create Free Account</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-7 h-7 rounded-xl bg-[#0d9488] flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838l-3.014 1.292 2.226.953a1 1 0 00.788 0l7-3a1 1 0 000-1.84l-7-3z"/></svg>
+            </div>
+            <span class="font-extrabold">Learnly</span>
+          </div>
+          <p class="text-sm text-[#64748b] leading-relaxed">Interactive learning that actually sticks.</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-[#0f172a] uppercase tracking-wider mb-3">Product</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">Courses</a>
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">Pricing</a>
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">For Teams</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-[#0f172a] uppercase tracking-wider mb-3">Company</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">About</a>
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">Blog</a>
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">Careers</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-[#0f172a] uppercase tracking-wider mb-3">Connect</p>
+          <div class="space-y-2">
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">Twitter</a>
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">Discord</a>
+            <a href="#" class="block text-sm text-[#64748b] hover:text-[#0f172a] transition-colors">GitHub</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-[#e2e8f0] text-center">
+        <p class="text-xs text-[#94a3b8]">&copy; 2026 Learnly. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        nav.classList.add('nav-scrolled');
+      } else {
+        nav.classList.remove('nav-scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>

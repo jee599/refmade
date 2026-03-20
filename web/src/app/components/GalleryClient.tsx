@@ -6,81 +6,86 @@ import type { Reference } from "@/app/data/references";
 
 type Filter = "all" | "light" | "dark" | "verified";
 
-function ColorDot({ color }: { color: string }) {
-  return (
-    <span
-      className="inline-block h-4 w-4 rounded-full border border-zinc-700"
-      style={{ backgroundColor: color }}
-    />
-  );
-}
-
 function StatusBadge({ status }: { status: Reference["status"] }) {
   if (status === "verified") {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-950 px-2 py-0.5 text-xs text-emerald-400">
-        ✅ verified
+        verified
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
-      📝 draft
+      draft
     </span>
   );
 }
 
 function ReferenceCard({ reference: r }: { reference: Reference }) {
-  // Derive text and muted colors from bg
-  const textColor = r.tone === "dark" ? "#fafafa" : "#09090b";
-  const mutedColor = r.tone === "dark" ? "#71717a" : "#a1a1aa";
-
   return (
     <Link href={`/reference/${r.id}`} className="group block">
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-blue-500/50 group-hover:shadow-lg group-hover:shadow-blue-500/10">
-        {/* Color strip */}
-        <div className="mb-3 flex items-center gap-2">
-          <ColorDot color={r.bg} />
-          <ColorDot color={textColor} />
-          <ColorDot color={r.accent} />
-          <ColorDot color={r.tone === "dark" ? "#18181b" : "#f4f4f5"} />
-          <ColorDot color={mutedColor} />
+      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-blue-500/50 group-hover:shadow-lg group-hover:shadow-blue-500/10">
+        {/* Preview section */}
+        <div className="relative h-48 w-full overflow-hidden border-b border-zinc-800 bg-zinc-900">
+          {r.sampleFile ? (
+            <iframe
+              src={`/samples/${r.sampleFile}`}
+              className="pointer-events-none h-[900px] w-[1440px] origin-top-left"
+              style={{ transform: "scale(0.22)", transformOrigin: "top left" }}
+              title={r.name}
+              loading="lazy"
+              sandbox="allow-same-origin"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <div className="mb-2 text-2xl">🎨</div>
+                <span className="text-sm text-zinc-500">Coming Soon</span>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Name + ID */}
-        <div className="mb-2 flex items-center gap-2">
-          <h3 className="font-[family-name:var(--font-space-grotesk)] text-base font-semibold text-zinc-50">
-            {r.name}
-          </h3>
-          <span className="rounded bg-zinc-800 px-1.5 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-500">
-            {r.id}
-          </span>
-        </div>
-
-        {/* Tags */}
-        <div className="mb-2 flex flex-wrap gap-1">
-          {r.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400"
-            >
-              {tag}
+        {/* Card body */}
+        <div className="p-4">
+          {/* Name + ID */}
+          <div className="mb-2 flex items-center gap-2">
+            <h3 className="font-[family-name:var(--font-space-grotesk)] text-base font-semibold text-zinc-50">
+              {r.name}
+            </h3>
+            <span className="rounded bg-zinc-800 px-1.5 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-500">
+              {r.id}
             </span>
-          ))}
+          </div>
+
+          {/* Tags */}
+          <div className="mb-2 flex flex-wrap gap-1">
+            {r.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Description */}
+          <p className="mb-2 line-clamp-1 text-sm text-zinc-400">
+            {r.description}
+          </p>
+
+          {/* Inspired by */}
+          <p className="mb-3 text-xs text-zinc-600">
+            Inspired by {r.inspired.join(", ")}
+          </p>
+
+          {/* Status */}
+          <StatusBadge status={r.status} />
         </div>
 
-        {/* Description */}
-        <p className="mb-2 line-clamp-1 text-sm text-zinc-400">
-          {r.description}
-        </p>
-
-        {/* Inspired by */}
-        <p className="mb-3 text-xs text-zinc-600">
-          Inspired by {r.inspired.join(", ")}
-        </p>
-
-        {/* Status */}
-        <StatusBadge status={r.status} />
+        {/* Accent color bar */}
+        <div className="h-1 w-full" style={{ backgroundColor: r.accent }} />
       </div>
     </Link>
   );
@@ -156,7 +161,7 @@ export default function GalleryClient({
           No references match your filters.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((r) => (
             <ReferenceCard key={r.id} reference={r} />
           ))}

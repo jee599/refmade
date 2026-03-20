@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { references } from "@/app/data/references";
 import ReferenceDetailClient from "./ReferenceDetailClient";
-import fs from "fs";
-import path from "path";
 
 export function generateStaticParams() {
   return references.map((r) => ({ id: r.id }));
@@ -29,9 +27,7 @@ export default async function ReferenceDetailPage(props: {
     notFound();
   }
 
-  const sampleFileName = `${reference.id}-${reference.name.toLowerCase().replace(/\s+/g, "-")}.html`;
-  const samplePath = path.join(process.cwd(), "public", "samples", sampleFileName);
-  const sampleExists = fs.existsSync(samplePath);
+  const sampleExists = !!reference.sampleFile;
 
   return (
     <div className="flex flex-1 flex-col">

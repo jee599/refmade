@@ -50,14 +50,13 @@ export default function ReferenceDetailClient({
   const mutedColor = r.tone === "dark" ? "#71717a" : "#a1a1aa";
   const subtleColor = r.tone === "dark" ? "#18181b" : "#f4f4f5";
 
-  const sampleFileName = `${r.id}-${r.name.toLowerCase().replace(/\s+/g, "-")}.html`;
-  const samplePath = `/samples/${sampleFileName}`;
+  const samplePath = r.sampleFile ? `/samples/${r.sampleFile}` : null;
 
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
       {/* Left: Preview */}
       <div className="flex-1 border-b border-zinc-800 p-4 lg:border-b-0 lg:border-r lg:p-6" style={{ minHeight: "70vh" }}>
-        {sampleExists ? (
+        {sampleExists && samplePath ? (
           <div className="h-full overflow-hidden rounded-xl border border-zinc-800 bg-white">
             <iframe
               src={samplePath}
@@ -178,7 +177,7 @@ export default function ReferenceDetailClient({
           >
             Use This Reference
           </a>
-          {sampleExists && (
+          {sampleExists && samplePath && (
             <a
               href={samplePath}
               target="_blank"

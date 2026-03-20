@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>026 — Luxury E-commerce</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f1eb;
+      color: #1a1611;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+
+    /* Reveal animation — slow, luxurious */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Slow fade for secondary reveals */
+    .reveal-slow {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 1.4s ease 0.2s, transform 1.4s ease 0.2s;
+    }
+    .reveal-slow.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Product card hover */
+    .product-card {
+      transition: transform 1.2s ease, box-shadow 1.2s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(26, 22, 17, 0.08);
+    }
+
+    /* Image placeholder */
+    .img-placeholder {
+      background: #e8e2d8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9a8c6c;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.875rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* Understated link hover */
+    .subtle-link {
+      position: relative;
+      transition: color 0.6s ease;
+    }
+    .subtle-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #6b6349;
+      transition: width 0.6s ease;
+    }
+    .subtle-link:hover::after {
+      width: 100%;
+    }
+
+    /* Nav */
+    .nav-luxury {
+      background: rgba(245, 241, 235, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(107, 99, 73, 0.1);
+    }
+
+    /* Thin divider */
+    .divider-thin {
+      height: 1px;
+      background: rgba(107, 99, 73, 0.15);
+    }
+
+    /* Editorial overlay */
+    .editorial-overlay {
+      background: linear-gradient(to top, rgba(26, 22, 17, 0.6), transparent 60%);
+    }
+
+    /* Ingredient item hover */
+    .ingredient-item {
+      transition: padding-left 0.6s ease;
+    }
+    .ingredient-item:hover {
+      padding-left: 1rem;
+    }
+
+    /* CTA button — understated */
+    .btn-luxury {
+      border: 1px solid #6b6349;
+      color: #6b6349;
+      padding: 0.75rem 2rem;
+      letter-spacing: 0.15em;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      transition: background 0.8s ease, color 0.8s ease;
+    }
+    .btn-luxury:hover {
+      background: #6b6349;
+      color: #f5f1eb;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f5f1eb; }
+    ::-webkit-scrollbar-thumb { background: #c4bba8; border-radius: 3px; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            luxury: {
+              bg: '#f5f1eb',
+              text: '#1a1611',
+              olive: '#6b6349',
+              brass: '#9a8c6c',
+              cream: '#e8e2d8',
+              warmwhite: '#faf8f4',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav-luxury fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+      <div class="flex items-center justify-between h-16">
+        <a href="#" class="font-['Cormorant_Garamond'] text-xl tracking-widest text-luxury-text" style="font-weight:300;">MAISON</a>
+        <div class="hidden md:flex items-center gap-10">
+          <a href="#" class="subtle-link text-xs tracking-widest uppercase text-luxury-olive">Collections</a>
+          <a href="#" class="subtle-link text-xs tracking-widest uppercase text-luxury-olive">Stories</a>
+          <a href="#" class="subtle-link text-xs tracking-widest uppercase text-luxury-olive">About</a>
+          <a href="#" class="btn-luxury text-xs">Discover</a>
+        </div>
+        <button class="md:hidden text-luxury-olive" aria-label="Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M4 8h16M4 16h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: Single Product Focus -->
+  <section class="pt-28 pb-20 md:pt-36 md:pb-28 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <!-- Product Image -->
+        <div class="reveal">
+          <div class="img-placeholder rounded-sm" style="aspect-ratio: 3/4;">
+            <span class="tracking-widest uppercase text-xs">Product Image</span>
+          </div>
+        </div>
+        <!-- Product Info -->
+        <div class="reveal-slow flex flex-col justify-center">
+          <p class="text-xs tracking-widest uppercase text-luxury-brass mb-6">New Arrival</p>
+          <h1 class="text-5xl md:text-6xl lg:text-7xl leading-none mb-8 text-luxury-text" style="letter-spacing:-0.01em;">
+            The Art of<br>Quiet Luxury
+          </h1>
+          <p class="text-base leading-relaxed text-luxury-olive mb-10 max-w-md">
+            Crafted from botanical essences and rare ingredients, each piece tells a story of restraint and intention. Less is revealed, more is felt.
+          </p>
+          <div>
+            <a href="#" class="subtle-link text-xs tracking-widest uppercase text-luxury-olive">
+              Discover the Collection →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Grid: 2x2, varied card sizes (constraint #2) -->
+  <section class="py-24 px-6 lg:px-12" style="background:#faf8f4;">
+    <div class="max-w-7xl mx-auto">
+      <div class="reveal mb-16">
+        <p class="text-xs tracking-widest uppercase text-luxury-brass mb-4">Curated Selection</p>
+        <h2 class="text-4xl md:text-5xl text-luxury-text">Essentials</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Product 1 — taller -->
+        <div class="reveal product-card">
+          <div class="img-placeholder rounded-sm mb-6" style="aspect-ratio: 3/4;">
+            <span class="tracking-widest uppercase text-xs">Product [N]</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <div>
+              <h3 class="text-xl text-luxury-text mb-1">Reverence Hand Balm</h3>
+              <p class="text-xs text-luxury-brass tracking-wide">Woody, Herbaceous</p>
+            </div>
+            <span class="text-sm text-luxury-olive">[N]</span>
+          </div>
+        </div>
+        <!-- Product 2 — shorter -->
+        <div class="reveal-slow product-card">
+          <div class="img-placeholder rounded-sm mb-6" style="aspect-ratio: 4/3;">
+            <span class="tracking-widest uppercase text-xs">Product [N]</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <div>
+              <h3 class="text-xl text-luxury-text mb-1">Résurrection Wash</h3>
+              <p class="text-xs text-luxury-brass tracking-wide">Citrus, Woody</p>
+            </div>
+            <span class="text-sm text-luxury-olive">[N]</span>
+          </div>
+        </div>
+        <!-- Product 3 — shorter -->
+        <div class="reveal product-card">
+          <div class="img-placeholder rounded-sm mb-6" style="aspect-ratio: 4/3;">
+            <span class="tracking-widest uppercase text-xs">Product [N]</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <div>
+              <h3 class="text-xl text-luxury-text mb-1">Hwyl Eau de Parfum</h3>
+              <p class="text-xs text-luxury-brass tracking-wide">Smoky, Woody</p>
+            </div>
+            <span class="text-sm text-luxury-olive">[N]</span>
+          </div>
+        </div>
+        <!-- Product 4 — taller -->
+        <div class="reveal-slow product-card">
+          <div class="img-placeholder rounded-sm mb-6" style="aspect-ratio: 3/4;">
+            <span class="tracking-widest uppercase text-xs">Product [N]</span>
+          </div>
+          <div class="flex justify-between items-baseline">
+            <div>
+              <h3 class="text-xl text-luxury-text mb-1">Tacit Eau de Parfum</h3>
+              <p class="text-xs text-luxury-brass tracking-wide">Floral, Green</p>
+            </div>
+            <span class="text-sm text-luxury-olive">[N]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial Story Section -->
+  <section class="py-20 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="reveal relative rounded-sm overflow-hidden" style="aspect-ratio:16/7;">
+        <div class="img-placeholder absolute inset-0">
+          <span class="tracking-widest uppercase text-xs">Editorial Image</span>
+        </div>
+        <div class="editorial-overlay absolute inset-0"></div>
+        <div class="absolute bottom-0 left-0 p-8 md:p-14 max-w-lg">
+          <p class="text-xs tracking-widest uppercase text-luxury-cream mb-4" style="color:#e8e2d8;">The Process</p>
+          <h2 class="text-3xl md:text-4xl text-white mb-4" style="font-weight:300;">From Soil to Skin</h2>
+          <p class="text-sm text-white/70 leading-relaxed mb-6">
+            Every formulation begins with a conversation between chemist and botanist. We source from small farms where quality is a matter of personal pride, not corporate mandate.
+          </p>
+          <a href="#" class="subtle-link text-xs tracking-widest uppercase" style="color:#e8e2d8;">
+            Read the Story →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ingredient / Material Section -->
+  <section class="py-28 px-6 lg:px-12" style="background:#faf8f4;">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
+        <!-- Left: heading + description -->
+        <div class="reveal">
+          <p class="text-xs tracking-widest uppercase text-luxury-brass mb-6">Materials</p>
+          <h2 class="text-4xl md:text-5xl text-luxury-text mb-8" style="line-height:1.1;">
+            What Goes In<br>Matters Most
+          </h2>
+          <p class="text-base text-luxury-olive leading-relaxed max-w-sm">
+            We publish the full ingredient list for every product. Transparency is not a trend for us — it is a founding principle.
+          </p>
+        </div>
+        <!-- Right: ingredient list -->
+        <div class="reveal-slow">
+          <ul>
+            <li class="ingredient-item py-5 border-b" style="border-color:rgba(107,99,73,0.15);">
+              <div class="flex justify-between items-baseline">
+                <div>
+                  <h3 class="text-lg text-luxury-text">Vetiver Root</h3>
+                  <p class="text-xs text-luxury-brass mt-1">Sourced from Réunion Island</p>
+                </div>
+                <svg class="w-4 h-4 text-luxury-brass flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </li>
+            <li class="ingredient-item py-5 border-b" style="border-color:rgba(107,99,73,0.15);">
+              <div class="flex justify-between items-baseline">
+                <div>
+                  <h3 class="text-lg text-luxury-text">Japanese Cypress</h3>
+                  <p class="text-xs text-luxury-brass mt-1">Hinoki from Kiso Valley</p>
+                </div>
+                <svg class="w-4 h-4 text-luxury-brass flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </li>
+            <li class="ingredient-item py-5 border-b" style="border-color:rgba(107,99,73,0.15);">
+              <div class="flex justify-between items-baseline">
+                <div>
+                  <h3 class="text-lg text-luxury-text">Bitter Orange</h3>
+                  <p class="text-xs text-luxury-brass mt-1">Cold-pressed from Seville rinds</p>
+                </div>
+                <svg class="w-4 h-4 text-luxury-brass flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </li>
+            <li class="ingredient-item py-5 border-b" style="border-color:rgba(107,99,73,0.15);">
+              <div class="flex justify-between items-baseline">
+                <div>
+                  <h3 class="text-lg text-luxury-text">Shea Butter</h3>
+                  <p class="text-xs text-luxury-brass mt-1">Hand-refined, Burkina Faso cooperatives</p>
+                </div>
+                <svg class="w-4 h-4 text-luxury-brass flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </li>
+            <li class="ingredient-item py-5">
+              <div class="flex justify-between items-baseline">
+                <div>
+                  <h3 class="text-lg text-luxury-text">Bergamot</h3>
+                  <p class="text-xs text-luxury-brass mt-1">Estate-grown in Calabria, Italy</p>
+                </div>
+                <svg class="w-4 h-4 text-luxury-brass flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Philosophy — two column, image + text -->
+  <section class="py-24 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div class="reveal-slow order-2 md:order-1">
+          <p class="text-xs tracking-widest uppercase text-luxury-brass mb-6">Our Philosophy</p>
+          <h2 class="text-3xl md:text-4xl text-luxury-text mb-6" style="line-height:1.15;">
+            Restraint Is a<br>Form of Generosity
+          </h2>
+          <p class="text-base text-luxury-olive leading-relaxed mb-6">
+            We design with the end in mind: a bathroom counter, a bedside table, a kitchen shelf. Each object should feel inevitable in its space — never competing for attention, always earning its place.
+          </p>
+          <p class="text-base text-luxury-olive leading-relaxed mb-8">
+            Our packaging uses [N]% post-consumer recycled materials. The amber glass is chosen not for aesthetics alone, but because it protects botanical actives from UV degradation. Form follows function, always.
+          </p>
+          <a href="#" class="subtle-link text-xs tracking-widest uppercase text-luxury-olive">
+            About Our Approach →
+          </a>
+        </div>
+        <div class="reveal order-1 md:order-2">
+          <div class="img-placeholder rounded-sm" style="aspect-ratio: 4/5;">
+            <span class="tracking-widest uppercase text-xs">Brand Image</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Store Locations — horizontal scroll feel -->
+  <section class="py-20 px-6 lg:px-12" style="background:#faf8f4;">
+    <div class="max-w-7xl mx-auto">
+      <div class="reveal mb-12">
+        <p class="text-xs tracking-widest uppercase text-luxury-brass mb-4">Spaces</p>
+        <h2 class="text-4xl md:text-5xl text-luxury-text">Our Stores</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="reveal product-card">
+          <div class="img-placeholder rounded-sm mb-4" style="aspect-ratio: 16/10;">
+            <span class="tracking-widest uppercase text-xs">Store Image</span>
+          </div>
+          <h3 class="text-lg text-luxury-text mb-1">Seoul — Bukchon</h3>
+          <p class="text-xs text-luxury-brass">Traditional hanok, reinterpreted</p>
+        </div>
+        <div class="reveal-slow product-card">
+          <div class="img-placeholder rounded-sm mb-4" style="aspect-ratio: 16/12;">
+            <span class="tracking-widest uppercase text-xs">Store Image</span>
+          </div>
+          <h3 class="text-lg text-luxury-text mb-1">Tokyo — Aoyama</h3>
+          <p class="text-xs text-luxury-brass">Concrete and hinoki wood</p>
+        </div>
+        <div class="reveal product-card">
+          <div class="img-placeholder rounded-sm mb-4" style="aspect-ratio: 16/9;">
+            <span class="tracking-widest uppercase text-xs">Store Image</span>
+          </div>
+          <h3 class="text-lg text-luxury-text mb-1">Melbourne — Flinders Lane</h3>
+          <p class="text-xs text-luxury-brass">The original, since [N]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial — single, understated (constraint #23: raw, specific feedback) -->
+  <section class="py-24 px-6 lg:px-12">
+    <div class="max-w-3xl mx-auto text-center reveal">
+      <svg class="w-8 h-8 mx-auto mb-8 text-luxury-brass opacity-40" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983z"/>
+      </svg>
+      <blockquote class="text-2xl md:text-3xl text-luxury-text leading-relaxed mb-8" style="font-family:'Cormorant Garamond',serif; font-weight:300;">
+        I stopped buying from the brand after they changed the Reverence formula in 2019. Then they quietly reverted it. The texture is back. I noticed on the second pump.
+      </blockquote>
+      <p class="text-xs tracking-widest uppercase text-luxury-brass">— [Your Customer Name]</p>
+    </div>
+  </section>
+
+  <!-- CTA — quiet, not loud -->
+  <section class="py-32 px-6 lg:px-12" style="background:#faf8f4;">
+    <div class="max-w-3xl mx-auto text-center reveal">
+      <h2 class="text-4xl md:text-5xl text-luxury-text mb-6">Visit Our Spaces</h2>
+      <p class="text-base text-luxury-olive leading-relaxed mb-10 max-w-md mx-auto">
+        Each store is designed in dialogue with its neighbourhood — the materials, the light, the pace of the street outside.
+      </p>
+      <a href="#" class="btn-luxury inline-block">Find a Store</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 px-6 lg:px-12 border-t" style="border-color:rgba(107,99,73,0.1);">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        <div>
+          <p class="font-['Cormorant_Garamond'] text-lg tracking-widest text-luxury-text mb-6" style="font-weight:300;">MAISON</p>
+          <p class="text-sm text-luxury-olive leading-relaxed">
+            Thoughtful design for skin and home.
+          </p>
+        </div>
+        <div>
+          <p class="text-xs tracking-widest uppercase text-luxury-brass mb-4">Shop</p>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Skin Care</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Body Care</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Fragrance</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Home</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs tracking-widest uppercase text-luxury-brass mb-4">About</p>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Our Story</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Sustainability</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Ingredients</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs tracking-widest uppercase text-luxury-brass mb-4">Connect</p>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Instagram</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Newsletter</a></li>
+            <li><a href="#" class="text-sm text-luxury-olive hover:text-luxury-text transition-colors duration-500">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="divider-thin mb-8"></div>
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-luxury-brass tracking-wide">Design reference 026 — Luxury E-commerce</p>
+        <p class="text-xs text-luxury-brass tracking-wide">Inspired by Aesop, Cartier</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Reveal Script (animations repeat on scroll) -->
+  <script>
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal, .reveal-slow').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

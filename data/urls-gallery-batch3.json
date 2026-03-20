@@ -1,0 +1,484 @@
+{
+  "urls": [
+    {
+      "url": "https://tomorrow.io",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Weather platform with frosted glass cards and blur overlays"
+    },
+    {
+      "url": "https://t.ricks.dev",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Futuristic glassmorphic portfolio with clean shapes"
+    },
+    {
+      "url": "https://ui.glass",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Glass UI generator with live glassmorphism demos"
+    },
+    {
+      "url": "https://whatamesh.vercel.app",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Stripe-style mesh gradient generator with glass panels"
+    },
+    {
+      "url": "https://memberstack.com",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "SaaS with translucent card UI and frosted glass elements"
+    },
+    {
+      "url": "https://glassmorphism.com",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "CSS glassmorphism generator with frosted glass demo"
+    },
+    {
+      "url": "https://wickedbackgrounds.com",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Background generator with glass blur effects"
+    },
+    {
+      "url": "https://superlist.com",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Productivity app with translucent panels and bold gradients"
+    },
+    {
+      "url": "https://valley.co",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "Sales tool with mesh gradient backgrounds and glass cards"
+    },
+    {
+      "url": "https://jasper.ai",
+      "category": "gallery-glassmorphism",
+      "source": "glassmorphism",
+      "style_note": "AI copywriter with glassmorphic hero panels and blur"
+    },
+    {
+      "url": "https://kikk.be",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "Digital culture festival with neon purple typography on dark"
+    },
+    {
+      "url": "https://solv01.com",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "IT agency with neon-yellow on black background"
+    },
+    {
+      "url": "https://cognitivecreation.co",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "Portfolio with neon multicolor on dark background"
+    },
+    {
+      "url": "https://landonorris.com",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "F1 driver site with dynamic neon visuals and bold interactions"
+    },
+    {
+      "url": "https://stringtune.com",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "JS animation library with glowing neon code demos"
+    },
+    {
+      "url": "https://flashlights.dev",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "Legal history site with dramatic light/dark neon contrast"
+    },
+    {
+      "url": "https://terminal.industries",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "Supply chain tech with terminal-green neon glow aesthetic"
+    },
+    {
+      "url": "https://flowfest.io",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "Event site with neon gradients and animated glow"
+    },
+    {
+      "url": "https://aave.com",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "DeFi protocol with lava animation and neon accents on dark"
+    },
+    {
+      "url": "https://neonmoire.com",
+      "category": "gallery-neon",
+      "source": "neon",
+      "style_note": "Design event curation with neon moire pattern effects"
+    },
+    {
+      "url": "https://cssgradient.io",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "CSS gradient generator with vibrant multi-color examples"
+    },
+    {
+      "url": "https://meshgradient.in",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "Mesh gradient generator with complex color blending"
+    },
+    {
+      "url": "https://wealthsimple.com",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "Canadian fintech with warm gradient hero and clean UI"
+    },
+    {
+      "url": "https://webgradients.com",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "180 linear gradient collection with copy-paste CSS"
+    },
+    {
+      "url": "https://grabient.com",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "Gradient design tool with bold multi-color transitions"
+    },
+    {
+      "url": "https://eggradients.com",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "Gradient palette collection with egg-shaped preview cards"
+    },
+    {
+      "url": "https://colorhunt.co",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "Color palette community with trending gradient combos"
+    },
+    {
+      "url": "https://khroma.co",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "AI-powered gradient and color tool with personalized palettes"
+    },
+    {
+      "url": "https://haikei.app",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "SVG background generator with gradient blob shapes"
+    },
+    {
+      "url": "https://kevinhufnagl.com",
+      "category": "gallery-gradient",
+      "source": "gradient",
+      "style_note": "Designer portfolio with Stripe-inspired mesh gradient tutorial"
+    },
+    {
+      "url": "https://bruno-simon.com",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "3D interactive portfolio navigated by driving a toy car"
+    },
+    {
+      "url": "https://mindmarket.co",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Research agency with immersive scroll animations"
+    },
+    {
+      "url": "https://oceanx.org",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Ocean exploration with cinematic WebGL underwater experience"
+    },
+    {
+      "url": "https://ottografie.nl",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Photography site with smooth page transitions and scroll"
+    },
+    {
+      "url": "https://exat.co",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Typeface showcase with typography animation and developer award"
+    },
+    {
+      "url": "https://onto.co",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Electric car brand with sleek motion design and parallax"
+    },
+    {
+      "url": "https://monolithproject.com",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Art installation with 3D interactive monolith experience"
+    },
+    {
+      "url": "https://marioroudil.com",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Director portfolio with cinematic scroll and video transitions"
+    },
+    {
+      "url": "https://tracingart.com",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Art tracing experience with interactive canvas animations"
+    },
+    {
+      "url": "https://thebluedesert.co",
+      "category": "gallery-animated",
+      "source": "awwwards",
+      "style_note": "Immersive desert narrative with parallax and color storytelling"
+    },
+    {
+      "url": "https://tally.so",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Form builder with clean minimal design and soft colors"
+    },
+    {
+      "url": "https://doppler.com",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Secrets manager with dark theme and developer-focused UI"
+    },
+    {
+      "url": "https://cron.com",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Calendar app with polished dark UI and subtle animations"
+    },
+    {
+      "url": "https://magic.link",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Auth SDK with gradient hero and glassmorphic elements"
+    },
+    {
+      "url": "https://dopt.com",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Product onboarding SDK with pastel gradients and clean layout"
+    },
+    {
+      "url": "https://commandbar.com",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "In-app assistant with conversational UI and modern SaaS design"
+    },
+    {
+      "url": "https://campsite.co",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Team communication with minimal dark theme and subtle glass"
+    },
+    {
+      "url": "https://dub.sh",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "Link management with gradient accents and open-source feel"
+    },
+    {
+      "url": "https://wegic.ai",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "AI website builder with conversational UI and gradient hero"
+    },
+    {
+      "url": "https://oneshot.ai",
+      "category": "gallery-saas",
+      "source": "saas",
+      "style_note": "AI sales platform with dark theme and neon accent colors"
+    },
+    {
+      "url": "https://adanola.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Activewear with bold typography and dynamic image overlays"
+    },
+    {
+      "url": "https://aesop.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Luxury skincare with editorial layout and premium minimalism"
+    },
+    {
+      "url": "https://giellygreen.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Luxury salon with sensory minimalism and modern aesthetic"
+    },
+    {
+      "url": "https://lab46.co",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Self-care brand with science-backed design and clean UX"
+    },
+    {
+      "url": "https://cancanfurnishings.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Contemporary furniture with minimalist elegance and rich visuals"
+    },
+    {
+      "url": "https://primeasia.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Leather goods with premium photography and dark hero"
+    },
+    {
+      "url": "https://osmo.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Kids learning with colorful playful design and animations"
+    },
+    {
+      "url": "https://reydelistmo.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Coffee brand with warm earth tones and artisan aesthetic"
+    },
+    {
+      "url": "https://cartier.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Luxury watches with immersive product showcases and gold accents"
+    },
+    {
+      "url": "https://atolldigital.com",
+      "category": "gallery-ecommerce",
+      "source": "ecommerce",
+      "style_note": "Digital agency with grid-based layout and modern ecommerce"
+    },
+    {
+      "url": "https://brittanychiang.com",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Dev portfolio with dark teal theme and sticky sidebar navigation"
+    },
+    {
+      "url": "https://keitayamada.com",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Elegant three-section portfolio with clarity and brevity"
+    },
+    {
+      "url": "https://madebybuzzworthy.com",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Bold agency with motion graphics and experimental transitions"
+    },
+    {
+      "url": "https://freshman.tech",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Dev blog with clean typography and minimal color palette"
+    },
+    {
+      "url": "https://weareburo.com",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Creative studio with immersive scroll and type-driven design"
+    },
+    {
+      "url": "https://telescope.ac",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Creative platform with cinematic transitions and dark theme"
+    },
+    {
+      "url": "https://heidelberg-ccus.com",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Industrial sustainability with data-driven visuals and gradient"
+    },
+    {
+      "url": "https://inkwell.app",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Writing app with ink-themed animations and creative transitions"
+    },
+    {
+      "url": "https://jordoncruz.com",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Windows 98 nostalgic portfolio with retro UI and neon touches"
+    },
+    {
+      "url": "https://stiff.studio",
+      "category": "gallery-portfolio",
+      "source": "portfolio",
+      "style_note": "Creative studio with typographic flair and interactive visuals"
+    },
+    {
+      "url": "https://solana.com",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "Blockchain with cyberpunk dark theme and purple-teal neon"
+    },
+    {
+      "url": "https://ethereum.org",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "Blockchain with light gradients and clean illustration style"
+    },
+    {
+      "url": "https://uniswap.org",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "DEX with pink gradient accent and glassmorphic swap card"
+    },
+    {
+      "url": "https://lido.fi",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "Liquid staking with ocean blue gradients and glowing UI"
+    },
+    {
+      "url": "https://dydx.exchange",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "Derivatives DEX with dark pro-trading interface and neon"
+    },
+    {
+      "url": "https://worldcoin.org",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "Identity protocol with orb gradient and futuristic dark UI"
+    },
+    {
+      "url": "https://magic-eden.io",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "NFT marketplace with vibrant gradient cards on dark background"
+    },
+    {
+      "url": "https://blur.io",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "NFT marketplace with neon orange on black pro-trader UI"
+    },
+    {
+      "url": "https://makerdao.com",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "DeFi protocol with green gradient and institutional clean design"
+    },
+    {
+      "url": "https://vancouver.bitcoin.com",
+      "category": "gallery-fintech",
+      "source": "fintech",
+      "style_note": "Regional crypto with bold bitcoin-orange and modern dark layout"
+    }
+  ]
+}

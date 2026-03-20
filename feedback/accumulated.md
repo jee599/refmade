@@ -4,6 +4,8 @@
 - Round 1: Tone D (Friendly), Tone C (Dark Premium) 소거
 - Round 4: 005 (Fintech Trust), 011 (Dark Luxury) 소거
 - Round 6: 004 (Editorial Serif) 소거
+- Round 8: 016 (Neobrutalist), 017 (Medical), 018 (Crypto) 소거
+- Round 9: 020 (Bold Colorful), 021 (Warm Scroll), 022 (Dashboard Dark), 024 (Monochrome Type) 소거
 
 ## 생존 톤
 - Tone A (Clean Minimal)

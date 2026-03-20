@@ -1,440 +1,390 @@
 {
   "meta": {
-    "total_sites": 78,
+    "total_sites": 66,
     "visual_sites": 0,
-    "generated_at": "2026-03-20T17:02:20.983Z"
+    "generated_at": "2026-03-20T17:24:08.858Z"
   },
   "typography": {
     "h1_font_size": {
-      "count": 76,
-      "median": 40,
-      "p25": 20,
-      "p75": 80,
-      "mode": 16,
-      "min": 9,
-      "max": 386.24,
-      "mean": 63.98,
-      "tailwind_median": "~text-4xl (40px)",
-      "tailwind_p25": "text-xl",
-      "tailwind_p75": "~text-7xl (80px)"
+      "count": 66,
+      "median": 48,
+      "p25": 36,
+      "p75": 72,
+      "mode": 48,
+      "min": 14,
+      "max": 219.888,
+      "mean": 62.32,
+      "tailwind_median": "text-5xl",
+      "tailwind_p25": "text-4xl",
+      "tailwind_p75": "text-7xl"
     },
     "h2_font_size": {
-      "count": 51,
-      "median": 32,
-      "p25": 24,
-      "p75": 52,
-      "mode": 24,
-      "min": 0,
-      "max": 270.335,
-      "mean": 43.07,
-      "tailwind_median": "~text-3xl (32px)",
-      "tailwind_p25": "text-2xl",
-      "tailwind_p75": "~text-5xl (52px)"
+      "count": 52,
+      "median": 36,
+      "p25": 20,
+      "p75": 56,
+      "mode": 20,
+      "min": 12,
+      "max": 180,
+      "mean": 41.9,
+      "tailwind_median": "text-4xl",
+      "tailwind_p25": "text-xl",
+      "tailwind_p75": "~text-6xl (56px)"
     },
     "body_font_size": {
-      "count": 78,
+      "count": 66,
       "median": 16,
-      "p25": 14,
+      "p25": 16,
       "p75": 16,
       "mode": 16,
-      "min": 9,
-      "max": 24,
-      "mean": 14.93,
+      "min": 10,
+      "max": 22.4,
+      "mean": 16.11,
       "tailwind_median": "text-base",
-      "tailwind_p25": "text-sm",
+      "tailwind_p25": "text-base",
       "tailwind_p75": "text-base"
     },
     "h1_line_height": {
-      "count": 68,
-      "median": 50,
-      "p25": 26.4,
-      "p75": 84,
-      "mode": 24,
-      "min": 9,
-      "max": 289.757,
-      "mean": 66.53,
-      "tailwind_median": "~12 (50px)",
-      "tailwind_p25": "~6 (26.4px)",
-      "tailwind_p75": "~20 (84px)"
+      "count": 56,
+      "median": 57.6,
+      "p25": 44,
+      "p75": 80,
+      "mode": 48,
+      "min": 24,
+      "max": 241.877,
+      "mean": 69.66,
+      "tailwind_median": "~14 (57.6px)",
+      "tailwind_p25": "11",
+      "tailwind_p75": "20"
     },
     "body_line_height": {
-      "count": 51,
-      "median": 22.4,
-      "p25": 18.4,
-      "p75": 24,
+      "count": 47,
+      "median": 24,
+      "p25": 21.6,
+      "p75": 25.2,
       "mode": 24,
-      "min": 9,
-      "max": 31.5,
-      "mean": 21.16,
-      "tailwind_median": "~5 (22.4px)",
-      "tailwind_p25": "~4 (18.4px)",
-      "tailwind_p75": "6"
+      "min": 10,
+      "max": 37.4,
+      "mean": 23.35,
+      "tailwind_median": "6",
+      "tailwind_p25": "~5 (21.6px)",
+      "tailwind_p75": "~6 (25.2px)"
     },
     "nav_link_font_size": {
-      "count": 43,
+      "count": 37,
       "median": 16,
-      "p25": 14,
-      "p75": 16,
+      "p25": 16,
+      "p75": 18,
       "mode": 16,
-      "min": 7.425,
-      "max": 50,
-      "mean": 17.25,
+      "min": 12,
+      "max": 86.4,
+      "mean": 18.96,
       "tailwind_median": "text-base",
-      "tailwind_p25": "text-sm",
-      "tailwind_p75": "text-base"
+      "tailwind_p25": "text-base",
+      "tailwind_p75": "text-lg"
     },
     "h1_font_weight": {
-      "240": {
+      "200": {
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       "300": {
         "count": 3,
-        "percentage": 3.9
-      },
-      "350": {
-        "count": 1,
-        "percentage": 1.3
+        "percentage": 4.5
       },
       "400": {
-        "count": 48,
-        "percentage": 63.2
+        "count": 15,
+        "percentage": 22.7
       },
-      "420": {
+      "450": {
+        "count": 2,
+        "percentage": 3
+      },
+      "485": {
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       "500": {
-        "count": 6,
-        "percentage": 7.9
+        "count": 9,
+        "percentage": 13.6
       },
       "600": {
-        "count": 5,
-        "percentage": 6.6
-      },
-      "650": {
-        "count": 1,
-        "percentage": 1.3
-      },
-      "652": {
-        "count": 1,
-        "percentage": 1.3
+        "count": 7,
+        "percentage": 10.6
       },
       "700": {
-        "count": 9,
-        "percentage": 11.8
+        "count": 21,
+        "percentage": 31.8
+      },
+      "800": {
+        "count": 2,
+        "percentage": 3
+      },
+      "900": {
+        "count": 5,
+        "percentage": 7.6
       }
     },
     "h2_font_weight": {
-      "300": {
-        "count": 2,
-        "percentage": 3.9
-      },
-      "350": {
+      "200": {
         "count": 1,
-        "percentage": 2
+        "percentage": 1.9
+      },
+      "300": {
+        "count": 4,
+        "percentage": 7.7
       },
       "400": {
-        "count": 33,
-        "percentage": 64.7
+        "count": 14,
+        "percentage": 26.9
+      },
+      "450": {
+        "count": 2,
+        "percentage": 3.8
+      },
+      "485": {
+        "count": 1,
+        "percentage": 1.9
       },
       "500": {
-        "count": 3,
-        "percentage": 5.9
+        "count": 8,
+        "percentage": 15.4
       },
       "600": {
-        "count": 5,
-        "percentage": 9.8
+        "count": 4,
+        "percentage": 7.7
       },
       "700": {
-        "count": 7,
-        "percentage": 13.7
+        "count": 16,
+        "percentage": 30.8
+      },
+      "900": {
+        "count": 2,
+        "percentage": 3.8
       }
     },
     "nav_link_font_weight": {
-      "350": {
-        "count": 1,
-        "percentage": 2.3
+      "300": {
+        "count": 2,
+        "percentage": 5.4
       },
       "400": {
-        "count": 32,
-        "percentage": 74.4
+        "count": 21,
+        "percentage": 56.8
+      },
+      "485": {
+        "count": 1,
+        "percentage": 2.7
       },
       "500": {
-        "count": 3,
-        "percentage": 7
+        "count": 6,
+        "percentage": 16.2
       },
       "600": {
-        "count": 5,
-        "percentage": 11.6
+        "count": 2,
+        "percentage": 5.4
       },
       "700": {
-        "count": 2,
-        "percentage": 4.7
+        "count": 4,
+        "percentage": 10.8
+      },
+      "900": {
+        "count": 1,
+        "percentage": 2.7
       }
     },
     "top_font_families": [
       {
         "family": "Inter",
-        "count": 6,
-        "percentage": 7.7
-      },
-      {
-        "family": "system-ui",
-        "count": 4,
-        "percentage": 5.1
-      },
-      {
-        "family": "Roobert",
-        "count": 2,
-        "percentage": 2.6
+        "count": 5,
+        "percentage": 7.6
       },
       {
         "family": "Times",
+        "count": 5,
+        "percentage": 7.6
+      },
+      {
+        "family": "system-ui",
+        "count": 3,
+        "percentage": 4.5
+      },
+      {
+        "family": "Mulish",
         "count": 2,
-        "percentage": 2.6
+        "percentage": 3
+      },
+      {
+        "family": "DM Sans",
+        "count": 2,
+        "percentage": 3
       },
       {
         "family": "-apple-system",
         "count": 2,
-        "percentage": 2.6
+        "percentage": 3
       },
       {
-        "family": "Playfair Display",
-        "count": 1,
-        "percentage": 1.3
+        "family": "Helvetica Neue",
+        "count": 2,
+        "percentage": 3
       },
       {
-        "family": "Sequel Sans Headline Book",
+        "family": "JetBrains Mono",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Untitled Sans",
+        "family": "Euclid",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "__fontNeueMontreal_e82096",
+        "family": "Outfit",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Grotesk",
+        "family": "Haffer XH SemiBold",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "InterVariable",
+        "family": "Blenderpro",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "AS Therma Bold Condensed",
+        "family": "Feature",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "AeonikPro",
+        "family": "Suisse Intl",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Spezia",
+        "family": "Mona Sans Variable",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "nb_international_proregular",
+        "family": "sf pro text",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "__haasGrotDisp_332926",
+        "family": "FT Regola Neue",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "sans-serif",
+        "family": "basis_grotesque_bold-web",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "ES Rebond Grotesque Regular",
+        "family": "fontSans",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "ABC Diatype",
+        "family": "ibm plex sans",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Nb international pro webfont",
+        "family": "tiempos",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "PP Neue Montreal",
+        "family": "Poppins",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "helvetica-w01-roman",
+        "family": "Instrument Serif",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "abcOracle",
+        "family": "Muli",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Phantom",
+        "family": "Amatic SC",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Family",
+        "family": "Big Caslon",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "regola-light",
+        "family": "Neue Montreal",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "Commercial Gräphik Web",
+        "family": "__DopplerRepro_a18e76",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "TNY",
+        "family": "GTSuper",
         "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       },
       {
-        "family": "ABCWhytePlus",
+        "family": "Haas",
         "count": 1,
-        "percentage": 1.3
-      },
-      {
-        "family": "LocomotiveNew",
-        "count": 1,
-        "percentage": 1.3
+        "percentage": 1.5
       }
     ],
-    "font_is_default_rate": 16.7,
+    "font_is_default_rate": 7.6,
     "unique_fontsize_count": {
-      "count": 78,
-      "median": 7,
-      "p25": 3,
-      "p75": 10,
-      "mode": 9,
-      "min": 1,
-      "max": 28,
-      "mean": 7.23
+      "count": 66,
+      "median": 8,
+      "p25": 5,
+      "p75": 11,
+      "mode": 8,
+      "min": 2,
+      "max": 22,
+      "mean": 8.06
     }
   },
   "colors": {
-    "is_dark_theme_rate": 62.8,
-    "dark_section_exists_rate": 69.2,
+    "is_dark_theme_rate": 51.5,
+    "dark_section_exists_rate": 77.3,
     "unique_color_count": {
-      "count": 78,
-      "median": 6,
-      "p25": 4,
-      "p75": 10,
-      "mode": 4,
+      "count": 66,
+      "median": 10,
+      "p25": 5,
+      "p75": 15,
+      "mode": 1,
       "min": 1,
-      "max": 34,
-      "mean": 7.31
+      "max": 66,
+      "mean": 12.42
     },
     "top_cta_bg_colors": [
       {
         "color": "#000000",
-        "count": 27
+        "count": 32
       },
       {
-        "color": "#F2F1EC",
+        "color": "#6E6E6E",
         "count": 1
       },
       {
-        "color": "#FFDB01",
+        "color": "#4CAF50",
         "count": 1
       },
       {
-        "color": "#0077FF",
-        "count": 1
-      },
-      {
-        "color": "#2727E6",
-        "count": 1
-      },
-      {
-        "color": "#FC5F2B",
-        "count": 1
-      },
-      {
-        "color": "#FCFCFC",
-        "count": 1
-      },
-      {
-        "color": "#0088FF",
-        "count": 1
-      },
-      {
-        "color": "#0096F7",
-        "count": 1
-      },
-      {
-        "color": "#BABABA",
-        "count": 1
-      },
-      {
-        "color": "#E5E4E0",
-        "count": 1
-      },
-      {
-        "color": "#690714",
-        "count": 1
-      },
-      {
-        "color": "#FFFFFF",
-        "count": 1
-      },
-      {
-        "color": "#FF8000",
-        "count": 1
-      }
-    ],
-    "top_body_bg_colors": [
-      {
-        "color": "#000000",
-        "count": 33
-      },
-      {
-        "color": "#FFFFFF",
-        "count": 15
-      },
-      {
-        "color": "#0A0A0A",
-        "count": 2
-      },
-      {
-        "color": "#F2F1EC",
-        "count": 1
-      },
-      {
-        "color": "#05060F",
-        "count": 1
-      },
-      {
-        "color": "#111111",
-        "count": 1
-      },
-      {
-        "color": "#DFE6D1",
+        "color": "#D2FF00",
         "count": 1
       },
       {
@@ -442,365 +392,738 @@
         "count": 1
       },
       {
-        "color": "#F1F0EE",
+        "color": "#292929",
         "count": 1
       },
       {
-        "color": "#030014",
+        "color": "#FFFFFF",
         "count": 1
       },
       {
-        "color": "#09101C",
+        "color": "#6C24E0",
         "count": 1
       },
       {
-        "color": "#101C36",
+        "color": "#FFFFFE",
         "count": 1
       },
       {
-        "color": "#EFEFEF",
+        "color": "#7774FF",
         "count": 1
       },
       {
-        "color": "#F5F5F7",
+        "color": "#FF37C7",
         "count": 1
       },
       {
-        "color": "#F4F4F4",
+        "color": "#1C1C1C",
+        "count": 1
+      }
+    ],
+    "top_body_bg_colors": [
+      {
+        "color": "#000000",
+        "count": 25
+      },
+      {
+        "color": "#FFFFFF",
+        "count": 17
+      },
+      {
+        "color": "#181824",
+        "count": 1
+      },
+      {
+        "color": "#F7F9FF",
+        "count": 1
+      },
+      {
+        "color": "#F1F1F1",
+        "count": 1
+      },
+      {
+        "color": "#282C20",
+        "count": 1
+      },
+      {
+        "color": "#F8F8F9",
+        "count": 1
+      },
+      {
+        "color": "#FCFCFC",
+        "count": 1
+      },
+      {
+        "color": "#0C0C0E",
+        "count": 1
+      },
+      {
+        "color": "#0C0D0F",
+        "count": 1
+      },
+      {
+        "color": "#1C1624",
+        "count": 1
+      },
+      {
+        "color": "#161412",
+        "count": 1
+      },
+      {
+        "color": "#FAFAFA",
+        "count": 1
+      },
+      {
+        "color": "#F9F9FB",
+        "count": 1
+      },
+      {
+        "color": "#F7F6F5",
         "count": 1
       }
     ]
   },
   "spacing": {
     "container_max_width": {
-      "count": 44,
-      "median": 1200,
-      "p25": 628.8,
-      "p75": 1400,
+      "count": 43,
+      "median": 1300,
+      "p25": 1152,
+      "p75": 1440,
       "mode": 1280,
-      "min": 91.6667,
-      "max": 99999,
-      "mean": 3425.35,
-      "tailwind_median": "~96 (1200px)",
-      "tailwind_p25": "~96 (628.8px)",
-      "tailwind_p75": "~96 (1400px)"
+      "min": 100,
+      "max": 2000,
+      "mean": 1266.02,
+      "tailwind_median": "~96 (1300px)",
+      "tailwind_p25": "~96 (1152px)",
+      "tailwind_p75": "~96 (1440px)"
     },
     "nav_height": {
-      "count": 44,
-      "median": 48,
-      "p25": 32,
-      "p75": 78,
+      "count": 37,
+      "median": 74,
+      "p25": 48,
+      "p75": 95,
       "mode": 0,
       "min": 0,
       "max": 900,
-      "mean": 123.69,
-      "tailwind_median": "12",
-      "tailwind_p25": "8",
-      "tailwind_p75": "~20 (78px)"
+      "mean": 116.26,
+      "tailwind_median": "~18 (74px)",
+      "tailwind_p25": "12",
+      "tailwind_p75": "~24 (95px)"
     },
     "hero_padding_top": {
-      "count": 48,
+      "count": 38,
       "median": 0,
       "p25": 0,
       "p75": 0,
       "mode": 0,
       "min": 0,
-      "max": 256,
-      "mean": 20.56,
+      "max": 164,
+      "mean": 21.76,
       "tailwind_median": "0",
       "tailwind_p25": "0",
       "tailwind_p75": "0"
     },
     "hero_padding_bottom": {
-      "count": 48,
+      "count": 38,
       "median": 0,
       "p25": 0,
       "p75": 0,
       "mode": 0,
       "min": 0,
-      "max": 140,
-      "mean": 12.21,
+      "max": 128,
+      "mean": 8.13,
       "tailwind_median": "0",
       "tailwind_p25": "0",
       "tailwind_p75": "0"
     },
     "card_padding": {
-      "count": 18,
+      "count": 25,
       "median": 0,
       "p25": 0,
-      "p75": 16,
-      "mode": 0,
-      "min": 0,
-      "max": 167,
-      "mean": 16.96,
-      "tailwind_median": "0",
-      "tailwind_p25": "0",
-      "tailwind_p75": "4"
-    },
-    "card_border_radius": {
-      "count": 18,
-      "median": 0,
-      "p25": 0,
-      "p75": 0,
+      "p75": 16.875,
       "mode": 0,
       "min": 0,
       "max": 48,
-      "mean": 5.22,
-      "tailwind_median": "rounded-none",
-      "tailwind_p25": "rounded-none",
-      "tailwind_p75": "rounded-none"
+      "mean": 9.11,
+      "tailwind_median": "0",
+      "tailwind_p25": "0",
+      "tailwind_p75": "~4 (16.875px)"
     },
-    "button_padding_left": {
-      "count": 63,
+    "card_border_radius": {
+      "count": 25,
       "median": 0,
       "p25": 0,
       "p75": 12,
       "mode": 0,
       "min": 0,
-      "max": 43.2,
-      "mean": 6.23,
+      "max": 32,
+      "mean": 7.33,
+      "tailwind_median": "rounded-none",
+      "tailwind_p25": "rounded-none",
+      "tailwind_p75": "rounded-xl"
+    },
+    "button_padding_left": {
+      "count": 55,
+      "median": 0,
+      "p25": 0,
+      "p75": 16,
+      "mode": 0,
+      "min": 0,
+      "max": 64,
+      "mean": 8.45,
       "tailwind_median": "0",
       "tailwind_p25": "0",
-      "tailwind_p75": "3"
+      "tailwind_p75": "4"
     },
     "button_padding_top": {
-      "count": 63,
+      "count": 55,
+      "median": 0,
+      "p25": 0,
+      "p75": 4,
+      "mode": 0,
+      "min": 0,
+      "max": 36.5156,
+      "mean": 3.04,
+      "tailwind_median": "0",
+      "tailwind_p25": "0",
+      "tailwind_p75": "1"
+    },
+    "button_border_radius": {
+      "count": 55,
       "median": 0,
       "p25": 0,
       "p75": 8,
       "mode": 0,
       "min": 0,
-      "max": 40,
-      "mean": 3.87,
-      "tailwind_median": "0",
-      "tailwind_p25": "0",
-      "tailwind_p75": "2"
-    },
-    "button_border_radius": {
-      "count": 63,
-      "median": 0,
-      "p25": 0,
-      "p75": 24,
-      "mode": 0,
-      "min": 0,
       "max": 9999,
-      "mean": 672.86,
+      "mean": 190.44,
       "tailwind_median": "rounded-none",
       "tailwind_p25": "rounded-none",
-      "tailwind_p75": "rounded-3xl"
+      "tailwind_p75": "rounded-lg"
     },
-    "card_has_shadow_rate": 1.3,
-    "card_has_border_rate": 2.6
+    "card_has_shadow_rate": 10.6,
+    "card_has_border_rate": 13.6
   },
   "layout": {
     "hero_type": {
       "minimal": {
-        "count": 40,
-        "percentage": 51.3
+        "count": 29,
+        "percentage": 43.9
       },
       "fullscreen": {
-        "count": 31,
-        "percentage": 39.7
-      },
-      "center": {
-        "count": 5,
-        "percentage": 6.4
+        "count": 21,
+        "percentage": 31.8
       },
       "split": {
-        "count": 2,
-        "percentage": 2.6
+        "count": 12,
+        "percentage": 18.2
+      },
+      "center": {
+        "count": 4,
+        "percentage": 6.1
       }
     },
     "nav_position": {
       "static": {
-        "count": 21,
-        "percentage": 47.7
-      },
-      "fixed": {
-        "count": 12,
-        "percentage": 27.3
+        "count": 22,
+        "percentage": 59.5
       },
       "relative": {
         "count": 6,
-        "percentage": 13.6
+        "percentage": 16.2
+      },
+      "fixed": {
+        "count": 6,
+        "percentage": 16.2
+      },
+      "sticky": {
+        "count": 2,
+        "percentage": 5.4
       },
       "absolute": {
-        "count": 5,
-        "percentage": 11.4
+        "count": 1,
+        "percentage": 2.7
       }
     },
-    "nav_has_cta_rate": 23.1,
-    "hero_has_badge_rate": 5.1,
-    "hero_has_image_rate": 50,
-    "hero_has_video_rate": 28.2,
+    "nav_has_cta_rate": 28.8,
+    "hero_has_badge_rate": 12.1,
+    "hero_has_image_rate": 65.2,
+    "hero_has_video_rate": 15.2,
     "hero_cta_count": {
-      "count": 78,
-      "median": 0,
+      "count": 66,
+      "median": 1,
       "p25": 0,
-      "p75": 2,
+      "p75": 3,
       "mode": 0,
       "min": 0,
       "max": 10,
-      "mean": 1.78
+      "mean": 2.44
     },
     "total_section_count": {
-      "count": 78,
-      "median": 3,
-      "p25": 0,
-      "p75": 9,
+      "count": 66,
+      "median": 4,
+      "p25": 1,
+      "p75": 13,
       "mode": 0,
       "min": 0,
-      "max": 100,
-      "mean": 8.92
+      "max": 122,
+      "mean": 12.35
     },
     "footer_column_count": {
-      "count": 29,
+      "count": 30,
       "median": 3,
       "p25": 2,
-      "p75": 4,
-      "mode": 3,
+      "p75": 5,
+      "mode": 2,
       "min": 1,
-      "max": 11,
-      "mean": 3.59
+      "max": 9,
+      "mean": 3.53
     },
-    "has_social_proof_logos_rate": 19.2,
-    "has_pricing_section_rate": 10.3,
-    "has_testimonials_rate": 17.9,
-    "has_faq_rate": 5.1
+    "has_social_proof_logos_rate": 25.8,
+    "has_pricing_section_rate": 24.2,
+    "has_testimonials_rate": 21.2,
+    "has_faq_rate": 7.6
   },
   "visual_effects": {
-    "has_animation_rate": 83.3,
-    "has_gradient_text_rate": 6.4,
-    "has_backdrop_blur_rate": 34.6,
-    "has_illustration_svg_rate": 62.8,
-    "has_product_screenshot_rate": 11.5,
-    "has_real_photo_rate": 12.8
+    "has_animation_rate": 68.2,
+    "has_gradient_text_rate": 3,
+    "has_backdrop_blur_rate": 21.2,
+    "has_illustration_svg_rate": 57.6,
+    "has_product_screenshot_rate": 25.8,
+    "has_real_photo_rate": 16.7
   },
   "ratios": {
     "h1_body_ratio": {
-      "count": 76,
-      "median": 2.88,
-      "p25": 1.25,
-      "p75": 5.5,
-      "mode": 1,
-      "min": 0.88,
-      "max": 27.59,
-      "mean": 4.35
+      "count": 66,
+      "median": 3,
+      "p25": 2,
+      "p75": 4.5,
+      "mode": 2,
+      "min": 1,
+      "max": 16.25,
+      "mean": 3.91
     },
     "h2_h1_ratio": {
-      "count": 50,
-      "median": 0.71,
-      "p25": 0.4,
-      "p75": 0.9,
+      "count": 52,
+      "median": 0.67,
+      "p25": 0.5,
+      "p75": 1,
       "mode": 1,
-      "min": 0.11,
-      "max": 9.38,
-      "mean": 0.97
+      "min": 0.05,
+      "max": 2.63,
+      "mean": 0.75
     },
     "hero_viewport_ratio": {
-      "count": 78,
-      "median": 0.15,
-      "p25": 0.07,
-      "p75": 0.29,
-      "mode": 0.05,
-      "min": 0,
-      "max": 1.29,
+      "count": 66,
+      "median": 0.2,
+      "p25": 0.13,
+      "p75": 0.27,
+      "mode": 0.16,
+      "min": 0.05,
+      "max": 0.73,
       "mean": 0.23
     },
     "section_padding_variance": {
-      "count": 21,
-      "median": 0.27,
-      "p25": 0.15,
-      "p75": 0.38,
+      "count": 25,
+      "median": 0.19,
+      "p25": 0.06,
+      "p75": 0.39,
       "mode": 0,
       "min": 0,
-      "max": 19.7,
-      "mean": 1.34,
+      "max": 0.71,
+      "mean": 0.23,
       "tailwind_median": "0",
       "tailwind_p25": "0",
       "tailwind_p75": "0"
     },
     "container_viewport_ratio": {
-      "count": 44,
-      "median": 0.83,
-      "p25": 0.44,
-      "p75": 0.97,
+      "count": 43,
+      "median": 0.9,
+      "p25": 0.8,
+      "p75": 1,
       "mode": 0.89,
-      "min": 0.06,
-      "max": 69.44,
-      "mean": 2.38
+      "min": 0.07,
+      "max": 1.39,
+      "mean": 0.88
     },
     "button_height_body_ratio": {
-      "count": 20,
-      "median": 2.25,
+      "count": 15,
+      "median": 2.07,
       "p25": 2,
-      "p75": 2.69,
+      "p75": 2.5,
       "mode": 2,
-      "min": 1.45,
-      "max": 6,
-      "mean": 2.61,
+      "min": 1.14,
+      "max": 5.06,
+      "mean": 2.33,
       "tailwind_median": "0.5",
       "tailwind_p25": "0.5",
-      "tailwind_p75": "~0.5 (2.69px)"
+      "tailwind_p75": "~0.5 (2.5px)"
     },
     "neutral_color_ratio": {
-      "count": 78,
-      "median": 0.75,
-      "p25": 0.56,
-      "p75": 1,
+      "count": 66,
+      "median": 0.71,
+      "p25": 0.55,
+      "p75": 0.83,
       "mode": 1,
-      "min": 0.21,
+      "min": 0.15,
       "max": 1,
-      "mean": 0.74
+      "mean": 0.7
     }
   },
   "by_category": {
-    "gallery": {
-      "count": 78,
+    "gallery-glassmorphism": {
+      "count": 9,
       "h1_font_size": {
-        "count": 76,
-        "median": 40,
-        "p25": 20,
-        "p75": 80,
+        "count": 9,
+        "median": 68.8,
+        "p25": 60,
+        "p75": 72,
+        "mode": 72,
+        "min": 21,
+        "max": 88,
+        "mean": 61.98,
+        "tailwind_median": "~text-7xl (68.8px)",
+        "tailwind_p25": "text-6xl",
+        "tailwind_p75": "text-7xl"
+      },
+      "body_font_size": {
+        "count": 9,
+        "median": 16,
+        "p25": 16,
+        "p75": 16,
         "mode": 16,
-        "min": 9,
-        "max": 386.24,
-        "mean": 63.98,
-        "tailwind_median": "~text-4xl (40px)",
-        "tailwind_p25": "text-xl",
+        "min": 12,
+        "max": 16,
+        "mean": 15.33,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "text-base",
+        "tailwind_p75": "text-base"
+      },
+      "is_dark_theme_rate": 44.4,
+      "has_animation_rate": 55.6,
+      "hero_type": {
+        "fullscreen": {
+          "count": 6,
+          "percentage": 66.7
+        },
+        "minimal": {
+          "count": 3,
+          "percentage": 33.3
+        }
+      }
+    },
+    "gallery-neon": {
+      "count": 7,
+      "h1_font_size": {
+        "count": 7,
+        "median": 48,
+        "p25": 38,
+        "p75": 195,
+        "mode": 16,
+        "min": 16,
+        "max": 201.6,
+        "mean": 90.77,
+        "tailwind_median": "text-5xl",
+        "tailwind_p25": "~text-4xl (38px)",
+        "tailwind_p75": "~text-9xl (195px)"
+      },
+      "body_font_size": {
+        "count": 7,
+        "median": 16,
+        "p25": 14,
+        "p75": 17.9224,
+        "mode": 16,
+        "min": 12,
+        "max": 18,
+        "mean": 15.7,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "text-sm",
+        "tailwind_p75": "text-lg"
+      },
+      "is_dark_theme_rate": 57.1,
+      "has_animation_rate": 71.4,
+      "hero_type": {
+        "fullscreen": {
+          "count": 4,
+          "percentage": 57.1
+        },
+        "minimal": {
+          "count": 2,
+          "percentage": 28.6
+        },
+        "split": {
+          "count": 1,
+          "percentage": 14.3
+        }
+      }
+    },
+    "gallery-gradient": {
+      "count": 10,
+      "h1_font_size": {
+        "count": 10,
+        "median": 39.808,
+        "p25": 24,
+        "p75": 72,
+        "mode": 16,
+        "min": 16,
+        "max": 92.8,
+        "mean": 48.56,
+        "tailwind_median": "~text-4xl (39.808px)",
+        "tailwind_p25": "text-2xl",
+        "tailwind_p75": "text-7xl"
+      },
+      "body_font_size": {
+        "count": 10,
+        "median": 16,
+        "p25": 16,
+        "p75": 16,
+        "mode": 16,
+        "min": 12,
+        "max": 18,
+        "mean": 15.8,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "text-base",
+        "tailwind_p75": "text-base"
+      },
+      "is_dark_theme_rate": 60,
+      "has_animation_rate": 70,
+      "hero_type": {
+        "minimal": {
+          "count": 7,
+          "percentage": 70
+        },
+        "split": {
+          "count": 3,
+          "percentage": 30
+        }
+      }
+    },
+    "gallery-animated": {
+      "count": 6,
+      "h1_font_size": {
+        "count": 6,
+        "median": 32,
+        "p25": 32,
+        "p75": 101.25,
+        "mode": 32,
+        "min": 14,
+        "max": 180,
+        "mean": 70.54,
+        "tailwind_median": "~text-3xl (32px)",
+        "tailwind_p25": "~text-3xl (32px)",
+        "tailwind_p75": "~text-8xl (101.25px)"
+      },
+      "body_font_size": {
+        "count": 6,
+        "median": 16,
+        "p25": 15,
+        "p75": 16,
+        "mode": 16,
+        "min": 10,
+        "max": 20,
+        "mean": 15.5,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "~text-sm (15px)",
+        "tailwind_p75": "text-base"
+      },
+      "is_dark_theme_rate": 100,
+      "has_animation_rate": 33.3,
+      "hero_type": {
+        "minimal": {
+          "count": 4,
+          "percentage": 66.7
+        },
+        "center": {
+          "count": 1,
+          "percentage": 16.7
+        },
+        "fullscreen": {
+          "count": 1,
+          "percentage": 16.7
+        }
+      }
+    },
+    "gallery-saas": {
+      "count": 10,
+      "h1_font_size": {
+        "count": 10,
+        "median": 57.6,
+        "p25": 48,
+        "p75": 72,
+        "mode": 48,
+        "min": 40,
+        "max": 140,
+        "mean": 69.76,
+        "tailwind_median": "~text-6xl (57.6px)",
+        "tailwind_p25": "text-5xl",
+        "tailwind_p75": "text-7xl"
+      },
+      "body_font_size": {
+        "count": 10,
+        "median": 16,
+        "p25": 16,
+        "p75": 16,
+        "mode": 16,
+        "min": 16,
+        "max": 22,
+        "mean": 17,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "text-base",
+        "tailwind_p75": "text-base"
+      },
+      "is_dark_theme_rate": 40,
+      "has_animation_rate": 80,
+      "hero_type": {
+        "split": {
+          "count": 3,
+          "percentage": 30
+        },
+        "fullscreen": {
+          "count": 3,
+          "percentage": 30
+        },
+        "minimal": {
+          "count": 3,
+          "percentage": 30
+        },
+        "center": {
+          "count": 1,
+          "percentage": 10
+        }
+      }
+    },
+    "gallery-ecommerce": {
+      "count": 9,
+      "h1_font_size": {
+        "count": 9,
+        "median": 32,
+        "p25": 32,
+        "p75": 48,
+        "mode": 32,
+        "min": 20,
+        "max": 55,
+        "mean": 37,
+        "tailwind_median": "~text-3xl (32px)",
+        "tailwind_p25": "~text-3xl (32px)",
+        "tailwind_p75": "text-5xl"
+      },
+      "body_font_size": {
+        "count": 9,
+        "median": 16,
+        "p25": 15,
+        "p75": 16,
+        "mode": 16,
+        "min": 12,
+        "max": 18,
+        "mean": 15.44,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "~text-sm (15px)",
+        "tailwind_p75": "text-base"
+      },
+      "is_dark_theme_rate": 55.6,
+      "has_animation_rate": 66.7,
+      "hero_type": {
+        "minimal": {
+          "count": 4,
+          "percentage": 44.4
+        },
+        "fullscreen": {
+          "count": 3,
+          "percentage": 33.3
+        },
+        "split": {
+          "count": 1,
+          "percentage": 11.1
+        },
+        "center": {
+          "count": 1,
+          "percentage": 11.1
+        }
+      }
+    },
+    "gallery-portfolio": {
+      "count": 6,
+      "h1_font_size": {
+        "count": 6,
+        "median": 48,
+        "p25": 41.5072,
+        "p75": 60,
+        "mode": 48,
+        "min": 21.3333,
+        "max": 219.888,
+        "mean": 73.45,
+        "tailwind_median": "text-5xl",
+        "tailwind_p25": "~text-4xl (41.5072px)",
+        "tailwind_p75": "text-6xl"
+      },
+      "body_font_size": {
+        "count": 6,
+        "median": 16,
+        "p25": 16,
+        "p75": 16,
+        "mode": 16,
+        "min": 10,
+        "max": 22.4,
+        "mean": 16.07,
+        "tailwind_median": "text-base",
+        "tailwind_p25": "text-base",
+        "tailwind_p75": "text-base"
+      },
+      "is_dark_theme_rate": 33.3,
+      "has_animation_rate": 66.7,
+      "hero_type": {
+        "fullscreen": {
+          "count": 4,
+          "percentage": 66.7
+        },
+        "minimal": {
+          "count": 2,
+          "percentage": 33.3
+        }
+      }
+    },
+    "gallery-fintech": {
+      "count": 9,
+      "h1_font_size": {
+        "count": 9,
+        "median": 60,
+        "p25": 44,
+        "p75": 80,
+        "mode": 20,
+        "min": 20,
+        "max": 96,
+        "mean": 60,
+        "tailwind_median": "text-6xl",
+        "tailwind_p25": "~text-5xl (44px)",
         "tailwind_p75": "~text-7xl (80px)"
       },
       "body_font_size": {
-        "count": 78,
+        "count": 9,
         "median": 16,
-        "p25": 14,
-        "p75": 16,
+        "p25": 16,
+        "p75": 20,
         "mode": 16,
-        "min": 9,
-        "max": 24,
-        "mean": 14.93,
+        "min": 15,
+        "max": 21,
+        "mean": 17.67,
         "tailwind_median": "text-base",
-        "tailwind_p25": "text-sm",
-        "tailwind_p75": "text-base"
+        "tailwind_p25": "text-base",
+        "tailwind_p75": "text-xl"
       },
-      "is_dark_theme_rate": 62.8,
-      "has_animation_rate": 83.3,
+      "is_dark_theme_rate": 33.3,
+      "has_animation_rate": 88.9,
       "hero_type": {
         "minimal": {
-          "count": 40,
-          "percentage": 51.3
-        },
-        "fullscreen": {
-          "count": 31,
-          "percentage": 39.7
-        },
-        "center": {
-          "count": 5,
-          "percentage": 6.4
+          "count": 4,
+          "percentage": 44.4
         },
         "split": {
-          "count": 2,
-          "percentage": 2.6
+          "count": 4,
+          "percentage": 44.4
+        },
+        "center": {
+          "count": 1,
+          "percentage": 11.1
         }
       }
     }

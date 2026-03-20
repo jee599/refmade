@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>028 — Crypto Trading</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050505;
+      color: #e5e5e5;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Animated mesh gradient blob */
+    @keyframes meshShift {
+      0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
+      33% { transform: translate(30px, -20px) scale(1.1); filter: hue-rotate(15deg); }
+      66% { transform: translate(-20px, 15px) scale(0.95); filter: hue-rotate(-10deg); }
+      100% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
+    }
+    .mesh-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.15;
+      animation: meshShift 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Glass card — dark */
+    .glass-dark {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .glass-dark:hover {
+      border-color: rgba(147, 51, 234, 0.3);
+      box-shadow: 0 0 30px rgba(147, 51, 234, 0.08);
+    }
+
+    /* Ticker bar */
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-track {
+      animation: tickerScroll 30s linear infinite;
+    }
+    .ticker-bar {
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Candlestick bars */
+    .candle-green {
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.3);
+    }
+    .candle-red {
+      background: #ef4444;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);
+    }
+    .candle-wick {
+      width: 1px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Nav */
+    .nav-crypto {
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Purple glow button */
+    .btn-purple {
+      background: #9333ea;
+      color: white;
+      padding: 0.625rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);
+    }
+    .btn-purple:hover {
+      box-shadow: 0 8px 30px rgba(147, 51, 234, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* Outline button */
+    .btn-outline-crypto {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e5e5e5;
+      padding: 0.625rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .btn-outline-crypto:hover {
+      border-color: rgba(147, 51, 234, 0.4);
+      background: rgba(147, 51, 234, 0.05);
+    }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+
+    /* Order book row hover */
+    .ob-row {
+      transition: background 0.2s ease;
+    }
+    .ob-row:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Subtle grid pattern */
+    .grid-pattern {
+      background-image:
+        linear-gradient(rgba(147, 51, 234, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(147, 51, 234, 0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* Pulse dot */
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .pulse-dot {
+      animation: pulseDot 2s ease-in-out infinite;
+    }
+
+    /* Protocol badge */
+    .protocol-badge {
+      background: rgba(147, 51, 234, 0.1);
+      border: 1px solid rgba(147, 51, 234, 0.2);
+      color: #a855f7;
+      font-size: 0.6875rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crypto: {
+              bg: '#050505',
+              surface: '#0a0a0a',
+              card: '#0f0f0f',
+              purple: '#9333ea',
+              cyan: '#06b6d4',
+              green: '#22c55e',
+              red: '#ef4444',
+              border: 'rgba(255,255,255,0.06)',
+              muted: '#737373',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="grid-pattern">
+
+  <!-- Mesh gradient blobs -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+    <div class="mesh-blob" style="width:600px; height:600px; top:-10%; left:20%; background:radial-gradient(circle, #9333ea 0%, transparent 70%);"></div>
+    <div class="mesh-blob" style="width:500px; height:500px; top:30%; right:-5%; background:radial-gradient(circle, #06b6d4 0%, transparent 70%); animation-delay:-4s;"></div>
+    <div class="mesh-blob" style="width:400px; height:400px; bottom:0; left:10%; background:radial-gradient(circle, #9333ea 0%, transparent 70%); animation-delay:-8s;"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav-crypto fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between h-14">
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-lg font-bold text-white" style="font-family:'Space Grotesk',sans-serif;">
+            <span style="color:#9333ea;">▲</span> VERTEX
+          </a>
+          <div class="hidden md:flex items-center gap-5">
+            <a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Trade</a>
+            <a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Earn</a>
+            <a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Governance</a>
+            <a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Docs</a>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <span class="protocol-badge">Mainnet</span>
+          <a href="#" class="btn-purple text-xs" style="padding:0.4rem 1rem;">Launch App</a>
+        </div>
+        <button class="md:hidden text-crypto-muted" aria-label="Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Live Ticker Bar -->
+  <div class="ticker-bar fixed top-14 left-0 right-0 z-40 overflow-hidden py-2">
+    <div class="ticker-track flex gap-8 whitespace-nowrap" style="width: max-content;">
+      <!-- Duplicate set for seamless loop -->
+      <span class="mono text-xs"><span class="text-white">BTC</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">ETH</span> <span class="text-crypto-red">$[N]</span> <span class="text-crypto-red text-xs">-[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">SOL</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">AVAX</span> <span class="text-crypto-red">$[N]</span> <span class="text-crypto-red text-xs">-[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">ARB</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">OP</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <!-- Duplicate for seamless scroll -->
+      <span class="mono text-xs"><span class="text-white">BTC</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">ETH</span> <span class="text-crypto-red">$[N]</span> <span class="text-crypto-red text-xs">-[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">SOL</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">AVAX</span> <span class="text-crypto-red">$[N]</span> <span class="text-crypto-red text-xs">-[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">ARB</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+      <span class="text-white/10">|</span>
+      <span class="mono text-xs"><span class="text-white">OP</span> <span class="text-crypto-green">$[N]</span> <span class="text-crypto-green text-xs">+[N]%</span></span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="pt-36 pb-20 md:pt-48 md:pb-28 px-6 relative">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal mb-5">
+        <span class="protocol-badge">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-crypto-green mr-1 pulse-dot"></span>
+          Live on Mainnet
+        </span>
+      </div>
+      <h1 class="reveal text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight" style="letter-spacing:-0.03em;">
+        Trade without<br>
+        <span style="color:#9333ea;">intermediaries</span>
+      </h1>
+      <p class="reveal text-base text-crypto-muted max-w-lg mx-auto mb-10 leading-relaxed">
+        Non-custodial perpetual trading with up to [N]x leverage. Deep liquidity, cross-margin, and on-chain settlement — no compromises.
+      </p>
+      <div class="reveal flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="#" class="btn-purple">Launch App</a>
+        <a href="#" class="btn-outline-crypto">Read Documentation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Protocol Stats — inline text style, NOT 4-col grid (constraint #26) -->
+  <section class="py-12 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-dark rounded-xl p-6 md:p-8">
+        <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
+          <div>
+            <span class="mono text-sm text-crypto-muted">TVL</span>
+            <span class="mono text-lg text-white ml-2">$[N]</span>
+          </div>
+          <span class="text-white/10 hidden md:inline">|</span>
+          <div>
+            <span class="mono text-sm text-crypto-muted">24h Volume</span>
+            <span class="mono text-lg text-white ml-2">$[N]</span>
+          </div>
+          <span class="text-white/10 hidden md:inline">|</span>
+          <div>
+            <span class="mono text-sm text-crypto-muted">Max APY</span>
+            <span class="mono text-lg text-crypto-cyan ml-2">[N]%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trading Dashboard Mockup -->
+  <section class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="reveal text-3xl md:text-4xl text-white mb-3" style="letter-spacing:-0.02em;">Pro-grade interface</h2>
+        <p class="reveal text-sm text-crypto-muted">Built for traders who read order flow, not marketing pages.</p>
+      </div>
+
+      <div class="reveal glass-dark rounded-xl p-4 md:p-6 overflow-hidden">
+        <!-- Dashboard header -->
+        <div class="flex items-center justify-between mb-4 pb-3 border-b" style="border-color:rgba(255,255,255,0.05);">
+          <div class="flex items-center gap-4">
+            <span class="mono text-sm text-white font-medium">ETH-PERP</span>
+            <span class="mono text-xs text-crypto-green">$[N]</span>
+            <span class="mono text-xs text-crypto-green">+[N]%</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="mono text-xs text-crypto-muted">Mark: <span class="text-white">$[N]</span></span>
+            <span class="mono text-xs text-crypto-muted">Index: <span class="text-white">$[N]</span></span>
+            <span class="mono text-xs text-crypto-muted">Funding: <span class="text-crypto-cyan">[N]%</span></span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <!-- Candlestick chart area -->
+          <div class="lg:col-span-2 rounded-lg p-4" style="background:rgba(255,255,255,0.02); min-height:280px;">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="mono text-xs text-crypto-muted">1H</span>
+              <span class="mono text-xs text-white bg-white/10 px-2 py-0.5 rounded">4H</span>
+              <span class="mono text-xs text-crypto-muted">1D</span>
+              <span class="mono text-xs text-crypto-muted">1W</span>
+            </div>
+            <!-- CSS candlesticks -->
+            <div class="flex items-end gap-1 h-48 px-2">
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-6"></div>
+                <div class="candle-green w-full rounded-sm" style="height:32px;"></div>
+                <div class="candle-wick h-3"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-4"></div>
+                <div class="candle-green w-full rounded-sm" style="height:48px;"></div>
+                <div class="candle-wick h-5"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-8"></div>
+                <div class="candle-red w-full rounded-sm" style="height:24px;"></div>
+                <div class="candle-wick h-4"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-3"></div>
+                <div class="candle-red w-full rounded-sm" style="height:40px;"></div>
+                <div class="candle-wick h-6"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-5"></div>
+                <div class="candle-green w-full rounded-sm" style="height:56px;"></div>
+                <div class="candle-wick h-2"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-4"></div>
+                <div class="candle-green w-full rounded-sm" style="height:36px;"></div>
+                <div class="candle-wick h-5"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-7"></div>
+                <div class="candle-red w-full rounded-sm" style="height:28px;"></div>
+                <div class="candle-wick h-3"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-2"></div>
+                <div class="candle-green w-full rounded-sm" style="height:64px;"></div>
+                <div class="candle-wick h-4"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-5"></div>
+                <div class="candle-green w-full rounded-sm" style="height:44px;"></div>
+                <div class="candle-wick h-3"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-6"></div>
+                <div class="candle-red w-full rounded-sm" style="height:20px;"></div>
+                <div class="candle-wick h-8"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-3"></div>
+                <div class="candle-green w-full rounded-sm" style="height:52px;"></div>
+                <div class="candle-wick h-4"></div>
+              </div>
+              <div class="flex flex-col items-center flex-1">
+                <div class="candle-wick h-4"></div>
+                <div class="candle-red w-full rounded-sm" style="height:32px;"></div>
+                <div class="candle-wick h-6"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Book -->
+          <div class="rounded-lg p-4" style="background:rgba(255,255,255,0.02);">
+            <p class="mono text-xs text-crypto-muted mb-3 uppercase tracking-wider">Order Book</p>
+            <div class="space-y-0.5 mb-3">
+              <div class="flex justify-between mono text-xs text-crypto-muted px-1">
+                <span>Price</span><span>Size</span><span>Total</span>
+              </div>
+              <!-- Asks (red) -->
+              <div class="ob-row flex justify-between mono text-xs px-1 py-0.5 rounded" style="background:rgba(239,68,68,0.05);">
+                <span class="text-crypto-red">$[N]</span><span class="text-white/60">[N]</span><span class="text-white/40">[N]</span>
+              </div>
+              <div class="ob-row flex justify-between mono text-xs px-1 py-0.5 rounded" style="background:rgba(239,68,68,0.08);">
+                <span class="text-crypto-red">$[N]</span><span class="text-white/60">[N]</span><span class="text-white/40">[N]</span>
+              </div>
+              <div class="ob-row flex justify-between mono text-xs px-1 py-0.5 rounded" style="background:rgba(239,68,68,0.12);">
+                <span class="text-crypto-red">$[N]</span><span class="text-white/60">[N]</span><span class="text-white/40">[N]</span>
+              </div>
+              <!-- Spread -->
+              <div class="flex justify-center py-1.5">
+                <span class="mono text-xs text-crypto-cyan">$[N] <span class="text-crypto-muted">Spread</span></span>
+              </div>
+              <!-- Bids (green) -->
+              <div class="ob-row flex justify-between mono text-xs px-1 py-0.5 rounded" style="background:rgba(34,197,94,0.12);">
+                <span class="text-crypto-green">$[N]</span><span class="text-white/60">[N]</span><span class="text-white/40">[N]</span>
+              </div>
+              <div class="ob-row flex justify-between mono text-xs px-1 py-0.5 rounded" style="background:rgba(34,197,94,0.08);">
+                <span class="text-crypto-green">$[N]</span><span class="text-white/60">[N]</span><span class="text-white/40">[N]</span>
+              </div>
+              <div class="ob-row flex justify-between mono text-xs px-1 py-0.5 rounded" style="background:rgba(34,197,94,0.05);">
+                <span class="text-crypto-green">$[N]</span><span class="text-white/60">[N]</span><span class="text-white/40">[N]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio bar -->
+        <div class="mt-4 pt-3 border-t flex flex-wrap items-center gap-6" style="border-color:rgba(255,255,255,0.05);">
+          <div>
+            <span class="mono text-xs text-crypto-muted">Account Value</span>
+            <span class="mono text-sm text-white ml-2">$[N]</span>
+          </div>
+          <div>
+            <span class="mono text-xs text-crypto-muted">Unrealized PnL</span>
+            <span class="mono text-sm text-crypto-green ml-2">+$[N]</span>
+          </div>
+          <div>
+            <span class="mono text-xs text-crypto-muted">Margin Used</span>
+            <span class="mono text-sm text-white ml-2">[N]%</span>
+          </div>
+          <div>
+            <span class="mono text-xs text-crypto-muted">Leverage</span>
+            <span class="mono text-sm text-crypto-purple ml-2">[N]x</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features — glass cards with purple glow, NOT same size (constraint #2) -->
+  <section class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <h2 class="reveal text-3xl md:text-4xl text-white mb-3" style="letter-spacing:-0.02em;">
+          Engineered for <span style="color:#9333ea;">edge</span>
+        </h2>
+        <p class="reveal text-sm text-crypto-muted max-w-md mx-auto">
+          Every millisecond matters. Every feature exists because a trader needed it.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Card 1 — tall -->
+        <div class="reveal glass-dark rounded-xl p-6 md:p-8 md:row-span-2">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(147,51,234,0.1);">
+            <svg class="w-5 h-5" style="color:#9333ea;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg text-white mb-3">Sub-second Execution</h3>
+          <p class="text-sm text-crypto-muted leading-relaxed mb-4">
+            Orders hit the matching engine in under [N]ms. Built on a custom sequencer optimized for throughput, not generic smart contract calls.
+          </p>
+          <p class="text-sm text-crypto-muted leading-relaxed">
+            Your limit orders sit on-chain. Your fills settle on-chain. No off-chain order matching hidden behind a "decentralized" label.
+          </p>
+        </div>
+        <!-- Card 2 -->
+        <div class="reveal reveal-delay-1 glass-dark rounded-xl p-6">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(6,182,212,0.1);">
+            <svg class="w-5 h-5" style="color:#06b6d4;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg text-white mb-2">Non-custodial</h3>
+          <p class="text-sm text-crypto-muted leading-relaxed">
+            Your keys, your funds. Withdraw anytime without permission from anyone. Smart contract audited by [N] firms.
+          </p>
+        </div>
+        <!-- Card 3 -->
+        <div class="reveal reveal-delay-2 glass-dark rounded-xl p-6">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style="background:rgba(147,51,234,0.1);">
+            <svg class="w-5 h-5" style="color:#a855f7;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg text-white mb-2">Cross-margin</h3>
+          <p class="text-sm text-crypto-muted leading-relaxed">
+            Use one margin balance across all positions. Gains in ETH offset losses in BTC — capital efficient like a real trading desk.
+          </p>
+        </div>
+        <!-- Card 4 — wide -->
+        <div class="reveal glass-dark rounded-xl p-6 md:col-span-2">
+          <div class="flex items-start gap-5">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,0.1);">
+              <svg class="w-5 h-5" style="color:#06b6d4;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg text-white mb-2">Deep Liquidity Engine</h3>
+              <p class="text-sm text-crypto-muted leading-relaxed">
+                LP pools combined with professional market makers. Tight spreads on major pairs — your [N]k order moves the price less than [N] basis points. Liquidity mining rewards paid in protocol tokens, vested over [N] months.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security & Audits -->
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-dark rounded-xl p-8 md:p-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h2 class="text-2xl md:text-3xl text-white mb-4">Battle-tested security</h2>
+            <p class="text-sm text-crypto-muted leading-relaxed mb-6">
+              [N] independent audits. $[N] bug bounty program on Immunefi. Insurance fund covering [N]% of total deposits. We publish every audit report — no "pending" excuses.
+            </p>
+            <a href="#" class="text-sm font-medium transition-colors" style="color:#9333ea;">View Audit Reports →</a>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,0.02);">
+              <div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:rgba(34,197,94,0.1);">
+                <svg class="w-4 h-4 text-crypto-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <p class="text-sm text-white">[Audit Firm Name]</p>
+                <p class="mono text-xs text-crypto-muted">Completed [date]</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,0.02);">
+              <div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:rgba(34,197,94,0.1);">
+                <svg class="w-4 h-4 text-crypto-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <p class="text-sm text-white">[Audit Firm Name]</p>
+                <p class="mono text-xs text-crypto-muted">Completed [date]</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,0.02);">
+              <div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:rgba(147,51,234,0.1);">
+                <svg class="w-4 h-4" style="color:#9333ea;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </div>
+              <div>
+                <p class="text-sm text-white">Bug Bounty</p>
+                <p class="mono text-xs text-crypto-muted">Up to $[N] per critical</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-28 px-6 relative">
+    <div class="max-w-3xl mx-auto text-center reveal">
+      <h2 class="text-4xl md:text-5xl text-white mb-4" style="letter-spacing:-0.02em;">
+        Start trading in<br><span style="color:#9333ea;">under a minute</span>
+      </h2>
+      <p class="text-sm text-crypto-muted mb-8 max-w-md mx-auto leading-relaxed">
+        Connect your wallet, deposit collateral, and place your first trade. No KYC, no waitlist, no approval queue.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="#" class="btn-purple">Launch App</a>
+        <a href="#" class="btn-outline-crypto">Join Discord</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t" style="border-color:rgba(255,255,255,0.05);">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+        <div>
+          <p class="text-sm font-bold text-white mb-4" style="font-family:'Space Grotesk',sans-serif;">
+            <span style="color:#9333ea;">▲</span> VERTEX
+          </p>
+          <p class="text-xs text-crypto-muted">Decentralized perpetuals.</p>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-white uppercase tracking-wider mb-3">Protocol</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Trade</a></li>
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Earn</a></li>
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Governance</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-white uppercase tracking-wider mb-3">Developers</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Documentation</a></li>
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">API</a></li>
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">GitHub</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-white uppercase tracking-wider mb-3">Community</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Discord</a></li>
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Twitter</a></li>
+            <li><a href="#" class="text-xs text-crypto-muted hover:text-white transition-colors">Forum</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t pt-6 flex flex-col md:flex-row justify-between items-center gap-3" style="border-color:rgba(255,255,255,0.05);">
+        <p class="text-xs text-crypto-muted">Design reference 028 — Crypto Trading</p>
+        <p class="text-xs text-crypto-muted">Inspired by Aave, Blur, Solana</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Reveal Script (animations repeat on scroll) -->
+  <script>
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

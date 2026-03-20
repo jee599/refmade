@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>029 — AI Chat Interface</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fafafa;
+      color: #1f2937;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Inter', sans-serif; font-weight: 700; }
+    code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Typing indicator bounce */
+    @keyframes bounce-dot {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+    .typing-dot {
+      animation: bounce-dot 1.4s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    /* Chat message slide in */
+    @keyframes slide-in-right {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-in-left {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* Chat animations */
+    .chat-msg-user {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .chat-msg-ai {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .chat-msg-user.visible,
+    .chat-msg-ai.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Pulse for CTA */
+    @keyframes subtle-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.3); }
+      50% { box-shadow: 0 0 0 8px rgba(124, 58, 237, 0); }
+    }
+    .cta-pulse:hover {
+      animation: subtle-pulse 2s ease-in-out infinite;
+    }
+
+    /* Code block styling */
+    .code-block {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-block .keyword { color: #cba6f7; }
+    .code-block .string { color: #a6e3a1; }
+    .code-block .comment { color: #6c7086; }
+    .code-block .func { color: #89b4fa; }
+
+    /* Input focus ring */
+    .chat-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    /* Smooth nav */
+    nav {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    nav.scrolled {
+      background-color: rgba(250, 250, 250, 0.92);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav — constraint #16: has CTA button -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 border-b border-gray-100">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-7 h-7 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+        </svg>
+        <span class="font-semibold text-lg text-gray-900">[Product]</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-gray-600">
+        <a href="#features" class="hover:text-violet-600 transition-colors duration-200">Features</a>
+        <a href="#examples" class="hover:text-violet-600 transition-colors duration-200">Examples</a>
+        <a href="#pricing" class="hover:text-violet-600 transition-colors duration-200">Pricing</a>
+      </div>
+      <a href="#try-it" class="bg-violet-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-violet-700 transition-colors duration-200">
+        Try Free
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero — constraint #4: h1 >= 40px, constraint #24: substantial content -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <p class="text-violet-600 font-medium text-sm tracking-wide uppercase mb-4">AI-Powered Conversations</p>
+        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
+          Talk to AI that<br>
+          <span class="text-violet-600">actually understands</span>
+        </h1>
+        <p class="text-lg text-gray-500 max-w-xl mx-auto mb-12 leading-relaxed">
+          [Your product tagline]. Not another chatbot — a reasoning engine
+          that writes code, analyzes data, and thinks with you.
+        </p>
+      </div>
+
+      <!-- Mock Chat UI — the hero visual -->
+      <div class="reveal reveal-delay-1 max-w-2xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+          <!-- Chat header -->
+          <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-violet-500"></div>
+            <span class="text-sm font-medium text-gray-700">[Your AI] — Online</span>
+          </div>
+          <!-- Chat body -->
+          <div class="p-5 space-y-4 min-h-[320px]">
+            <!-- User message -->
+            <div class="chat-msg-user flex justify-end">
+              <div class="bg-violet-600 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md max-w-xs text-left leading-relaxed">
+                Write a function that validates email addresses
+              </div>
+            </div>
+            <!-- AI response -->
+            <div class="chat-msg-ai flex justify-start">
+              <div class="bg-white border border-gray-200 text-sm px-4 py-3 rounded-2xl rounded-tl-md max-w-sm text-left">
+                <p class="text-gray-700 mb-3 leading-relaxed">Here's a TypeScript email validator with RFC 5322 compliance:</p>
+                <div class="code-block text-xs">
+                  <span class="keyword">const</span> <span class="func">validateEmail</span> = (email: <span class="keyword">string</span>): <span class="keyword">boolean</span> =&gt; {<br>
+                  &nbsp;&nbsp;<span class="keyword">const</span> pattern = <span class="string">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span>;<br>
+                  &nbsp;&nbsp;<span class="keyword">return</span> pattern.<span class="func">test</span>(email);<br>
+                  };
+                </div>
+              </div>
+            </div>
+            <!-- User follow-up -->
+            <div class="chat-msg-user flex justify-end" style="transition-delay: 0.2s;">
+              <div class="bg-violet-600 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-md max-w-xs text-left leading-relaxed">
+                Can you make it stricter? Handle edge cases too
+              </div>
+            </div>
+            <!-- Typing indicator -->
+            <div class="chat-msg-ai flex justify-start items-end gap-2" style="transition-delay: 0.4s;">
+              <div class="bg-white border border-gray-200 px-4 py-3 rounded-2xl rounded-tl-md">
+                <div class="flex gap-1.5">
+                  <div class="typing-dot w-2 h-2 bg-violet-400 rounded-full"></div>
+                  <div class="typing-dot w-2 h-2 bg-violet-400 rounded-full"></div>
+                  <div class="typing-dot w-2 h-2 bg-violet-400 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features — constraint #15: SVG icons, constraint #2: not all same size, constraint #3: different padding -->
+  <section id="features" class="py-24 px-6 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Beyond simple chat</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">Every conversation is a workspace. Write, debug, analyze, create — all through natural language.</p>
+      </div>
+
+      <!-- Feature cards: 1 large + 2 small — constraint #2 -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Large card spanning full width on left -->
+        <div class="reveal md:row-span-2 bg-gray-50 rounded-xl p-8 border border-gray-100 hover:border-violet-200 transition-all duration-300 group">
+          <div class="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center mb-5 group-hover:bg-violet-200 transition-colors duration-300">
+            <svg class="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Code Generation</h3>
+          <p class="text-gray-500 leading-relaxed mb-6">Describe what you need. Get working code with types, tests, and error handling — not just snippets.</p>
+          <!-- Mini conversation example -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+            <div class="flex justify-end">
+              <span class="bg-violet-600 text-white text-xs px-3 py-1.5 rounded-full">"Build a REST endpoint for user auth"</span>
+            </div>
+            <div class="flex justify-start">
+              <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Generated: route + middleware + validation + tests</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Small card top right -->
+        <div class="reveal reveal-delay-1 bg-gray-50 rounded-xl p-8 border border-gray-100 hover:border-violet-200 transition-all duration-300 group">
+          <div class="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center mb-5 group-hover:bg-violet-200 transition-colors duration-300">
+            <svg class="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Data Analysis</h3>
+          <p class="text-gray-500 leading-relaxed">Drop a CSV or paste a table. Get instant insights, charts, and anomaly detection in plain language.</p>
+        </div>
+
+        <!-- Small card bottom right -->
+        <div class="reveal reveal-delay-2 bg-gray-50 rounded-xl p-8 border border-gray-100 hover:border-violet-200 transition-all duration-300 group">
+          <div class="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center mb-5 group-hover:bg-violet-200 transition-colors duration-300">
+            <svg class="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Content & Writing</h3>
+          <p class="text-gray-500 leading-relaxed">Draft emails, refine copy, translate — with context awareness that remembers your tone and style.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conversation Examples — shows AI capabilities as chats -->
+  <section id="examples" class="py-20 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">See it in action</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">Real conversation patterns. Not scripted demos — actual problem-solving flows.</p>
+      </div>
+
+      <div class="space-y-8">
+        <!-- Example 1: Debugging -->
+        <div class="reveal bg-white rounded-xl border border-gray-200 p-6 max-w-2xl mx-auto">
+          <p class="text-xs font-medium text-violet-600 uppercase tracking-wide mb-4">Debugging Session</p>
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="bg-violet-600 text-white text-sm px-4 py-2 rounded-2xl rounded-tr-md max-w-sm leading-relaxed">
+                My API returns 403 on POST but GET works fine. Same auth token.
+              </div>
+            </div>
+            <div class="flex justify-start">
+              <div class="bg-gray-50 border border-gray-200 text-sm px-4 py-2.5 rounded-2xl rounded-tl-md max-w-sm text-gray-700 leading-relaxed">
+                This is likely a CORS preflight issue. Your OPTIONS handler probably isn't returning the right <code class="mono text-xs bg-gray-200 px-1 rounded">Access-Control-Allow-Methods</code> header. Check your middleware order — CORS needs to run before auth.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example 2: Data task -->
+        <div class="reveal reveal-delay-1 bg-white rounded-xl border border-gray-200 p-6 max-w-2xl mx-auto">
+          <p class="text-xs font-medium text-violet-600 uppercase tracking-wide mb-4">Data Processing</p>
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="bg-violet-600 text-white text-sm px-4 py-2 rounded-2xl rounded-tr-md max-w-sm leading-relaxed">
+                Clean this dataset: remove nulls, normalize dates to ISO, flag outliers in the revenue column
+              </div>
+            </div>
+            <div class="flex justify-start">
+              <div class="bg-gray-50 border border-gray-200 text-sm px-4 py-2.5 rounded-2xl rounded-tl-md max-w-sm text-gray-700 leading-relaxed">
+                Done. Removed [N] null rows, converted [N] date formats. Found [N] revenue outliers (values &gt; 3σ from mean). Here's the cleaned CSV and a summary report.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example 3: Creative -->
+        <div class="reveal reveal-delay-2 bg-white rounded-xl border border-gray-200 p-6 max-w-2xl mx-auto">
+          <p class="text-xs font-medium text-violet-600 uppercase tracking-wide mb-4">Creative Writing</p>
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="bg-violet-600 text-white text-sm px-4 py-2 rounded-2xl rounded-tr-md max-w-sm leading-relaxed">
+                Rewrite this landing page headline. Current: "We help teams collaborate better"
+              </div>
+            </div>
+            <div class="flex justify-start">
+              <div class="bg-gray-50 border border-gray-200 text-sm px-4 py-2.5 rounded-2xl rounded-tl-md max-w-sm text-gray-700 leading-relaxed">
+                3 options ranked by specificity:<br>
+                1. "Ship projects in half the meetings"<br>
+                2. "Your team's second brain, minus the meetings"<br>
+                3. "[Your metric] fewer threads. Same output."
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social proof — constraint #22: no big corp names, #23: realistic feedback, #25: no round numbers -->
+  <section class="py-24 px-6 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What people say</h2>
+      </div>
+      <div class="reveal grid md:grid-cols-2 gap-6">
+        <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
+          <p class="text-gray-600 leading-relaxed mb-4">"[Your real user quote — something specific about the problem it solved, not generic praise. Include a detail that only a real user would mention.]"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-violet-200 rounded-full"></div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">[Name]</p>
+              <p class="text-xs text-gray-500">[Role at Company]</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
+          <p class="text-gray-600 leading-relaxed mb-4">"[Second testimonial — mention a specific use case, not 'this is amazing'. Something like 'I used it to debug a race condition that took me 3 days — fixed in one conversation.']"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-violet-200 rounded-full"></div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">[Name]</p>
+              <p class="text-xs text-gray-500">[Role at Company]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Try It — mock input section -->
+  <section id="try-it" class="py-28 px-6">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Try it yourself</h2>
+        <p class="text-gray-500 max-w-md mx-auto mb-10">No signup required. Start a conversation and see what happens.</p>
+      </div>
+
+      <div class="reveal reveal-delay-1 max-w-xl mx-auto">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-lg p-2">
+          <div class="flex items-center gap-3">
+            <input type="text" placeholder="Ask anything..." class="chat-input flex-1 px-4 py-3.5 text-sm text-gray-700 bg-transparent rounded-lg border-none placeholder:text-gray-400">
+            <button class="cta-pulse bg-violet-600 text-white p-3 rounded-lg hover:bg-violet-700 transition-colors duration-200 flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-4">[Your product] can make mistakes. Verify important information.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works — step by step -->
+  <section class="py-20 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How it works</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">Three steps. No setup wizard. No onboarding call.</p>
+      </div>
+
+      <div class="max-w-2xl mx-auto space-y-12">
+        <div class="reveal flex gap-6 items-start">
+          <div class="w-10 h-10 bg-violet-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Start a conversation</h3>
+            <p class="text-gray-500 leading-relaxed">Type what you need in plain language. No syntax to learn, no menus to navigate. Just describe the task — code, analysis, writing, anything.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-1 flex gap-6 items-start">
+          <div class="w-10 h-10 bg-violet-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Iterate in context</h3>
+            <p class="text-gray-500 leading-relaxed">Follow up naturally. Ask for changes, refinements, explanations. The AI remembers everything from your conversation — no re-explaining.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2 flex gap-6 items-start">
+          <div class="w-10 h-10 bg-violet-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Export and use</h3>
+            <p class="text-gray-500 leading-relaxed">Copy code, download files, or integrate via API. Everything you create is yours — no lock-in, no watermarks, no usage restrictions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration logos / trust strip — constraint #22: placeholder only -->
+  <section class="py-16 px-6 bg-white border-y border-gray-100">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <p class="text-xs text-gray-400 uppercase tracking-widest mb-8">Integrates with your stack</p>
+        <div class="flex flex-wrap justify-center gap-10 items-center">
+          <div class="flex items-center gap-2 text-gray-400">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            <span class="text-sm font-medium">[Tool 1]</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-400">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            <span class="text-sm font-medium">[Tool 2]</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-400">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+            <span class="text-sm font-medium">[Tool 3]</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-400">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span class="text-sm font-medium">[Tool 4]</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-400">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+            <span class="text-sm font-medium">[Tool 5]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing — constraint #24: practical content -->
+  <section id="pricing" class="py-24 px-6 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Simple pricing</h2>
+        <p class="text-gray-500">Start free. Upgrade when you need more.</p>
+      </div>
+
+      <!-- 2-column pricing — not 3 -->
+      <div class="reveal grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <div class="bg-gray-50 rounded-xl p-8 border border-gray-100 hover:border-violet-200 transition-all duration-300">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Free</h3>
+          <p class="text-3xl font-bold text-gray-900 mb-1">$0</p>
+          <p class="text-sm text-gray-500 mb-6">[N] messages / month</p>
+          <ul class="space-y-3 text-sm text-gray-600">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Feature 1]
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Feature 2]
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Feature 3]
+            </li>
+          </ul>
+          <button class="mt-8 w-full py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-violet-300 hover:text-violet-600 transition-all duration-200">
+            Get Started
+          </button>
+        </div>
+
+        <div class="bg-violet-600 rounded-xl p-8 border border-violet-500 text-white">
+          <h3 class="text-lg font-semibold mb-2">Pro</h3>
+          <p class="text-3xl font-bold mb-1">$[N]</p>
+          <p class="text-sm text-violet-200 mb-6">/ month, billed annually</p>
+          <ul class="space-y-3 text-sm text-violet-100">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Unlimited messages
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Pro Feature 1]
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Pro Feature 2]
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Priority support
+            </li>
+          </ul>
+          <button class="mt-8 w-full py-2.5 bg-white text-violet-600 text-sm font-medium rounded-lg hover:bg-violet-50 transition-colors duration-200">
+            Upgrade to Pro
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-gray-100">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2">
+        <svg class="w-6 h-6 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+        </svg>
+        <span class="font-semibold text-gray-900">[Product]</span>
+      </div>
+      <div class="flex gap-6 text-sm text-gray-500">
+        <a href="#" class="hover:text-violet-600 transition-colors duration-200">Privacy</a>
+        <a href="#" class="hover:text-violet-600 transition-colors duration-200">Terms</a>
+        <a href="#" class="hover:text-violet-600 transition-colors duration-200">Docs</a>
+        <a href="#" class="hover:text-violet-600 transition-colors duration-200">Status</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Reveal + Chat Animation Script -->
+  <script>
+    // IntersectionObserver for scroll reveal (repeats)
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .chat-msg-user, .chat-msg-ai').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 40) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>

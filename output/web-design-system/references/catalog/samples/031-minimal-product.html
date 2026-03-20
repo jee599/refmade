@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>031 — Minimal Product</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #111827;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* Browser frame for product mockup */
+    .browser-frame {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+    .browser-frame-header {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Subtle hover lift */
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Focus ring for interactive */
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav — constraint #16: has CTA button -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-indigo-500 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/>
+          </svg>
+        </div>
+        <span class="font-medium text-gray-900">[Product]</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-gray-500">
+        <a href="#features" class="hover:text-indigo-500 transition-colors duration-200">Features</a>
+        <a href="#product" class="hover:text-indigo-500 transition-colors duration-200">Product</a>
+        <a href="#pricing" class="hover:text-indigo-500 transition-colors duration-200">Pricing</a>
+      </div>
+      <a href="#pricing" class="bg-indigo-500 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+        Get Started
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero — left-aligned text + right product mockup — constraint #4: h1 >= 40px -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+      <div>
+        <div class="reveal">
+          <p class="text-indigo-500 text-sm font-medium mb-4">[Product Category]</p>
+          <h1 class="text-4xl md:text-5xl font-medium text-gray-900 leading-tight mb-6">
+            [The simplest way to<br>do your thing]
+          </h1>
+          <p class="text-gray-500 text-lg leading-relaxed mb-8 max-w-md">
+            [One clear sentence about what your product does. No buzzwords. Just the value — what changes for the user after they start using it.]
+          </p>
+          <div class="flex items-center gap-4">
+            <a href="#pricing" class="bg-indigo-500 text-white text-sm font-medium px-6 py-3 rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+              Start Free
+            </a>
+            <a href="#product" class="text-gray-500 text-sm font-medium hover:text-indigo-500 transition-colors duration-200 flex items-center gap-1.5">
+              See how it works
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product UI mockup in browser frame -->
+      <div class="reveal reveal-delay-1">
+        <div class="browser-frame">
+          <div class="browser-frame-header">
+            <div class="browser-dot bg-red-300"></div>
+            <div class="browser-dot bg-yellow-300"></div>
+            <div class="browser-dot bg-green-300"></div>
+            <span class="text-xs text-gray-400 ml-2">[product].app</span>
+          </div>
+          <div class="bg-gray-50 p-6">
+            <!-- Mock form builder / tool UI -->
+            <div class="space-y-4">
+              <div class="bg-white rounded-lg border border-gray-200 p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-medium text-gray-900">[Form Title]</span>
+                  <span class="text-xs text-indigo-500 font-medium">Published</span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded"></div>
+                    <div class="h-3 bg-gray-200 rounded w-32"></div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded"></div>
+                    <div class="h-3 bg-gray-200 rounded w-40"></div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 border-2 border-indigo-500 rounded bg-indigo-500"></div>
+                    <div class="h-3 bg-indigo-100 rounded w-28"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg border border-gray-200 p-4">
+                <div class="h-3 bg-gray-200 rounded w-24 mb-2"></div>
+                <div class="h-8 bg-gray-100 rounded-lg border border-gray-200 w-full"></div>
+              </div>
+              <div class="bg-indigo-500 text-white text-xs font-medium text-center py-2 rounded-lg w-20">
+                Submit
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features — 3 columns, generous spacing — constraint #15: SVG icons, #2: varied cards, #3: different padding -->
+  <section id="features" class="py-24 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Everything you need. Nothing you don't.</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">Built for speed. No bloat, no setup wizards, no onboarding calls.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="reveal hover-lift bg-white rounded-lg p-8 border border-gray-100">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Feature 1 — e.g., Instant Setup]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[One sentence. What it does and why it matters. Keep it under 20 words.]</p>
+        </div>
+
+        <div class="reveal reveal-delay-1 hover-lift bg-white rounded-lg p-8 border border-gray-100">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Feature 2 — e.g., Flexible Layouts]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Describe a capability that differentiates this from alternatives.]</p>
+        </div>
+
+        <div class="reveal reveal-delay-2 hover-lift bg-white rounded-lg p-8 border border-gray-100">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Feature 3 — e.g., Built-in Security]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Keep it concrete. Avoid words like 'powerful' or 'seamless'.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Showcase — detailed browser frame UI -->
+  <section id="product" class="py-20 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">See the product</h2>
+        <p class="text-gray-500 max-w-md mx-auto">A closer look at the interface. Clean, fast, focused.</p>
+      </div>
+
+      <div class="reveal">
+        <div class="browser-frame max-w-4xl mx-auto">
+          <div class="browser-frame-header">
+            <div class="browser-dot bg-red-300"></div>
+            <div class="browser-dot bg-yellow-300"></div>
+            <div class="browser-dot bg-green-300"></div>
+            <span class="text-xs text-gray-400 ml-2">[product].app/dashboard</span>
+          </div>
+          <div class="bg-white p-6">
+            <!-- Mock dashboard UI -->
+            <div class="grid grid-cols-4 gap-4">
+              <!-- Sidebar -->
+              <div class="col-span-1 space-y-3">
+                <div class="flex items-center gap-2 px-3 py-2 bg-indigo-50 rounded-lg">
+                  <div class="w-3.5 h-3.5 bg-indigo-500 rounded"></div>
+                  <div class="h-2.5 bg-indigo-200 rounded w-16"></div>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-14"></div>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-20"></div>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-12"></div>
+                </div>
+                <hr class="border-gray-100 my-2">
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-16"></div>
+                </div>
+              </div>
+              <!-- Main content area -->
+              <div class="col-span-3 space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="h-3 bg-gray-900 rounded w-28"></div>
+                  <div class="h-7 bg-indigo-500 rounded-lg w-24"></div>
+                </div>
+                <!-- Table-like structure -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                  <div class="grid grid-cols-4 gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200">
+                    <div class="h-2 bg-gray-400 rounded w-12"></div>
+                    <div class="h-2 bg-gray-400 rounded w-10"></div>
+                    <div class="h-2 bg-gray-400 rounded w-14"></div>
+                    <div class="h-2 bg-gray-400 rounded w-8"></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-4 px-4 py-3 border-b border-gray-100">
+                    <div class="h-2 bg-gray-200 rounded w-20"></div>
+                    <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    <div class="h-5 bg-green-100 text-green-700 text-[10px] rounded-full w-14 flex items-center justify-center font-medium">Active</div>
+                    <div class="h-2 bg-gray-200 rounded w-10"></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-4 px-4 py-3 border-b border-gray-100">
+                    <div class="h-2 bg-gray-200 rounded w-24"></div>
+                    <div class="h-2 bg-gray-200 rounded w-12"></div>
+                    <div class="h-5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full w-14 flex items-center justify-center font-medium">Draft</div>
+                    <div class="h-2 bg-gray-200 rounded w-8"></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-4 px-4 py-3">
+                    <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    <div class="h-2 bg-gray-200 rounded w-20"></div>
+                    <div class="h-5 bg-green-100 text-green-700 text-[10px] rounded-full w-14 flex items-center justify-center font-medium">Active</div>
+                    <div class="h-2 bg-gray-200 rounded w-12"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works — simple steps -->
+  <section class="py-20 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">How it works</h2>
+        <p class="text-gray-500 max-w-md mx-auto">Three steps to go from zero to live.</p>
+      </div>
+
+      <div class="reveal grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span class="text-indigo-500 font-medium text-sm">1</span>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">Create</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Describe the first step — what the user does to get started. Keep it concrete.]</p>
+        </div>
+        <div class="text-center">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span class="text-indigo-500 font-medium text-sm">2</span>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">Customize</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Second step — what configuration or personalization happens. Be specific.]</p>
+        </div>
+        <div class="text-center">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span class="text-indigo-500 font-medium text-sm">3</span>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">Share</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Final step — how the user publishes or shares their work. Mention the outcome.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration strip — constraint #22: no real corp names -->
+  <section class="py-16 px-6 border-y border-gray-100">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <p class="text-xs text-gray-400 uppercase tracking-widest mb-8">Works with</p>
+        <div class="flex flex-wrap justify-center gap-10 items-center">
+          <span class="text-gray-300 text-sm font-medium">[Integration 1]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 2]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 3]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 4]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 5]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial — single, large, minimal — constraint #22, #23 -->
+  <section class="py-24 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal max-w-2xl mx-auto text-center">
+        <svg class="w-8 h-8 text-indigo-200 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H0z"/>
+        </svg>
+        <p class="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8">
+          "[Your best testimonial here — something specific, not 'great product'. A quote that mentions the exact problem solved and the before/after. Make it sound like a real person texting a friend, not writing a LinkedIn recommendation.]"
+        </p>
+        <div>
+          <p class="text-sm font-medium text-gray-900">[Name]</p>
+          <p class="text-sm text-gray-500">[Role], [Company]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing — 2 columns (Free vs Pro), simple — constraint #24: practical content -->
+  <section id="pricing" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Pricing</h2>
+        <p class="text-gray-500">Free to start. No credit card required.</p>
+      </div>
+
+      <div class="reveal grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <!-- Free tier -->
+        <div class="hover-lift bg-white rounded-lg p-8 border border-gray-200">
+          <h3 class="font-medium text-gray-900 mb-1">Free</h3>
+          <p class="text-3xl font-medium text-gray-900 mb-1">$0</p>
+          <p class="text-sm text-gray-500 mb-6">For individuals and small projects</p>
+          <ul class="space-y-3 text-sm text-gray-600 mb-8">
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [N] [units] per month
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Core feature included]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Community support
+            </li>
+          </ul>
+          <button class="w-full py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-indigo-300 hover:text-indigo-500 transition-all duration-200">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Pro tier — constraint #9: CTA stands out -->
+        <div class="hover-lift bg-white rounded-lg p-8 border-2 border-indigo-500 relative">
+          <span class="absolute -top-3 left-6 bg-indigo-500 text-white text-xs font-medium px-3 py-0.5 rounded-full">Popular</span>
+          <h3 class="font-medium text-gray-900 mb-1">Pro</h3>
+          <p class="text-3xl font-medium text-gray-900 mb-1">$[N]<span class="text-base text-gray-400 font-normal">/mo</span></p>
+          <p class="text-sm text-gray-500 mb-6">For teams and growing businesses</p>
+          <ul class="space-y-3 text-sm text-gray-600 mb-8">
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Unlimited [units]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Pro feature — specific]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Pro feature — specific]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Priority email support
+            </li>
+          </ul>
+          <button class="w-full py-2.5 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+            Upgrade to Pro
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA — simple, clean -->
+  <section class="py-28 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Ready to start?</h2>
+        <p class="text-gray-500 max-w-md mx-auto mb-8">Create your first [thing] in under a minute. No setup required.</p>
+        <a href="#" class="inline-block bg-indigo-500 text-white text-sm font-medium px-8 py-3 rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+          Get Started — Free
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ — minimal accordion style -->
+  <section class="py-20 px-6">
+    <div class="max-w-2xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Questions</h2>
+      </div>
+
+      <div class="reveal space-y-4">
+        <div class="border-b border-gray-100 pb-4">
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Common question about getting started?]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Clear, direct answer. No marketing fluff. Under 30 words.]</p>
+        </div>
+        <div class="border-b border-gray-100 pb-4">
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Question about data/privacy/security?]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Specific answer mentioning actual practices — encryption, data location, compliance.]</p>
+        </div>
+        <div class="border-b border-gray-100 pb-4">
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Question about pricing/limits?]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Honest answer about what's included and what costs extra.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-gray-100">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-indigo-500 rounded-md flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/>
+          </svg>
+        </div>
+        <span class="text-sm font-medium text-gray-900">[Product]</span>
+      </div>
+      <div class="flex gap-6 text-sm text-gray-400">
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Privacy</a>
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Terms</a>
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Docs</a>
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Twitter</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Reveal Script — repeats on scroll -->
+  <script>
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      revealObserver.observe(el);
+    });
+  </script>
+
+</body>
+</html>

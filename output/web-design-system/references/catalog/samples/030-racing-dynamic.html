@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>030 — Racing / Dynamic Sports</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 800; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Speed lines — diagonal stripes at low opacity */
+    .speed-lines {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(57, 255, 20, 0.02) 40px,
+        rgba(57, 255, 20, 0.02) 41px
+      );
+    }
+
+    /* Diagonal crop for image placeholders */
+    .diagonal-crop {
+      clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+    }
+
+    /* Slash graphic element */
+    .slash-element {
+      width: 4px;
+      height: 80px;
+      background: #39FF14;
+      transform: rotate(-20deg);
+    }
+
+    /* Slide from left */
+    @keyframes slide-from-left {
+      from { opacity: 0; transform: translateX(-60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-from-right {
+      from { opacity: 0; transform: translateX(60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .reveal-left.visible,
+    .reveal-right.visible,
+    .reveal-up.visible {
+      opacity: 1;
+      transform: translate(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.05s; }
+    .reveal-delay-2 { transition-delay: 0.1s; }
+    .reveal-delay-3 { transition-delay: 0.15s; }
+    .reveal-delay-4 { transition-delay: 0.2s; }
+
+    /* Green dot nav indicator */
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      background: #39FF14;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .nav-link.active .nav-dot {
+      opacity: 1;
+    }
+
+    /* Neon green glow on hover */
+    .green-glow:hover {
+      box-shadow: 0 0 20px rgba(57, 255, 20, 0.15), 0 0 40px rgba(57, 255, 20, 0.05);
+    }
+
+    /* Horizontal rule — racing stripe */
+    .racing-stripe {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #39FF14, transparent);
+      opacity: 0.4;
+    }
+
+    /* Card hover border */
+    .race-card {
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .race-card:hover {
+      border-color: #39FF14;
+    }
+
+    /* Parallax helper */
+    .parallax-slow {
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav — minimal, fixed, green dot indicator — constraint #16: has CTA -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <span class="font-extrabold text-lg tracking-tight" style="font-family: 'Space Grotesk', sans-serif;">
+        [DRIVER<span class="text-[#39FF14]">.</span>]
+      </span>
+      <div class="hidden md:flex items-center gap-8 text-sm text-gray-400">
+        <a href="#stats" class="nav-link relative hover:text-white transition-colors duration-200">
+          Stats
+          <span class="nav-dot"></span>
+        </a>
+        <a href="#gallery" class="nav-link relative hover:text-white transition-colors duration-200">
+          Gallery
+          <span class="nav-dot"></span>
+        </a>
+        <a href="#career" class="nav-link relative hover:text-white transition-colors duration-200">
+          Career
+          <span class="nav-dot"></span>
+        </a>
+      </div>
+      <a href="#contact" class="text-sm font-medium px-5 py-2 border border-[#39FF14] text-[#39FF14] rounded-none hover:bg-[#39FF14] hover:text-black transition-all duration-200">
+        CONTACT
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero — fullscreen dark, neon green accent, diagonal slash graphics -->
+  <section class="relative min-h-screen flex items-center speed-lines">
+    <!-- Diagonal slash decorations -->
+    <div class="absolute top-20 right-16 hidden lg:block">
+      <div class="slash-element mb-3"></div>
+      <div class="slash-element opacity-40"></div>
+    </div>
+    <div class="absolute bottom-32 left-12 hidden lg:block">
+      <div class="slash-element opacity-30 mb-3"></div>
+      <div class="slash-element opacity-60"></div>
+      <div class="slash-element opacity-20 mt-3"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 pt-24 pb-16 w-full">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="reveal-left">
+            <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-6">[Season Year] // Race [N] of [N]</p>
+          </div>
+          <!-- constraint #4: h1 >= 40px -->
+          <h1 class="reveal-left reveal-delay-1 text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none tracking-tight mb-8">
+            BORN TO<br>
+            <span class="text-[#39FF14]">RACE</span><span class="text-gray-600">.</span>
+          </h1>
+          <p class="reveal-left reveal-delay-2 text-gray-400 text-lg max-w-md leading-relaxed mb-10">
+            [Driver name]. [N] podiums. [N] fastest laps. Pushing the limit at [your speed] km/h — every single lap.
+          </p>
+          <div class="reveal-left reveal-delay-3 flex gap-4">
+            <a href="#stats" class="bg-[#39FF14] text-black text-sm font-bold px-8 py-3 rounded-none hover:bg-[#2de00f] transition-colors duration-200 tracking-wide">
+              VIEW STATS
+            </a>
+            <a href="#gallery" class="border border-white/20 text-white text-sm font-medium px-8 py-3 rounded-none hover:border-[#39FF14] hover:text-[#39FF14] transition-all duration-200 tracking-wide">
+              GALLERY
+            </a>
+          </div>
+        </div>
+
+        <!-- Image placeholder with diagonal crop -->
+        <div class="reveal-right reveal-delay-2">
+          <div class="diagonal-crop bg-gray-800 aspect-[4/5] flex items-center justify-center">
+            <div class="text-center">
+              <svg class="w-16 h-16 text-gray-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <p class="text-gray-600 text-sm mono">[Driver Portrait]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Racing stripe divider -->
+  <div class="racing-stripe"></div>
+
+  <!-- Stats Section — constraint #26: no 4-col grid, #25: placeholder numbers -->
+  <section id="stats" class="py-24 px-6 speed-lines">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal-left mb-16">
+        <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-4">Performance Data</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Season Numbers</h2>
+      </div>
+
+      <!-- Stats as inline text blocks, NOT a 4-col grid — constraint #26 -->
+      <div class="grid md:grid-cols-3 gap-8 mb-16">
+        <div class="reveal-left race-card bg-white/[0.03] rounded-none p-6">
+          <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Fastest Lap</p>
+          <p class="mono text-4xl font-bold text-[#39FF14] mb-1">[N:NN.NNN]</p>
+          <p class="text-sm text-gray-500">[Circuit Name] — [Date]</p>
+        </div>
+        <div class="reveal-left reveal-delay-1 race-card bg-white/[0.03] rounded-none p-6">
+          <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Top Speed</p>
+          <p class="mono text-4xl font-bold text-white mb-1">[NNN] <span class="text-lg text-gray-500">km/h</span></p>
+          <p class="text-sm text-gray-500">[Straight Name] — [Race]</p>
+        </div>
+        <div class="reveal-left reveal-delay-2 race-card bg-white/[0.03] rounded-none p-6">
+          <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Championship Position</p>
+          <p class="mono text-4xl font-bold text-white mb-1">P[N]</p>
+          <p class="text-sm text-gray-500">[N] points — [N] races remaining</p>
+        </div>
+      </div>
+
+      <!-- Lap time comparison — horizontal layout -->
+      <div class="reveal-up">
+        <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-6">Recent Lap Times</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4 race-card bg-white/[0.03] rounded-none p-4">
+            <span class="mono text-sm text-[#39FF14] w-20">[Circuit]</span>
+            <div class="flex-1 h-1 bg-white/5 rounded-none relative overflow-hidden">
+              <div class="absolute inset-y-0 left-0 bg-[#39FF14] rounded-none" style="width: 92%;"></div>
+            </div>
+            <span class="mono text-sm text-gray-400 w-24 text-right">[N:NN.NNN]</span>
+          </div>
+          <div class="flex items-center gap-4 race-card bg-white/[0.03] rounded-none p-4">
+            <span class="mono text-sm text-white w-20">[Circuit]</span>
+            <div class="flex-1 h-1 bg-white/5 rounded-none relative overflow-hidden">
+              <div class="absolute inset-y-0 left-0 bg-white/40 rounded-none" style="width: 88%;"></div>
+            </div>
+            <span class="mono text-sm text-gray-400 w-24 text-right">[N:NN.NNN]</span>
+          </div>
+          <div class="flex items-center gap-4 race-card bg-white/[0.03] rounded-none p-4">
+            <span class="mono text-sm text-white w-20">[Circuit]</span>
+            <div class="flex-1 h-1 bg-white/5 rounded-none relative overflow-hidden">
+              <div class="absolute inset-y-0 left-0 bg-white/40 rounded-none" style="width: 95%;"></div>
+            </div>
+            <span class="mono text-sm text-gray-400 w-24 text-right">[N:NN.NNN]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="racing-stripe"></div>
+
+  <!-- Gallery — diagonal crop images — constraint #2: not all same size -->
+  <section id="gallery" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal-right mb-16 text-right">
+        <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-4">Gallery</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">On Track</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4">
+        <!-- Large image — spans 2 cols -->
+        <div class="reveal-left md:col-span-2 race-card">
+          <div class="diagonal-crop bg-gray-800 aspect-video flex items-center justify-center">
+            <div class="text-center">
+              <svg class="w-12 h-12 text-gray-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <p class="text-gray-600 text-xs mono">[Race Action Shot]</p>
+            </div>
+          </div>
+        </div>
+        <!-- Smaller images -->
+        <div class="reveal-right reveal-delay-1 race-card">
+          <div class="diagonal-crop bg-gray-800 aspect-square flex items-center justify-center">
+            <p class="text-gray-600 text-xs mono">[Helmet Close-up]</p>
+          </div>
+        </div>
+        <div class="reveal-left reveal-delay-2 race-card">
+          <div class="diagonal-crop bg-gray-800 aspect-square flex items-center justify-center">
+            <p class="text-gray-600 text-xs mono">[Podium Celebration]</p>
+          </div>
+        </div>
+        <div class="reveal-right reveal-delay-3 md:col-span-2 race-card">
+          <div class="diagonal-crop bg-gray-800 aspect-[21/9] flex items-center justify-center">
+            <p class="text-gray-600 text-xs mono">[Pit Stop Wide Angle]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="racing-stripe"></div>
+
+  <!-- Career Timeline — constraint #24: practical content -->
+  <section id="career" class="py-24 px-6 speed-lines">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal-left mb-16">
+        <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-4">Timeline</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Career Highlights</h2>
+      </div>
+
+      <div class="space-y-6">
+        <div class="reveal-left race-card bg-white/[0.03] rounded-none p-6 flex gap-6 items-start">
+          <span class="mono text-sm text-[#39FF14] whitespace-nowrap">[YEAR]</span>
+          <div>
+            <h3 class="text-lg font-bold mb-1">[Achievement Title]</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">[Description of the achievement — specific details about the race, team, or milestone. Not generic.]</p>
+          </div>
+        </div>
+        <div class="reveal-left reveal-delay-1 race-card bg-white/[0.03] rounded-none p-6 flex gap-6 items-start">
+          <span class="mono text-sm text-[#39FF14] whitespace-nowrap">[YEAR]</span>
+          <div>
+            <h3 class="text-lg font-bold mb-1">[Achievement Title]</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">[Another specific milestone — include circuit name, position gained, or record broken.]</p>
+          </div>
+        </div>
+        <div class="reveal-left reveal-delay-2 race-card bg-white/[0.03] rounded-none p-6 flex gap-6 items-start">
+          <span class="mono text-sm text-[#39FF14] whitespace-nowrap">[YEAR]</span>
+          <div>
+            <h3 class="text-lg font-bold mb-1">[Achievement Title]</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">[Debut, first win, championship — whatever fits the narrative.]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="racing-stripe"></div>
+
+  <!-- Equipment / Setup section -->
+  <section class="py-24 px-6 speed-lines">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal-right mb-16 text-right">
+        <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-4">Setup</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">The Machine</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="reveal-left race-card bg-white/[0.03] rounded-none p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <svg class="w-6 h-6 text-[#39FF14]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <h3 class="text-lg font-bold">Engine Specs</h3>
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-sm text-gray-500">Power Unit</span>
+              <span class="mono text-sm text-white">[Manufacturer] V[N] Turbo Hybrid</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-sm text-gray-500">Power Output</span>
+              <span class="mono text-sm text-[#39FF14]">[N]+ bhp</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-sm text-gray-500">Weight</span>
+              <span class="mono text-sm text-white">[N] kg (minimum)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">0-100 km/h</span>
+              <span class="mono text-sm text-white">[N.N]s</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-right reveal-delay-1 race-card bg-white/[0.03] rounded-none p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <svg class="w-6 h-6 text-[#39FF14]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <h3 class="text-lg font-bold">Race Setup</h3>
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-sm text-gray-500">Front Wing</span>
+              <span class="mono text-sm text-white">[Low / Medium / High] downforce</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-sm text-gray-500">Tire Compound</span>
+              <span class="mono text-sm text-[#39FF14]">[Soft / Medium / Hard]</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-sm text-gray-500">Brake Bias</span>
+              <span class="mono text-sm text-white">[NN]% front</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">DRS Zones</span>
+              <span class="mono text-sm text-white">[N] zones</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="racing-stripe"></div>
+
+  <!-- Sponsor / Partners — constraint #22: no real big corp names -->
+  <section class="py-20 px-6">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="reveal-up">
+        <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-10">Partners & Sponsors</p>
+        <div class="flex flex-wrap justify-center gap-12 items-center">
+          <span class="text-gray-600 font-bold text-xl tracking-wider" style="font-family: 'Space Grotesk', sans-serif;">[SPONSOR 1]</span>
+          <span class="text-gray-600 font-bold text-xl tracking-wider" style="font-family: 'Space Grotesk', sans-serif;">[SPONSOR 2]</span>
+          <span class="text-gray-600 font-bold text-xl tracking-wider" style="font-family: 'Space Grotesk', sans-serif;">[SPONSOR 3]</span>
+          <span class="text-gray-600 font-bold text-xl tracking-wider" style="font-family: 'Space Grotesk', sans-serif;">[SPONSOR 4]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA — constraint #9: CTA different from surroundings -->
+  <section id="contact" class="py-28 px-6 relative">
+    <div class="absolute inset-0 speed-lines opacity-50"></div>
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+      <div class="reveal-up">
+        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
+          LET'S <span class="text-[#39FF14]">WORK</span> TOGETHER
+        </h2>
+        <p class="text-gray-400 max-w-md mx-auto mb-10">Sponsorships, media inquiries, and collaborations. Get in touch.</p>
+        <a href="#" class="inline-block bg-[#39FF14] text-black text-sm font-bold px-10 py-4 rounded-none hover:bg-[#2de00f] transition-colors duration-200 tracking-widest green-glow">
+          GET IN TOUCH
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-white/5">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <span class="font-extrabold text-sm tracking-tight text-gray-500" style="font-family: 'Space Grotesk', sans-serif;">
+        [DRIVER<span class="text-[#39FF14]">.</span>]
+      </span>
+      <div class="flex gap-6">
+        <a href="#" class="text-gray-500 hover:text-[#39FF14] transition-colors duration-200">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+        </a>
+        <a href="#" class="text-gray-500 hover:text-[#39FF14] transition-colors duration-200">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="#" class="text-gray-500 hover:text-[#39FF14] transition-colors duration-200">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 3.993L9 16z"/></svg>
+        </a>
+      </div>
+      <span class="mono text-xs text-gray-600">&copy; [YEAR] [Driver Name]. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Scroll Reveal + Parallax Script -->
+  <script>
+    // IntersectionObserver — fast 200ms animations, repeats on scroll
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Nav active section tracking
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 200;
+        if (window.scrollY >= top) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Subtle parallax on slash elements
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      document.querySelectorAll('.slash-element').forEach((el, i) => {
+        el.style.transform = `rotate(-20deg) translateY(${scrollY * 0.05 * (i + 1)}px)`;
+      });
+    });
+  </script>
+
+</body>
+</html>

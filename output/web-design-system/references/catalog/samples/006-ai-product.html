@@ -35,27 +35,10 @@
       background-size: 32px 32px;
     }
 
-    /* Typing animation */
-    @keyframes typing {
-      from { max-width: 0; }
-      to { max-width: 100%; }
-    }
+    /* Blinking cursor */
     @keyframes blink {
       50% { opacity: 0; }
     }
-    .type-line {
-      overflow: hidden;
-      white-space: nowrap;
-      display: inline-block;
-      max-width: 0;
-      animation: typing 0.8s steps(30, end) forwards;
-      vertical-align: top;
-    }
-    .type-line-1 { animation-delay: 0s; }
-    .type-line-2 { animation-delay: 0.6s; }
-    .type-line-3 { animation-delay: 1.2s; }
-    .type-line-4 { animation-delay: 1.8s; }
-    .type-line-5 { animation-delay: 2.4s; }
     .type-cursor {
       display: inline-block;
       width: 2px;
@@ -63,12 +46,33 @@
       background: #6366f1;
       animation: blink 1s step-end infinite;
       vertical-align: text-bottom;
-      margin-left: 2px;
+      margin-left: 1px;
     }
+
+    /* Keystroke pulse dot */
+    @keyframes keystrokePulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    .keystroke-dot {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #6366f1;
+      pointer-events: none;
+      animation: keystrokePulse 0.35s ease-out forwards;
+    }
+
+    /* Hero response fade-in (controlled by JS) */
     .hero-response {
       opacity: 0;
-      animation: fadeInUp 0.6s ease forwards;
-      animation-delay: 3.2s;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .hero-response.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* Scroll reveal */
@@ -104,18 +108,17 @@
     /* Code block line numbers */
     .code-ln { color: #3e4451; user-select: none; min-width: 2ch; text-align: right; display: inline-block; margin-right: 1.5em; }
 
-    /* Typewriter for response section */
-    .typewriter-response .tw-char {
-      opacity: 0;
-      animation: charAppear 0.03s forwards;
-    }
-    @keyframes charAppear {
-      to { opacity: 1; }
-    }
-
     /* Copy button */
     .copy-btn { opacity: 0; transition: opacity 0.2s; }
     .code-panel:hover .copy-btn { opacity: 1; }
+
+    /* Typing code container */
+    .typing-code-area {
+      min-height: 7.5em;
+    }
+    .typing-code-area .code-line {
+      white-space: pre;
+    }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -124,8 +127,7 @@
         transition-duration: 0.01ms !important;
       }
       .reveal, .reveal-left, .reveal-right, .reveal-line { opacity: 1; transform: none; }
-      .type-line { max-width: 100%; }
-      .hero-response { opacity: 1; }
+      .hero-response { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -174,16 +176,11 @@
               </div>
               <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
             </div>
-            <!-- Code with typing -->
-            <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <div><span class="code-ln">1</span><span class="type-line type-line-1"><span class="syn-kw">const</span> response = <span class="syn-kw">await</span> nexus.<span class="syn-fn">analyze</span>({</span></div>
-              <div><span class="code-ln">2</span><span class="type-line type-line-2">  model: <span class="syn-str">"nexus-v4"</span>,</span></div>
-              <div><span class="code-ln">3</span><span class="type-line type-line-3">  input: <span class="syn-str">"Classify this contract clause"</span>,</span></div>
-              <div><span class="code-ln">4</span><span class="type-line type-line-4">  schema: <span class="syn-var">ClauseSchema</span>,</span></div>
-              <div><span class="code-ln">5</span><span class="type-line type-line-5">});<span class="type-cursor"></span></span></div>
+            <!-- Code with typing — starts empty, JS fills it -->
+            <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto typing-code-area" id="heroCodeArea" style="position:relative;">
             </div>
             <!-- Response fades in after typing -->
-            <div class="hero-response border-t border-border p-5 bg-[#0d0d0d]">
+            <div class="hero-response border-t border-border p-5 bg-[#0d0d0d]" id="heroResponse">
               <p class="text-xs font-mono text-muted mb-3"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5"></span>Response — 143ms</p>
               <pre class="font-mono text-sm leading-relaxed text-[#a3a3a3]"><code>{
   <span class="syn-str">"type"</span>: <span class="syn-str">"limitation_of_liability"</span>,
@@ -213,7 +210,7 @@
         <p class="text-muted max-w-xl">Send a request, get structured data back. No post-processing needed.</p>
       </div>
       <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Left: request code (static) -->
+        <!-- Left: request code (typing animation) -->
         <div class="flex-1 code-panel reveal-left">
           <div class="bg-surface border border-border rounded-xl overflow-hidden h-full">
             <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
@@ -222,22 +219,7 @@
               </div>
               <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
             </div>
-            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto">
-              <div class="reveal-line"><span class="code-ln">1</span><span class="syn-kw">import</span> { Nexus } <span class="syn-kw">from</span> <span class="syn-str">"@nexus/sdk"</span>;</div>
-              <div class="reveal-line"><span class="code-ln">2</span></div>
-              <div class="reveal-line"><span class="code-ln">3</span><span class="syn-kw">const</span> client = <span class="syn-kw">new</span> <span class="syn-fn">Nexus</span>({</div>
-              <div class="reveal-line"><span class="code-ln">4</span>  apiKey: process.env.<span class="syn-var">NEXUS_KEY</span>,</div>
-              <div class="reveal-line"><span class="code-ln">5</span>});</div>
-              <div class="reveal-line"><span class="code-ln">6</span></div>
-              <div class="reveal-line"><span class="code-ln">7</span><span class="syn-kw">const</span> result = <span class="syn-kw">await</span> client.<span class="syn-fn">extract</span>({</div>
-              <div class="reveal-line"><span class="code-ln">8</span>  model: <span class="syn-str">"nexus-v4"</span>,</div>
-              <div class="reveal-line"><span class="code-ln">9</span>  input: <span class="syn-str">"Revenue grew 23% YoY to $4.2B"</span>,</div>
-              <div class="reveal-line"><span class="code-ln">10</span>  schema: {</div>
-              <div class="reveal-line"><span class="code-ln">11</span>    metric: <span class="syn-str">"string"</span>,</div>
-              <div class="reveal-line"><span class="code-ln">12</span>    value: <span class="syn-str">"number"</span>,</div>
-              <div class="reveal-line"><span class="code-ln">13</span>    period: <span class="syn-str">"string"</span>,</div>
-              <div class="reveal-line"><span class="code-ln">14</span>  },</div>
-              <div class="reveal-line"><span class="code-ln">15</span>});</div>
+            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto typing-code-area" id="actionCodeArea" style="position:relative;">
             </div>
           </div>
         </div>
@@ -253,18 +235,10 @@
                 <span>89ms</span>
               </div>
             </div>
-            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto typewriter-response" id="responseBlock">
-              <div><span class="code-ln">1</span><span class="syn-cmt">// Guaranteed valid — matches your schema</span></div>
-              <div><span class="code-ln">2</span>{</div>
-              <div><span class="code-ln">3</span>  <span class="syn-str">"metric"</span>: <span class="syn-str">"revenue_growth"</span>,</div>
-              <div><span class="code-ln">4</span>  <span class="syn-str">"value"</span>: <span class="syn-num">4.2e9</span>,</div>
-              <div><span class="code-ln">5</span>  <span class="syn-str">"period"</span>: <span class="syn-str">"YoY"</span>,</div>
-              <div><span class="code-ln">6</span>  <span class="syn-str">"change_pct"</span>: <span class="syn-num">23</span>,</div>
-              <div><span class="code-ln">7</span>  <span class="syn-str">"currency"</span>: <span class="syn-str">"USD"</span></div>
-              <div><span class="code-ln">8</span>}</div>
+            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto typing-code-area" id="actionResponseArea" style="position:relative;">
             </div>
             <!-- Token footer -->
-            <div class="border-t border-border px-5 py-3 flex items-center gap-4 text-xs font-mono text-muted">
+            <div class="border-t border-border px-5 py-3 flex items-center gap-4 text-xs font-mono text-muted" id="actionTokenFooter" style="opacity:0; transition: opacity 0.4s ease;">
               <span>tokens: 312 in / 47 out</span>
               <span class="text-border">|</span>
               <span>stop: end_turn</span>
@@ -561,14 +535,325 @@
     </div>
   </footer>
 
-  <!-- Scroll reveal + staggered code lines -->
+  <!-- Typing animation engine + scroll reveal -->
   <script>
     (function() {
-      // Respect reduced motion
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+      // ─── Syntax highlighting tokenizer ───
+      // Each token: { text, className }
+      function tokenizeLine(raw) {
+        var tokens = [];
+        var keywords = ['const','let','var','await','import','from','new','export','enum','return','function','async'];
+        var i = 0;
+        while (i < raw.length) {
+          // String literals
+          if (raw[i] === '"' || raw[i] === "'") {
+            var quote = raw[i];
+            var end = raw.indexOf(quote, i + 1);
+            if (end === -1) end = raw.length - 1;
+            tokens.push({ text: raw.substring(i, end + 1), className: 'syn-str' });
+            i = end + 1;
+            continue;
+          }
+          // Comments
+          if (raw[i] === '/' && raw[i+1] === '/') {
+            tokens.push({ text: raw.substring(i), className: 'syn-cmt' });
+            i = raw.length;
+            continue;
+          }
+          // Numbers
+          if (/[0-9]/.test(raw[i]) && (i === 0 || /[\s:,(\[{]/.test(raw[i-1]))) {
+            var numEnd = i;
+            while (numEnd < raw.length && /[0-9.eE]/.test(raw[numEnd])) numEnd++;
+            tokens.push({ text: raw.substring(i, numEnd), className: 'syn-num' });
+            i = numEnd;
+            continue;
+          }
+          // Words (keywords, function calls, variables)
+          if (/[a-zA-Z_$]/.test(raw[i])) {
+            var wordEnd = i;
+            while (wordEnd < raw.length && /[a-zA-Z0-9_$]/.test(raw[wordEnd])) wordEnd++;
+            var word = raw.substring(i, wordEnd);
+            if (keywords.indexOf(word) !== -1) {
+              tokens.push({ text: word, className: 'syn-kw' });
+            } else if (wordEnd < raw.length && raw[wordEnd] === '(') {
+              tokens.push({ text: word, className: 'syn-fn' });
+            } else if (word[0] === word[0].toUpperCase() && word[0] !== word[0].toLowerCase()) {
+              tokens.push({ text: word, className: 'syn-var' });
+            } else {
+              tokens.push({ text: word, className: '' });
+            }
+            i = wordEnd;
+            continue;
+          }
+          // Plain character
+          tokens.push({ text: raw[i], className: '' });
+          i++;
+        }
+        return tokens;
+      }
+
+      // ─── Typing engine ───
+      // lines: array of { text: string, delay: number (ms pause before this line) }
+      // container: DOM element to type into
+      // options: { baseSpeed, speedVariance, onComplete }
+      function createTypingAnimation(container, lines, options) {
+        var baseSpeed = (options && options.baseSpeed) || 40;
+        var speedVariance = (options && options.speedVariance) || 30;
+        var onComplete = (options && options.onComplete) || function(){};
+
+        // Pre-tokenize all lines
+        var tokenizedLines = lines.map(function(l) { return tokenizeLine(l.text); });
+
+        // Build flat char queue: each entry = { char, className, lineIndex, isNewLine, delay }
+        var queue = [];
+        tokenizedLines.forEach(function(tokens, li) {
+          var delay = lines[li].delay || 0;
+          var isFirst = true;
+          tokens.forEach(function(tok) {
+            for (var ci = 0; ci < tok.text.length; ci++) {
+              queue.push({
+                char: tok.text[ci],
+                className: tok.className,
+                lineIndex: li,
+                isNewLine: isFirst,
+                delay: isFirst ? delay : 0
+              });
+              isFirst = false;
+            }
+          });
+          // If line is empty, still mark newline
+          if (tokens.length === 0) {
+            queue.push({ char: '', className: '', lineIndex: li, isNewLine: true, delay: delay });
+          }
+        });
+
+        // Create line elements with line numbers
+        var lineEls = [];
+        lines.forEach(function(_, li) {
+          var div = document.createElement('div');
+          div.className = 'code-line';
+          var ln = document.createElement('span');
+          ln.className = 'code-ln';
+          ln.textContent = li + 1;
+          div.appendChild(ln);
+          var codeSpan = document.createElement('span');
+          codeSpan.className = 'code-content';
+          div.appendChild(codeSpan);
+          container.appendChild(div);
+          lineEls.push(codeSpan);
+        });
+
+        // Cursor element
+        var cursor = document.createElement('span');
+        cursor.className = 'type-cursor';
+
+        var qi = 0;
+        var currentSpan = null;
+
+        function typeNext() {
+          if (qi >= queue.length) {
+            // Done — remove cursor after a moment
+            setTimeout(function() {
+              if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+            }, 1500);
+            onComplete();
+            return;
+          }
+
+          var entry = queue[qi];
+          qi++;
+
+          var lineEl = lineEls[entry.lineIndex];
+
+          // For empty lines, just move cursor
+          if (entry.char === '' && entry.isNewLine) {
+            lineEl.appendChild(cursor);
+            setTimeout(typeNext, entry.delay || 100);
+            return;
+          }
+
+          // Need new span if class changed or new line
+          if (!currentSpan || currentSpan._cls !== entry.className || entry.isNewLine) {
+            if (entry.className) {
+              currentSpan = document.createElement('span');
+              currentSpan.className = entry.className;
+            } else {
+              currentSpan = document.createDocumentFragment ? null : null;
+              currentSpan = document.createElement('span');
+            }
+            currentSpan._cls = entry.className;
+            lineEl.appendChild(currentSpan);
+          }
+
+          // Append char
+          currentSpan.textContent += entry.char;
+
+          // Move cursor after current span
+          lineEl.appendChild(cursor);
+
+          // Spawn keystroke pulse dot
+          spawnKeystrokeDot(cursor);
+
+          // Schedule next
+          var speed = baseSpeed + Math.random() * speedVariance;
+          var totalDelay = (entry.isNewLine ? entry.delay : 0) + speed;
+          setTimeout(typeNext, totalDelay);
+        }
+
+        return { start: function(initialDelay) { setTimeout(typeNext, initialDelay || 0); } };
+      }
+
+      // ─── Keystroke pulse dot ───
+      function spawnKeystrokeDot(cursorEl) {
+        if (!cursorEl || !cursorEl.parentNode) return;
+        var rect = cursorEl.getBoundingClientRect();
+        var container = cursorEl.closest('.typing-code-area');
+        if (!container) return;
+        var containerRect = container.getBoundingClientRect();
+        var dot = document.createElement('span');
+        dot.className = 'keystroke-dot';
+        dot.style.left = (rect.left - containerRect.left + 1) + 'px';
+        dot.style.top = (rect.top - containerRect.top + rect.height / 2 - 2) + 'px';
+        container.appendChild(dot);
+        setTimeout(function() { if (dot.parentNode) dot.parentNode.removeChild(dot); }, 400);
+      }
+
+      // ─── Show code immediately for reduced motion ───
+      function showCodeImmediate(container, lines) {
+        lines.forEach(function(line, li) {
+          var div = document.createElement('div');
+          div.className = 'code-line';
+          var ln = document.createElement('span');
+          ln.className = 'code-ln';
+          ln.textContent = li + 1;
+          div.appendChild(ln);
+          var tokens = tokenizeLine(line.text);
+          tokens.forEach(function(tok) {
+            if (tok.className) {
+              var s = document.createElement('span');
+              s.className = tok.className;
+              s.textContent = tok.text;
+              div.appendChild(s);
+            } else {
+              div.appendChild(document.createTextNode(tok.text));
+            }
+          });
+          container.appendChild(div);
+        });
+      }
+
+      // ─── Hero code lines ───
+      var heroLines = [
+        { text: 'const response = await nexus.analyze({', delay: 0 },
+        { text: '  model: "nexus-v4",', delay: 300 },
+        { text: '  input: "Classify this contract clause",', delay: 300 },
+        { text: '  schema: ClauseSchema,', delay: 300 },
+        { text: '});', delay: 300 }
+      ];
+
+      // ─── "See it in action" request lines ───
+      var actionRequestLines = [
+        { text: 'import { Nexus } from "@nexus/sdk";', delay: 0 },
+        { text: '', delay: 200 },
+        { text: 'const client = new Nexus({', delay: 200 },
+        { text: '  apiKey: process.env.NEXUS_KEY,', delay: 200 },
+        { text: '});', delay: 200 },
+        { text: '', delay: 200 },
+        { text: 'const result = await client.extract({', delay: 200 },
+        { text: '  model: "nexus-v4",', delay: 200 },
+        { text: '  input: "Revenue grew 23% YoY to $4.2B",', delay: 200 },
+        { text: '  schema: {', delay: 200 },
+        { text: '    metric: "string",', delay: 150 },
+        { text: '    value: "number",', delay: 150 },
+        { text: '    period: "string",', delay: 150 },
+        { text: '  },', delay: 150 },
+        { text: '});', delay: 200 }
+      ];
+
+      // ─── "See it in action" response lines ───
+      var actionResponseLines = [
+        { text: '// Guaranteed valid — matches your schema', delay: 0 },
+        { text: '{', delay: 200 },
+        { text: '  "metric": "revenue_growth",', delay: 150 },
+        { text: '  "value": 4.2e9,', delay: 150 },
+        { text: '  "period": "YoY",', delay: 150 },
+        { text: '  "change_pct": 23,', delay: 150 },
+        { text: '  "currency": "USD"', delay: 150 },
+        { text: '}', delay: 150 }
+      ];
+
+      // ─── Reduced motion: show everything immediately ───
+      if (reducedMotion) {
+        var heroArea = document.getElementById('heroCodeArea');
+        showCodeImmediate(heroArea, heroLines);
+        document.getElementById('heroResponse').classList.add('visible');
+
+        var actionArea = document.getElementById('actionCodeArea');
+        showCodeImmediate(actionArea, actionRequestLines);
+
+        var responseArea = document.getElementById('actionResponseArea');
+        showCodeImmediate(responseArea, actionResponseLines);
+        document.getElementById('actionTokenFooter').style.opacity = '1';
+        return;
+      }
+
+      // ─── IntersectionObserver for typing triggers ───
+      var heroTyped = false;
+      var actionTyped = false;
+
+      var typingObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+
+          // Hero code area
+          if (entry.target.id === 'heroCodeArea' && !heroTyped) {
+            heroTyped = true;
+            var anim = createTypingAnimation(entry.target, heroLines, {
+              baseSpeed: 30,
+              speedVariance: 30,
+              onComplete: function() {
+                document.getElementById('heroResponse').classList.add('visible');
+              }
+            });
+            anim.start(500);
+            typingObserver.unobserve(entry.target);
+          }
+
+          // Action request code area
+          if (entry.target.id === 'actionCodeArea' && !actionTyped) {
+            actionTyped = true;
+            var anim = createTypingAnimation(entry.target, actionRequestLines, {
+              baseSpeed: 15,
+              speedVariance: 10,
+              onComplete: function() {
+                // After request typed, type the response
+                var responseArea = document.getElementById('actionResponseArea');
+                var respAnim = createTypingAnimation(responseArea, actionResponseLines, {
+                  baseSpeed: 12,
+                  speedVariance: 8,
+                  onComplete: function() {
+                    document.getElementById('actionTokenFooter').style.opacity = '1';
+                  }
+                });
+                respAnim.start(400);
+              }
+            });
+            anim.start(300);
+            typingObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      var heroArea = document.getElementById('heroCodeArea');
+      var actionArea = document.getElementById('actionCodeArea');
+      if (heroArea) typingObserver.observe(heroArea);
+      if (actionArea) typingObserver.observe(actionArea);
+
+      // ─── Scroll reveal for other elements ───
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
@@ -576,17 +861,16 @@
         });
       }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-      // Observe all reveal elements
-      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
         observer.observe(el);
       });
 
-      // Staggered code line reveals
-      const lineObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+      // Staggered code line reveals (for static code blocks)
+      var lineObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
           if (entry.isIntersecting) {
-            const lines = entry.target.querySelectorAll('.reveal-line');
-            lines.forEach((line, i) => {
+            var lines = entry.target.querySelectorAll('.reveal-line');
+            lines.forEach(function(line, i) {
               line.style.transitionDelay = (i * 80) + 'ms';
               line.classList.add('visible');
             });
@@ -595,8 +879,7 @@
         });
       }, { threshold: 0.2 });
 
-      // Find containers that have reveal-line children
-      document.querySelectorAll('.reveal-left, .reveal-right, .reveal').forEach(container => {
+      document.querySelectorAll('.reveal-left, .reveal-right, .reveal').forEach(function(container) {
         if (container.querySelectorAll('.reveal-line').length > 0) {
           lineObserver.observe(container);
         }

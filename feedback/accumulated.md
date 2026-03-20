@@ -2,6 +2,8 @@
 
 ## 소거 이력
 - Round 1: Tone D (Friendly), Tone C (Dark Premium) 소거
+- Round 4: 005 (Fintech Trust), 011 (Dark Luxury) 소거
+- Round 6: 004 (Editorial Serif) 소거
 
 ## 생존 톤
 - Tone A (Clean Minimal)

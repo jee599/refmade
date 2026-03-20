@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -19,6 +19,7 @@
       font-family: 'Inter', sans-serif;
       font-weight: 500;
     }
+    .mono { font-family: 'JetBrains Mono', monospace; }
 
     /* Scroll reveal */
     .reveal {
@@ -40,6 +41,7 @@
       border-radius: 0.75rem;
       overflow: hidden;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      position: relative;
     }
     .browser-frame-header {
       background: #f9fafb;
@@ -53,6 +55,15 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
+    }
+
+    /* Animated indigo glow pulse for browser frame */
+    @keyframes border-glow {
+      0%, 100% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 0 rgba(99, 102, 241, 0); }
+      50% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 0 20px 2px rgba(99, 102, 241, 0.12); }
+    }
+    .browser-frame-glow {
+      animation: border-glow 3s ease-in-out infinite;
     }
 
     /* Subtle hover lift */
@@ -69,12 +80,64 @@
       outline: 2px solid #6366f1;
       outline-offset: 2px;
     }
+
+    /* Gradient CTA button */
+    .gradient-cta {
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .gradient-cta:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Glass nav */
+    nav {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    /* Badge pill */
+    .badge-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.025em;
+    }
+
+    /* Progress bar fill animation */
+    @keyframes progress-fill {
+      0% { width: 0; }
+      100% { width: 72%; }
+    }
+    .progress-animate {
+      animation: progress-fill 1.5s ease-out forwards;
+    }
+    .reveal:not(.visible) .progress-animate {
+      animation: none;
+      width: 0;
+    }
+
+    /* Notification count pop-in */
+    @keyframes pop-in {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .notif-animate {
+      animation: pop-in 0.4s ease-out 0.8s both;
+    }
+    .reveal:not(.visible) .notif-animate {
+      animation: none;
+      opacity: 0;
+      transform: scale(0);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Nav — constraint #16: has CTA button -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+  <!-- Nav — glass effect, constraint #16: has CTA button -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-100">
     <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <div class="w-7 h-7 bg-indigo-500 rounded-lg flex items-center justify-center">
@@ -89,7 +152,7 @@
         <a href="#product" class="hover:text-indigo-500 transition-colors duration-200">Product</a>
         <a href="#pricing" class="hover:text-indigo-500 transition-colors duration-200">Pricing</a>
       </div>
-      <a href="#pricing" class="bg-indigo-500 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+      <a href="#pricing" class="gradient-cta text-white text-sm font-medium px-5 py-2 rounded-lg">
         Get Started
       </a>
     </div>
@@ -100,7 +163,10 @@
     <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
       <div>
         <div class="reveal">
-          <p class="text-indigo-500 text-sm font-medium mb-4">[Product Category]</p>
+          <!-- Badge pill above heading -->
+          <div class="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1 mb-5">
+            <span class="badge-pill text-indigo-600">New: [Feature Name]</span>
+          </div>
           <h1 class="text-4xl md:text-5xl font-medium text-gray-900 leading-tight mb-6">
             [The simplest way to<br>do your thing]
           </h1>
@@ -108,7 +174,7 @@
             [One clear sentence about what your product does. No buzzwords. Just the value — what changes for the user after they start using it.]
           </p>
           <div class="flex items-center gap-4">
-            <a href="#pricing" class="bg-indigo-500 text-white text-sm font-medium px-6 py-3 rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+            <a href="#pricing" class="gradient-cta text-white text-sm font-medium px-6 py-3 rounded-lg">
               Start Free
             </a>
             <a href="#product" class="text-gray-500 text-sm font-medium hover:text-indigo-500 transition-colors duration-200 flex items-center gap-1.5">
@@ -121,9 +187,9 @@
         </div>
       </div>
 
-      <!-- Product UI mockup in browser frame -->
+      <!-- Product UI mockup in browser frame with glow -->
       <div class="reveal reveal-delay-1">
-        <div class="browser-frame">
+        <div class="browser-frame browser-frame-glow">
           <div class="browser-frame-header">
             <div class="browser-dot bg-red-300"></div>
             <div class="browser-dot bg-yellow-300"></div>
@@ -131,12 +197,16 @@
             <span class="text-xs text-gray-400 ml-2">[product].app</span>
           </div>
           <div class="bg-gray-50 p-6">
-            <!-- Mock form builder / tool UI -->
+            <!-- Mock form builder / tool UI with micro-animations -->
             <div class="space-y-4">
               <div class="bg-white rounded-lg border border-gray-200 p-4">
                 <div class="flex items-center justify-between mb-3">
                   <span class="text-xs font-medium text-gray-900">[Form Title]</span>
-                  <span class="text-xs text-indigo-500 font-medium">Published</span>
+                  <div class="flex items-center gap-2">
+                    <!-- Notification count micro-animation -->
+                    <span class="notif-animate inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full">3</span>
+                    <span class="text-xs text-indigo-500 font-medium">Published</span>
+                  </div>
                 </div>
                 <div class="space-y-2">
                   <div class="flex items-center gap-2">
@@ -153,9 +223,15 @@
                   </div>
                 </div>
               </div>
+              <!-- Progress bar micro-animation -->
               <div class="bg-white rounded-lg border border-gray-200 p-4">
-                <div class="h-3 bg-gray-200 rounded w-24 mb-2"></div>
-                <div class="h-8 bg-gray-100 rounded-lg border border-gray-200 w-full"></div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="h-3 bg-gray-200 rounded w-24"></div>
+                  <span class="mono text-[10px] text-gray-400">72%</span>
+                </div>
+                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div class="progress-animate h-full bg-indigo-500 rounded-full"></div>
+                </div>
               </div>
               <div class="bg-indigo-500 text-white text-xs font-medium text-center py-2 rounded-lg w-20">
                 Submit
@@ -167,7 +243,7 @@
     </div>
   </section>
 
-  <!-- Features — 3 columns, generous spacing — constraint #15: SVG icons, #2: varied cards, #3: different padding -->
+  <!-- Features — bento grid: 1 large + 2 small — constraint #15: SVG icons, #2: varied cards, #3: different padding -->
   <section id="features" class="py-24 px-6 bg-gray-50">
     <div class="max-w-5xl mx-auto">
       <div class="reveal text-center mb-16">
@@ -175,17 +251,45 @@
         <p class="text-gray-500 max-w-lg mx-auto">Built for speed. No bloat, no setup wizards, no onboarding calls.</p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="reveal hover-lift bg-white rounded-lg p-8 border border-gray-100">
+      <!-- Bento grid: 1 large spanning 2 rows + 2 small stacked -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Large feature card — spans 2 rows -->
+        <div class="reveal hover-lift md:row-span-2 bg-white rounded-lg p-10 border border-gray-100">
           <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
             <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
           </div>
-          <h3 class="text-base font-medium text-gray-900 mb-2">[Feature 1 — e.g., Instant Setup]</h3>
-          <p class="text-sm text-gray-500 leading-relaxed">[One sentence. What it does and why it matters. Keep it under 20 words.]</p>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">[Feature 1 — e.g., Instant Setup]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed mb-6">[One sentence. What it does and why it matters. Keep it under 20 words.]</p>
+          <!-- Mini visual detail -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div>
+                <div class="h-2.5 bg-gray-200 rounded w-24 mb-1"></div>
+                <div class="h-2 bg-gray-100 rounded w-16"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div>
+                <div class="h-2.5 bg-gray-200 rounded w-20 mb-1"></div>
+                <div class="h-2 bg-gray-100 rounded w-28"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
+        <!-- Small card top right -->
         <div class="reveal reveal-delay-1 hover-lift bg-white rounded-lg p-8 border border-gray-100">
           <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
             <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -196,6 +300,7 @@
           <p class="text-sm text-gray-500 leading-relaxed">[Describe a capability that differentiates this from alternatives.]</p>
         </div>
 
+        <!-- Small card bottom right -->
         <div class="reveal reveal-delay-2 hover-lift bg-white rounded-lg p-8 border border-gray-100">
           <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
             <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -209,7 +314,7 @@
     </div>
   </section>
 
-  <!-- Product Showcase — detailed browser frame UI -->
+  <!-- Product Showcase — detailed browser frame UI with glow -->
   <section id="product" class="py-20 px-6">
     <div class="max-w-5xl mx-auto">
       <div class="reveal text-center mb-12">
@@ -218,7 +323,7 @@
       </div>
 
       <div class="reveal">
-        <div class="browser-frame max-w-4xl mx-auto">
+        <div class="browser-frame browser-frame-glow max-w-4xl mx-auto">
           <div class="browser-frame-header">
             <div class="browser-dot bg-red-300"></div>
             <div class="browser-dot bg-yellow-300"></div>
@@ -226,7 +331,7 @@
             <span class="text-xs text-gray-400 ml-2">[product].app/dashboard</span>
           </div>
           <div class="bg-white p-6">
-            <!-- Mock dashboard UI -->
+            <!-- Mock dashboard UI with micro-animations -->
             <div class="grid grid-cols-4 gap-4">
               <!-- Sidebar -->
               <div class="col-span-1 space-y-3">
@@ -256,7 +361,21 @@
               <div class="col-span-3 space-y-4">
                 <div class="flex items-center justify-between">
                   <div class="h-3 bg-gray-900 rounded w-28"></div>
-                  <div class="h-7 bg-indigo-500 rounded-lg w-24"></div>
+                  <div class="flex items-center gap-2">
+                    <!-- Notification count -->
+                    <span class="notif-animate inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full">7</span>
+                    <div class="h-7 bg-indigo-500 rounded-lg w-24"></div>
+                  </div>
+                </div>
+                <!-- Progress bar in dashboard -->
+                <div class="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] text-gray-500 font-medium">Completion</span>
+                    <span class="mono text-[10px] text-gray-400">72%</span>
+                  </div>
+                  <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="progress-animate h-full bg-indigo-500 rounded-full"></div>
+                  </div>
                 </div>
                 <!-- Table-like structure -->
                 <div class="border border-gray-200 rounded-lg overflow-hidden">
@@ -418,7 +537,7 @@
               Priority email support
             </li>
           </ul>
-          <button class="w-full py-2.5 bg-indigo-500 text-white text-sm font-medium rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+          <button class="w-full py-2.5 gradient-cta text-white text-sm font-medium rounded-lg">
             Upgrade to Pro
           </button>
         </div>
@@ -432,7 +551,7 @@
       <div class="reveal">
         <h2 class="text-3xl font-medium text-gray-900 mb-4">Ready to start?</h2>
         <p class="text-gray-500 max-w-md mx-auto mb-8">Create your first [thing] in under a minute. No setup required.</p>
-        <a href="#" class="inline-block bg-indigo-500 text-white text-sm font-medium px-8 py-3 rounded-lg hover:bg-indigo-600 transition-colors duration-200">
+        <a href="#" class="inline-block gradient-cta text-white text-sm font-medium px-8 py-3 rounded-lg">
           Get Started — Free
         </a>
       </div>

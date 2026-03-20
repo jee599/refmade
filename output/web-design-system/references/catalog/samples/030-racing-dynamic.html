@@ -29,6 +29,25 @@
       );
     }
 
+    /* CRT scan line overlay */
+    .scan-lines {
+      position: relative;
+    }
+    .scan-lines::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.08) 2px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
     /* Diagonal crop for image placeholders */
     .diagonal-crop {
       clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
@@ -40,6 +59,20 @@
       height: 80px;
       background: #39FF14;
       transform: rotate(-20deg);
+    }
+
+    /* Animated gradient text — neon green to cyan */
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .gradient-text-neon {
+      background: linear-gradient(135deg, #39FF14, #00e5ff, #39FF14);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 3s ease-in-out infinite;
     }
 
     /* Slide from left */
@@ -108,18 +141,33 @@
       opacity: 0.4;
     }
 
-    /* Card hover border */
+    /* Card hover border + tilt effect */
     .race-card {
       border: 1px solid transparent;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     }
     .race-card:hover {
       border-color: #39FF14;
+      transform: perspective(800px) rotateY(-1deg) rotateX(1deg);
+    }
+
+    /* Floating data badge */
+    .float-badge {
+      animation: float-drift 4s ease-in-out infinite;
+    }
+    @keyframes float-drift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
     /* Parallax helper */
     .parallax-slow {
       will-change: transform;
+    }
+
+    /* Speed counter ticker */
+    .speed-ticker {
+      font-variant-numeric: tabular-nums;
     }
   </style>
 </head>
@@ -152,7 +200,7 @@
   </nav>
 
   <!-- Hero — fullscreen dark, neon green accent, diagonal slash graphics -->
-  <section class="relative min-h-screen flex items-center speed-lines">
+  <section class="relative min-h-screen flex items-center speed-lines scan-lines">
     <!-- Diagonal slash decorations -->
     <div class="absolute top-20 right-16 hidden lg:block">
       <div class="slash-element mb-3"></div>
@@ -164,7 +212,21 @@
       <div class="slash-element opacity-20 mt-3"></div>
     </div>
 
-    <div class="max-w-6xl mx-auto px-6 pt-24 pb-16 w-full">
+    <!-- Floating data badges -->
+    <div class="absolute top-40 right-8 hidden xl:block float-badge z-10" style="animation-delay: 0.5s;">
+      <div class="bg-white/[0.05] backdrop-blur-sm border border-white/10 rounded-none px-3 py-1.5">
+        <span class="mono text-[10px] text-[#39FF14]">SECTOR 1</span>
+        <span class="mono text-xs text-white ml-2">[N.NNN]s</span>
+      </div>
+    </div>
+    <div class="absolute bottom-48 right-24 hidden xl:block float-badge z-10" style="animation-delay: 1.5s;">
+      <div class="bg-white/[0.05] backdrop-blur-sm border border-white/10 rounded-none px-3 py-1.5">
+        <span class="mono text-[10px] text-gray-500">TIRE TEMP</span>
+        <span class="mono text-xs text-[#39FF14] ml-2">[N]&deg;C</span>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 pt-24 pb-16 w-full relative z-10">
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <div class="reveal-left">
@@ -173,11 +235,21 @@
           <!-- constraint #4: h1 >= 40px -->
           <h1 class="reveal-left reveal-delay-1 text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none tracking-tight mb-8">
             BORN TO<br>
-            <span class="text-[#39FF14]">RACE</span><span class="text-gray-600">.</span>
+            <span class="gradient-text-neon">RACE</span><span class="text-gray-600">.</span>
           </h1>
-          <p class="reveal-left reveal-delay-2 text-gray-400 text-lg max-w-md leading-relaxed mb-10">
+          <p class="reveal-left reveal-delay-2 text-gray-400 text-lg max-w-md leading-relaxed mb-6">
             [Driver name]. [N] podiums. [N] fastest laps. Pushing the limit at [your speed] km/h — every single lap.
           </p>
+
+          <!-- Speed ticker counter -->
+          <div class="reveal-left reveal-delay-2 mb-10">
+            <div class="inline-flex items-baseline gap-2">
+              <span class="mono text-5xl font-bold text-white speed-ticker" data-target="347">0</span>
+              <span class="mono text-lg text-gray-500">km/h</span>
+            </div>
+            <p class="mono text-xs text-gray-600 mt-1">TOP SPEED — [Circuit Name]</p>
+          </div>
+
           <div class="reveal-left reveal-delay-3 flex gap-4">
             <a href="#stats" class="bg-[#39FF14] text-black text-sm font-bold px-8 py-3 rounded-none hover:bg-[#2de00f] transition-colors duration-200 tracking-wide">
               VIEW STATS
@@ -206,30 +278,61 @@
   <!-- Racing stripe divider -->
   <div class="racing-stripe"></div>
 
-  <!-- Stats Section — constraint #26: no 4-col grid, #25: placeholder numbers -->
-  <section id="stats" class="py-24 px-6 speed-lines">
-    <div class="max-w-6xl mx-auto">
+  <!-- Stats Section — bento grid layout — constraint #26: no 4-col grid, #25: placeholder numbers -->
+  <section id="stats" class="py-24 px-6 speed-lines scan-lines">
+    <div class="max-w-6xl mx-auto relative z-10">
       <div class="reveal-left mb-16">
         <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-4">Performance Data</p>
         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Season Numbers</h2>
       </div>
 
-      <!-- Stats as inline text blocks, NOT a 4-col grid — constraint #26 -->
-      <div class="grid md:grid-cols-3 gap-8 mb-16">
-        <div class="reveal-left race-card bg-white/[0.03] rounded-none p-6">
+      <!-- Bento grid for stats — varied sizes -->
+      <div class="grid md:grid-cols-3 gap-4 mb-16">
+        <!-- Large card spanning 2 cols -->
+        <div class="reveal-left md:col-span-2 race-card bg-white/[0.03] rounded-none p-8">
           <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Fastest Lap</p>
-          <p class="mono text-4xl font-bold text-[#39FF14] mb-1">[N:NN.NNN]</p>
+          <p class="mono text-5xl font-bold text-[#39FF14] mb-2">[N:NN.NNN]</p>
           <p class="text-sm text-gray-500">[Circuit Name] — [Date]</p>
+          <div class="mt-6 flex gap-6">
+            <div>
+              <p class="mono text-xs text-gray-600 mb-1">DELTA TO P2</p>
+              <p class="mono text-lg text-white">-[N.NNN]s</p>
+            </div>
+            <div>
+              <p class="mono text-xs text-gray-600 mb-1">SECTOR BEST</p>
+              <p class="mono text-lg text-[#39FF14]">[N]/[N]</p>
+            </div>
+          </div>
         </div>
-        <div class="reveal-left reveal-delay-1 race-card bg-white/[0.03] rounded-none p-6">
+        <!-- Single col card -->
+        <div class="reveal-right race-card bg-white/[0.03] rounded-none p-8">
           <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Top Speed</p>
           <p class="mono text-4xl font-bold text-white mb-1">[NNN] <span class="text-lg text-gray-500">km/h</span></p>
           <p class="text-sm text-gray-500">[Straight Name] — [Race]</p>
         </div>
-        <div class="reveal-left reveal-delay-2 race-card bg-white/[0.03] rounded-none p-6">
+        <!-- Single col card -->
+        <div class="reveal-left reveal-delay-1 race-card bg-white/[0.03] rounded-none p-8">
           <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Championship Position</p>
           <p class="mono text-4xl font-bold text-white mb-1">P[N]</p>
           <p class="text-sm text-gray-500">[N] points — [N] races remaining</p>
+        </div>
+        <!-- Wide card spanning 2 cols -->
+        <div class="reveal-right reveal-delay-1 md:col-span-2 race-card bg-white/[0.03] rounded-none p-8">
+          <p class="mono text-xs text-gray-500 uppercase tracking-widest mb-3">Season Summary</p>
+          <div class="grid grid-cols-3 gap-6">
+            <div>
+              <p class="mono text-2xl font-bold text-white">[N]</p>
+              <p class="text-xs text-gray-500">Podiums</p>
+            </div>
+            <div>
+              <p class="mono text-2xl font-bold text-[#39FF14]">[N]</p>
+              <p class="text-xs text-gray-500">Fastest Laps</p>
+            </div>
+            <div>
+              <p class="mono text-2xl font-bold text-white">[N.N]%</p>
+              <p class="text-xs text-gray-500">Points Finish Rate</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -308,8 +411,8 @@
   <div class="racing-stripe"></div>
 
   <!-- Career Timeline — constraint #24: practical content -->
-  <section id="career" class="py-24 px-6 speed-lines">
-    <div class="max-w-6xl mx-auto">
+  <section id="career" class="py-24 px-6 speed-lines scan-lines">
+    <div class="max-w-6xl mx-auto relative z-10">
       <div class="reveal-left mb-16">
         <p class="mono text-xs text-[#39FF14] tracking-widest uppercase mb-4">Timeline</p>
         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Career Highlights</h2>
@@ -464,7 +567,7 @@
     </div>
   </footer>
 
-  <!-- Scroll Reveal + Parallax Script -->
+  <!-- Scroll Reveal + Parallax + Speed Ticker Script -->
   <script>
     // IntersectionObserver — fast 200ms animations, repeats on scroll
     const revealObserver = new IntersectionObserver((entries) => {
@@ -479,6 +582,35 @@
 
     document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up').forEach(el => {
       revealObserver.observe(el);
+    });
+
+    // Speed ticker counter animation — counts up when visible, resets when not
+    const tickerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const el = entry.target;
+        const target = parseInt(el.dataset.target, 10);
+        if (entry.isIntersecting) {
+          let current = 0;
+          const duration = 1500;
+          const step = target / (duration / 16);
+          const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+              current = target;
+              clearInterval(timer);
+            }
+            el.textContent = Math.floor(current);
+          }, 16);
+          el._timer = timer;
+        } else {
+          if (el._timer) clearInterval(el._timer);
+          el.textContent = '0';
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.speed-ticker').forEach(el => {
+      tickerObserver.observe(el);
     });
 
     // Nav active section tracking
@@ -500,7 +632,7 @@
       });
     });
 
-    // Subtle parallax on slash elements
+    // Subtle parallax on slash elements and floating badges
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       document.querySelectorAll('.slash-element').forEach((el, i) => {

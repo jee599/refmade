@@ -34,20 +34,98 @@
       background-image: radial-gradient(#262626 1px, transparent 1px);
       background-size: 32px 32px;
     }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-    .cursor-blink::after {
-      content: '|';
-      animation: blink 1s step-end infinite;
-      color: #6366f1;
-      margin-left: 2px;
+
+    /* Typing animation */
+    @keyframes typing {
+      from { max-width: 0; }
+      to { max-width: 100%; }
     }
     @keyframes blink {
       50% { opacity: 0; }
+    }
+    .type-line {
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      max-width: 0;
+      animation: typing 0.8s steps(30, end) forwards;
+      vertical-align: top;
+    }
+    .type-line-1 { animation-delay: 0s; }
+    .type-line-2 { animation-delay: 0.6s; }
+    .type-line-3 { animation-delay: 1.2s; }
+    .type-line-4 { animation-delay: 1.8s; }
+    .type-line-5 { animation-delay: 2.4s; }
+    .type-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: #6366f1;
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+    .hero-response {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+      animation-delay: 3.2s;
+    }
+
+    /* Scroll reveal */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .reveal-line { opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .reveal-line.visible { opacity: 1; transform: translateY(0); }
+
+    /* Syntax colors */
+    .syn-kw { color: #c678dd; }
+    .syn-str { color: #98c379; }
+    .syn-num { color: #d19a66; }
+    .syn-cmt { color: #5c6370; }
+    .syn-fn { color: #61afef; }
+    .syn-var { color: #e5c07b; }
+
+    /* Code block line numbers */
+    .code-ln { color: #3e4451; user-select: none; min-width: 2ch; text-align: right; display: inline-block; margin-right: 1.5em; }
+
+    /* Typewriter for response section */
+    .typewriter-response .tw-char {
+      opacity: 0;
+      animation: charAppear 0.03s forwards;
+    }
+    @keyframes charAppear {
+      to { opacity: 1; }
+    }
+
+    /* Copy button */
+    .copy-btn { opacity: 0; transition: opacity 0.2s; }
+    .code-panel:hover .copy-btn { opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal, .reveal-left, .reveal-right, .reveal-line { opacity: 1; transform: none; }
+      .type-line { max-width: 100%; }
+      .hero-response { opacity: 1; }
     }
   </style>
 </head>
@@ -67,176 +145,210 @@
     </div>
   </nav>
 
-  <!-- Hero — no radial glow (#18), no gradient text (#19) -->
+  <!-- Hero — SPLIT layout: left text, right code typing animation -->
   <section class="dot-grid pt-28 md:pt-40 pb-20 md:pb-28">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <p class="text-sm font-mono text-accent mb-6 tracking-wider uppercase">Model v4 Now Available</p>
-      <h1 class="font-heading font-medium text-4xl md:text-6xl tracking-tight leading-[1.08] text-white mb-6">
-        Foundation models for<br>structured reasoning
-      </h1>
-      <p class="text-lg text-muted max-w-xl mx-auto mb-10 leading-relaxed">
-        Extract entities, classify intent, and generate schema-constrained outputs from unstructured text. 200K context window. Sub-200ms P95 latency on cached prompts.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-        <a href="#" class="bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Try the API</a>
-        <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Documentation</a>
-      </div>
-      <!-- Inline code snippet -->
-      <div class="bg-subtle border border-border rounded-xl p-5 text-left max-w-lg mx-auto">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-3 h-3 rounded-full bg-[#333]"></span>
-          <span class="w-3 h-3 rounded-full bg-[#333]"></span>
-          <span class="w-3 h-3 rounded-full bg-[#333]"></span>
-          <span class="ml-auto text-xs font-mono text-muted">python</span>
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <!-- Left: text, left-aligned -->
+        <div class="flex-1 max-w-xl">
+          <p class="text-sm font-mono text-accent mb-6 tracking-wider uppercase">Model v4 Now Available</p>
+          <h1 class="font-heading font-medium text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-white mb-6">
+            Foundation models for<br>structured reasoning
+          </h1>
+          <p class="text-lg text-muted mb-10 leading-relaxed">
+            Extract entities, classify intent, and generate schema-constrained outputs from unstructured text. 200K context window. Sub-200ms P95 latency.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#" class="bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Try the API</a>
+            <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Docs</a>
+          </div>
         </div>
-        <pre class="font-mono text-sm text-[#a3a3a3] leading-relaxed overflow-x-auto"><code><span class="text-accent">import</span> nexus
-
-response = nexus.complete(
-  model=<span class="text-emerald-400">"nexus-v4"</span>,
-  prompt=<span class="text-emerald-400">"Explain quantum computing"</span>,
-  max_tokens=<span class="text-amber-300">1024</span>
-)
-<span class="text-accent">print</span>(response.text)</code></pre>
+        <!-- Right: live code typing animation -->
+        <div class="flex-1 w-full max-w-lg code-panel">
+          <div class="bg-subtle border border-border rounded-xl overflow-hidden">
+            <!-- Tab bar -->
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-border bg-[#0f0f0f]">
+              <div class="flex items-center gap-1">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded-t border border-border border-b-0 relative top-[1px]">app.ts</span>
+                <span class="px-3 py-1 text-xs font-mono text-muted">config.ts</span>
+              </div>
+              <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+            </div>
+            <!-- Code with typing -->
+            <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto">
+              <div><span class="code-ln">1</span><span class="type-line type-line-1"><span class="syn-kw">const</span> response = <span class="syn-kw">await</span> nexus.<span class="syn-fn">analyze</span>({</span></div>
+              <div><span class="code-ln">2</span><span class="type-line type-line-2">  model: <span class="syn-str">"nexus-v4"</span>,</span></div>
+              <div><span class="code-ln">3</span><span class="type-line type-line-3">  input: <span class="syn-str">"Classify this contract clause"</span>,</span></div>
+              <div><span class="code-ln">4</span><span class="type-line type-line-4">  schema: <span class="syn-var">ClauseSchema</span>,</span></div>
+              <div><span class="code-ln">5</span><span class="type-line type-line-5">});<span class="type-cursor"></span></span></div>
+            </div>
+            <!-- Response fades in after typing -->
+            <div class="hero-response border-t border-border p-5 bg-[#0d0d0d]">
+              <p class="text-xs font-mono text-muted mb-3"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5"></span>Response — 143ms</p>
+              <pre class="font-mono text-sm leading-relaxed text-[#a3a3a3]"><code>{
+  <span class="syn-str">"type"</span>: <span class="syn-str">"limitation_of_liability"</span>,
+  <span class="syn-str">"confidence"</span>: <span class="syn-num">0.97</span>,
+  <span class="syn-str">"entities"</span>: [<span class="syn-str">"Party A"</span>, <span class="syn-str">"Party B"</span>],
+  <span class="syn-str">"risk_level"</span>: <span class="syn-str">"medium"</span>
+}</code></pre>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Social proof — no fake logos (#22), single-line developer count with placeholder (#25) -->
+  <!-- Social proof -->
   <section class="py-10 border-y border-border">
     <div class="max-w-6xl mx-auto px-6">
       <p class="text-sm text-muted text-center font-mono">[N] developers ship with Nexus API</p>
     </div>
   </section>
 
-  <!-- API Playground — authentic multi-turn, realistic parameters -->
-  <section class="bg-subtle py-20 md:py-28">
-    <div class="max-w-4xl mx-auto px-6">
-      <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-center text-white mb-4">API Playground</h2>
-      <p class="text-muted text-center mb-12 max-w-lg mx-auto">Test completions, structured extraction, and function calling against the live API.</p>
-      <div class="bg-surface border border-border rounded-xl overflow-hidden">
-        <!-- Toolbar -->
-        <div class="flex items-center justify-between px-5 py-3 border-b border-border">
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span class="text-sm font-mono text-muted">nexus-v4</span>
+  <!-- Full-width code showcase — "See it in action" -->
+  <section class="py-20 md:py-28 bg-subtle">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal mb-14">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">See it in action</h2>
+        <p class="text-muted max-w-xl">Send a request, get structured data back. No post-processing needed.</p>
+      </div>
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Left: request code (static) -->
+        <div class="flex-1 code-panel reveal-left">
+          <div class="bg-surface border border-border rounded-xl overflow-hidden h-full">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+              <div class="flex items-center gap-1">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded border border-border">request.ts</span>
+              </div>
+              <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
             </div>
-            <div class="flex items-center gap-1 text-xs text-muted font-mono">
-              <span class="px-2 py-0.5 rounded bg-border">temp 0.7</span>
-              <span class="px-2 py-0.5 rounded bg-border">top_p 0.9</span>
-              <span class="px-2 py-0.5 rounded bg-border">max_tokens 2048</span>
+            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto">
+              <div class="reveal-line"><span class="code-ln">1</span><span class="syn-kw">import</span> { Nexus } <span class="syn-kw">from</span> <span class="syn-str">"@nexus/sdk"</span>;</div>
+              <div class="reveal-line"><span class="code-ln">2</span></div>
+              <div class="reveal-line"><span class="code-ln">3</span><span class="syn-kw">const</span> client = <span class="syn-kw">new</span> <span class="syn-fn">Nexus</span>({</div>
+              <div class="reveal-line"><span class="code-ln">4</span>  apiKey: process.env.<span class="syn-var">NEXUS_KEY</span>,</div>
+              <div class="reveal-line"><span class="code-ln">5</span>});</div>
+              <div class="reveal-line"><span class="code-ln">6</span></div>
+              <div class="reveal-line"><span class="code-ln">7</span><span class="syn-kw">const</span> result = <span class="syn-kw">await</span> client.<span class="syn-fn">extract</span>({</div>
+              <div class="reveal-line"><span class="code-ln">8</span>  model: <span class="syn-str">"nexus-v4"</span>,</div>
+              <div class="reveal-line"><span class="code-ln">9</span>  input: <span class="syn-str">"Revenue grew 23% YoY to $4.2B"</span>,</div>
+              <div class="reveal-line"><span class="code-ln">10</span>  schema: {</div>
+              <div class="reveal-line"><span class="code-ln">11</span>    metric: <span class="syn-str">"string"</span>,</div>
+              <div class="reveal-line"><span class="code-ln">12</span>    value: <span class="syn-str">"number"</span>,</div>
+              <div class="reveal-line"><span class="code-ln">13</span>    period: <span class="syn-str">"string"</span>,</div>
+              <div class="reveal-line"><span class="code-ln">14</span>  },</div>
+              <div class="reveal-line"><span class="code-ln">15</span>});</div>
             </div>
-          </div>
-          <div class="flex items-center gap-3 text-xs text-muted font-mono">
-            <span>200K ctx</span>
-            <span class="text-emerald-400">187ms</span>
           </div>
         </div>
-        <!-- System prompt -->
-        <div class="px-5 py-3 border-b border-border bg-[#0f0f0f]">
-          <p class="text-xs font-mono text-muted mb-1">system</p>
-          <p class="text-sm font-mono text-[#a3a3a3]">You are a technical assistant specializing in machine learning. Respond with precise, cited explanations.</p>
-        </div>
-        <!-- Chat messages -->
-        <div class="p-5 space-y-4 min-h-[220px]">
-          <div class="flex gap-3">
-            <div class="w-7 h-7 rounded-lg bg-border flex items-center justify-center text-xs text-muted flex-shrink-0">U</div>
-            <div class="bg-subtle border border-border rounded-xl rounded-tl-sm px-4 py-3 text-sm max-w-md">
-              What is the difference between L1 and L2 regularization? When would I choose one over the other in a high-dimensional feature space?
+        <!-- Right: response with typewriter -->
+        <div class="flex-1 code-panel reveal-right">
+          <div class="bg-surface border border-border rounded-xl overflow-hidden h-full">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+              <div class="flex items-center gap-1">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded border border-border">response.json</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs font-mono text-muted">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                <span>89ms</span>
+              </div>
             </div>
-          </div>
-          <div class="flex gap-3">
-            <div class="w-7 h-7 rounded-lg bg-accent/20 flex items-center justify-center text-xs text-accent flex-shrink-0">N</div>
-            <div class="bg-[#1a1a2e] border border-[#262640] rounded-xl rounded-tl-sm px-4 py-3 text-sm max-w-lg leading-relaxed">
-              <p class="text-[#a3a3a3] mb-2"><strong class="text-white font-medium font-body">L1 (Lasso)</strong> adds &Sigma;|w<sub>i</sub>| as penalty, driving many coefficients to exactly zero. This makes it a de-facto feature selector, useful when you suspect most features are irrelevant.</p>
-              <p class="text-[#a3a3a3] mb-2"><strong class="text-white font-medium font-body">L2 (Ridge)</strong> adds &Sigma;w<sub>i</sub>&sup2;, shrinking all weights uniformly without eliminating any. It handles multicollinearity better and tends to outperform L1 when most features carry signal.</p>
-              <p class="text-[#a3a3a3]">In high-dimensional settings (p &gt;&gt; n), start with L1 or Elastic Net. If prediction accuracy matters more than interpretability and you have correlated features, L2 is the safer default.</p>
+            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto typewriter-response" id="responseBlock">
+              <div><span class="code-ln">1</span><span class="syn-cmt">// Guaranteed valid — matches your schema</span></div>
+              <div><span class="code-ln">2</span>{</div>
+              <div><span class="code-ln">3</span>  <span class="syn-str">"metric"</span>: <span class="syn-str">"revenue_growth"</span>,</div>
+              <div><span class="code-ln">4</span>  <span class="syn-str">"value"</span>: <span class="syn-num">4.2e9</span>,</div>
+              <div><span class="code-ln">5</span>  <span class="syn-str">"period"</span>: <span class="syn-str">"YoY"</span>,</div>
+              <div><span class="code-ln">6</span>  <span class="syn-str">"change_pct"</span>: <span class="syn-num">23</span>,</div>
+              <div><span class="code-ln">7</span>  <span class="syn-str">"currency"</span>: <span class="syn-str">"USD"</span></div>
+              <div><span class="code-ln">8</span>}</div>
             </div>
-          </div>
-          <!-- Token usage bar -->
-          <div class="flex items-center gap-3 pt-2 text-xs font-mono text-muted">
-            <span>input: 847 tokens</span>
-            <span class="text-border">|</span>
-            <span>output: 192 tokens</span>
-            <span class="text-border">|</span>
-            <span>latency: 187ms</span>
-            <span class="text-border">|</span>
-            <span>stop_reason: end_turn</span>
-          </div>
-        </div>
-        <!-- Input -->
-        <div class="border-t border-border p-4">
-          <div class="flex gap-3">
-            <input type="text" placeholder="Continue the conversation..." class="flex-1 bg-subtle border border-border rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-muted focus:outline-none focus:border-accent transition-colors duration-200" aria-label="Chat input">
-            <button class="bg-accent hover:bg-indigo-400 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface" aria-label="Send message">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
+            <!-- Token footer -->
+            <div class="border-t border-border px-5 py-3 flex items-center gap-4 text-xs font-mono text-muted">
+              <span>tokens: 312 in / 47 out</span>
+              <span class="text-border">|</span>
+              <span>stop: end_turn</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Capabilities — specific, not generic "built for developers" (#22 repurposed heading) -->
+  <!-- Capabilities — alternating left-right layout -->
   <section class="py-20 md:py-28">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-center text-white mb-4">Core capabilities</h2>
-      <p class="text-muted text-center mb-16 max-w-lg mx-auto">What the model does well, and what it was designed for.</p>
-      <div class="space-y-20">
-        <!-- Feature 1 -->
-        <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          <div class="flex-1">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="reveal mb-16 max-w-2xl">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Core capabilities</h2>
+        <p class="text-muted">What the model does well, and what it was designed for.</p>
+      </div>
+
+      <div class="space-y-24">
+        <!-- Feature 1: left text, right visual -->
+        <div class="flex flex-col md:flex-row items-start gap-10 md:gap-16">
+          <div class="flex-1 reveal-left">
             <div class="w-10 h-10 rounded-lg bg-subtle border border-border flex items-center justify-center mb-5">
               <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>
             </div>
             <h3 class="font-heading font-medium text-xl text-white mb-3">200K Context Window</h3>
-            <p class="text-muted leading-relaxed">Process entire codebases, legal documents, or research papers in a single request. No chunking, no lost context. Input and output windows are independently configurable.</p>
+            <p class="text-muted leading-relaxed mb-4">Process entire codebases, legal documents, or research papers in a single request. No chunking, no lost context.</p>
+            <p class="text-sm text-muted">Input and output windows are independently configurable per request.</p>
           </div>
-          <div class="flex-1 bg-subtle border border-border rounded-xl p-6">
-            <div class="space-y-2 font-mono text-sm text-muted">
+          <div class="flex-1 reveal-right bg-subtle border border-border rounded-xl p-6">
+            <div class="space-y-3 font-mono text-sm text-muted">
               <div class="flex justify-between"><span>Input tokens</span><span class="text-white">187,429</span></div>
               <div class="w-full bg-border rounded-full h-1.5"><div class="bg-accent rounded-full h-1.5" style="width: 93%"></div></div>
-              <div class="flex justify-between"><span>Output tokens</span><span class="text-white">2,048</span></div>
+              <div class="flex justify-between mt-4"><span>Output tokens</span><span class="text-white">2,048</span></div>
               <div class="w-full bg-border rounded-full h-1.5"><div class="bg-emerald-400 rounded-full h-1.5" style="width: 12%"></div></div>
+              <div class="flex justify-between mt-4"><span>Latency (P95)</span><span class="text-white">187ms</span></div>
+              <div class="w-full bg-border rounded-full h-1.5"><div class="bg-[#d19a66] rounded-full h-1.5" style="width: 19%"></div></div>
             </div>
           </div>
         </div>
-        <!-- Feature 2 -->
-        <div class="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16">
-          <div class="flex-1">
+
+        <!-- Feature 2: right text, left code (reversed) -->
+        <div class="flex flex-col md:flex-row-reverse items-start gap-10 md:gap-16">
+          <div class="flex-1 reveal-right">
             <div class="w-10 h-10 rounded-lg bg-subtle border border-border flex items-center justify-center mb-5">
               <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"/></svg>
             </div>
             <h3 class="font-heading font-medium text-xl text-white mb-3">Structured Outputs</h3>
-            <p class="text-muted leading-relaxed">Define a JSON Schema and get guaranteed-valid responses. No post-processing, no regex parsing. Works with nested objects, arrays, and enums.</p>
+            <p class="text-muted leading-relaxed mb-4">Define a JSON Schema and get guaranteed-valid responses. No post-processing, no regex parsing.</p>
+            <p class="text-sm text-muted">Works with nested objects, arrays, enums, and recursive schemas.</p>
           </div>
-          <div class="flex-1 bg-subtle border border-border rounded-xl p-5">
-            <pre class="font-mono text-sm text-[#a3a3a3] leading-relaxed overflow-x-auto"><code>{
-  <span class="text-accent">"sentiment"</span>: <span class="text-emerald-400">"positive"</span>,
-  <span class="text-accent">"confidence"</span>: <span class="text-amber-300">0.94</span>,
-  <span class="text-accent">"language"</span>: <span class="text-emerald-400">"en"</span>,
-  <span class="text-accent">"entities"</span>: [
-    {
-      <span class="text-accent">"text"</span>: <span class="text-emerald-400">"Nexus AI"</span>,
-      <span class="text-accent">"type"</span>: <span class="text-emerald-400">"ORG"</span>,
-      <span class="text-accent">"start"</span>: <span class="text-amber-300">14</span>,
-      <span class="text-accent">"end"</span>: <span class="text-amber-300">22</span>
-    }
-  ],
-  <span class="text-accent">"topics"</span>: [<span class="text-emerald-400">"product_launch"</span>, <span class="text-emerald-400">"ai_infrastructure"</span>]
-}</code></pre>
+          <div class="flex-1 reveal-left code-panel">
+            <div class="bg-subtle border border-border rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-surface rounded border border-border">output.json</span>
+                <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+              </div>
+              <div class="p-5">
+                <pre class="font-mono text-sm leading-relaxed overflow-x-auto"><code><span class="code-ln">1</span>{
+<span class="code-ln">2</span>  <span class="syn-str">"sentiment"</span>: <span class="syn-str">"positive"</span>,
+<span class="code-ln">3</span>  <span class="syn-str">"confidence"</span>: <span class="syn-num">0.94</span>,
+<span class="code-ln">4</span>  <span class="syn-str">"entities"</span>: [
+<span class="code-ln">5</span>    {
+<span class="code-ln">6</span>      <span class="syn-str">"text"</span>: <span class="syn-str">"Nexus AI"</span>,
+<span class="code-ln">7</span>      <span class="syn-str">"type"</span>: <span class="syn-str">"ORG"</span>
+<span class="code-ln">8</span>    }
+<span class="code-ln">9</span>  ]
+<span class="code-ln">10</span>}</code></pre>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- Feature 3 -->
-        <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          <div class="flex-1">
+
+        <!-- Feature 3: left text, right visual -->
+        <div class="flex flex-col md:flex-row items-start gap-10 md:gap-16">
+          <div class="flex-1 reveal-left">
             <div class="w-10 h-10 rounded-lg bg-subtle border border-border flex items-center justify-center mb-5">
               <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
             </div>
             <h3 class="font-heading font-medium text-xl text-white mb-3">Enterprise Security</h3>
-            <p class="text-muted leading-relaxed">SOC 2 Type II certified. Data encrypted at rest and in transit. Zero data retention on API requests by default. Custom data residency available.</p>
+            <p class="text-muted leading-relaxed mb-4">SOC 2 Type II certified. Data encrypted at rest and in transit. Zero data retention on API requests by default.</p>
+            <p class="text-sm text-muted">Custom data residency available for regulated industries.</p>
           </div>
-          <div class="flex-1 bg-subtle border border-border rounded-xl p-6">
+          <div class="flex-1 reveal-right bg-subtle border border-border rounded-xl p-6">
             <div class="grid grid-cols-2 gap-4 text-center">
               <div class="p-4 bg-surface rounded-lg border border-border"><span class="block font-mono text-lg text-white">SOC 2</span><span class="text-xs text-muted">Type II</span></div>
               <div class="p-4 bg-surface rounded-lg border border-border"><span class="block font-mono text-lg text-white">HIPAA</span><span class="text-xs text-muted">Compliant</span></div>
@@ -249,23 +361,68 @@ response = nexus.complete(
     </div>
   </section>
 
-  <!-- Research / Safety -->
+  <!-- Function Calling — full-width bg, contained content -->
   <section class="bg-subtle py-16 md:py-24">
     <div class="max-w-4xl mx-auto px-6">
-      <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-6">Safety &amp; Alignment</h2>
-      <p class="text-muted leading-relaxed mb-8 max-w-2xl">
-        Every model undergoes adversarial evaluation, bias benchmarking, and alignment tuning before release. Published model cards include failure modes and known limitations.
-      </p>
+      <div class="reveal mb-8">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Function calling</h2>
+        <p class="text-muted max-w-2xl">Define tools as JSON Schema, and the model decides when and how to invoke them. Supports parallel and sequential tool use.</p>
+      </div>
+      <div class="reveal code-panel">
+        <div class="bg-surface border border-border rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+            <div class="flex items-center gap-1">
+              <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded border border-border">tools.ts</span>
+              <span class="px-3 py-1 text-xs font-mono text-muted">types.ts</span>
+            </div>
+            <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+          </div>
+          <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto">
+<div><span class="code-ln">1</span><span class="syn-kw">const</span> tools = [{</div>
+<div><span class="code-ln">2</span>  name: <span class="syn-str">"get_weather"</span>,</div>
+<div><span class="code-ln">3</span>  description: <span class="syn-str">"Get current weather for a location"</span>,</div>
+<div><span class="code-ln">4</span>  parameters: {</div>
+<div><span class="code-ln">5</span>    type: <span class="syn-str">"object"</span>,</div>
+<div><span class="code-ln">6</span>    properties: {</div>
+<div><span class="code-ln">7</span>      location: { type: <span class="syn-str">"string"</span> },</div>
+<div><span class="code-ln">8</span>      unit: { type: <span class="syn-str">"string"</span>, <span class="syn-kw">enum</span>: [<span class="syn-str">"celsius"</span>, <span class="syn-str">"fahrenheit"</span>] },</div>
+<div><span class="code-ln">9</span>    },</div>
+<div><span class="code-ln">10</span>  },</div>
+<div><span class="code-ln">11</span>}];</div>
+<div><span class="code-ln">12</span></div>
+<div><span class="code-ln">13</span><span class="syn-kw">const</span> response = <span class="syn-kw">await</span> nexus.<span class="syn-fn">complete</span>({</div>
+<div><span class="code-ln">14</span>  model: <span class="syn-str">"nexus-v4"</span>,</div>
+<div><span class="code-ln">15</span>  messages: [{ role: <span class="syn-str">"user"</span>, content: <span class="syn-str">"Weather in Tokyo?"</span> }],</div>
+<div><span class="code-ln">16</span>  tools,</div>
+<div><span class="code-ln">17</span>});</div>
+<div><span class="code-ln">18</span></div>
+<div><span class="code-ln">19</span><span class="syn-cmt">// response.tool_calls[0].function.name → "get_weather"</span></div>
+<div><span class="code-ln">20</span><span class="syn-cmt">// response.tool_calls[0].function.arguments → { location: "Tokyo" }</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Safety & Alignment -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="reveal mb-8">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-6">Safety &amp; Alignment</h2>
+        <p class="text-muted leading-relaxed max-w-2xl">
+          Every model undergoes adversarial evaluation, bias benchmarking, and alignment tuning before release. Published model cards include failure modes and known limitations.
+        </p>
+      </div>
       <div class="grid sm:grid-cols-3 gap-6">
-        <div class="border border-border rounded-xl p-5 bg-surface hover:border-[#404040] transition-colors duration-200">
+        <div class="reveal border border-border rounded-xl p-5 bg-subtle hover:border-[#404040] transition-colors duration-200">
           <h3 class="font-heading font-medium text-white mb-2">Red Teaming</h3>
           <p class="text-sm text-muted leading-relaxed">External adversarial testing by independent security researchers before each model release.</p>
         </div>
-        <div class="border border-border rounded-xl p-5 bg-surface hover:border-[#404040] transition-colors duration-200">
+        <div class="reveal border border-border rounded-xl p-5 bg-subtle hover:border-[#404040] transition-colors duration-200">
           <h3 class="font-heading font-medium text-white mb-2">Bias Evaluation</h3>
           <p class="text-sm text-muted leading-relaxed">Continuous monitoring across demographic axes with published evaluation results and methodology.</p>
         </div>
-        <div class="border border-border rounded-xl p-5 bg-surface hover:border-[#404040] transition-colors duration-200">
+        <div class="reveal border border-border rounded-xl p-5 bg-subtle hover:border-[#404040] transition-colors duration-200">
           <h3 class="font-heading font-medium text-white mb-2">Content Filtering</h3>
           <p class="text-sm text-muted leading-relaxed">Multi-layer output filtering with configurable sensitivity for enterprise needs.</p>
         </div>
@@ -273,12 +430,14 @@ response = nexus.complete(
     </div>
   </section>
 
-  <!-- API Pricing — usage-based with [N] placeholders (#25), per 1M tokens -->
-  <section class="py-20 md:py-28">
+  <!-- API Pricing -->
+  <section class="bg-subtle py-20 md:py-28">
     <div class="max-w-5xl mx-auto px-6">
-      <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-center text-white mb-4">Usage-based pricing</h2>
-      <p class="text-muted text-center mb-12">Pay only for what you use. No seat licenses, no minimums.</p>
-      <div class="overflow-x-auto">
+      <div class="reveal">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Usage-based pricing</h2>
+        <p class="text-muted mb-12">Pay only for what you use. No seat licenses, no minimums.</p>
+      </div>
+      <div class="reveal overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="border-b border-border text-sm text-muted">
@@ -289,7 +448,7 @@ response = nexus.complete(
             </tr>
           </thead>
           <tbody class="font-mono text-sm">
-            <tr class="bg-subtle">
+            <tr class="bg-surface">
               <td class="py-4 pr-6 pl-3 text-white font-body font-medium rounded-l-lg">nexus-v4</td>
               <td class="py-4 pr-6">$[N]</td>
               <td class="py-4 pr-6">$[N]</td>
@@ -301,7 +460,7 @@ response = nexus.complete(
               <td class="py-4 pr-6">$[N]</td>
               <td class="py-4">128K</td>
             </tr>
-            <tr class="bg-subtle">
+            <tr class="bg-surface">
               <td class="py-4 pr-6 pl-3 text-white font-body font-medium rounded-l-lg">nexus-embed</td>
               <td class="py-4 pr-6">$[N]</td>
               <td class="py-4 pr-6 text-muted">&mdash;</td>
@@ -316,54 +475,36 @@ response = nexus.complete(
           </tbody>
         </table>
       </div>
-      <p class="text-sm text-muted mt-6 text-center">Volume discounts available above $[N]/month. <a href="#" class="text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Contact sales</a></p>
-    </div>
-  </section>
-
-  <!-- Function Calling example — adds depth beyond the playground -->
-  <section class="bg-subtle py-16 md:py-24">
-    <div class="max-w-4xl mx-auto px-6">
-      <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Function calling</h2>
-      <p class="text-muted mb-8 max-w-2xl">Define tools as JSON Schema, and the model decides when and how to invoke them. Supports parallel and sequential tool use.</p>
-      <div class="bg-surface border border-border rounded-xl p-5">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-3 h-3 rounded-full bg-[#333]"></span>
-          <span class="w-3 h-3 rounded-full bg-[#333]"></span>
-          <span class="w-3 h-3 rounded-full bg-[#333]"></span>
-          <span class="ml-auto text-xs font-mono text-muted">python</span>
-        </div>
-        <pre class="font-mono text-sm text-[#a3a3a3] leading-relaxed overflow-x-auto"><code>tools = [{
-  <span class="text-accent">"name"</span>: <span class="text-emerald-400">"get_weather"</span>,
-  <span class="text-accent">"description"</span>: <span class="text-emerald-400">"Get current weather for a location"</span>,
-  <span class="text-accent">"parameters"</span>: {
-    <span class="text-accent">"type"</span>: <span class="text-emerald-400">"object"</span>,
-    <span class="text-accent">"properties"</span>: {
-      <span class="text-accent">"location"</span>: {<span class="text-accent">"type"</span>: <span class="text-emerald-400">"string"</span>},
-      <span class="text-accent">"unit"</span>: {<span class="text-accent">"type"</span>: <span class="text-emerald-400">"string"</span>, <span class="text-accent">"enum"</span>: [<span class="text-emerald-400">"celsius"</span>, <span class="text-emerald-400">"fahrenheit"</span>]}
-    },
-    <span class="text-accent">"required"</span>: [<span class="text-emerald-400">"location"</span>]
-  }
-}]
-
-response = nexus.complete(
-  model=<span class="text-emerald-400">"nexus-v4"</span>,
-  messages=[{<span class="text-accent">"role"</span>: <span class="text-emerald-400">"user"</span>, <span class="text-accent">"content"</span>: <span class="text-emerald-400">"What's the weather in Tokyo?"</span>}],
-  tools=tools
-)
-<span class="text-muted"># response.tool_calls[0].function.name == "get_weather"</span>
-<span class="text-muted"># response.tool_calls[0].function.arguments == {"location": "Tokyo"}</span></code></pre>
-      </div>
+      <p class="text-sm text-muted mt-6">Volume discounts available above $[N]/month. <a href="#" class="text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Contact sales</a></p>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="py-24">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-5">Start building today</h2>
-      <p class="text-muted mb-10 max-w-lg mx-auto">Get your API key in seconds. First $[N] of usage is free.</p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#" class="bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Start Building</a>
-        <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Documentation</a>
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="reveal flex flex-col md:flex-row items-center gap-10 md:gap-16">
+        <div class="flex-1">
+          <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-5">Start building today</h2>
+          <p class="text-muted mb-8">Get your API key in seconds. First $[N] of usage is free.</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#" class="bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Start Building</a>
+            <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Documentation</a>
+          </div>
+        </div>
+        <div class="flex-1 code-panel">
+          <div class="bg-subtle border border-border rounded-xl overflow-hidden">
+            <div class="flex items-center px-4 py-2.5 border-b border-border">
+              <span class="px-3 py-1 text-xs font-mono text-white bg-surface rounded border border-border">quickstart.sh</span>
+            </div>
+            <div class="p-5 font-mono text-sm leading-loose text-[#a3a3a3]">
+              <div><span class="code-ln">1</span><span class="syn-cmt"># Install the SDK</span></div>
+              <div><span class="code-ln">2</span>npm install <span class="syn-str">@nexus/sdk</span></div>
+              <div><span class="code-ln">3</span></div>
+              <div><span class="code-ln">4</span><span class="syn-cmt"># Set your key</span></div>
+              <div><span class="code-ln">5</span><span class="syn-kw">export</span> NEXUS_KEY=<span class="syn-str">"nx_..."</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -419,6 +560,49 @@ response = nexus.complete(
       </div>
     </div>
   </footer>
+
+  <!-- Scroll reveal + staggered code lines -->
+  <script>
+    (function() {
+      // Respect reduced motion
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      // Observe all reveal elements
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+        observer.observe(el);
+      });
+
+      // Staggered code line reveals
+      const lineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const lines = entry.target.querySelectorAll('.reveal-line');
+            lines.forEach((line, i) => {
+              line.style.transitionDelay = (i * 80) + 'ms';
+              line.classList.add('visible');
+            });
+            lineObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      // Find containers that have reveal-line children
+      document.querySelectorAll('.reveal-left, .reveal-right, .reveal').forEach(container => {
+        if (container.querySelectorAll('.reveal-line').length > 0) {
+          lineObserver.observe(container);
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>

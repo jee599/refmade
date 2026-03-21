@@ -104,14 +104,34 @@
       animation: refractionShift 8s linear infinite;
       pointer-events:none;
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Animated Gradient Mesh */
+    @keyframes meshShift1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.15)} 66%{transform:translate(-30px,30px) scale(0.9)} }
+    @keyframes meshShift2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-60px,50px) scale(0.95)} }
+    @keyframes meshShift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,40px)} 66%{transform:translate(-40px,-20px)} }
+    .mesh-blob { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
+    .mesh-blob-1 { animation:meshShift1 15s ease-in-out infinite; }
+    .mesh-blob-2 { animation:meshShift2 18s ease-in-out infinite; }
+    .mesh-blob-3 { animation:meshShift3 20s ease-in-out infinite; }
+  
+
+    /* Spring Animations */
+    .spring-entrance { transition:transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease; }
+    .spring-bounce:hover { transform:translateY(-4px); transition:transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  
+
+    /* Cursor Trail */
+    .trail-dot { position:fixed; pointer-events:none; z-index:9997; width:6px; height:6px; border-radius:50%; transition:opacity 0.5s ease; }
+  
   </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
 
   <!-- Larger Background Blobs -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-    <div class="blob-1 absolute top-10 left-1/4 w-96 h-96 rounded-full" style="background:rgba(99,102,241,0.18); filter:blur(100px);"></div>
-    <div class="blob-2 absolute top-1/4 right-1/4 w-[28rem] h-[28rem] rounded-full" style="background:rgba(192,132,252,0.15); filter:blur(110px);"></div>
+    <div class="blob-1 absolute top-10 left-1/4 w-96 h-96 rounded-full" style="background:rgba(99,102,241,0.22); filter:blur(100px);"></div>
+    <div class="blob-2 absolute top-1/4 right-1/4 w-[28rem] h-[28rem] rounded-full" style="background:rgba(192,132,252,0.20); filter:blur(110px);"></div>
     <div class="blob-3 absolute bottom-1/4 left-1/3 w-80 h-80 rounded-full" style="background:rgba(96,165,250,0.14); filter:blur(90px);"></div>
     <div class="blob-4 absolute bottom-1/3 right-1/3 w-72 h-72 rounded-full" style="background:rgba(167,139,250,0.14); filter:blur(95px);"></div>
     <div class="blob-5 absolute top-1/2 left-1/2 w-[32rem] h-[32rem] rounded-full" style="background:rgba(249,168,212,0.10); filter:blur(120px);"></div>
@@ -466,6 +486,38 @@
       entries.forEach(entry => { if(entry.isIntersecting){entry.target.classList.add('visible');}else{entry.target.classList.remove('visible');} });
     }, observerOptions);
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  
+
+      // Cursor Trail
+      (function(){
+        var trailDots = [];
+        var numDots = 12;
+        for(var i=0;i<numDots;i++){
+          var dot = document.createElement('div');
+          dot.className = 'trail-dot';
+          dot.style.background = 'rgba(99,102,241,0.3)';
+          dot.style.opacity = String(1 - i/numDots);
+          dot.style.width = String(Math.max(2, 6 - i*0.4)) + 'px';
+          dot.style.height = String(Math.max(2, 6 - i*0.4)) + 'px';
+          document.body.appendChild(dot);
+          trailDots.push({el:dot, x:0, y:0});
+        }
+        var mouseX=0, mouseY=0;
+        document.addEventListener('mousemove', function(e){ mouseX=e.clientX; mouseY=e.clientY; });
+        function animateTrail(){
+          var prevX=mouseX, prevY=mouseY;
+          trailDots.forEach(function(dot,i){
+            var target = i===0 ? {x:mouseX,y:mouseY} : trailDots[i-1];
+            dot.x += (target.x - dot.x) * 0.35;
+            dot.y += (target.y - dot.y) * 0.35;
+            dot.el.style.left = dot.x + 'px';
+            dot.el.style.top = dot.y + 'px';
+          });
+          requestAnimationFrame(animateTrail);
+        }
+        animateTrail();
+      })();
+  
   </script>
 </body>
 </html>

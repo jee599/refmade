@@ -131,6 +131,16 @@
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Hover Card Tilt */
+    .tilt-card { transition:transform 0.15s ease; transform-style:preserve-3d; perspective:800px; }
+  
+
+    /* Elastic/Spring Animations */
+    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
+    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  
   </style>
 </head>
 <body class="font-body" style="background-color: var(--bg); color: var(--text);">
@@ -147,7 +157,7 @@
           <a href="#how-it-works" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">How It Works</a>
           <a href="#pricing" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Pricing</a>
           <a href="#" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Docs</a>
-          <a href="#signup" class="btn-gradient rounded-lg px-4 py-2 text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
+          <a href="#signup" class="btn-gradient rounded-lg elastic-hover px-4 py-2 text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
         </div>
         <button class="rounded-lg p-2 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-b').classList.toggle('hidden')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
@@ -178,7 +188,7 @@
               TaskFlow learns your team's workflow and automates the repetitive parts — assignment, status updates, handoffs. Your team plans less and ships more.
             </p>
             <div class="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a href="#signup" class="btn-gradient inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
+              <a href="#signup" class="btn-gradient inline-flex elastic-hover items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
                 Start Free Trial
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
               </a>
@@ -321,7 +331,7 @@
         <!-- Bento grid with varied sizing -->
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <!-- Card 1: Large (2x2) -->
-          <article class="card-hover fade-in group rounded-lg border p-8 shadow-sm sm:col-span-2 sm:row-span-2" style="background-color: var(--bg); border-color: var(--border);">
+          <article class="card-hover fade-in group tilt-card rounded-lg border p-8 shadow-sm sm:col-span-2 sm:row-span-2" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
             </div>
@@ -344,7 +354,7 @@
             </div>
           </article>
           <!-- Card 2: Medium -->
-          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
+          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </div>
@@ -352,7 +362,7 @@
             <p class="text-sm leading-relaxed" style="color: var(--muted);">AI detects repetitive patterns and suggests automations. Status updates, handoffs, and notifications run on autopilot.</p>
           </article>
           <!-- Card 3: Medium -->
-          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
+          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             </div>
@@ -360,7 +370,7 @@
             <p class="text-sm leading-relaxed" style="color: var(--muted);">Real-time risk scoring flags at-risk deadlines before they slip. Rebalance workloads with one click.</p>
           </article>
           <!-- Card 4: Wide -->
-          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
+          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
             <div class="flex items-start gap-6">
               <div class="shrink-0">
                 <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
@@ -393,7 +403,7 @@
             </div>
           </article>
           <!-- Card 5 -->
-          <article class="card-hover fade-in group rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
+          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
             <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             </div>
@@ -554,7 +564,7 @@
           <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: #ffffff;">Ready to automate your workflow?</h2>
           <p class="mt-4 text-base" style="color: rgba(255,255,255,0.55);">Free to start, no credit card required.</p>
           <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href="#signup" class="btn-gradient inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
+            <a href="#signup" class="btn-gradient inline-flex elastic-hover items-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
               Start Free Trial
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </a>
@@ -661,6 +671,27 @@
         mockupObserver.observe(mockup);
       }
     })();
+  
+
+      // Hover Card Tilt
+      (function(){
+        document.querySelectorAll('.tilt-card').forEach(function(card){
+          card.addEventListener('mousemove', function(e){
+            var rect = card.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+            var centerX = rect.width / 2;
+            var centerY = rect.height / 2;
+            var rotateX = ((y - centerY) / centerY) * -6;
+            var rotateY = ((x - centerX) / centerX) * 6;
+            card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+          });
+          card.addEventListener('mouseleave', function(){
+            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
+          });
+        });
+      })();
+  
   </script>
 
 </body>

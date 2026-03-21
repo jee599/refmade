@@ -173,7 +173,7 @@ function TerminalBlock({ isVisible }: { isVisible: boolean }) {
         )}
         {step >= 3 && (
           <div className="text-emerald-400">
-            [<span className="text-emerald-300">{"\u2713"}</span>] 17 references generated
+            [<span className="text-emerald-300">{"\u2713"}</span>] 20 references generated
           </div>
         )}
         {step >= 4 && (

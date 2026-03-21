@@ -153,6 +153,27 @@
       height: 10px;
       border-radius: 50%;
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Animated Gradient Mesh */
+    @keyframes meshShift1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.15)} 66%{transform:translate(-30px,30px) scale(0.9)} }
+    @keyframes meshShift2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-60px,50px) scale(0.95)} }
+    @keyframes meshShift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,40px)} 66%{transform:translate(-40px,-20px)} }
+    .mesh-blob { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
+    .mesh-blob-1 { animation:meshShift1 15s ease-in-out infinite; }
+    .mesh-blob-2 { animation:meshShift2 18s ease-in-out infinite; }
+    .mesh-blob-3 { animation:meshShift3 20s ease-in-out infinite; }
+  
+
+    /* Elastic/Spring Animations */
+    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
+    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  
+
+    /* Staggered Grid Reveal */
+    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
+  
   </style>
 </head>
 <body>
@@ -503,6 +524,30 @@
     document.querySelectorAll('.reveal').forEach(el => {
       revealObserver.observe(el);
     });
+  
+
+      // Staggered Grid Reveal
+      (function(){
+        var staggerEls = document.querySelectorAll('.stagger-item');
+        if(!staggerEls.length) return;
+        var staggerObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
+              items.forEach(function(item, i){
+                var row = Math.floor(i / 3);
+                var col = i % 3;
+                var delay = (row + col) * 100;
+                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
+              });
+            } else {
+              entry.target.classList.remove('stagger-visible');
+            }
+          });
+        }, {threshold:0.1});
+        staggerEls.forEach(function(el){ staggerObs.observe(el); });
+      })();
+  
   </script>
 
 </body>

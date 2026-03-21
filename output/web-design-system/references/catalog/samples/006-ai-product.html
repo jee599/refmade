@@ -117,6 +117,25 @@
       }
       .reveal, .reveal-left, .reveal-right, .reveal-line { opacity: 1; transform: none; }
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Text Mask/Clip Effect */
+    .text-gradient-mask {
+      background:linear-gradient(135deg, currentColor 0%, currentColor 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+    }
+  
+
+    /* Smooth Number Counters */
+    .smooth-counter { font-variant-numeric:tabular-nums; transition:all 0.1s ease; }
+  
+
+    /* Magnetic Cursor */
+    .magnetic { transition:transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  
+  
+    @keyframes shimmer-text { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
   </style>
 </head>
 <body class="antialiased">
@@ -143,13 +162,13 @@
         <div class="flex-1 max-w-xl">
           <p class="text-sm font-mono text-accent mb-6 tracking-wider uppercase">Model v4 Now Available</p>
           <h1 class="font-heading font-medium text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-white mb-6">
-            Foundation models for<br>structured reasoning
+            <span style="background:linear-gradient(135deg,#6366f1,#a78bfa,#6366f1);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer-text 4s ease-in-out infinite;">Foundation models for</span><br>structured reasoning
           </h1>
           <p class="text-lg text-muted mb-10 leading-relaxed">
             Extract entities, classify intent, and generate schema-constrained outputs from unstructured text. 200K context window. Sub-200ms P95 latency.
           </p>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#" class="bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Try the API</a>
+            <a href="#" class="magnetic bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Try the API</a>
             <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Docs</a>
           </div>
         </div>
@@ -445,7 +464,7 @@
           <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-5">Start building today</h2>
           <p class="text-muted mb-8">Get your API key in seconds. First $[N] of usage is free.</p>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#" class="bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Start Building</a>
+            <a href="#" class="magnetic bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Start Building</a>
             <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Documentation</a>
           </div>
         </div>
@@ -885,6 +904,56 @@
         }
       });
     })();
+  
+
+      // Smooth Number Counters (smooth interpolation)
+      (function(){
+        var counters = document.querySelectorAll('.smooth-counter');
+        if(!counters.length) return;
+        var counterObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var el = entry.target;
+              var target = parseFloat(el.getAttribute('data-target'));
+              var suffix = el.getAttribute('data-suffix') || '';
+              var decimals = parseInt(el.getAttribute('data-decimals') || '0');
+              var duration = 2000;
+              var startTime = null;
+              var startVal = 0;
+              function step(ts){
+                if(!startTime) startTime = ts;
+                var progress = Math.min((ts - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 4);
+                var current = startVal + (target - startVal) * eased;
+                el.textContent = current.toFixed(decimals) + suffix;
+                if(progress < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            } else {
+              var suffix = entry.target.getAttribute('data-suffix') || '';
+              entry.target.textContent = '0' + suffix;
+            }
+          });
+        }, {threshold:0.3});
+        counters.forEach(function(el){ counterObs.observe(el); });
+      })();
+  
+
+      // Magnetic Cursor
+      (function(){
+        document.querySelectorAll('.magnetic').forEach(function(el){
+          el.addEventListener('mousemove', function(e){
+            var rect = el.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width/2;
+            var y = e.clientY - rect.top - rect.height/2;
+            el.style.transform = 'translate(' + (x*0.3) + 'px,' + (y*0.3) + 'px)';
+          });
+          el.addEventListener('mouseleave', function(){
+            el.style.transform = 'translate(0,0)';
+          });
+        });
+      })();
+  
   </script>
 
 </body>

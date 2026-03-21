@@ -122,6 +122,23 @@
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Marquee/Ticker Strip */
+    @keyframes marqueeScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .marquee-strip { overflow:hidden; white-space:nowrap; }
+    .marquee-inner { display:inline-flex; animation:marqueeScroll 20s linear infinite; }
+    .marquee-inner:hover { animation-play-state:paused; }
+  
+
+    /* Staggered Grid Reveal */
+    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
+  
+
+    /* Smooth Number Counters */
+    .smooth-counter { font-variant-numeric:tabular-nums; transition:all 0.1s ease; }
+  
   </style>
 </head>
 <body class="font-body" style="background-color: var(--bg); color: var(--text);">
@@ -185,6 +202,32 @@
       </div>
     </section>
 
+    <!-- Marquee Strip -->
+    <div class="marquee-strip py-3" style="background-color:var(--subtle-bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+      <div class="marquee-inner gap-12">
+        <span class="font-mono text-xs" style="color:var(--muted);">AI-POWERED ROUTING</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">WORKFLOW AUTOMATION</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">PREDICTIVE ANALYTICS</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">CUSTOM VIEWS</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">TIME INTELLIGENCE</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">AI-POWERED ROUTING</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">WORKFLOW AUTOMATION</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">PREDICTIVE ANALYTICS</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">CUSTOM VIEWS</span>
+        <span style="color:var(--border);">&bull;</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">TIME INTELLIGENCE</span>
+        <span style="color:var(--border);">&bull;</span>
+      </div>
+    </div>
+
     <!-- Animated Divider -->
     <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
 
@@ -198,7 +241,7 @@
         </div>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <!-- Card 1: Large -->
-          <article class="fade-in card-hoverable group rounded-lg border p-8 transition-all duration-200 hover:border-black sm:col-span-2" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-8 transition-all duration-200 hover:border-black sm:col-span-2" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16l7-3 7 3V4a2 2 0 00-2-2z"/></svg>
             </div>
@@ -209,7 +252,7 @@
             </div>
           </article>
           <!-- Card 2 -->
-          <article class="fade-in card-hoverable group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.49 8.49l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.49-8.49l2.83-2.83"/></svg>
             </div>
@@ -220,7 +263,7 @@
             </div>
           </article>
           <!-- Card 3 -->
-          <article class="fade-in card-hoverable group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="3" y="13" width="7" height="7" rx="1"/><rect x="13" y="3" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
             </div>
@@ -231,7 +274,7 @@
             </div>
           </article>
           <!-- Card 4 -->
-          <article class="fade-in card-hoverable group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 5-9"/></svg>
             </div>
@@ -242,7 +285,7 @@
             </div>
           </article>
           <!-- Card 5 -->
-          <article class="fade-in card-hoverable group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
+          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
             <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
               <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/></svg>
             </div>
@@ -308,15 +351,15 @@
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div class="fade-in grid gap-8 sm:grid-cols-3 text-center">
           <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
-            <span class="font-heading text-5xl md:text-6xl font-medium block ticker-value" data-target="94" data-suffix="%" style="letter-spacing: -0.03em;">0%</span>
+            <span class="font-heading text-5xl md:text-6xl font-medium block smooth-counter" data-target="94" data-suffix="%" style="letter-spacing: -0.03em;">0%</span>
             <span class="mt-2 block text-sm" style="color: var(--muted);">On-time delivery rate</span>
           </div>
           <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
-            <span class="font-heading text-5xl md:text-6xl font-medium block ticker-value" data-target="12" data-suffix="h" style="letter-spacing: -0.03em;">0h</span>
+            <span class="font-heading text-5xl md:text-6xl font-medium block smooth-counter" data-target="12" data-suffix="h" style="letter-spacing: -0.03em;">0h</span>
             <span class="mt-2 block text-sm" style="color: var(--muted);">Saved per team per week</span>
           </div>
           <div>
-            <span class="font-heading text-5xl md:text-6xl font-medium block ticker-value" data-target="847" data-suffix="" style="letter-spacing: -0.03em;">0</span>
+            <span class="font-heading text-5xl md:text-6xl font-medium block smooth-counter" data-target="847" data-suffix="" style="letter-spacing: -0.03em;">0</span>
             <span class="mt-2 block text-sm" style="color: var(--muted);">Teams using TaskFlow</span>
           </div>
         </div>
@@ -563,6 +606,63 @@
         requestAnimationFrame(step);
       }
     })();
+  
+
+      // Staggered Grid Reveal
+      (function(){
+        var staggerEls = document.querySelectorAll('.stagger-item');
+        if(!staggerEls.length) return;
+        var staggerObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
+              items.forEach(function(item, i){
+                var row = Math.floor(i / 3);
+                var col = i % 3;
+                var delay = (row + col) * 100;
+                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
+              });
+            } else {
+              entry.target.classList.remove('stagger-visible');
+            }
+          });
+        }, {threshold:0.1});
+        staggerEls.forEach(function(el){ staggerObs.observe(el); });
+      })();
+  
+
+      // Smooth Number Counters (smooth interpolation)
+      (function(){
+        var counters = document.querySelectorAll('.smooth-counter');
+        if(!counters.length) return;
+        var counterObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var el = entry.target;
+              var target = parseFloat(el.getAttribute('data-target'));
+              var suffix = el.getAttribute('data-suffix') || '';
+              var decimals = parseInt(el.getAttribute('data-decimals') || '0');
+              var duration = 2000;
+              var startTime = null;
+              var startVal = 0;
+              function step(ts){
+                if(!startTime) startTime = ts;
+                var progress = Math.min((ts - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 4);
+                var current = startVal + (target - startVal) * eased;
+                el.textContent = current.toFixed(decimals) + suffix;
+                if(progress < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            } else {
+              var suffix = entry.target.getAttribute('data-suffix') || '';
+              entry.target.textContent = '0' + suffix;
+            }
+          });
+        }, {threshold:0.3});
+        counters.forEach(function(el){ counterObs.observe(el); });
+      })();
+  
   </script>
 
 </body>

@@ -199,6 +199,30 @@
       justify-content: center;
       flex-shrink: 0;
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Animated Gradient Mesh */
+    @keyframes meshShift1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.15)} 66%{transform:translate(-30px,30px) scale(0.9)} }
+    @keyframes meshShift2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-60px,50px) scale(0.95)} }
+    @keyframes meshShift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,40px)} 66%{transform:translate(-40px,-20px)} }
+    .mesh-blob { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
+    .mesh-blob-1 { animation:meshShift1 15s ease-in-out infinite; }
+    .mesh-blob-2 { animation:meshShift2 18s ease-in-out infinite; }
+    .mesh-blob-3 { animation:meshShift3 20s ease-in-out infinite; }
+  
+
+    /* Text Mask/Clip Effect */
+    .text-gradient-mask {
+      background:linear-gradient(135deg, currentColor 0%, currentColor 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+    }
+  
+
+    /* Elastic/Spring Animations */
+    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
+    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  
   </style>
   <script>
     tailwind.config = {

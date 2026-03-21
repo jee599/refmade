@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import type { Reference } from "@/app/data/references";
 
 function CopyableSwatch({
@@ -46,11 +46,57 @@ export default function ReferenceDetailClient({
   sampleExists: boolean;
 }) {
   const r = reference;
-  const textColor = r.tone === "dark" ? "#fafafa" : "#09090b";
+  const defaultTextColor = r.tone === "dark" ? "#fafafa" : "#09090b";
+  const textColor = defaultTextColor;
   const mutedColor = r.tone === "dark" ? "#71717a" : "#a1a1aa";
   const subtleColor = r.tone === "dark" ? "#18181b" : "#f4f4f5";
 
   const samplePath = r.sampleFile ? `/samples/${r.sampleFile}` : null;
+
+  // Customizer state
+  const [customAccent, setCustomAccent] = useState(r.accent);
+  const [customBg, setCustomBg] = useState(r.bg);
+  const [customText, setCustomText] = useState(defaultTextColor);
+  const [htmlContent, setHtmlContent] = useState("");
+  const [isCustomizing, setIsCustomizing] = useState(false);
+
+  useEffect(() => {
+    if (r.sampleFile) {
+      fetch(`/samples/${r.sampleFile}`)
+        .then((res) => res.text())
+        .then((html) => setHtmlContent(html))
+        .catch(() => setHtmlContent(""));
+    }
+  }, [r.sampleFile]);
+
+  const customizedHtml = useMemo(() => {
+    if (!htmlContent) return "";
+    let html = htmlContent;
+    if (customAccent !== r.accent) {
+      html = html.replaceAll(r.accent, customAccent);
+    }
+    if (customBg !== r.bg) {
+      html = html.replaceAll(r.bg, customBg);
+    }
+    if (customText !== defaultTextColor) {
+      html = html.replaceAll(defaultTextColor, customText);
+    }
+    return html;
+  }, [htmlContent, customAccent, customBg, customText, r.accent, r.bg, defaultTextColor]);
+
+  const hasCustomChanges = customAccent !== r.accent || customBg !== r.bg || customText !== defaultTextColor;
+
+  const handleDownloadRef = () => {
+    const content = hasCustomChanges && customizedHtml ? customizedHtml : htmlContent;
+    if (!content) return;
+    const blob = new Blob([content], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${r.id}-${r.name.toLowerCase().replace(/\s+/g, "-")}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
@@ -58,12 +104,22 @@ export default function ReferenceDetailClient({
       <div className="flex-1 border-b border-zinc-800 p-4 lg:border-b-0 lg:border-r lg:p-6" style={{ minHeight: "70vh" }}>
         {sampleExists && samplePath ? (
           <div className="h-full overflow-hidden rounded-lg border border-zinc-800 bg-white">
-            <iframe
-              src={samplePath}
-              className="h-full w-full"
-              title={`${r.name} preview`}
-              style={{ minHeight: "60vh" }}
-            />
+            {hasCustomChanges && customizedHtml ? (
+              <iframe
+                srcDoc={customizedHtml}
+                className="h-full w-full"
+                title={`${r.name} customized preview`}
+                style={{ minHeight: "60vh" }}
+                sandbox="allow-scripts allow-same-origin"
+              />
+            ) : (
+              <iframe
+                src={samplePath}
+                className="h-full w-full"
+                title={`${r.name} preview`}
+                style={{ minHeight: "60vh" }}
+              />
+            )}
           </div>
         ) : (
           <div className="flex h-full min-h-[60vh] items-center justify-center rounded-lg border border-dashed border-zinc-800 bg-zinc-900/50">
@@ -124,6 +180,88 @@ export default function ReferenceDetailClient({
           </div>
         </div>
 
+        {/* Customizer */}
+        {sampleExists && htmlContent && (
+          <div>
+            <button
+              onClick={() => setIsCustomizing(!isCustomizing)}
+              className="mb-3 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600 hover:text-emerald-400 transition-colors cursor-pointer"
+            >
+              // customize {isCustomizing ? "[-]" : "[+]"}
+            </button>
+            {isCustomizing && (
+              <div className="space-y-3 rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={customAccent}
+                    onChange={(e) => setCustomAccent(e.target.value)}
+                    className="h-8 w-8 cursor-pointer rounded border border-zinc-700 bg-transparent"
+                  />
+                  <div>
+                    <span className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">accent:</span>
+                    <input
+                      type="text"
+                      value={customAccent}
+                      onChange={(e) => setCustomAccent(e.target.value)}
+                      maxLength={7}
+                      className="ml-2 w-20 rounded border border-zinc-700 bg-zinc-900 px-2 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-300 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={customBg}
+                    onChange={(e) => setCustomBg(e.target.value)}
+                    className="h-8 w-8 cursor-pointer rounded border border-zinc-700 bg-transparent"
+                  />
+                  <div>
+                    <span className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">background:</span>
+                    <input
+                      type="text"
+                      value={customBg}
+                      onChange={(e) => setCustomBg(e.target.value)}
+                      maxLength={7}
+                      className="ml-2 w-20 rounded border border-zinc-700 bg-zinc-900 px-2 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-300 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={customText}
+                    onChange={(e) => setCustomText(e.target.value)}
+                    className="h-8 w-8 cursor-pointer rounded border border-zinc-700 bg-transparent"
+                  />
+                  <div>
+                    <span className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">text:</span>
+                    <input
+                      type="text"
+                      value={customText}
+                      onChange={(e) => setCustomText(e.target.value)}
+                      maxLength={7}
+                      className="ml-2 w-20 rounded border border-zinc-700 bg-zinc-900 px-2 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-300 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                {hasCustomChanges && (
+                  <button
+                    onClick={() => {
+                      setCustomAccent(r.accent);
+                      setCustomBg(r.bg);
+                      setCustomText(defaultTextColor);
+                    }}
+                    className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
+                  >
+                    $ reset --colors
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Typography */}
         <div>
           <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
@@ -180,14 +318,24 @@ export default function ReferenceDetailClient({
             $ use --ref {r.id.split("-")[0]}
           </a>
           {sampleExists && samplePath && (
-            <a
-              href={samplePath}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-emerald-400 transition-colors hover:bg-emerald-500/20"
-            >
-              $ open --preview
-            </a>
+            <>
+              <a
+                href={samplePath}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-emerald-400 transition-colors hover:bg-emerald-500/20"
+              >
+                $ open --preview
+              </a>
+              {htmlContent && (
+                <button
+                  onClick={handleDownloadRef}
+                  className="inline-flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-700 cursor-pointer"
+                >
+                  $ download --ref {r.id}
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -93,6 +93,7 @@ function GeneratePageInner() {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [outputTab, setOutputTab] = useState<"code" | "preview">("preview");
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -328,13 +329,51 @@ function GeneratePageInner() {
           </div>
           {output && (
             <div className="flex items-center gap-2">
+              {format === "code" && (
+                <div className="flex rounded-md border border-zinc-700 bg-zinc-800 p-0.5">
+                  <button
+                    onClick={() => setOutputTab("code")}
+                    className={`rounded px-2.5 py-1 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium transition-all duration-200 cursor-pointer ${
+                      outputTab === "code"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                        : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                    }`}
+                  >
+                    code
+                  </button>
+                  <button
+                    onClick={() => setOutputTab("preview")}
+                    className={`rounded px-2.5 py-1 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium transition-all duration-200 cursor-pointer ${
+                      outputTab === "preview"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                        : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+                    }`}
+                  >
+                    preview
+                  </button>
+                </div>
+              )}
               <CopyButton text={output} />
               <button
                 onClick={handleDownload}
                 className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium text-zinc-300 transition-all duration-200 hover:bg-zinc-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
-                download
+                $ download
               </button>
+              {format === "code" && (
+                <button
+                  onClick={() => {
+                    const w = window.open("", "_blank");
+                    if (w) {
+                      w.document.write(output);
+                      w.document.close();
+                    }
+                  }}
+                  className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium text-emerald-400 transition-all duration-200 hover:bg-emerald-500/20 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                >
+                  $ open --new-tab
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -355,10 +394,19 @@ function GeneratePageInner() {
             </div>
           )}
 
-          {output && format === "code" && (
+          {output && format === "code" && outputTab === "code" && (
             <pre className="p-6 font-[family-name:var(--font-jetbrains-mono)] text-xs leading-relaxed text-zinc-300 overflow-x-auto">
               <code>{output}</code>
             </pre>
+          )}
+
+          {output && format === "code" && outputTab === "preview" && (
+            <iframe
+              srcDoc={output}
+              className="w-full min-h-[600px] flex-1 rounded-lg border border-zinc-800"
+              sandbox="allow-scripts allow-same-origin"
+              title="Live Preview"
+            />
           )}
 
           {output && format === "markdown" && (

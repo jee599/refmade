@@ -7,31 +7,23 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:         #0a0a0a;
       --text:       #ffffff;
       --subtle-bg:  #111111;
-      --border:     #222222;
-      --muted:      #999999;
-      /* multi-accent palette */
+      --border:     #1e1e1e;
+      --muted:      #777777;
       --blue:       #BCD4FD;
       --tan:        #E3C0A9;
       --lavender:   #C9C1FF;
       --coral:      #E88150;
       --mint:       #59E7CA;
       --sage:       #91B394;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      --salmon:     #FFA796;
+      --pink:       #F9CCDD;
+      --brown:      #996B4A;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -41,525 +33,455 @@
       }
     }
 
-    /* ── LOADER ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .font-mono {
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── LOADER — full-screen filter blocks (sutera.ch style) ────── */
     #loader {
       position: fixed;
       inset: 0;
       z-index: 9999;
       background: var(--bg);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      pointer-events: none;
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    #loader.hidden {
+    #loader.dissolving {
       opacity: 0;
-      transform: scale(0.98);
-      pointer-events: none;
+      filter: blur(8px) brightness(2);
     }
 
-    .loader-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      width: 120px;
+    .loader-filter {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-wrap: wrap;
+      transform-origin: center;
     }
-    .loader-block {
-      aspect-ratio: 1;
-      border-radius: 3px;
-      animation: loader-pulse 1.4s ease-in-out infinite;
+    .loader-filter span {
+      aspect-ratio: 1/1;
+      min-width: 7.5%;
+      flex: 1;
+      background-color: #fff;
+      opacity: 0;
+      animation: loader-block-fade 2s ease-in-out infinite;
     }
-    .loader-block:nth-child(1)  { background: var(--blue);    animation-delay: 0.0s; }
-    .loader-block:nth-child(2)  { background: var(--tan);     animation-delay: 0.1s; }
-    .loader-block:nth-child(3)  { background: var(--lavender);animation-delay: 0.2s; }
-    .loader-block:nth-child(4)  { background: var(--coral);   animation-delay: 0.3s; }
-    .loader-block:nth-child(5)  { background: var(--mint);    animation-delay: 0.4s; }
-    .loader-block:nth-child(6)  { background: var(--sage);    animation-delay: 0.5s; }
-    .loader-block:nth-child(7)  { background: var(--tan);     animation-delay: 0.6s; }
-    .loader-block:nth-child(8)  { background: var(--blue);    animation-delay: 0.7s; }
-    .loader-block:nth-child(9)  { background: var(--coral);   animation-delay: 0.8s; }
+    .loader-filter span:nth-child(odd)  { animation-delay: 0s; }
+    .loader-filter span:nth-child(even) { animation-delay: 0.15s; }
+    .loader-filter span:nth-child(3n)   { animation-delay: 0.3s; }
+    .loader-filter span:nth-child(5n)   { animation-delay: 0.45s; }
+    .loader-filter span:nth-child(7n)   { animation-delay: 0.6s; }
 
-    @keyframes loader-pulse {
-      0%, 100% { opacity: 0.15; filter: blur(1px) brightness(0.6); transform: scale(0.85); }
-      50%       { opacity: 1;    filter: blur(0px) brightness(1.4); transform: scale(1.05); }
+    @keyframes loader-block-fade {
+      0%   { opacity: 0; transform: scale(0.92); }
+      30%  { opacity: 0.9; transform: scale(1); }
+      70%  { opacity: 0.9; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.92); }
     }
 
-    .loader-label {
+    .loader-center {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      mix-blend-mode: difference;
+    }
+    .loader-center .loader-pct {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 6vw, 72px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #fff;
+    }
+    .loader-center .loader-label {
       font-family: 'DM Mono', monospace;
       font-size: 10px;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--muted);
-      animation: loader-blink 1.4s ease-in-out infinite;
-    }
-    @keyframes loader-blink {
-      0%, 100% { opacity: 0.3; }
-      50%       { opacity: 1;   }
+      color: #fff;
+      opacity: 0.5;
+      margin-top: 8px;
     }
 
-    /* ── MAIN CONTENT (fades in after loader) ───────────────── */
+    /* ── MAIN CONTENT ───────────────────────────────────────── */
     #main-content {
       opacity: 0;
-      transition: opacity 0.8s ease 0.2s;
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
     }
     #main-content.visible { opacity: 1; }
 
     /* ── NAV ─────────────────────────────────────────────────── */
     nav {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
-      border-bottom: 1px solid var(--border);
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
     }
 
-    /* ── HERO ────────────────────────────────────────────────── */
+    .nav-link {
+      position: relative;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: color 0.2s ease;
+      text-decoration: none;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    /* ── HERO ─────────────────────────────────────────────────── */
     .hero-headline {
-      font-size: clamp(3rem, 10vw, 7rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.0;
+      font-size: clamp(3.5rem, 12vw, 9rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
     }
 
     .hero-word {
       display: inline-block;
       opacity: 0;
-      transform: translateY(32px);
-      animation: word-rise 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+      transform: translateY(40px);
+      animation: word-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-    .hero-word:nth-child(1) { animation-delay: 1.8s; }
-    .hero-word:nth-child(2) { animation-delay: 1.95s; }
-    .hero-word:nth-child(3) { animation-delay: 2.1s; }
+    .hero-word:nth-child(1) { animation-delay: 2.0s; }
+    .hero-word:nth-child(2) { animation-delay: 2.15s; }
+    .hero-word:nth-child(3) { animation-delay: 2.3s; }
     @keyframes word-rise {
       to { opacity: 1; transform: translateY(0); }
     }
 
     .hero-sub {
       opacity: 0;
-      animation: fade-up 0.7s ease 2.4s forwards;
+      animation: fade-up 0.8s ease 2.6s forwards;
     }
     @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Animated scan line across hero */
-    .scan-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, var(--blue) 30%, var(--mint) 70%, transparent 100%);
-      opacity: 0.4;
-      animation: scan 6s linear infinite;
+    /* ── PROJECT GRID — holographic cards on obsidian table ──── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
     }
-    @keyframes scan {
-      0%   { top: 0%;   opacity: 0; }
-      5%   { opacity: 0.4; }
-      95%  { opacity: 0.4; }
-      100% { top: 100%; opacity: 0; }
+    @media (max-width: 1023px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 639px) {
+      .projects-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── PROJECT CARDS ───────────────────────────────────────── */
     .project-card {
+      position: relative;
       background: var(--subtle-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      position: relative;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  z-index 0s;
     }
     .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      transform: scale(1.02);
+      z-index: 10;
     }
-    /* each card gets its own accent applied via data-accent */
+
+    /* Featured card spans 2 cols */
+    @media (min-width: 1024px) {
+      .project-card.featured {
+        grid-column: span 2;
+      }
+    }
+
+    .card-visual {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #0d0d0d;
+    }
+    .project-card.featured .card-visual {
+      aspect-ratio: 21/9;
+    }
+
+    /* GIF-like animated preview backgrounds */
+    .card-visual .motion-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* Morphing blobs */
+    .motion-morph .blob {
+      position: absolute;
+      border-radius: 50%;
+      mix-blend-mode: screen;
+      filter: blur(20px);
+      animation: blob-drift 6s ease-in-out infinite alternate;
+    }
+    .motion-morph .blob:nth-child(1) {
+      width: 55%; height: 55%;
+      top: 10%; left: 10%;
+      background: var(--card-accent);
+      opacity: 0.35;
+    }
+    .motion-morph .blob:nth-child(2) {
+      width: 40%; height: 40%;
+      bottom: 5%; right: 15%;
+      background: var(--card-accent);
+      opacity: 0.25;
+      animation-delay: 2s;
+      animation-duration: 5s;
+    }
+    .motion-morph .blob:nth-child(3) {
+      width: 30%; height: 30%;
+      top: 40%; right: 5%;
+      background: rgba(255,255,255,0.15);
+      opacity: 0.2;
+      animation-delay: 1s;
+      animation-duration: 7s;
+    }
+    @keyframes blob-drift {
+      0%   { transform: translate(0, 0) scale(1); border-radius: 50%; }
+      33%  { transform: translate(15px, -10px) scale(1.12); border-radius: 40% 60% 55% 45%; }
+      66%  { transform: translate(-10px, 15px) scale(0.92); border-radius: 60% 40% 45% 55%; }
+      100% { transform: translate(8px, 8px) scale(1.05); border-radius: 45% 55% 50% 50%; }
+    }
+
+    /* Grid scan lines */
+    .motion-grid::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px),
+        repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px);
+      z-index: 1;
+    }
+    .motion-grid .sweep-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(180deg, transparent, var(--card-accent), transparent);
+      opacity: 0.08;
+      animation: sweep-v 4s linear infinite;
+      z-index: 2;
+    }
+    @keyframes sweep-v {
+      0%   { top: -60px; }
+      100% { top: calc(100% + 60px); }
+    }
+
+    /* Orbiting rings */
+    .motion-orbit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .motion-orbit .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid var(--card-accent);
+    }
+    .motion-orbit .ring:nth-child(1) {
+      width: 35%; padding-top: 35%;
+      opacity: 0.3;
+      animation: spin 10s linear infinite;
+    }
+    .motion-orbit .ring:nth-child(2) {
+      width: 55%; padding-top: 55%;
+      opacity: 0.15;
+      animation: spin 14s linear infinite reverse;
+    }
+    .motion-orbit .ring:nth-child(3) {
+      width: 75%; padding-top: 75%;
+      opacity: 0.07;
+      animation: spin 20s linear infinite;
+    }
+    .motion-orbit .dot {
+      position: absolute;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--card-accent);
+      box-shadow: 0 0 10px var(--card-accent);
+    }
+    .motion-orbit .dot:nth-child(4) {
+      animation: orbit-a 10s linear infinite;
+    }
+    .motion-orbit .dot:nth-child(5) {
+      width: 3px; height: 3px;
+      animation: orbit-b 14s linear infinite reverse;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes orbit-a {
+      0%   { transform: rotate(0deg) translateX(17.5%) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(17.5%) rotate(-360deg); }
+    }
+    @keyframes orbit-b {
+      0%   { transform: rotate(0deg) translateX(27.5%) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(27.5%) rotate(-360deg); }
+    }
+
+    /* Waveform bars */
+    .motion-wave {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 0 24px;
+    }
+    .motion-wave .bar {
+      flex: 1;
+      max-width: 8px;
+      background: var(--card-accent);
+      border-radius: 2px;
+      animation: wave-bar 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes wave-bar {
+      from { transform: scaleY(0.2); opacity: 0.4; }
+      to   { transform: scaleY(1);   opacity: 1; }
+    }
+
+    /* Typing lines */
+    .motion-type {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 24px;
+      gap: 10px;
+    }
+    .motion-type .ln {
+      height: 2px;
+      background: var(--card-accent);
+      border-radius: 1px;
+      transform-origin: left;
+      animation: type-ln 3s ease-in-out infinite;
+    }
+    @keyframes type-ln {
+      0%   { transform: scaleX(0); opacity: 0; }
+      15%  { transform: scaleX(1); opacity: 0.6; }
+      75%  { transform: scaleX(1); opacity: 0.6; }
+      100% { transform: scaleX(1); opacity: 0.15; }
+    }
+
+    /* Particle float */
+    .motion-particles .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--card-accent);
+      animation: p-float linear infinite;
+    }
+    @keyframes p-float {
+      0%   { transform: translateY(100%) translateX(0); opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-100%) translateX(15px); opacity: 0; }
+    }
+
+    /* Holographic shimmer on hover */
+    .card-holo {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 25%,
+        rgba(255,255,255,0.03) 38%,
+        rgba(255,255,255,0.07) 50%,
+        rgba(255,255,255,0.03) 62%,
+        transparent 75%
+      );
+      background-size: 300% 100%;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .project-card:hover .card-holo {
+      opacity: 1;
+      animation: holo-slide 1.5s ease forwards;
+    }
+    @keyframes holo-slide {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+
+    /* Card info overlay — bottom, on top of visual */
+    .card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85) 40%);
+      z-index: 2;
+    }
+
+    .card-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .card-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid;
+      display: inline-block;
+    }
+
+    /* Accent via data attribute */
     .project-card[data-accent="blue"]     { --card-accent: var(--blue); }
     .project-card[data-accent="tan"]      { --card-accent: var(--tan); }
     .project-card[data-accent="lavender"] { --card-accent: var(--lavender); }
     .project-card[data-accent="coral"]    { --card-accent: var(--coral); }
     .project-card[data-accent="mint"]     { --card-accent: var(--mint); }
     .project-card[data-accent="sage"]     { --card-accent: var(--sage); }
+    .project-card[data-accent="salmon"]   { --card-accent: var(--salmon); }
+    .project-card[data-accent="pink"]     { --card-accent: var(--pink); }
+    .project-card[data-accent="brown"]    { --card-accent: var(--brown); }
 
-    .project-card:hover { border-color: var(--card-accent); }
-
-    .card-preview {
-      position: relative;
-      aspect-ratio: 16/9;
-      overflow: hidden;
-      background: #0d0d0d;
-    }
-
-    /* GIF-like CSS animation previews */
-    .card-preview .anim-layer {
-      position: absolute;
-      inset: 0;
-    }
-
-    /* ── Animated preview: morphing shapes ── */
-    .preview-morph .shape {
-      position: absolute;
-      border-radius: 50%;
-      mix-blend-mode: screen;
-      animation: morph-drift 4s ease-in-out infinite alternate;
-    }
-    .preview-morph .shape:nth-child(1) {
-      width: 60%; height: 60%;
-      top: -10%; left: -10%;
-      background: radial-gradient(circle, var(--card-accent) 0%, transparent 70%);
-      opacity: 0.6;
-      animation-delay: 0s;
-      animation-duration: 5s;
-    }
-    .preview-morph .shape:nth-child(2) {
-      width: 40%; height: 40%;
-      bottom: -5%; right: 10%;
-      background: radial-gradient(circle, var(--card-accent) 0%, transparent 70%);
-      opacity: 0.4;
-      animation-delay: 1.5s;
-      animation-duration: 3.5s;
-    }
-    .preview-morph .shape:nth-child(3) {
-      width: 25%; height: 25%;
-      top: 30%; right: -5%;
-      background: radial-gradient(circle, #ffffff 0%, transparent 70%);
-      opacity: 0.15;
-      animation-delay: 0.8s;
-      animation-duration: 4.5s;
-    }
-    @keyframes morph-drift {
-      0%   { transform: translate(0,0) scale(1);    border-radius: 50%; }
-      33%  { transform: translate(12px,-8px) scale(1.1); border-radius: 40% 60% 55% 45%; }
-      66%  { transform: translate(-8px,12px) scale(0.95); border-radius: 60% 40% 45% 55%; }
-      100% { transform: translate(5px,5px) scale(1.05);  border-radius: 50%; }
-    }
-
-    /* ── Grid scan-lines ── */
-    .preview-grid-scan::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,0.03) 15px, rgba(255,255,255,0.03) 16px),
-        repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(255,255,255,0.03) 15px, rgba(255,255,255,0.03) 16px);
-    }
-    .preview-grid-scan .sweep {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 0%, var(--card-accent) 50%, transparent 100%);
-      opacity: 0.12;
-      animation: sweep-down 3s linear infinite;
-    }
-    @keyframes sweep-down {
-      0%   { transform: translateY(-100%); }
-      100% { transform: translateY(200%); }
-    }
-
-    /* ── Typing cursor ── */
-    .preview-type {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 20px;
-      gap: 8px;
-    }
-    .preview-type .line {
-      height: 2px;
-      background: var(--card-accent);
-      border-radius: 1px;
-      transform-origin: left;
-      animation: type-line 2.5s ease-in-out infinite;
-    }
-    .preview-type .line:nth-child(1) { width: 70%; animation-delay: 0s; }
-    .preview-type .line:nth-child(2) { width: 90%; animation-delay: 0.3s; }
-    .preview-type .line:nth-child(3) { width: 55%; animation-delay: 0.6s; }
-    .preview-type .line:nth-child(4) { width: 80%; animation-delay: 0.9s; }
-    .preview-type .line:nth-child(5) { width: 40%; animation-delay: 1.2s; }
-    @keyframes type-line {
-      0%   { transform: scaleX(0); opacity: 0; }
-      20%  { transform: scaleX(1); opacity: 0.7; }
-      70%  { transform: scaleX(1); opacity: 0.7; }
-      100% { transform: scaleX(1); opacity: 0.2; }
-    }
-
-    /* ── Orbit dots ── */
-    .preview-orbit {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .preview-orbit .orbit-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid;
-      border-color: var(--card-accent);
-      opacity: 0.3;
-    }
-    .preview-orbit .orbit-ring:nth-child(1) { width: 40%; padding-top: 40%; animation: spin 8s linear infinite; }
-    .preview-orbit .orbit-ring:nth-child(2) { width: 65%; padding-top: 65%; animation: spin 12s linear infinite reverse; opacity: 0.15; }
-    .preview-orbit .orbit-ring:nth-child(3) { width: 85%; padding-top: 85%; animation: spin 16s linear infinite; opacity: 0.08; }
-    .preview-orbit .orbit-dot {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--card-accent);
-      box-shadow: 0 0 8px var(--card-accent);
-    }
-    .preview-orbit .orbit-dot:nth-child(4) {
-      animation: orbit-dot1 8s linear infinite;
-      transform-origin: center;
-    }
-    .preview-orbit .orbit-dot:nth-child(5) {
-      width: 4px; height: 4px;
-      animation: orbit-dot2 12s linear infinite reverse;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    @keyframes orbit-dot1 {
-      0%   { transform: rotate(0deg)   translateX(20%) rotate(0deg); }
-      100% { transform: rotate(360deg) translateX(20%) rotate(-360deg); }
-    }
-    @keyframes orbit-dot2 {
-      0%   { transform: rotate(0deg)   translateX(32%) rotate(0deg); }
-      100% { transform: rotate(360deg) translateX(32%) rotate(-360deg); }
-    }
-
-    /* ── Wave bars ── */
-    .preview-wave {
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 4px;
-      padding: 16px;
-    }
-    .preview-wave .bar {
-      width: 6px;
-      background: var(--card-accent);
-      border-radius: 3px 3px 0 0;
-      animation: wave-bar 1.2s ease-in-out infinite alternate;
-    }
-    .preview-wave .bar:nth-child(1)  { height: 30%; animation-delay: 0.0s; }
-    .preview-wave .bar:nth-child(2)  { height: 60%; animation-delay: 0.1s; }
-    .preview-wave .bar:nth-child(3)  { height: 80%; animation-delay: 0.2s; }
-    .preview-wave .bar:nth-child(4)  { height: 45%; animation-delay: 0.3s; }
-    .preview-wave .bar:nth-child(5)  { height: 90%; animation-delay: 0.4s; }
-    .preview-wave .bar:nth-child(6)  { height: 55%; animation-delay: 0.5s; }
-    .preview-wave .bar:nth-child(7)  { height: 70%; animation-delay: 0.6s; }
-    .preview-wave .bar:nth-child(8)  { height: 35%; animation-delay: 0.7s; }
-    .preview-wave .bar:nth-child(9)  { height: 65%; animation-delay: 0.8s; }
-    .preview-wave .bar:nth-child(10) { height: 40%; animation-delay: 0.9s; }
-    @keyframes wave-bar {
-      from { transform: scaleY(0.3); opacity: 0.5; }
-      to   { transform: scaleY(1);   opacity: 1; }
-    }
-
-    /* ── Particle field ── */
-    .preview-particles {
-      overflow: hidden;
-    }
-    .preview-particles .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      background: var(--card-accent);
-      animation: particle-float linear infinite;
-    }
-    @keyframes particle-float {
-      0%   { transform: translateY(100%) translateX(0); opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 0.8; }
-      100% { transform: translateY(-100%) translateX(20px); opacity: 0; }
-    }
-
-    /* ── Glitch bars ── */
-    .preview-glitch {
-      overflow: hidden;
-    }
-    .preview-glitch .glitch-layer {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        var(--card-accent),
-        var(--card-accent) 1px,
-        transparent 1px,
-        transparent 32px
-      );
-      opacity: 0.06;
-      animation: glitch-shift 0.15s steps(1) infinite;
-    }
-    .preview-glitch .glitch-bar {
-      position: absolute;
-      left: 0; right: 0;
-      height: 3px;
-      background: var(--card-accent);
-      opacity: 0.4;
-      animation: glitch-bar 3s linear infinite;
-    }
-    .preview-glitch .glitch-bar:nth-child(2) { animation-delay: 1s; animation-duration: 2.5s; }
-    .preview-glitch .glitch-bar:nth-child(3) { animation-delay: 2s; animation-duration: 3.5s; height: 1px; opacity: 0.2; }
-    @keyframes glitch-shift {
-      0%  { transform: translateX(0); }
-      25% { transform: translateX(-2px); opacity: 0.08; }
-      50% { transform: translateX(2px); }
-      75% { transform: translateX(-1px); opacity: 0.04; }
-    }
-    @keyframes glitch-bar {
-      0%   { top: 0%;   opacity: 0; }
-      5%   { opacity: 0.4; }
-      90%  { opacity: 0.3; }
-      100% { top: 100%; opacity: 0; }
-    }
-
-    /* ── Holographic shimmer on card hover ── */
-    .card-holo {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        105deg,
-        transparent 30%,
-        rgba(255,255,255,0.04) 40%,
-        rgba(255,255,255,0.08) 50%,
-        rgba(255,255,255,0.04) 60%,
-        transparent 70%
-      );
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-    .project-card:hover .card-holo { opacity: 1; }
-
-    /* ── Card accent badge ── */
-    .card-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 500;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid var(--card-accent);
-      color: var(--card-accent);
-    }
-    .card-label-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--card-accent);
-      box-shadow: 0 0 6px var(--card-accent);
-      animation: dot-pulse 2s ease-in-out infinite;
-    }
-    @keyframes dot-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.6); }
-    }
-
-    /* ── EASTER EGG: konami interaction ── */
-    .easter-egg-trigger {
-      cursor: crosshair;
-      user-select: none;
-    }
-    .easter-egg-trigger:active .easter-egg-reveal {
-      display: block !important;
-    }
-
-    /* ── SCROLL FADE-IN ─────────────────────────────────────── */
+    /* ── SCROLL REVEAL ───────────────────────────────────────── */
     .reveal {
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ── TEAM CARD ───────────────────────────────────────────── */
-    .team-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid var(--border);
-      flex-shrink: 0;
-      position: relative;
-      background: var(--subtle-bg);
-    }
-    .team-avatar .avatar-rings {
-      position: absolute;
-      inset: 4px;
-      border-radius: 50%;
-      animation: avatar-spin 6s linear infinite;
-    }
-    .team-avatar .avatar-rings::before,
-    .team-avatar .avatar-rings::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid;
-    }
-    .team-avatar .avatar-rings::before {
-      inset: 0;
-      border-color: var(--blue);
-      opacity: 0.5;
-    }
-    .team-avatar .avatar-rings::after {
-      inset: 4px;
-      border-color: var(--mint);
-      opacity: 0.3;
-      animation: avatar-spin 4s linear infinite reverse;
-    }
-    @keyframes avatar-spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* ── NAV INDICATOR LINE ──────────────────────────────────── */
-    .nav-link {
-      position: relative;
-      color: var(--muted);
-      font-size: 14px;
-      transition: color 0.2s;
-      text-decoration: none;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: var(--blue);
-      transform: scaleX(0);
-      transition: transform 0.2s ease;
-    }
-    .nav-link:hover { color: var(--text); }
-    .nav-link:hover::after { transform: scaleX(1); }
-
-    /* ── FOOTER GRID ─────────────────────────────────────────── */
-    .footer-accent-bar {
-      height: 2px;
-      background: linear-gradient(90deg, var(--blue), var(--lavender), var(--mint), var(--coral), var(--tan), var(--sage));
-      background-size: 200% 100%;
-      animation: gradient-slide 6s linear infinite;
-    }
-    @keyframes gradient-slide {
-      0%   { background-position: 0% 0%; }
-      100% { background-position: 200% 0%; }
-    }
-
-    /* ── SECTION MONO LABEL ──────────────────────────────────── */
+    /* ── MONO LABEL ──────────────────────────────────────────── */
     .mono-label {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -568,76 +490,113 @@
       color: var(--muted);
     }
 
-    /* ── CONTACT FIELD ───────────────────────────────────────── */
-    .contact-input {
+    /* ── TEAM AVATAR ─────────────────────────────────────────── */
+    .team-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      position: relative;
       background: var(--subtle-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .team-avatar .ring {
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      border: 1px solid var(--card-accent);
+      opacity: 0.4;
+      animation: spin 8s linear infinite;
+    }
+
+    /* ── CONTACT INPUT ───────────────────────────────────────── */
+    .contact-input {
+      background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
       color: var(--text);
       border-radius: 6px;
       padding: 12px 16px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 14px;
       outline: none;
       transition: border-color 0.2s;
       width: 100%;
     }
-    .contact-input:focus {
-      border-color: var(--blue);
-    }
+    .contact-input:focus { border-color: var(--blue); }
     .contact-input::placeholder { color: var(--muted); }
 
-    /* ── EASTER EGG HIDDEN MESSAGE ───────────────────────────── */
+    /* ── FOOTER GRADIENT BAR ─────────────────────────────────── */
+    .footer-bar {
+      height: 1px;
+      background: linear-gradient(90deg, var(--blue), var(--lavender), var(--coral), var(--mint), var(--tan), var(--sage));
+      background-size: 200% 100%;
+      animation: gradient-shift 8s linear infinite;
+    }
+    @keyframes gradient-shift {
+      0%   { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+
+    /* ── EASTER EGG ──────────────────────────────────────────── */
     #egg-message {
       display: none;
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 20px;
+      right: 20px;
       z-index: 200;
       background: var(--subtle-bg);
       border: 1px solid var(--mint);
       color: var(--mint);
       font-family: 'DM Mono', monospace;
       font-size: 12px;
-      padding: 12px 18px;
+      padding: 10px 16px;
       border-radius: 6px;
-      animation: egg-pop 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+      animation: egg-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       pointer-events: none;
     }
-    @keyframes egg-pop {
-      from { opacity: 0; transform: translateY(8px) scale(0.95); }
+    @keyframes egg-in {
+      from { opacity: 0; transform: translateY(8px) scale(0.96); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ── LARGE CARD (first) ────────────────── */
-    @media (min-width: 1024px) {
-      .card-featured {
-        grid-column: span 2;
-      }
-      .card-featured .card-preview {
-        aspect-ratio: 21/9;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ──────── LOADER ──────── -->
+  <!-- ──────── LOADER — full-screen dissolving filter ──────── -->
   <div id="loader" aria-hidden="true">
-    <div class="loader-grid">
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
-      <div class="loader-block"></div>
+    <div class="loader-filter">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
-    <span class="loader-label">Initializing Prism OS</span>
+    <div class="loader-center">
+      <div class="loader-pct" id="loader-pct">0%</div>
+      <div class="loader-label">Loading</div>
+    </div>
   </div>
 
-  <!-- ──────── EASTER EGG MESSAGE ──────── -->
+  <!-- ──────── EASTER EGG ──────── -->
   <div id="egg-message" role="status"></div>
 
   <!-- ──────── MAIN CONTENT ──────── -->
@@ -646,12 +605,12 @@
     <!-- NAV -->
     <nav>
       <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-2.5 group">
-          <div class="w-6 h-6 relative">
+        <a href="#" class="flex items-center gap-2 group" style="text-decoration: none;">
+          <div class="w-5 h-5 relative">
             <div class="absolute inset-0 rounded-sm rotate-12 group-hover:rotate-45 transition-transform duration-300" style="background: var(--blue); opacity: 0.9;"></div>
-            <div class="absolute inset-0.5 rounded-sm -rotate-6 group-hover:rotate-0 transition-transform duration-300" style="background: var(--lavender); opacity: 0.8;"></div>
+            <div class="absolute inset-0.5 rounded-sm -rotate-6 group-hover:rotate-0 transition-transform duration-300" style="background: var(--lavender); opacity: 0.7;"></div>
           </div>
-          <span class="font-semibold text-sm tracking-tight">Prism Labs</span>
+          <span class="text-sm font-semibold tracking-tight">Prism Labs</span>
         </a>
 
         <div class="hidden md:flex items-center gap-8">
@@ -661,338 +620,226 @@
           <a href="#contact" class="nav-link">Contact</a>
         </div>
 
-        <button
-          class="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
-          style="border-color: var(--blue); color: var(--blue); background: rgba(188,212,253,0.06);"
-          onmouseover="this.style.background='rgba(188,212,253,0.12)'"
-          onmouseout="this.style.background='rgba(188,212,253,0.06)'"
+        <a href="#contact"
+           class="hidden md:inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
+           style="color: var(--muted); text-decoration: none; letter-spacing: 0.08em;"
+           onmouseover="this.style.color='var(--text)'"
+           onmouseout="this.style.color='var(--muted)'"
         >
-          <span>New Project</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+          Reach out
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
 
-        <!-- mobile hamburger -->
-        <button class="md:hidden p-1.5 rounded-md border focus-visible:ring-2" style="border-color: var(--border);" aria-label="Menu">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect y="2" width="16" height="1.5" rx=".75" fill="#ffffff"/><rect y="7.25" width="16" height="1.5" rx=".75" fill="#ffffff"/><rect y="12.5" width="10" height="1.5" rx=".75" fill="#ffffff"/></svg>
+        <button class="md:hidden p-1.5 rounded-md" aria-label="Menu" style="color: var(--muted);">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect y="3" width="18" height="1.5" rx=".75" fill="currentColor"/><rect y="8.5" width="18" height="1.5" rx=".75" fill="currentColor"/><rect y="14" width="12" height="1.5" rx=".75" fill="currentColor"/></svg>
         </button>
       </div>
     </nav>
 
     <!-- ──────── HERO ──────── -->
-    <section style="background: var(--bg); padding: 96px 0 128px;" class="relative overflow-hidden">
-      <div class="scan-line"></div>
-
-      <!-- subtle grid -->
-      <div class="absolute inset-0 pointer-events-none" style="
-        background-image: repeating-linear-gradient(0deg, transparent, transparent 47px, rgba(255,255,255,0.02) 47px, rgba(255,255,255,0.02) 48px),
-                          repeating-linear-gradient(90deg, transparent, transparent 47px, rgba(255,255,255,0.02) 47px, rgba(255,255,255,0.02) 48px);
-      "></div>
-
-      <div class="max-w-7xl mx-auto px-6 relative">
-        <div class="mono-label mb-8 reveal">
-          Spatial Design Studio &mdash; Est. 2021
-        </div>
-
-        <h1 class="hero-headline mb-6 overflow-hidden">
-          <span class="hero-word">Reality,</span>
-          <span style="display: inline-block; width: 0.4em;"></span>
-          <span class="hero-word">By</span>
-          <span style="display: inline-block; width: 0.4em;"></span>
+    <section style="background: var(--bg); padding: 120px 0 80px;" class="relative">
+      <div class="max-w-7xl mx-auto px-6">
+        <h1 class="hero-headline mb-8">
+          <span class="hero-word">Reality,</span><br>
+          <span class="hero-word">By&nbsp;</span>
           <span class="hero-word" style="color: var(--blue);">Design</span>
         </h1>
 
-        <p class="hero-sub text-lg max-w-xl mb-10" style="color: var(--muted); line-height: 1.7;">
-          We shape the space between digital and physical — crafting interfaces that feel native to the moment they live in.
-        </p>
-
-        <div class="hero-sub flex flex-wrap items-center gap-4">
-          <a href="#work"
-             class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
-             style="background: var(--blue); color: #0a0a0a;"
-             onmouseover="this.style.filter='brightness(1.1) saturate(1.1)'"
-             onmouseout="this.style.filter=''"
-          >
-            View Work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#contact"
-             class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 border"
-             style="border-color: var(--border); color: var(--muted);"
-             onmouseover="this.style.borderColor='var(--blue)'; this.style.color='var(--text)'"
-             onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--muted)'"
-          >
-            Start a project
-          </a>
-        </div>
-
-        <!-- Floating accent shapes (easter egg target) -->
-        <div
-          class="easter-egg-trigger absolute hidden lg:block"
-          style="right: 80px; top: -20px; width: 320px; height: 320px;"
-          title="⬆⬆⬇⬇"
-          onclick="showEgg('You found the prism core. Reality is just a palette choice.')"
-          aria-hidden="true"
-        >
-          <!-- animated prism shape -->
-          <div style="position: relative; width: 100%; height: 100%;">
-            <div style="
-              position: absolute; inset: 30px;
-              border-radius: 50%;
-              background: conic-gradient(from 0deg, var(--blue), var(--lavender), var(--mint), var(--coral), var(--tan), var(--sage), var(--blue));
-              opacity: 0.06;
-              animation: spin 20s linear infinite;
-            "></div>
-            <div style="
-              position: absolute; inset: 60px;
-              border-radius: 50%;
-              border: 1px solid var(--blue);
-              opacity: 0.1;
-              animation: spin 12s linear infinite reverse;
-            "></div>
-            <div style="
-              position: absolute; inset: 90px;
-              border-radius: 50%;
-              border: 1px solid var(--lavender);
-              opacity: 0.08;
-              animation: spin 8s linear infinite;
-            "></div>
-            <div style="
-              position: absolute; top: 50%; left: 50%;
-              width: 8px; height: 8px;
-              transform: translate(-50%,-50%);
-              border-radius: 50%;
-              background: var(--mint);
-              box-shadow: 0 0 20px var(--mint), 0 0 40px var(--mint);
-              opacity: 0.5;
-              animation: dot-pulse 2s ease-in-out infinite;
-            "></div>
-          </div>
-        </div>
-
-        <!-- Stat row -->
-        <div class="flex flex-wrap gap-10 mt-16 pt-12 border-t" style="border-color: var(--border);">
-          <div class="reveal">
-            <div class="text-3xl font-semibold tracking-tight mb-1">47</div>
-            <div class="mono-label text-xs">Projects shipped</div>
-          </div>
-          <div class="reveal" style="transition-delay: 0.1s;">
-            <div class="text-3xl font-semibold tracking-tight mb-1">12</div>
-            <div class="mono-label text-xs">Countries</div>
-          </div>
-          <div class="reveal" style="transition-delay: 0.2s;">
-            <div class="text-3xl font-semibold tracking-tight mb-1">4</div>
-            <div class="mono-label text-xs">Years operating</div>
-          </div>
-          <div class="reveal" style="transition-delay: 0.3s;">
-            <div class="text-3xl font-semibold tracking-tight mb-1">∞</div>
-            <div class="mono-label text-xs" style="color: var(--blue);">Accents possible</div>
+        <div class="hero-sub flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <p class="text-base max-w-md" style="color: var(--muted); line-height: 1.7;">
+            Spatial design studio shaping interfaces at the boundary of digital and physical. Each project gets one color. One accent. One identity.
+          </p>
+          <div class="mono-label text-xs flex items-center gap-3 flex-shrink-0">
+            <span>Currently in Zurich, Switzerland</span>
+            <span style="color: var(--border);">/</span>
+            <a href="#contact" style="color: var(--blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Reach out</a>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ──────── PROJECT GRID ──────── -->
-    <section id="work" style="background: var(--bg); padding: 64px 0;">
+    <section id="work" style="background: var(--bg); padding: 0 0 0;">
       <div class="max-w-7xl mx-auto px-6">
-
-        <div class="flex items-end justify-between mb-10 reveal">
-          <div>
-            <div class="mono-label mb-3">Selected Work</div>
-            <h2 class="text-3xl md:text-5xl font-semibold tracking-tight">Projects</h2>
-          </div>
-          <button class="hidden md:inline-flex items-center gap-2 text-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
-                  style="color: var(--muted);"
-                  onmouseover="this.style.color='var(--text)'"
-                  onmouseout="this.style.color='var(--muted)'">
-            All work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
+        <div class="flex items-end justify-between mb-6 reveal">
+          <div class="mono-label">Some Project Examples</div>
         </div>
+      </div>
 
-        <!-- 3-col grid, first card is featured (col-span-2) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="projects-grid">
 
-          <!-- Card 1 — FEATURED — blue -->
-          <article class="project-card card-featured reveal" data-accent="blue"
-                   onclick="showEgg('Depth perception is just confidence in distance.')"
-                   style="cursor: pointer;">
-            <div class="card-preview preview-morph anim-layer">
-              <div class="shape"></div>
-              <div class="shape"></div>
-              <div class="shape"></div>
-              <!-- text overlay -->
-              <div style="position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 20px;">
-                <div style="font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); opacity: 0.7; letter-spacing: 0.1em;">
-                  RENDER_DEPTH // 001
+          <!-- Card 01 — FEATURED — blue -->
+          <article class="project-card featured reveal" data-accent="blue"
+                   onclick="showEgg('Depth perception is just confidence in distance.')">
+            <div class="card-visual">
+              <div class="motion-layer motion-morph">
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+              </div>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">01</div>
+                <h3 class="card-title">Depth OS — Layered Interface System</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Spatial UI</span>
                 </div>
-              </div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Spatial UI</span>
-                <span class="mono-label text-xs">2024</span>
-              </div>
-              <h3 class="text-lg font-semibold mb-1.5">Depth OS — Layered Interface System</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">A spatial interface framework for next-gen headsets. Every layer carries depth, every interaction has mass.</p>
-              <div class="flex items-center gap-2 mt-4">
-                <span style="font-size: 12px; color: var(--muted);">Interface Design</span>
-                <span style="color: var(--border);">·</span>
-                <span style="font-size: 12px; color: var(--muted);">3D Systems</span>
-                <span style="color: var(--border);">·</span>
-                <span style="font-size: 12px; color: var(--muted);">Prototyping</span>
               </div>
             </div>
           </article>
 
-          <!-- Card 2 — tan -->
+          <!-- Card 02 — tan -->
           <article class="project-card reveal" data-accent="tan" style="transition-delay: 0.05s;">
-            <div class="card-preview preview-grid-scan anim-layer">
-              <div class="sweep"></div>
-              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
-                <div style="font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 600; color: var(--tan); opacity: 0.2; letter-spacing: -0.02em;">
-                  FLOW
+            <div class="card-visual">
+              <div class="motion-layer motion-grid">
+                <div class="sweep-line"></div>
+                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                  <span style="font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: var(--card-accent); opacity: 0.08; letter-spacing: -0.04em;">FLOW</span>
+                </div>
+              </div>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">02</div>
+                <h3 class="card-title">Cascade — B2B Identity System</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Brand</span>
                 </div>
               </div>
             </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Brand</span>
-                <span class="mono-label text-xs">2024</span>
-              </div>
-              <h3 class="text-lg font-semibold mb-1.5">Cascade — B2B Identity System</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">A warm, authoritative identity for a financial data platform entering enterprise markets.</p>
-            </div>
           </article>
 
-          <!-- Card 3 — lavender -->
+          <!-- Card 03 — lavender -->
           <article class="project-card reveal" data-accent="lavender" style="transition-delay: 0.1s;">
-            <div class="card-preview preview-orbit anim-layer">
-              <div class="orbit-ring"></div>
-              <div class="orbit-ring"></div>
-              <div class="orbit-ring"></div>
-              <div class="orbit-dot"></div>
-              <div class="orbit-dot"></div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Motion</span>
-                <span class="mono-label text-xs">2023</span>
+            <div class="card-visual">
+              <div class="motion-layer motion-orbit">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Orbit — Data Visualization Engine</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">Live telemetry visualized as orbital mechanics. Infrastructure monitoring as a cosmos.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">03</div>
+                <h3 class="card-title">Orbit — Data Visualization Engine</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Motion</span>
+                </div>
+              </div>
             </div>
           </article>
 
-          <!-- Card 4 — coral -->
+          <!-- Card 04 — coral -->
           <article class="project-card reveal" data-accent="coral" style="transition-delay: 0.15s;">
-            <div class="card-preview preview-wave anim-layer">
-              <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-              <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-              <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-              <div class="bar"></div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Audio</span>
-                <span class="mono-label text-xs">2023</span>
+            <div class="card-visual">
+              <div class="motion-layer motion-wave" id="wave-card">
+                <!-- bars injected via JS -->
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Pulse — Music Creation Interface</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">A browser-native DAW where waveforms are the UI. Built for producers who think in frequency.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">04</div>
+                <h3 class="card-title">Pulse — Music Creation Interface</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Audio</span>
+                </div>
+              </div>
             </div>
           </article>
 
-          <!-- Card 5 — mint -->
+          <!-- Card 05 — mint -->
           <article class="project-card reveal" data-accent="mint" style="transition-delay: 0.2s;">
-            <div class="card-preview preview-type anim-layer">
-              <div class="line"></div><div class="line"></div><div class="line"></div>
-              <div class="line"></div><div class="line"></div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Dev Tools</span>
-                <span class="mono-label text-xs">2023</span>
+            <div class="card-visual">
+              <div class="motion-layer motion-type">
+                <div class="ln" style="width: 72%; animation-delay: 0s;"></div>
+                <div class="ln" style="width: 88%; animation-delay: 0.25s;"></div>
+                <div class="ln" style="width: 55%; animation-delay: 0.5s;"></div>
+                <div class="ln" style="width: 80%; animation-delay: 0.75s;"></div>
+                <div class="ln" style="width: 40%; animation-delay: 1s;"></div>
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Syntax — Code Editor Redesign</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">Reimagining the IDE as a writing surface. Cognitive load reduced by 40% in user testing.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">05</div>
+                <h3 class="card-title">Syntax — Code Editor Redesign</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Dev Tools</span>
+                </div>
+              </div>
             </div>
           </article>
 
-          <!-- Card 6 — sage -->
+          <!-- Card 06 — sage -->
           <article class="project-card reveal" data-accent="sage" style="transition-delay: 0.25s;">
-            <div class="card-preview preview-particles anim-layer">
-              <!-- particles injected via JS -->
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>AI/UX</span>
-                <span class="mono-label text-xs">2022</span>
+            <div class="card-visual">
+              <div class="motion-layer motion-particles" id="particles-card">
+                <!-- particles injected via JS -->
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Verdant — Climate Data Platform</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">Environmental intelligence made legible. Six continents of carbon data distilled to decisions.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">06</div>
+                <h3 class="card-title">Verdant — Climate Data Platform</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">AI/UX</span>
+                </div>
+              </div>
             </div>
           </article>
 
-          <!-- Card 7 — blue (cycle restarts) -->
-          <article class="project-card reveal" data-accent="blue" style="transition-delay: 0.3s;">
-            <div class="card-preview preview-glitch anim-layer">
-              <div class="glitch-layer"></div>
-              <div class="glitch-bar"></div>
-              <div class="glitch-bar"></div>
-              <div class="glitch-bar"></div>
-              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); opacity: 0.5; letter-spacing: 0.1em;">SYS://BOOT</div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>OS Design</span>
-                <span class="mono-label text-xs">2022</span>
+          <!-- Card 07 — salmon -->
+          <article class="project-card reveal" data-accent="salmon" style="transition-delay: 0.3s;">
+            <div class="card-visual">
+              <div class="motion-layer motion-morph">
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Kernel — System UI Framework</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">A complete design system for embedded operating interfaces. From BIOS to dashboard.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">07</div>
+                <h3 class="card-title">Ember — Fintech Dashboard</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Product</span>
+                </div>
+              </div>
             </div>
           </article>
 
-          <!-- Card 8 — tan -->
-          <article class="project-card reveal" data-accent="tan" style="transition-delay: 0.35s;">
-            <div class="card-preview preview-morph anim-layer">
-              <div class="shape"></div>
-              <div class="shape"></div>
-              <div class="shape"></div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Commerce</span>
-                <span class="mono-label text-xs">2022</span>
+          <!-- Card 08 — pink -->
+          <article class="project-card reveal" data-accent="pink" style="transition-delay: 0.35s;">
+            <div class="card-visual">
+              <div class="motion-layer motion-grid">
+                <div class="sweep-line" style="animation-duration: 3s;"></div>
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Silt — Luxury E-Commerce Experience</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">Tactile warmth in a digital storefront. Product pages that make you feel the fabric.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">08</div>
+                <h3 class="card-title">Aura — Patient Experience System</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Healthcare</span>
+                </div>
+              </div>
             </div>
           </article>
 
-          <!-- Card 9 — lavender -->
-          <article class="project-card reveal" data-accent="lavender" style="transition-delay: 0.4s;">
-            <div class="card-preview preview-orbit anim-layer">
-              <div class="orbit-ring"></div>
-              <div class="orbit-ring"></div>
-              <div class="orbit-ring"></div>
-              <div class="orbit-dot"></div>
-              <div class="orbit-dot"></div>
-            </div>
-            <div class="card-holo"></div>
-            <div style="padding: 20px;">
-              <div class="flex items-center justify-between mb-3">
-                <span class="card-label"><span class="card-label-dot"></span>Healthcare</span>
-                <span class="mono-label text-xs">2021</span>
+          <!-- Card 09 — brown -->
+          <article class="project-card reveal" data-accent="brown" style="transition-delay: 0.4s;"
+                   onclick="showEgg('Some colors are quieter. That is their power.')">
+            <div class="card-visual">
+              <div class="motion-layer motion-orbit">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
               </div>
-              <h3 class="text-lg font-semibold mb-1.5">Aura — Patient Experience System</h3>
-              <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">Hospital anxiety down 28%. Design that acknowledges humans are in the room.</p>
+              <div class="card-holo"></div>
+              <div class="card-info">
+                <div class="card-number" style="color: var(--card-accent);">09</div>
+                <h3 class="card-title">Stolus — Luxury Retail Platform</h3>
+                <div class="mt-2">
+                  <span class="card-tag" style="border-color: var(--card-accent); color: var(--card-accent);">Commerce</span>
+                </div>
+              </div>
             </div>
           </article>
 
@@ -1003,80 +850,80 @@
     <!-- ──────── ABOUT ──────── -->
     <section id="about" style="background: var(--subtle-bg); padding: 80px 0;">
       <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
           <div class="reveal">
-            <div class="mono-label mb-4">About the studio</div>
-            <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-6 leading-tight">
+            <div class="mono-label mb-4">About</div>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-6 leading-tight" style="letter-spacing: -0.03em;">
               We don't design screens.<br>
               We design <span style="color: var(--lavender);">comprehension</span>.
             </h2>
             <p style="color: var(--muted); line-height: 1.8; margin-bottom: 1.25rem;">
-              Prism Labs is a 9-person spatial design studio working at the edge of what interfaces can be. We partner with founders, product teams, and research labs who believe that how something looks is inseparable from whether it works.
+              Prism Labs is a 9-person spatial design studio working at the edge of what interfaces can be. We partner with founders, product teams, and research labs who believe how something looks is inseparable from whether it works.
             </p>
             <p style="color: var(--muted); line-height: 1.8;">
-              Each project in our stack gets one color. One tone. One persistent accent that lives through every component, every state, every handoff. Consistency isn't a constraint — it's the craft.
+              Each project in our stack gets one color. One tone. One persistent accent that lives through every component, every state, every handoff. Consistency is the craft.
             </p>
 
             <div class="flex flex-wrap gap-3 mt-8">
-              <span style="font-size: 12px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Figma → Production</span>
-              <span style="font-size: 12px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Design Systems</span>
-              <span style="font-size: 12px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Spatial / XR UI</span>
-              <span style="font-size: 12px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Motion Design</span>
-              <span style="font-size: 12px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Brand Identity</span>
+              <span style="font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Figma to Production</span>
+              <span style="font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Design Systems</span>
+              <span style="font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Spatial / XR</span>
+              <span style="font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Motion Design</span>
+              <span style="font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);">Brand Identity</span>
             </div>
           </div>
 
-          <!-- About visual: multi-accent palette strip -->
+          <!-- Color system card -->
           <div class="reveal" style="transition-delay: 0.15s;">
-            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px; font-family: 'DM Mono', monospace;">
-              <div class="mono-label mb-6 text-xs">COLOR ASSIGNMENT SYSTEM</div>
-              <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 28px;">
+              <div class="mono-label mb-5 text-xs">Color Assignment System</div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--blue); flex-shrink: 0;"></div>
+                  <div style="width: 28px; height: 28px; border-radius: 5px; background: var(--blue); flex-shrink: 0;"></div>
                   <div>
-                    <div style="font-size: 12px; color: var(--text);">#BCD4FD — Blue Lavender</div>
+                    <div style="font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace;">#BCD4FD</div>
                     <div style="font-size: 11px; color: var(--muted);">Spatial, System, Tech</div>
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--tan); flex-shrink: 0;"></div>
+                  <div style="width: 28px; height: 28px; border-radius: 5px; background: var(--tan); flex-shrink: 0;"></div>
                   <div>
-                    <div style="font-size: 12px; color: var(--text);">#E3C0A9 — Tan</div>
-                    <div style="font-size: 11px; color: var(--muted);">Brand, Commerce, Luxury</div>
+                    <div style="font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace;">#E3C0A9</div>
+                    <div style="font-size: 11px; color: var(--muted);">Brand, Commerce</div>
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--lavender); flex-shrink: 0;"></div>
+                  <div style="width: 28px; height: 28px; border-radius: 5px; background: var(--lavender); flex-shrink: 0;"></div>
                   <div>
-                    <div style="font-size: 12px; color: var(--text);">#C9C1FF — Lavender</div>
-                    <div style="font-size: 11px; color: var(--muted);">Motion, Data, Healthcare</div>
+                    <div style="font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace;">#C9C1FF</div>
+                    <div style="font-size: 11px; color: var(--muted);">Motion, Data</div>
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--coral); flex-shrink: 0;"></div>
+                  <div style="width: 28px; height: 28px; border-radius: 5px; background: var(--coral); flex-shrink: 0;"></div>
                   <div>
-                    <div style="font-size: 12px; color: var(--text);">#E88150 — Coral</div>
-                    <div style="font-size: 11px; color: var(--muted);">Audio, Creative, Energy</div>
+                    <div style="font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace;">#E88150</div>
+                    <div style="font-size: 11px; color: var(--muted);">Audio, Creative</div>
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--mint); flex-shrink: 0;"></div>
+                  <div style="width: 28px; height: 28px; border-radius: 5px; background: var(--mint); flex-shrink: 0;"></div>
                   <div>
-                    <div style="font-size: 12px; color: var(--text);">#59E7CA — Mint</div>
-                    <div style="font-size: 11px; color: var(--muted);">Dev Tools, Utility, Speed</div>
+                    <div style="font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace;">#59E7CA</div>
+                    <div style="font-size: 11px; color: var(--muted);">Dev Tools, Utility</div>
                   </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--sage); flex-shrink: 0;"></div>
+                  <div style="width: 28px; height: 28px; border-radius: 5px; background: var(--sage); flex-shrink: 0;"></div>
                   <div>
-                    <div style="font-size: 12px; color: var(--text);">#91B394 — Sage</div>
-                    <div style="font-size: 11px; color: var(--muted);">AI, Climate, Long-term</div>
+                    <div style="font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace;">#91B394</div>
+                    <div style="font-size: 11px; color: var(--muted);">AI, Climate</div>
                   </div>
                 </div>
               </div>
-              <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted);">
-                Each client owns exactly one color. No duplicates. No blending.
+              <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace;">
+                Each client owns exactly one color.
               </div>
             </div>
           </div>
@@ -1089,70 +936,71 @@
     <section id="team" style="background: var(--bg); padding: 64px 0;">
       <div class="max-w-7xl mx-auto px-6">
         <div class="mono-label mb-4 reveal">The people</div>
-        <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-10 reveal">Team</h2>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-10 reveal" style="letter-spacing: -0.03em;">Team</h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 
-          <!-- Each team card has a subtle accent reference -->
-          <div class="reveal" style="background: var(--subtle-bg); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.2s;"
+          <div class="reveal" data-accent="blue"
+               style="background: var(--subtle-bg); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.25s;"
                onmouseover="this.style.borderColor='var(--blue)'"
                onmouseout="this.style.borderColor='var(--border)'">
-            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
-              <div class="team-avatar">
-                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: var(--blue);">K</div>
-                <div class="avatar-rings"></div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+              <div class="team-avatar" style="--card-accent: var(--blue);">
+                <span style="font-size: 16px; font-weight: 600; color: var(--blue); z-index: 1;">K</span>
+                <div class="ring"></div>
               </div>
               <div>
                 <div style="font-weight: 600; font-size: 15px;">Kira Selene</div>
                 <div style="font-size: 12px; color: var(--muted);">Founding Partner, Design</div>
               </div>
             </div>
-            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Former Principal at Figma. Believes in systems thinking as the highest form of creativity.</p>
-            <div style="margin-top: 14px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--blue); letter-spacing: 0.1em;">Spatial · Systems · Vision</div>
+            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Former Principal at Figma. Systems thinking as the highest form of creativity.</p>
+            <div style="margin-top: 12px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase;">Spatial / Systems / Vision</div>
           </div>
 
-          <div class="reveal" style="background: var(--subtle-bg); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.2s; transition-delay: 0.05s;"
+          <div class="reveal" data-accent="coral"
+               style="background: var(--subtle-bg); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.25s; transition-delay: 0.05s;"
                onmouseover="this.style.borderColor='var(--coral)'"
                onmouseout="this.style.borderColor='var(--border)'">
-            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
-              <div class="team-avatar">
-                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: var(--coral);">M</div>
-                <div class="avatar-rings" style="--blue: var(--coral); --mint: var(--tan);"></div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+              <div class="team-avatar" style="--card-accent: var(--coral);">
+                <span style="font-size: 16px; font-weight: 600; color: var(--coral); z-index: 1;">M</span>
+                <div class="ring"></div>
               </div>
               <div>
                 <div style="font-weight: 600; font-size: 15px;">Marcus Veil</div>
                 <div style="font-size: 12px; color: var(--muted);">Founding Partner, Engineering</div>
               </div>
             </div>
-            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">ex-Vercel. Closes the gap between the prototype and the product. Speaks Rust and TypeScript fluently.</p>
-            <div style="margin-top: 14px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--coral); letter-spacing: 0.1em;">Animation · WebGL · Performance</div>
+            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">ex-Vercel. Closes the gap between prototype and product. Speaks Rust and TypeScript.</p>
+            <div style="margin-top: 12px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--coral); letter-spacing: 0.1em; text-transform: uppercase;">Animation / WebGL / Perf</div>
           </div>
 
-          <div class="reveal" style="background: var(--subtle-bg); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.2s; transition-delay: 0.1s;"
+          <div class="reveal" data-accent="mint"
+               style="background: var(--subtle-bg); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.25s; transition-delay: 0.1s;"
                onmouseover="this.style.borderColor='var(--mint)'"
                onmouseout="this.style.borderColor='var(--border)'">
-            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
-              <div class="team-avatar">
-                <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: var(--mint);">Z</div>
-                <div class="avatar-rings" style="--blue: var(--mint); --mint: var(--sage);"></div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+              <div class="team-avatar" style="--card-accent: var(--mint);">
+                <span style="font-size: 16px; font-weight: 600; color: var(--mint); z-index: 1;">Z</span>
+                <div class="ring"></div>
               </div>
               <div>
                 <div style="font-weight: 600; font-size: 15px;">Zara Osei</div>
                 <div style="font-size: 12px; color: var(--muted);">Head of Research</div>
               </div>
             </div>
-            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Turns user interviews and eye-tracking data into design decisions. Runs every sprint retrospective.</p>
-            <div style="margin-top: 14px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--mint); letter-spacing: 0.1em;">UX Research · Testing · Strategy</div>
+            <p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Turns user interviews and eye-tracking data into design decisions. Runs every sprint retro.</p>
+            <div style="margin-top: 12px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--mint); letter-spacing: 0.1em; text-transform: uppercase;">UX Research / Testing</div>
           </div>
 
         </div>
 
-        <!-- Hidden team easter egg -->
-        <div class="mt-8 text-center reveal">
+        <div class="mt-6 text-center reveal">
           <button
-            class="mono-label text-xs transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2"
-            style="color: var(--border);"
-            onmouseover="this.style.color='var(--lavender)'; this.setAttribute('data-hovered', 'true')"
+            class="mono-label text-xs transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer"
+            style="color: var(--border); background: none; border: none;"
+            onmouseover="this.style.color='var(--lavender)'"
             onmouseout="this.style.color='var(--border)'"
             onclick="showEgg('There are 9 of us. The other 6 prefer to remain unnamed.')"
           >
@@ -1169,22 +1017,35 @@
 
           <div class="reveal">
             <div class="mono-label mb-4">Get in touch</div>
-            <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-4">Start a project</h2>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-4" style="letter-spacing: -0.03em;">Start a project</h2>
             <p style="color: var(--muted); line-height: 1.7; max-width: 380px;">
-              We take on 4–6 new projects per year. Tell us what you're building and we'll tell you if it's something we'd love to get into.
+              We take on 4-6 new projects per year. Tell us what you're building and we'll tell you if it's something we'd love to get into.
             </p>
-            <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 10px;">
               <a href="mailto:hello@prismlabs.xyz" style="font-size: 14px; color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 6px;"
                  onmouseover="this.style.textDecoration='underline'"
                  onmouseout="this.style.textDecoration='none'">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 4l6 4.5L13 4" stroke="currentColor" stroke-width="1.2"/></svg>
                 hello@prismlabs.xyz
               </a>
-              <a href="#" style="font-size: 14px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 6px;"
+              <span style="font-size: 13px; color: var(--muted);">Currently in Zurich, Switzerland</span>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; gap: 16px;">
+              <a href="#" style="color: var(--muted); transition: color 0.2s; text-decoration: none;"
                  onmouseover="this.style.color='var(--text)'"
                  onmouseout="this.style.color='var(--muted)'">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a6 6 0 100 12A6 6 0 007 1z" stroke="currentColor" stroke-width="1.2"/><path d="M1 7h12M7 1c-1.5 2-2.5 4-2.5 6s1 4 2.5 6M7 1c1.5 2 2.5 4 2.5 6S8.5 11 7 13" stroke="currentColor" stroke-width="1.2"/></svg>
-                prismlabs.xyz
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+              <a href="#" style="color: var(--muted); transition: color 0.2s; text-decoration: none;"
+                 onmouseover="this.style.color='var(--text)'"
+                 onmouseout="this.style.color='var(--muted)'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l.002.196c0 5.06-3.853 10.895-10.896 10.895A10.83 10.83 0 011.11 17.49a7.694 7.694 0 005.671-1.586 3.835 3.835 0 01-3.58-2.661 3.836 3.836 0 001.73-.066 3.832 3.832 0 01-3.073-3.755v-.031c.518.287 1.11.46 1.74.48A3.833 3.833 0 012.41 6.735a10.88 10.88 0 007.898 4.006 3.832 3.832 0 016.526-3.494 7.688 7.688 0 002.431-.929 3.84 3.84 0 01-1.685 2.12 7.657 7.657 0 002.2-.603 7.78 7.78 0 01-1.886 1.99v.396z"/></svg>
+              </a>
+              <a href="#" style="color: var(--muted); transition: color 0.2s; text-decoration: none;"
+                 onmouseover="this.style.color='var(--text)'"
+                 onmouseout="this.style.color='var(--muted)'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
               </a>
             </div>
           </div>
@@ -1193,16 +1054,16 @@
             <div style="display: flex; flex-direction: column; gap: 14px;">
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                 <div>
-                  <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em;">NAME</label>
+                  <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;">Name</label>
                   <input type="text" class="contact-input" placeholder="Alex Morgan" required autocomplete="name">
                 </div>
                 <div>
-                  <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em;">EMAIL</label>
+                  <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;">Email</label>
                   <input type="email" class="contact-input" placeholder="alex@company.co" required autocomplete="email">
                 </div>
               </div>
               <div>
-                <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em;">PROJECT TYPE</label>
+                <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;">Project Type</label>
                 <select class="contact-input" style="cursor: pointer;">
                   <option value="" disabled selected>Select a category</option>
                   <option>Spatial / XR Interface</option>
@@ -1214,14 +1075,14 @@
                 </select>
               </div>
               <div>
-                <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em;">BRIEF</label>
-                <textarea class="contact-input" rows="4" placeholder="Tell us about your project — the weirder the better." style="resize: vertical;"></textarea>
+                <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;">Brief</label>
+                <textarea class="contact-input" rows="4" placeholder="Tell us about your project." style="resize: vertical;"></textarea>
               </div>
               <button
                 type="submit"
-                class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full font-medium text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
+                class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full font-medium text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 cursor-pointer"
                 style="background: var(--blue); color: #0a0a0a;"
-                onmouseover="this.style.filter='brightness(1.1)'"
+                onmouseover="this.style.filter='brightness(1.12)'"
                 onmouseout="this.style.filter=''"
               >
                 Send Brief
@@ -1235,79 +1096,92 @@
     </section>
 
     <!-- ──────── FOOTER ──────── -->
-    <footer style="background: var(--bg); padding: 64px 0 0;">
-      <div class="footer-accent-bar mb-12"></div>
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 pb-16">
+    <footer style="background: var(--bg); padding: 0;">
+      <div class="footer-bar"></div>
+      <div class="max-w-7xl mx-auto px-6" style="padding: 48px 24px 0;">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 pb-12">
           <div class="col-span-2 md:col-span-1">
-            <div class="flex items-center gap-2 mb-4">
-              <div style="width: 20px; height: 20px; background: var(--blue); border-radius: 3px; transform: rotate(12deg);"></div>
+            <div class="flex items-center gap-2 mb-3">
+              <div style="width: 16px; height: 16px; background: var(--blue); border-radius: 3px; transform: rotate(12deg);"></div>
               <span style="font-weight: 600; font-size: 14px;">Prism Labs</span>
             </div>
             <p style="font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 200px;">
-              Spatial design studio. Reality, by design.
+              Spatial design studio.<br>Reality, by design.
             </p>
           </div>
           <div>
             <div class="mono-label text-xs mb-4">Studio</div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <a href="#work"    style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Work</a>
-              <a href="#about"   style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">About</a>
-              <a href="#team"    style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Team</a>
-              <a href="#contact" style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Contact</a>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <a href="#work"    style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Work</a>
+              <a href="#about"   style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">About</a>
+              <a href="#team"    style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Team</a>
+              <a href="#contact" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Contact</a>
             </div>
           </div>
           <div>
             <div class="mono-label text-xs mb-4">Elsewhere</div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Read.cv</a>
-              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Dribbble</a>
-              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">GitHub</a>
-              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Twitter / X</a>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
+              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Medium</a>
+              <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Instagram</a>
             </div>
           </div>
           <div>
             <div class="mono-label text-xs mb-4">Status</div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted);">
-                <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 6px var(--mint); animation: dot-pulse 2s ease-in-out infinite;"></div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted);">
+                <div style="width: 5px; height: 5px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 6px var(--mint); animation: dot-pulse 2s ease-in-out infinite;"></div>
                 Taking new projects
               </div>
-              <div style="font-size: 13px; color: var(--muted);">Q2 2026 intake open</div>
-              <a href="#contact" style="font-size: 13px; color: var(--blue); text-decoration: none; margin-top: 4px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Apply now →</a>
+              <span style="font-size: 13px; color: var(--muted);">Q2 2026 intake open</span>
+              <a href="#contact" style="font-size: 13px; color: var(--blue); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Apply now</a>
             </div>
           </div>
         </div>
 
-        <div style="border-top: 1px solid var(--border); padding: 20px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-          <span style="font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace;">© 2026 Prism Labs</span>
+        <div style="border-top: 1px solid var(--border); padding: 16px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace;">© 2026 Prism Labs</span>
           <button
-            style="font-size: 11px; color: var(--border); font-family: 'DM Mono', monospace; background: none; border: none; cursor: pointer; transition: color 0.2s;"
+            style="font-size: 10px; color: var(--border); font-family: 'DM Mono', monospace; background: none; border: none; cursor: pointer; transition: color 0.2s; letter-spacing: 0.08em;"
             onmouseover="this.style.color='var(--sage)'"
             onmouseout="this.style.color='var(--border)'"
             onclick="showEgg('REF_066 // Reality Interface // All accents are real.')"
           >
             ref_066
           </button>
-          <span style="font-size: 12px; color: var(--muted);">Reality, by design.</span>
+          <span style="font-size: 11px; color: var(--muted);">Reality, by design.</span>
         </div>
       </div>
     </footer>
 
-  </div><!-- /main-content -->
+  </div>
 
   <script>
-    // ── LOADER ───────────────────────────────────────────────
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('loader').classList.add('hidden');
-        document.getElementById('main-content').classList.add('visible');
-        // trigger initial reveals
-        checkReveal();
-      }, 1800);
-    });
+    // ── LOADER with percentage counter ─────────────────────
+    (function() {
+      const pctEl = document.getElementById('loader-pct');
+      let pct = 0;
+      const interval = setInterval(() => {
+        pct += Math.floor(Math.random() * 12) + 3;
+        if (pct >= 100) {
+          pct = 100;
+          clearInterval(interval);
+          pctEl.textContent = '100%';
+          setTimeout(() => {
+            document.getElementById('loader').classList.add('dissolving');
+            setTimeout(() => {
+              document.getElementById('loader').style.display = 'none';
+              document.getElementById('main-content').classList.add('visible');
+              checkReveal();
+            }, 700);
+          }, 300);
+        } else {
+          pctEl.textContent = pct + '%';
+        }
+      }, 140);
+    })();
 
-    // ── SCROLL REVEAL ─────────────────────────────────────────
+    // ── SCROLL REVEAL ───────────────────────────────────────
     function checkReveal() {
       document.querySelectorAll('.reveal').forEach(el => {
         const rect = el.getBoundingClientRect();
@@ -1319,25 +1193,39 @@
     window.addEventListener('scroll', checkReveal, { passive: true });
     window.addEventListener('resize', checkReveal, { passive: true });
 
-    // ── PARTICLES (Card 6 — sage) ─────────────────────────────
-    const particleContainer = document.querySelector('.preview-particles.anim-layer');
-    if (particleContainer) {
-      for (let i = 0; i < 18; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.animationDuration = (3 + Math.random() * 4) + 's';
-        p.style.animationDelay = (Math.random() * 5) + 's';
-        p.style.width = p.style.height = (1 + Math.random() * 3) + 'px';
-        particleContainer.appendChild(p);
+    // ── WAVE BARS (Card 04) ─────────────────────────────────
+    const waveCard = document.getElementById('wave-card');
+    if (waveCard) {
+      for (let i = 0; i < 16; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        const h = 20 + Math.random() * 80;
+        bar.style.height = h + '%';
+        bar.style.animationDelay = (i * 0.08) + 's';
+        waveCard.appendChild(bar);
       }
     }
 
-    // ── EASTER EGG ────────────────────────────────────────────
+    // ── PARTICLES (Card 06) ─────────────────────────────────
+    const particlesCard = document.getElementById('particles-card');
+    if (particlesCard) {
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = p.style.height = (1 + Math.random() * 3) + 'px';
+        p.style.animationDuration = (3 + Math.random() * 4) + 's';
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        particlesCard.appendChild(p);
+      }
+    }
+
+    // ── EASTER EGG ──────────────────────────────────────────
     function showEgg(msg) {
       const el = document.getElementById('egg-message');
       el.textContent = '// ' + msg;
       el.style.display = 'block';
+      el.style.opacity = '1';
       clearTimeout(window._eggTimer);
       window._eggTimer = setTimeout(() => {
         el.style.opacity = '0';
@@ -1347,49 +1235,24 @@
           el.style.opacity = '';
           el.style.transition = '';
         }, 500);
-      }, 3200);
+      }, 3000);
     }
 
-    // ── KONAMI / LOGO SEQUENCE ────────────────────────────────
-    const konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-    let konamiIdx = 0;
-    document.addEventListener('keydown', e => {
-      if (e.key === konamiSeq[konamiIdx]) {
-        konamiIdx++;
-        if (konamiIdx === konamiSeq.length) {
-          konamiIdx = 0;
-          showEgg('PRISM UNLOCKED // You see all frequencies now.');
-          document.body.style.transition = 'filter 1s ease';
-          document.body.style.filter = 'hue-rotate(45deg) saturate(1.4)';
-          setTimeout(() => {
-            document.body.style.filter = '';
-          }, 2000);
-        }
-      } else {
-        konamiIdx = 0;
+    // ── DOT PULSE ANIMATION ─────────────────────────────────
+    const dotPulseStyle = document.createElement('style');
+    dotPulseStyle.textContent = `
+      @keyframes dot-pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.6); }
       }
-    });
+    `;
+    document.head.appendChild(dotPulseStyle);
 
-    // ── FORM SUBMIT ───────────────────────────────────────────
+    // ── FORM SUBMIT ─────────────────────────────────────────
     function handleFormSubmit(e) {
       e.preventDefault();
-      showEgg('Brief received. We\'ll be in touch within 48h.');
+      showEgg('Brief received. We will be in touch within 48 hours.');
     }
-
-    // ── HOLOGRAPHIC CARD MOUSE TRACKING ───────────────────────
-    document.querySelectorAll('.project-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
-        const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 20;
-        card.style.transform = `translateY(-4px) rotateX(${-y * 0.4}deg) rotateY(${x * 0.4}deg)`;
-        card.style.perspective = '800px';
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-        card.style.perspective = '';
-      });
-    });
   </script>
 </body>
 </html>

@@ -7,294 +7,321 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000000;
       --text: #ffffff;
       --subtle-bg: #111111;
-      --border: #333333;
+      --border: #222222;
       --muted: #666666;
       --accent: #ffffff;
     }
 
-    * { cursor: none; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    * { box-sizing: border-box; cursor: none; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin: 0;
       overflow-x: hidden;
     }
 
-    /* ─── Custom Cursor ─────────────────────────────────── */
+    /* ─── Custom Cursor ──────────────────────────────────── */
     #cursor {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 12px;
-      height: 12px;
+      top: 0; left: 0;
+      width: 10px; height: 10px;
       background: var(--accent);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
-      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, border-radius 0.2s ease, opacity 0.2s ease;
+      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.25s ease,
+                  opacity 0.2s ease;
       mix-blend-mode: difference;
     }
-    #cursor.hover-link {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+    #cursor.hover {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.35);
     }
-    #cursor.drag {
-      width: 64px;
-      height: 64px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+    #cursor.press {
+      width: 56px; height: 56px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
     }
-    #cursor-trail {
+
+    #cursor-dot {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.3);
+      top: 0; left: 0;
+      width: 3px; height: 3px;
+      background: rgba(255,255,255,0.4);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9998;
       transform: translate(-50%, -50%);
-      transition: left 0.12s ease, top 0.12s ease;
+      transition: left 0.15s ease-out, top 0.15s ease-out, opacity 0.2s ease;
     }
 
-    /* ─── Typography ────────────────────────────────────── */
+    /* ─── Typography ─────────────────────────────────────── */
     .heading {
       font-weight: 500;
       letter-spacing: -0.02em;
       line-height: 1.05;
     }
 
-    /* ─── Smooth scroll simulation (JS-based inertia) ─── */
-    html { scroll-behavior: smooth; }
-
-    /* ─── Scroll-triggered fade-in ──────────────────────── */
-    .fade-in {
+    /* ─── Scroll-triggered reveal ────────────────────────── */
+    .reveal {
       opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(28px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .fade-in.visible {
+    .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .fade-in-delay-1 { transition-delay: 0.1s; }
-    .fade-in-delay-2 { transition-delay: 0.2s; }
-    .fade-in-delay-3 { transition-delay: 0.3s; }
-    .fade-in-delay-4 { transition-delay: 0.4s; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
 
-    @media (prefers-reduced-motion: reduce) {
-      .fade-in { opacity: 1; transform: none; transition: none; }
-    }
-
-    /* ─── Nav ───────────────────────────────────────────── */
+    /* ─── Nav ────────────────────────────────────────────── */
     nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
-
-    /* ─── Film card hover ───────────────────────────────── */
-    .film-card {
-      position: relative;
-      overflow: hidden;
-      background: var(--subtle-bg);
-    }
-    .film-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s ease;
-      filter: grayscale(20%);
-    }
-    .film-card:hover img {
-      transform: scale(1.04);
-      filter: grayscale(0%);
-    }
-    .film-card-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .film-card:hover .film-card-overlay {
-      opacity: 1;
-    }
-    .film-card-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 1.5rem;
-      transform: translateY(8px);
-      opacity: 0;
-      transition: transform 0.4s ease, opacity 0.4s ease;
-    }
-    .film-card:hover .film-card-info {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* ─── Text link buttons ─────────────────────────────── */
-    .text-link {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text);
+    .nav-link {
+      font-size: 13px;
+      color: var(--muted);
       text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      transition: opacity 0.2s ease;
+      letter-spacing: 0.01em;
+      transition: color 0.2s ease;
     }
-    .text-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: var(--accent);
-      transition: width 0.3s ease;
-    }
-    .text-link:hover { opacity: 0.7; }
-    .text-link:hover::after { width: 100%; }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); }
 
-    /* CTA primary button */
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--accent);
-      color: var(--bg);
-      padding: 0.75rem 1.75rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      border: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-    .btn-primary:hover {
-      opacity: 0.88;
-      transform: translateY(-1px);
-    }
-    .btn-primary:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
-    }
-
-    /* Ghost button */
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: transparent;
-      color: var(--text);
-      padding: 0.75rem 1.75rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      border: 1px solid var(--border);
-      transition: border-color 0.2s ease, opacity 0.2s ease;
-    }
-    .btn-ghost:hover {
-      border-color: rgba(255,255,255,0.5);
-    }
-    .btn-ghost:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
-    }
-
-    /* ─── SVG Ornamental divider ────────────────────────── */
-    .ornament {
-      opacity: 0.12;
-      display: block;
-      margin: 0 auto;
-    }
-
-    /* ─── Mono label ────────────────────────────────────── */
-    .mono-label {
-      font-family: monospace;
+    /* ─── Mono label ─────────────────────────────────────── */
+    .mono {
       font-size: 10px;
+      font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    /* ─── Horizontal ticker ─────────────────────────────── */
+    /* ─── Film poster card ───────────────────────────────── */
+    .poster {
+      position: relative;
+      overflow: hidden;
+      background: var(--subtle-bg);
+    }
+    .poster img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.8s ease;
+      filter: grayscale(15%) brightness(0.95);
+    }
+    .poster:hover img {
+      transform: scale(1.03);
+      filter: grayscale(0%) brightness(1);
+    }
+    .poster-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .poster:hover .poster-overlay { opacity: 1; }
+    .poster-info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.5rem;
+      transform: translateY(6px);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.4s ease;
+    }
+    .poster:hover .poster-info {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ─── Text link ──────────────────────────────────────── */
+    .text-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: opacity 0.2s ease;
+    }
+    .text-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .text-link:hover::after { width: 100%; }
+    .text-link:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+    }
+
+    /* ─── CTA button ─────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border: none;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      cursor: none;
+    }
+    .btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+    }
+
+    /* ─── Ghost button ───────────────────────────────────── */
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text);
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      transition: border-color 0.2s ease;
+      cursor: none;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.4); }
+    .btn-ghost:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+    }
+
+    /* ─── Rating badge ───────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      padding: 1px 7px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    /* ─── SVG ornament ───────────────────────────────────── */
+    .ornament {
+      display: block;
+      margin: 0 auto;
+      opacity: 0.1;
+    }
+
+    /* ─── Watch card ─────────────────────────────────────── */
+    .watch-card {
+      border: 1px solid var(--border);
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .watch-card:hover {
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* ─── List row ───────────────────────────────────────── */
+    .list-row {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+    .list-row:hover { background: rgba(255,255,255,0.02); }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    .foot-link {
+      color: var(--muted);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .foot-link:hover { color: var(--text); }
+
+    /* ─── Ticker ─────────────────────────────────────────── */
     .ticker-wrap {
       overflow: hidden;
       white-space: nowrap;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
-    .ticker-inner {
+    .ticker-track {
       display: inline-flex;
-      animation: ticker 24s linear infinite;
+      animation: slide 28s linear infinite;
     }
-    @keyframes ticker {
-      0% { transform: translateX(0); }
+    @keyframes slide {
+      0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
 
-    /* ─── Watch Now card ────────────────────────────────── */
-    .watch-card {
-      border: 1px solid var(--border);
-      transition: border-color 0.3s ease, background 0.3s ease;
-    }
-    .watch-card:hover {
-      border-color: rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.03);
-    }
-
-    /* ─── Shop item ─────────────────────────────────────── */
-    .shop-item {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s ease;
-    }
-    .shop-item:hover {
-      background: rgba(255,255,255,0.025);
-    }
-    .shop-item:last-child { border-bottom: none; }
-
-    /* ─── Footer link ───────────────────────────────────── */
-    .footer-link {
-      color: var(--muted);
-      font-size: 0.8125rem;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .footer-link:hover { color: var(--text); }
-
-    /* ─── Hero film strip accent ─────────────────────────── */
-    .film-strip-dot {
-      width: 6px;
-      height: 6px;
-      background: rgba(255,255,255,0.15);
+    /* ─── Play button overlay ────────────────────────────── */
+    .play-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
+      width: 64px; height: 64px;
       border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    /* ─── Rating badge ──────────────────────────────────── */
-    .rating-badge {
-      display: inline-block;
-      border: 1px solid var(--border);
-      padding: 2px 8px;
-      font-family: monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      color: var(--muted);
+    .poster:hover .play-btn {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
   </style>
 </head>
@@ -302,110 +329,103 @@
 
 <!-- Custom cursor -->
 <div id="cursor"></div>
-<div id="cursor-trail"></div>
+<div id="cursor-dot"></div>
 
 <!-- ═══════════════════════════════════════════════════════
      NAV
 ════════════════════════════════════════════════════════ -->
-<nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm">
-  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-    <!-- Logo -->
-    <a href="#" class="flex items-center gap-3 text-link" style="font-size: 1rem; font-weight: 500; letter-spacing: -0.01em;">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <rect x="1" y="1" width="18" height="18" stroke="white" stroke-width="1"/>
-        <rect x="4" y="1" width="2" height="4" fill="white"/>
-        <rect x="9" y="1" width="2" height="4" fill="white"/>
-        <rect x="14" y="1" width="2" height="4" fill="white"/>
-        <rect x="4" y="15" width="2" height="4" fill="white"/>
-        <rect x="9" y="15" width="2" height="4" fill="white"/>
-        <rect x="14" y="15" width="2" height="4" fill="white"/>
+<nav>
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-14">
+    <a href="#" class="text-link" style="font-size: 15px; font-weight: 500; letter-spacing: -0.01em;">
+      <!-- Film-strip icon -->
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="margin-right: 6px;">
+        <rect x="1" y="3" width="18" height="14" rx="1" stroke="white" stroke-width="1.2" fill="none"/>
+        <rect x="3" y="3" width="3" height="3" fill="white" opacity="0.4"/>
+        <rect x="8.5" y="3" width="3" height="3" fill="white" opacity="0.4"/>
+        <rect x="14" y="3" width="3" height="3" fill="white" opacity="0.4"/>
+        <rect x="3" y="14" width="3" height="3" fill="white" opacity="0.4"/>
+        <rect x="8.5" y="14" width="3" height="3" fill="white" opacity="0.4"/>
+        <rect x="14" y="14" width="3" height="3" fill="white" opacity="0.4"/>
       </svg>
       CineVault
     </a>
 
-    <!-- Nav links -->
     <div class="hidden md:flex items-center gap-8">
-      <a href="#theaters" class="text-link" style="color: var(--muted);">In Theaters</a>
-      <a href="#coming-soon" class="text-link" style="color: var(--muted);">Coming Soon</a>
-      <a href="#watch-now" class="text-link" style="color: var(--muted);">Watch Now</a>
-      <a href="#shop" class="text-link" style="color: var(--muted);">Shop</a>
+      <a href="#theaters" class="nav-link">In Theaters</a>
+      <a href="#coming" class="nav-link">Coming Soon</a>
+      <a href="#watch" class="nav-link">Watch Now</a>
+      <a href="#shop" class="nav-link">Shop</a>
     </div>
 
-    <!-- CTA -->
-    <a href="#" class="btn-primary text-sm">Start Watching</a>
+    <a href="#" class="btn text-xs">Start Watching</a>
   </div>
 </nav>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     HERO  bg:#000000  py-32 md:py-40
+     HERO   bg:#000   py-32 md:py-40
 ════════════════════════════════════════════════════════ -->
-<section style="background: #000000; padding-top: 8rem; padding-bottom: 10rem;">
+<section style="background: #000; padding: 7rem 0 9rem;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <!-- Film strip ornament -->
-    <div class="flex items-center gap-3 mb-16 fade-in">
-      <div class="film-strip-dot"></div>
-      <div class="film-strip-dot"></div>
-      <div class="film-strip-dot"></div>
-      <span class="mono-label ml-1">Est. 2024 — Premium Cinema</span>
+    <!-- Label -->
+    <div class="reveal flex items-center gap-3 mb-14">
+      <span style="display:inline-block;width:32px;height:1px;background:var(--muted);"></span>
+      <span class="mono">Premium Cinema · Est. 2024</span>
     </div>
 
-    <!-- Hero headline -->
-    <div class="max-w-5xl fade-in fade-in-delay-1">
-      <h1 class="heading text-5xl md:text-7xl mb-8" style="line-height: 1.05;">
-        Cinema that<br/>
-        <span style="color: var(--muted);">refuses to</span><br/>
-        be ordinary.
-      </h1>
-      <p class="text-base md:text-lg leading-relaxed mb-12" style="color: var(--muted); max-width: 480px;">
-        Handpicked films from independent directors, curated for those who see cinema as a craft — not just content.
-      </p>
-      <div class="flex flex-wrap items-center gap-6">
-        <a href="#" class="btn-primary">
-          Explore the Vault
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#theaters" class="text-link" style="color: var(--muted);">Now in theaters →</a>
-      </div>
+    <!-- Headline -->
+    <h1 class="heading reveal reveal-d1" style="font-size: clamp(44px, 8vw, 96px); margin: 0 0 2rem; max-width: 13ch;">
+      Cinema for those<br/>
+      <span style="color: var(--muted);">who still</span> care.
+    </h1>
+
+    <p class="reveal reveal-d2" style="font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 460px; margin: 0 0 2.5rem;">
+      Handpicked films from independent directors, curated for people who see cinema as a craft — not content.
+    </p>
+
+    <div class="reveal reveal-d2 flex flex-wrap items-center gap-5">
+      <a href="#" class="btn">
+        Explore the Vault
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#theaters" class="text-link" style="color: var(--muted);">Now in theaters</a>
     </div>
 
-    <!-- Hero film imagery grid -->
-    <div class="mt-20 grid grid-cols-12 gap-3 h-64 md:h-96 fade-in fade-in-delay-2">
-      <!-- Large image -->
-      <div class="col-span-7 film-card">
-        <img
-          src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=900&q=80&fit=crop"
-          alt="Featured film still"
-        />
-        <div class="film-card-overlay"></div>
-        <div class="film-card-info">
-          <span class="rating-badge">R</span>
-          <p class="text-sm font-medium mt-2">The Quiet Hours</p>
-          <p class="mono-label mt-1">Dir. Elena Marchetti · 2024</p>
+    <!-- Hero film imagery -->
+    <div class="mt-16 grid grid-cols-12 gap-3 reveal reveal-d3" style="height: clamp(240px, 38vw, 420px);">
+      <!-- Main poster -->
+      <div class="col-span-12 md:col-span-7 poster">
+        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=900&q=80&fit=crop" alt="Featured — The Quiet Hours" />
+        <div class="poster-overlay"></div>
+        <div class="play-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+        </div>
+        <div class="poster-info">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="badge">R</span>
+            <span class="mono" style="font-size:9px;">In Theaters · 2h 14m</span>
+          </div>
+          <p class="text-sm font-medium">The Quiet Hours</p>
+          <p class="mono mt-1" style="font-size:9px;">Dir. Elena Marchetti · 2025</p>
         </div>
       </div>
-      <!-- Two stacked images -->
-      <div class="col-span-5 grid grid-rows-2 gap-3">
-        <div class="film-card">
-          <img
-            src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?w=600&q=80&fit=crop"
-            alt="Film still"
-          />
-          <div class="film-card-overlay"></div>
-          <div class="film-card-info">
+      <!-- Side stack -->
+      <div class="hidden md:grid col-span-5 grid-rows-2 gap-3">
+        <div class="poster">
+          <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?w=600&q=80&fit=crop" alt="Neon Horizon" />
+          <div class="poster-overlay"></div>
+          <div class="poster-info">
             <p class="text-sm font-medium">Neon Horizon</p>
+            <p class="mono mt-1" style="font-size:9px;">Sci-Fi · 1h 52m</p>
           </div>
         </div>
-        <div class="film-card">
-          <img
-            src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&q=80&fit=crop"
-            alt="Film still"
-          />
-          <div class="film-card-overlay"></div>
-          <div class="film-card-info">
+        <div class="poster">
+          <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&q=80&fit=crop" alt="La Deriva" />
+          <div class="poster-overlay"></div>
+          <div class="poster-info">
             <p class="text-sm font-medium">La Deriva</p>
+            <p class="mono mt-1" style="font-size:9px;">Drama · 2h 06m</p>
           </div>
         </div>
       </div>
@@ -414,112 +434,96 @@
   </div>
 </section>
 
-<!-- ─── SVG Ornamental Divider ─────────────────────────── -->
-<div style="background: #111111; padding: 0;">
-  <div class="max-w-7xl mx-auto px-6">
-    <svg class="ornament" width="600" height="40" viewBox="0 0 600 40" fill="none">
-      <line x1="0" y1="20" x2="240" y2="20" stroke="white" stroke-width="0.5"/>
-      <path d="M260 20 Q270 10 280 20 Q290 30 300 20 Q310 10 320 20 Q330 30 340 20" stroke="white" stroke-width="0.5" fill="none"/>
-      <line x1="360" y1="20" x2="600" y2="20" stroke="white" stroke-width="0.5"/>
-      <circle cx="300" cy="20" r="3" stroke="white" stroke-width="0.5" fill="none"/>
-    </svg>
+
+<!-- ─── SVG Ornament ─────────────────────────────────────── -->
+<div style="background: #111;">
+  <svg class="ornament" width="600" height="32" viewBox="0 0 600 32" fill="none">
+    <line x1="0" y1="16" x2="255" y2="16" stroke="white" stroke-width="0.5"/>
+    <circle cx="270" cy="16" r="2" stroke="white" stroke-width="0.5" fill="none"/>
+    <line x1="276" y1="16" x2="290" y2="16" stroke="white" stroke-width="0.5"/>
+    <circle cx="300" cy="16" r="4" stroke="white" stroke-width="0.5" fill="none"/>
+    <circle cx="300" cy="16" r="1.5" fill="white" opacity="0.3"/>
+    <line x1="310" y1="16" x2="324" y2="16" stroke="white" stroke-width="0.5"/>
+    <circle cx="330" cy="16" r="2" stroke="white" stroke-width="0.5" fill="none"/>
+    <line x1="345" y1="16" x2="600" y2="16" stroke="white" stroke-width="0.5"/>
+  </svg>
+</div>
+
+
+<!-- ─── Ticker Band ──────────────────────────────────────── -->
+<div class="ticker-wrap py-3" style="background: #111;">
+  <div class="ticker-track">
+    <span class="mono mx-8">4K Dolby Vision</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">Curated by Critics</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">2,400+ Films</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">Independent Cinema</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">Director Commentary</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">No Algorithm</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">4K Dolby Vision</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">Curated by Critics</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">2,400+ Films</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">Independent Cinema</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">Director Commentary</span><span style="color:var(--border);">·</span>
+    <span class="mono mx-8">No Algorithm</span><span style="color:var(--border);">·</span>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     TICKER BAND
-════════════════════════════════════════════════════════ -->
-<div class="ticker-wrap py-3" style="background: #111111;">
-  <div class="ticker-inner">
-    <span class="mono-label mx-8">4K DOLBY VISION</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">CURATED BY CRITICS</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">2,400+ FILMS</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">INDEPENDENT CINEMA</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">DIRECTOR COMMENTARY</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">NO ALGORITHM</span>
-    <span style="color: var(--border);">·</span>
-    <!-- repeat for seamless loop -->
-    <span class="mono-label mx-8">4K DOLBY VISION</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">CURATED BY CRITICS</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">2,400+ FILMS</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">INDEPENDENT CINEMA</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">DIRECTOR COMMENTARY</span>
-    <span style="color: var(--border);">·</span>
-    <span class="mono-label mx-8">NO ALGORITHM</span>
-    <span style="color: var(--border);">·</span>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════════════════════
-     IN THEATERS  bg:#111111  py-20
+     IN THEATERS   bg:#111   py-20
 ════════════════════════════════════════════════════════ -->
-<section id="theaters" style="background: #111111; padding: 5rem 0;">
+<section id="theaters" style="background: #111; padding: 5rem 0;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <div class="flex items-end justify-between mb-12 fade-in">
+    <div class="flex items-end justify-between mb-12 reveal">
       <div>
-        <p class="mono-label mb-3">01 / In Theaters</p>
+        <p class="mono mb-3">01 / In Theaters</p>
         <h2 class="heading text-3xl md:text-5xl">Now playing.</h2>
       </div>
-      <a href="#" class="text-link hidden md:inline-flex" style="color: var(--muted);">View all →</a>
+      <a href="#" class="text-link hidden md:inline-flex" style="color:var(--muted);">View all</a>
     </div>
 
-    <!-- Photography-centric grid — first card col-span-2 -->
+    <!-- Photography-centric grid: featured large, 2 stacked -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
 
-      <!-- Featured (large) -->
-      <div class="md:col-span-7 film-card fade-in fade-in-delay-1" style="height: 480px;">
-        <img
-          src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=900&q=80&fit=crop"
-          alt="The Quiet Hours"
-        />
-        <div class="film-card-overlay"></div>
-        <div class="film-card-info">
+      <!-- Featured -->
+      <div class="md:col-span-7 poster reveal reveal-d1" style="height: 480px;">
+        <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=900&q=80&fit=crop" alt="The Quiet Hours" />
+        <div class="poster-overlay"></div>
+        <div class="play-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+        </div>
+        <div class="poster-info">
           <div class="flex items-center gap-3 mb-2">
-            <span class="rating-badge">PG-13</span>
-            <span class="mono-label">Drama · 2h 14m</span>
+            <span class="badge">PG-13</span>
+            <span class="mono" style="font-size:9px;">Drama · 2h 14m</span>
           </div>
           <h3 class="text-lg font-medium heading">The Quiet Hours</h3>
-          <p class="text-sm mt-1" style="color: rgba(255,255,255,0.6);">A woman returns to her childhood village to discover the silence was never peaceful.</p>
-          <a href="#" class="text-link mt-3 inline-flex" style="font-size: 0.75rem;">Book tickets →</a>
+          <p class="text-sm mt-1" style="color:rgba(255,255,255,0.55);">A woman returns to her childhood village to find the silence was never peaceful.</p>
+          <a href="#" class="text-link mt-3 inline-flex" style="font-size:12px;">Get tickets</a>
         </div>
       </div>
 
-      <!-- Secondary stack -->
+      <!-- Stack -->
       <div class="md:col-span-5 grid grid-rows-2 gap-4">
-        <div class="film-card fade-in fade-in-delay-2" style="height: 228px;">
-          <img
-            src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=700&q=80&fit=crop"
-            alt="Contre-Jour"
-          />
-          <div class="film-card-overlay"></div>
-          <div class="film-card-info">
+        <div class="poster reveal reveal-d2" style="height: 230px;">
+          <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=700&q=80&fit=crop" alt="Contre-Jour" />
+          <div class="poster-overlay"></div>
+          <div class="poster-info">
             <div class="flex items-center gap-2 mb-1">
-              <span class="rating-badge">R</span>
-              <span class="mono-label">Thriller · 1h 58m</span>
+              <span class="badge">R</span>
+              <span class="mono" style="font-size:9px;">Thriller · 1h 58m</span>
             </div>
             <h3 class="text-base font-medium heading">Contre-Jour</h3>
           </div>
         </div>
-        <div class="film-card fade-in fade-in-delay-3" style="height: 228px;">
-          <img
-            src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=700&q=80&fit=crop"
-            alt="Marée Noire"
-          />
-          <div class="film-card-overlay"></div>
-          <div class="film-card-info">
+        <div class="poster reveal reveal-d3" style="height: 230px;">
+          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=700&q=80&fit=crop" alt="Marée Noire" />
+          <div class="poster-overlay"></div>
+          <div class="poster-info">
             <div class="flex items-center gap-2 mb-1">
-              <span class="rating-badge">PG</span>
-              <span class="mono-label">Documentary · 1h 32m</span>
+              <span class="badge">PG</span>
+              <span class="mono" style="font-size:9px;">Documentary · 1h 32m</span>
             </div>
             <h3 class="text-base font-medium heading">Marée Noire</h3>
           </div>
@@ -527,498 +531,438 @@
       </div>
 
     </div>
-
   </div>
 </section>
 
-<!-- ─── SVG Ornamental Divider ─────────────────────────── -->
-<div style="background: #000000; padding: 0;">
-  <div class="max-w-7xl mx-auto px-6">
-    <svg class="ornament" width="400" height="32" viewBox="0 0 400 32" fill="none">
-      <line x1="0" y1="16" x2="160" y2="16" stroke="white" stroke-width="0.5"/>
-      <path d="M170 16 L185 8 L200 16 L215 8 L230 16" stroke="white" stroke-width="0.5" fill="none"/>
-      <line x1="240" y1="16" x2="400" y2="16" stroke="white" stroke-width="0.5"/>
-    </svg>
-  </div>
+
+<!-- ─── SVG Ornament ─────────────────────────────────────── -->
+<div style="background: #000;">
+  <svg class="ornament" width="400" height="28" viewBox="0 0 400 28" fill="none">
+    <line x1="0" y1="14" x2="165" y2="14" stroke="white" stroke-width="0.5"/>
+    <path d="M175 14 L187 6 L200 14 L213 6 L225 14" stroke="white" stroke-width="0.5" fill="none"/>
+    <line x1="235" y1="14" x2="400" y2="14" stroke="white" stroke-width="0.5"/>
+  </svg>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     COMING SOON  bg:#000000  py-20
+     COMING SOON   bg:#000   py-20
 ════════════════════════════════════════════════════════ -->
-<section id="coming-soon" style="background: #000000; padding: 5rem 0;">
+<section id="coming" style="background: #000; padding: 5rem 0;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <div class="flex items-end justify-between mb-12 fade-in">
+    <div class="flex items-end justify-between mb-12 reveal">
       <div>
-        <p class="mono-label mb-3">02 / Coming Soon</p>
+        <p class="mono mb-3">02 / Coming Soon</p>
         <h2 class="heading text-3xl md:text-5xl">Mark your calendar.</h2>
       </div>
     </div>
 
-    <!-- Film list — editorial table style -->
+    <!-- Editorial list -->
     <div style="border-top: 1px solid var(--border);">
 
-      <!-- Item 1 -->
-      <div class="shop-item grid grid-cols-12 gap-6 py-8 fade-in fade-in-delay-1">
+      <div class="list-row grid grid-cols-12 gap-5 py-7 items-center reveal reveal-d1">
         <div class="col-span-3 md:col-span-2">
-          <div class="film-card" style="height: 120px;">
+          <div class="poster" style="height: 110px;">
             <img src="https://images.unsplash.com/photo-1461344577544-4e5dc9487184?w=300&q=80&fit=crop" alt="Sotto Voce"/>
           </div>
         </div>
         <div class="col-span-9 md:col-span-7 flex flex-col justify-center">
           <div class="flex items-center gap-3 mb-2">
-            <span class="rating-badge">NR</span>
-            <span class="mono-label">Romance</span>
+            <span class="badge">NR</span>
+            <span class="mono" style="font-size:9px;">Romance</span>
           </div>
           <h3 class="heading text-lg md:text-xl mb-1">Sotto Voce</h3>
-          <p class="text-sm leading-relaxed" style="color: var(--muted);">Two composers. One unfinished symphony. A love story told entirely in silence.</p>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">Two composers. One unfinished symphony. A love story told entirely in silence.</p>
         </div>
-        <div class="col-span-12 md:col-span-3 flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4">
-          <span class="mono-label">Apr 18, 2025</span>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Remind me →</a>
+        <div class="hidden md:flex col-span-3 flex-col items-end justify-center gap-3">
+          <span class="mono">Apr 18, 2026</span>
+          <a href="#" class="text-link" style="font-size:12px; color:var(--muted);">Remind me</a>
         </div>
       </div>
 
-      <!-- Item 2 -->
-      <div class="shop-item grid grid-cols-12 gap-6 py-8 fade-in fade-in-delay-2">
+      <div class="list-row grid grid-cols-12 gap-5 py-7 items-center reveal reveal-d2">
         <div class="col-span-3 md:col-span-2">
-          <div class="film-card" style="height: 120px;">
+          <div class="poster" style="height: 110px;">
             <img src="https://images.unsplash.com/photo-1553949333-2e9c0a0a2200?w=300&q=80&fit=crop" alt="Umbra"/>
           </div>
         </div>
         <div class="col-span-9 md:col-span-7 flex flex-col justify-center">
           <div class="flex items-center gap-3 mb-2">
-            <span class="rating-badge">R</span>
-            <span class="mono-label">Noir · Thriller</span>
+            <span class="badge">R</span>
+            <span class="mono" style="font-size:9px;">Noir · Thriller</span>
           </div>
           <h3 class="heading text-lg md:text-xl mb-1">Umbra</h3>
-          <p class="text-sm leading-relaxed" style="color: var(--muted);">A disgraced detective investigates the one case he swore he'd never reopen.</p>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">A disgraced detective investigates the one case he swore he'd never reopen.</p>
         </div>
-        <div class="col-span-12 md:col-span-3 flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4">
-          <span class="mono-label">May 2, 2025</span>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Remind me →</a>
+        <div class="hidden md:flex col-span-3 flex-col items-end justify-center gap-3">
+          <span class="mono">May 2, 2026</span>
+          <a href="#" class="text-link" style="font-size:12px; color:var(--muted);">Remind me</a>
         </div>
       </div>
 
-      <!-- Item 3 -->
-      <div class="shop-item grid grid-cols-12 gap-6 py-8 fade-in fade-in-delay-3">
+      <div class="list-row grid grid-cols-12 gap-5 py-7 items-center reveal reveal-d3">
         <div class="col-span-3 md:col-span-2">
-          <div class="film-card" style="height: 120px;">
+          <div class="poster" style="height: 110px;">
             <img src="https://images.unsplash.com/photo-1579547945478-a6d9a0f4b223?w=300&q=80&fit=crop" alt="Vesper"/>
           </div>
         </div>
         <div class="col-span-9 md:col-span-7 flex flex-col justify-center">
           <div class="flex items-center gap-3 mb-2">
-            <span class="rating-badge">PG-13</span>
-            <span class="mono-label">Sci-Fi</span>
+            <span class="badge">PG-13</span>
+            <span class="mono" style="font-size:9px;">Sci-Fi</span>
           </div>
           <h3 class="heading text-lg md:text-xl mb-1">Vesper</h3>
-          <p class="text-sm leading-relaxed" style="color: var(--muted);">In the last city with electric light, a girl maps the dark world beyond the wall.</p>
+          <p class="text-sm leading-relaxed" style="color:var(--muted);">In the last city with electric light, a girl maps the dark world beyond the wall.</p>
         </div>
-        <div class="col-span-12 md:col-span-3 flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4">
-          <span class="mono-label">Jun 6, 2025</span>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Remind me →</a>
+        <div class="hidden md:flex col-span-3 flex-col items-end justify-center gap-3">
+          <span class="mono">Jun 6, 2026</span>
+          <a href="#" class="text-link" style="font-size:12px; color:var(--muted);">Remind me</a>
         </div>
       </div>
 
     </div>
-
   </div>
 </section>
 
-<!-- ─── SVG Ornamental Divider ─────────────────────────── -->
-<div style="background: #111111; padding: 0;">
-  <div class="max-w-7xl mx-auto px-6">
-    <svg class="ornament" width="500" height="36" viewBox="0 0 500 36" fill="none">
-      <line x1="0" y1="18" x2="200" y2="18" stroke="white" stroke-width="0.5"/>
-      <rect x="222" y="12" width="12" height="12" stroke="white" stroke-width="0.5" fill="none" transform="rotate(45 228 18)"/>
-      <rect x="244" y="12" width="12" height="12" stroke="white" stroke-width="0.5" fill="none" transform="rotate(45 250 18)"/>
-      <rect x="266" y="12" width="12" height="12" stroke="white" stroke-width="0.5" fill="none" transform="rotate(45 272 18)"/>
-      <line x1="300" y1="18" x2="500" y2="18" stroke="white" stroke-width="0.5"/>
-    </svg>
-  </div>
+
+<!-- ─── SVG Ornament ─────────────────────────────────────── -->
+<div style="background: #111;">
+  <svg class="ornament" width="500" height="32" viewBox="0 0 500 32" fill="none">
+    <line x1="0" y1="16" x2="205" y2="16" stroke="white" stroke-width="0.5"/>
+    <rect x="224" y="8" width="10" height="10" stroke="white" stroke-width="0.5" fill="none" transform="rotate(45 229 13)"/>
+    <rect x="248" y="8" width="10" height="10" stroke="white" stroke-width="0.5" fill="none" transform="rotate(45 253 13)"/>
+    <rect x="272" y="8" width="10" height="10" stroke="white" stroke-width="0.5" fill="none" transform="rotate(45 277 13)"/>
+    <line x1="295" y1="16" x2="500" y2="16" stroke="white" stroke-width="0.5"/>
+  </svg>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     WATCH NOW  bg:#111111  py-24
+     WATCH NOW   bg:#111   py-24
 ════════════════════════════════════════════════════════ -->
-<section id="watch-now" style="background: #111111; padding: 6rem 0;">
+<section id="watch" style="background: #111; padding: 6rem 0;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <div class="mb-12 fade-in">
-      <p class="mono-label mb-3">03 / Watch Now</p>
+    <div class="mb-12 reveal">
+      <p class="mono mb-3">03 / Watch Now</p>
       <h2 class="heading text-3xl md:text-5xl mb-4">Stream tonight.</h2>
-      <p class="text-base leading-relaxed" style="color: var(--muted); max-width: 440px;">Hand-edited weekly collections. No infinite scroll. No autoplay. Just cinema.</p>
+      <p class="text-base leading-relaxed" style="color:var(--muted); max-width:420px;">
+        Hand-edited weekly collections. No infinite scroll. No autoplay. Just cinema.
+      </p>
     </div>
 
-    <!-- Watch cards grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Watch cards: first card larger -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
 
-      <!-- Card 1 — featured -->
-      <div class="watch-card p-6 fade-in fade-in-delay-1">
-        <div class="film-card mb-5" style="height: 200px;">
-          <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&q=80&fit=crop" alt="Editors Pick"/>
-          <div class="film-card-overlay"></div>
+      <!-- Featured pick (wider) -->
+      <div class="md:col-span-5 watch-card p-5 reveal reveal-d1">
+        <div class="poster mb-4" style="height: 220px;">
+          <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&q=80&fit=crop" alt="Pale Fire"/>
+          <div class="poster-overlay"></div>
+          <div class="play-btn" style="width:48px;height:48px;">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="white"><polygon points="6,3 18,10 6,17"/></svg>
+          </div>
         </div>
-        <p class="mono-label mb-2">Editor's Pick · This Week</p>
+        <p class="mono mb-2" style="font-size:9px;">Editor's Pick · This Week</p>
         <h3 class="heading text-lg mb-2">Pale Fire</h3>
-        <p class="text-sm leading-relaxed mb-4" style="color: var(--muted);">An adaptation of Nabokov's labyrinthine novel — finally done justice on screen.</p>
+        <p class="text-sm leading-relaxed mb-4" style="color:var(--muted);">An adaptation of Nabokov's labyrinthine novel — finally done justice on screen.</p>
         <div class="flex items-center justify-between">
-          <span class="mono-label">2h 28m</span>
-          <a href="#" class="text-link" style="font-size: 0.75rem;">Watch now →</a>
+          <span class="mono" style="font-size:9px;">2h 28m</span>
+          <a href="#" class="text-link" style="font-size:12px;">Watch now</a>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="watch-card p-6 fade-in fade-in-delay-2">
-        <div class="film-card mb-5" style="height: 200px;">
-          <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80&fit=crop" alt="New Arrival"/>
-          <div class="film-card-overlay"></div>
+      <!-- Two standard cards -->
+      <div class="md:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="watch-card p-5 reveal reveal-d2">
+          <div class="poster mb-4" style="height: 180px;">
+            <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80&fit=crop" alt="Archipelago"/>
+            <div class="poster-overlay"></div>
+          </div>
+          <p class="mono mb-2" style="font-size:9px;">New Arrival</p>
+          <h3 class="heading text-base mb-2">Archipelago</h3>
+          <p class="text-sm leading-relaxed mb-4" style="color:var(--muted);">A family on an island holiday slowly unravels the myth of togetherness.</p>
+          <div class="flex items-center justify-between">
+            <span class="mono" style="font-size:9px;">1h 54m</span>
+            <a href="#" class="text-link" style="font-size:12px;">Watch</a>
+          </div>
         </div>
-        <p class="mono-label mb-2">New Arrival</p>
-        <h3 class="heading text-lg mb-2">Archipelago</h3>
-        <p class="text-sm leading-relaxed mb-4" style="color: var(--muted);">A family on an island holiday slowly unravels the myth of togetherness.</p>
-        <div class="flex items-center justify-between">
-          <span class="mono-label">1h 54m</span>
-          <a href="#" class="text-link" style="font-size: 0.75rem;">Watch now →</a>
-        </div>
-      </div>
 
-      <!-- Card 3 -->
-      <div class="watch-card p-6 fade-in fade-in-delay-3">
-        <div class="film-card mb-5" style="height: 200px;">
-          <img src="https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=600&q=80&fit=crop" alt="Classic Restored"/>
-          <div class="film-card-overlay"></div>
-        </div>
-        <p class="mono-label mb-2">4K Restored Classic</p>
-        <h3 class="heading text-lg mb-2">Nightwatch (1994)</h3>
-        <p class="text-sm leading-relaxed mb-4" style="color: var(--muted);">Ole Bornedal's original Danish masterpiece — restored from original negatives.</p>
-        <div class="flex items-center justify-between">
-          <span class="mono-label">1h 47m</span>
-          <a href="#" class="text-link" style="font-size: 0.75rem;">Watch now →</a>
+        <div class="watch-card p-5 reveal reveal-d3">
+          <div class="poster mb-4" style="height: 180px;">
+            <img src="https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=600&q=80&fit=crop" alt="Nightwatch"/>
+            <div class="poster-overlay"></div>
+          </div>
+          <p class="mono mb-2" style="font-size:9px;">4K Restored Classic</p>
+          <h3 class="heading text-base mb-2">Nightwatch (1994)</h3>
+          <p class="text-sm leading-relaxed mb-4" style="color:var(--muted);">Ole Bornedal's Danish masterpiece — restored from original negatives.</p>
+          <div class="flex items-center justify-between">
+            <span class="mono" style="font-size:9px;">1h 47m</span>
+            <a href="#" class="text-link" style="font-size:12px;">Watch</a>
+          </div>
         </div>
       </div>
 
     </div>
-
   </div>
 </section>
 
-<!-- ─── SVG Ornamental Divider ─────────────────────────── -->
-<div style="background: #000000; padding: 0;">
-  <div class="max-w-7xl mx-auto px-6">
-    <svg class="ornament" width="480" height="36" viewBox="0 0 480 36" fill="none">
-      <line x1="0" y1="18" x2="190" y2="18" stroke="white" stroke-width="0.5"/>
-      <circle cx="210" cy="18" r="4" stroke="white" stroke-width="0.5" fill="none"/>
-      <circle cx="230" cy="18" r="2" stroke="white" stroke-width="0.5" fill="none"/>
-      <circle cx="240" cy="18" r="6" stroke="white" stroke-width="0.5" fill="none"/>
-      <circle cx="250" cy="18" r="2" stroke="white" stroke-width="0.5" fill="none"/>
-      <circle cx="270" cy="18" r="4" stroke="white" stroke-width="0.5" fill="none"/>
-      <line x1="290" y1="18" x2="480" y2="18" stroke="white" stroke-width="0.5"/>
-    </svg>
-  </div>
+
+<!-- ─── SVG Ornament ─────────────────────────────────────── -->
+<div style="background: #000;">
+  <svg class="ornament" width="480" height="32" viewBox="0 0 480 32" fill="none">
+    <line x1="0" y1="16" x2="195" y2="16" stroke="white" stroke-width="0.5"/>
+    <circle cx="212" cy="16" r="3" stroke="white" stroke-width="0.5" fill="none"/>
+    <circle cx="228" cy="16" r="1.5" stroke="white" stroke-width="0.5" fill="none"/>
+    <circle cx="240" cy="16" r="5" stroke="white" stroke-width="0.5" fill="none"/>
+    <circle cx="240" cy="16" r="1.5" fill="white" opacity="0.25"/>
+    <circle cx="252" cy="16" r="1.5" stroke="white" stroke-width="0.5" fill="none"/>
+    <circle cx="268" cy="16" r="3" stroke="white" stroke-width="0.5" fill="none"/>
+    <line x1="285" y1="16" x2="480" y2="16" stroke="white" stroke-width="0.5"/>
+  </svg>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     SHOP  bg:#000000  py-20
+     SHOP   bg:#000   py-20
 ════════════════════════════════════════════════════════ -->
-<section id="shop" style="background: #000000; padding: 5rem 0;">
+<section id="shop" style="background: #000; padding: 5rem 0;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-16 fade-in">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-14 reveal">
       <div>
-        <p class="mono-label mb-3">04 / Shop</p>
+        <p class="mono mb-3">04 / Shop</p>
         <h2 class="heading text-3xl md:text-5xl">Film objects.</h2>
       </div>
       <div class="flex flex-col justify-end">
-        <p class="text-base leading-relaxed" style="color: var(--muted);">
-          Archival prints, director notes, and limited-edition physical media. Each piece is a document of cinema's ongoing conversation with time.
+        <p class="text-base leading-relaxed" style="color:var(--muted);">
+          Archival prints, director notes, and limited-edition physical media. Each piece is a document of cinema's conversation with time.
         </p>
       </div>
     </div>
 
-    <!-- Shop item list -->
     <div style="border-top: 1px solid var(--border);">
 
-      <div class="shop-item grid grid-cols-12 gap-6 py-6 items-center fade-in fade-in-delay-1">
+      <div class="list-row grid grid-cols-12 gap-5 py-5 items-center reveal reveal-d1">
         <div class="col-span-2 md:col-span-1">
-          <div class="film-card" style="height: 64px; width: 64px;">
+          <div class="poster" style="height:56px; width:56px;">
             <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=80&fit=crop" alt="Print"/>
           </div>
         </div>
         <div class="col-span-7 md:col-span-8">
-          <h3 class="text-base font-medium heading mb-0.5">Archival Print — The Quiet Hours</h3>
-          <p class="text-sm" style="color: var(--muted);">Silver gelatin, 40×50cm, edition of 50</p>
+          <h3 class="text-sm font-medium heading mb-0.5">Archival Print — The Quiet Hours</h3>
+          <p class="text-xs" style="color:var(--muted);">Silver gelatin, 40×50cm, edition of 50</p>
         </div>
         <div class="col-span-3 text-right">
-          <p class="text-base font-medium">$240</p>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Add →</a>
+          <p class="text-sm font-medium">$240</p>
+          <a href="#" class="text-link" style="font-size:11px; color:var(--muted);">Add</a>
         </div>
       </div>
 
-      <div class="shop-item grid grid-cols-12 gap-6 py-6 items-center fade-in fade-in-delay-2">
+      <div class="list-row grid grid-cols-12 gap-5 py-5 items-center reveal reveal-d2">
         <div class="col-span-2 md:col-span-1">
-          <div class="film-card" style="height: 64px; width: 64px;">
+          <div class="poster" style="height:56px; width:56px;">
             <img src="https://images.unsplash.com/photo-1501647327897-90e05ebd1c3b?w=200&q=80&fit=crop" alt="Screenplay"/>
           </div>
         </div>
         <div class="col-span-7 md:col-span-8">
-          <h3 class="text-base font-medium heading mb-0.5">Original Screenplay — Pale Fire</h3>
-          <p class="text-sm" style="color: var(--muted);">Signed by director, annotated draft</p>
+          <h3 class="text-sm font-medium heading mb-0.5">Original Screenplay — Pale Fire</h3>
+          <p class="text-xs" style="color:var(--muted);">Signed by director, annotated draft</p>
         </div>
         <div class="col-span-3 text-right">
-          <p class="text-base font-medium">$180</p>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Add →</a>
+          <p class="text-sm font-medium">$180</p>
+          <a href="#" class="text-link" style="font-size:11px; color:var(--muted);">Add</a>
         </div>
       </div>
 
-      <div class="shop-item grid grid-cols-12 gap-6 py-6 items-center fade-in fade-in-delay-3">
+      <div class="list-row grid grid-cols-12 gap-5 py-5 items-center reveal reveal-d3">
         <div class="col-span-2 md:col-span-1">
-          <div class="film-card" style="height: 64px; width: 64px;">
-            <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=200&q=80&fit=crop" alt="4K Set"/>
+          <div class="poster" style="height:56px; width:56px;">
+            <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=200&q=80&fit=crop" alt="Collector set"/>
           </div>
         </div>
         <div class="col-span-7 md:col-span-8">
-          <h3 class="text-base font-medium heading mb-0.5">4K Collector's Edition — Umbra</h3>
-          <p class="text-sm" style="color: var(--muted);">Blu-ray + booklet + behind-scenes disc</p>
+          <h3 class="text-sm font-medium heading mb-0.5">4K Collector's Edition — Umbra</h3>
+          <p class="text-xs" style="color:var(--muted);">Blu-ray + booklet + behind-scenes disc</p>
         </div>
         <div class="col-span-3 text-right">
-          <p class="text-base font-medium">$95</p>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Add →</a>
+          <p class="text-sm font-medium">$95</p>
+          <a href="#" class="text-link" style="font-size:11px; color:var(--muted);">Add</a>
         </div>
       </div>
 
-      <div class="shop-item grid grid-cols-12 gap-6 py-6 items-center fade-in fade-in-delay-4">
+      <div class="list-row grid grid-cols-12 gap-5 py-5 items-center reveal reveal-d4">
         <div class="col-span-2 md:col-span-1">
-          <div class="film-card" style="height: 64px; width: 64px;">
-            <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=200&q=80&fit=crop" alt="Membership"/>
+          <div class="poster" style="height:56px; width:56px;">
+            <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=200&q=80&fit=crop" alt="Gift membership"/>
           </div>
         </div>
         <div class="col-span-7 md:col-span-8">
-          <h3 class="text-base font-medium heading mb-0.5">CineVault Gift Membership — 12 Months</h3>
-          <p class="text-sm" style="color: var(--muted);">Full access + quarterly physical edition</p>
+          <h3 class="text-sm font-medium heading mb-0.5">CineVault Gift Membership — 12 Months</h3>
+          <p class="text-xs" style="color:var(--muted);">Full access + quarterly physical edition</p>
         </div>
         <div class="col-span-3 text-right">
-          <p class="text-base font-medium">$144</p>
-          <a href="#" class="text-link" style="font-size: 0.75rem; color: var(--muted);">Add →</a>
+          <p class="text-sm font-medium">$144</p>
+          <a href="#" class="text-link" style="font-size:11px; color:var(--muted);">Add</a>
         </div>
       </div>
 
     </div>
-
   </div>
 </section>
 
-<!-- ─── SVG Ornamental Divider ─────────────────────────── -->
-<div style="background: #111111; padding: 0;">
-  <div class="max-w-7xl mx-auto px-6">
-    <svg class="ornament" width="560" height="40" viewBox="0 0 560 40" fill="none">
-      <line x1="0" y1="20" x2="220" y2="20" stroke="white" stroke-width="0.5"/>
-      <path d="M235 20 Q242 12 250 20" stroke="white" stroke-width="0.5" fill="none"/>
-      <path d="M250 20 Q258 28 266 20" stroke="white" stroke-width="0.5" fill="none"/>
-      <path d="M266 20 Q274 12 282 20" stroke="white" stroke-width="0.5" fill="none"/>
-      <path d="M282 20 Q290 28 298 20" stroke="white" stroke-width="0.5" fill="none"/>
-      <path d="M298 20 Q306 12 314 20" stroke="white" stroke-width="0.5" fill="none"/>
-      <line x1="329" y1="20" x2="560" y2="20" stroke="white" stroke-width="0.5"/>
-    </svg>
-  </div>
+
+<!-- ─── SVG Ornament ─────────────────────────────────────── -->
+<div style="background: #111;">
+  <svg class="ornament" width="560" height="28" viewBox="0 0 560 28" fill="none">
+    <line x1="0" y1="14" x2="230" y2="14" stroke="white" stroke-width="0.5"/>
+    <path d="M240 14 Q247 7 254 14 Q261 21 268 14 Q275 7 282 14 Q289 21 296 14 Q303 7 310 14" stroke="white" stroke-width="0.5" fill="none"/>
+    <line x1="320" y1="14" x2="560" y2="14" stroke="white" stroke-width="0.5"/>
+  </svg>
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     FOOTER  bg:#111111  py-16
+     FOOTER   bg:#111   py-16
 ════════════════════════════════════════════════════════ -->
-<footer style="background: #111111; padding: 4rem 0 2rem;">
+<footer style="background: #111; padding: 4rem 0 2rem;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
 
       <!-- Brand -->
-      <div class="md:col-span-2 fade-in">
+      <div class="md:col-span-5 reveal">
         <div class="flex items-center gap-2 mb-4">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-            <rect x="1" y="1" width="18" height="18" stroke="white" stroke-width="1"/>
-            <rect x="4" y="1" width="2" height="4" fill="white"/>
-            <rect x="9" y="1" width="2" height="4" fill="white"/>
-            <rect x="14" y="1" width="2" height="4" fill="white"/>
-            <rect x="4" y="15" width="2" height="4" fill="white"/>
-            <rect x="9" y="15" width="2" height="4" fill="white"/>
-            <rect x="14" y="15" width="2" height="4" fill="white"/>
+            <rect x="1" y="3" width="18" height="14" rx="1" stroke="white" stroke-width="1.2" fill="none"/>
+            <rect x="3" y="3" width="3" height="3" fill="white" opacity="0.4"/>
+            <rect x="8.5" y="3" width="3" height="3" fill="white" opacity="0.4"/>
+            <rect x="14" y="3" width="3" height="3" fill="white" opacity="0.4"/>
+            <rect x="3" y="14" width="3" height="3" fill="white" opacity="0.4"/>
+            <rect x="8.5" y="14" width="3" height="3" fill="white" opacity="0.4"/>
+            <rect x="14" y="14" width="3" height="3" fill="white" opacity="0.4"/>
           </svg>
           <span class="text-sm font-medium">CineVault</span>
         </div>
-        <p class="text-sm leading-relaxed mb-6" style="color: var(--muted); max-width: 280px;">
-          Premium streaming for people who care about what they watch. No algorithm. No noise.
+        <p class="text-sm leading-relaxed mb-6" style="color:var(--muted); max-width:280px;">
+          Premium streaming for people who care about what they watch. No algorithm. No noise. Just film.
         </p>
-        <a href="#" class="btn-primary text-sm">Start your free trial</a>
+        <a href="#" class="btn text-xs">Start your free trial</a>
       </div>
 
-      <!-- Links col 1 -->
-      <div class="fade-in fade-in-delay-1">
-        <p class="mono-label mb-5">Explore</p>
+      <!-- Links -->
+      <div class="md:col-span-3 md:col-start-7 reveal reveal-d1">
+        <p class="mono mb-5">Explore</p>
         <ul class="space-y-3">
-          <li><a href="#" class="footer-link">In Theaters</a></li>
-          <li><a href="#" class="footer-link">Coming Soon</a></li>
-          <li><a href="#" class="footer-link">Watch Now</a></li>
-          <li><a href="#" class="footer-link">Collections</a></li>
-          <li><a href="#" class="footer-link">Directors</a></li>
+          <li><a href="#" class="foot-link">In Theaters</a></li>
+          <li><a href="#" class="foot-link">Coming Soon</a></li>
+          <li><a href="#" class="foot-link">Watch Now</a></li>
+          <li><a href="#" class="foot-link">Collections</a></li>
+          <li><a href="#" class="foot-link">Directors</a></li>
         </ul>
       </div>
 
-      <!-- Links col 2 -->
-      <div class="fade-in fade-in-delay-2">
-        <p class="mono-label mb-5">Company</p>
+      <div class="md:col-span-2 reveal reveal-d2">
+        <p class="mono mb-5">Company</p>
         <ul class="space-y-3">
-          <li><a href="#" class="footer-link">About</a></li>
-          <li><a href="#" class="footer-link">Manifesto</a></li>
-          <li><a href="#" class="footer-link">Shop</a></li>
-          <li><a href="#" class="footer-link">Press</a></li>
-          <li><a href="#" class="footer-link">Contact</a></li>
+          <li><a href="#" class="foot-link">About</a></li>
+          <li><a href="#" class="foot-link">Manifesto</a></li>
+          <li><a href="#" class="foot-link">Shop</a></li>
+          <li><a href="#" class="foot-link">Press</a></li>
+          <li><a href="#" class="foot-link">Contact</a></li>
         </ul>
       </div>
 
     </div>
 
     <!-- Bottom bar -->
-    <div style="border-top: 1px solid var(--border);" class="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 fade-in">
-      <p class="mono-label">© 2025 CineVault Inc. All rights reserved.</p>
+    <div style="border-top: 1px solid var(--border);" class="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 reveal">
+      <p class="mono" style="font-size:9px;">© 2026 CineVault Inc. All rights reserved.</p>
       <div class="flex items-center gap-8">
-        <a href="#" class="footer-link">Privacy</a>
-        <a href="#" class="footer-link">Terms</a>
-        <a href="#" class="footer-link">Cookies</a>
+        <a href="#" class="foot-link" style="font-size:12px;">Privacy</a>
+        <a href="#" class="foot-link" style="font-size:12px;">Terms</a>
+        <a href="#" class="foot-link" style="font-size:12px;">Cookies</a>
       </div>
     </div>
 
   </div>
 </footer>
 
+
 <!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
+     JAVASCRIPT — no scroll hijacking
 ════════════════════════════════════════════════════════ -->
 <script>
   // ─── Custom Cursor ─────────────────────────────────────
   const cursor = document.getElementById('cursor');
-  const trail = document.getElementById('cursor-trail');
+  const dot = document.getElementById('cursor-dot');
+  let mx = 0, my = 0, dx = 0, dy = 0;
+  let pressing = false, pressTimer;
 
-  let mouseX = 0, mouseY = 0;
-  let trailX = 0, trailY = 0;
-  let isDragging = false;
-  let mouseDown = false;
-
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
   });
 
-  // Smooth trail
-  function animateTrail() {
-    trailX += (mouseX - trailX) * 0.18;
-    trailY += (mouseY - trailY) * 0.18;
-    trail.style.left = trailX + 'px';
-    trail.style.top = trailY + 'px';
-    requestAnimationFrame(animateTrail);
-  }
-  animateTrail();
-
-  // Hover state
-  const interactives = document.querySelectorAll('a, button, .film-card, .watch-card, .shop-item');
-  interactives.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      if (!isDragging) cursor.classList.add('hover-link');
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.classList.remove('hover-link');
-    });
-  });
-
-  // Drag state
-  document.addEventListener('mousedown', () => {
-    mouseDown = true;
-    setTimeout(() => {
-      if (mouseDown) {
-        isDragging = true;
-        cursor.classList.remove('hover-link');
-        cursor.classList.add('drag');
-      }
-    }, 120);
-  });
-  document.addEventListener('mouseup', () => {
-    mouseDown = false;
-    isDragging = false;
-    cursor.classList.remove('drag');
-  });
-
-  // Hide cursor when leaving window
-  document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; trail.style.opacity = '0'; });
-  document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; trail.style.opacity = '1'; });
-
-  // ─── Lenis-style smooth scroll (JS inertia) ────────────
-  // Lightweight approximation without the library dependency
-  (function() {
-    let currentY = 0;
-    let targetY = 0;
-    let ease = 0.08;
-    let ticking = false;
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    document.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      targetY += e.deltaY;
-      targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(updateScroll);
-      }
-    }, { passive: false });
-
-    function updateScroll() {
-      currentY = lerp(currentY, targetY, ease);
-      window.scrollTo(0, currentY);
-      if (Math.abs(targetY - currentY) > 0.5) {
-        requestAnimationFrame(updateScroll);
-      } else {
-        currentY = targetY;
-        window.scrollTo(0, currentY);
-        ticking = false;
-      }
-    }
+  // Trailing dot
+  (function trail() {
+    dx += (mx - dx) * 0.15;
+    dy += (my - dy) * 0.15;
+    dot.style.left = dx + 'px';
+    dot.style.top = dy + 'px';
+    requestAnimationFrame(trail);
   })();
 
-  // ─── Scroll-triggered fade-in ──────────────────────────
-  const fadeEls = document.querySelectorAll('.fade-in');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        // Re-trigger if scrolled back past
-      } else {
-        entry.target.classList.remove('visible');
-      }
-    });
-  }, {
-    threshold: 0.08,
-    rootMargin: '0px 0px -40px 0px'
+  // Hover state on interactive elements
+  document.querySelectorAll('a, button, .poster, .watch-card, .list-row').forEach(el => {
+    el.addEventListener('mouseenter', () => { if (!pressing) cursor.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); });
   });
 
-  fadeEls.forEach(el => observer.observe(el));
+  // Press / drag state
+  document.addEventListener('mousedown', () => {
+    pressTimer = setTimeout(() => {
+      pressing = true;
+      cursor.classList.remove('hover');
+      cursor.classList.add('press');
+    }, 100);
+  });
+  document.addEventListener('mouseup', () => {
+    clearTimeout(pressTimer);
+    pressing = false;
+    cursor.classList.remove('press');
+  });
 
-  // ─── Nav: active state on scroll ──────────────────────
+  // Hide when leaving window
+  document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; dot.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; dot.style.opacity = '1'; });
+
+  // ─── Scroll-triggered reveal ─────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => obs.observe(el));
+
+  // ─── Nav: active link on scroll ──────────────────────
   const navLinks = document.querySelectorAll('nav a[href^="#"]');
-  const sections = ['theaters', 'coming-soon', 'watch-now', 'shop'].map(id => document.getElementById(id));
+  const sectionIds = ['theaters', 'coming', 'watch', 'shop'];
+  const secs = sectionIds.map(id => document.getElementById(id));
 
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY + 120;
-    sections.forEach((section, i) => {
-      if (!section) return;
-      const top = section.offsetTop;
-      const bottom = top + section.offsetHeight;
-      if (scrollY >= top && scrollY < bottom) {
-        navLinks.forEach(link => link.style.color = 'var(--muted)');
-        const activeLink = document.querySelector(`nav a[href="#${section.id}"]`);
-        if (activeLink) activeLink.style.color = 'var(--text)';
+    const y = window.scrollY + 100;
+    secs.forEach(sec => {
+      if (!sec) return;
+      if (y >= sec.offsetTop && y < sec.offsetTop + sec.offsetHeight) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${sec.id}"]`);
+        if (active) active.classList.add('active');
       }
     });
   }, { passive: true });

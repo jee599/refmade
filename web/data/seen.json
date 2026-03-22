@@ -13,9 +13,19 @@
     "https://interfere.com": { "source": "Lapa Ninja", "firstSeen": "2026-03-23", "status": "kept" },
     "https://www.overlay.com": { "source": "Lapa Ninja", "firstSeen": "2026-03-23", "status": "kept" },
     "https://www.ecrin.digital/en": { "source": "CSSDA", "firstSeen": "2026-03-23", "status": "deleted" },
-    "https://375.studio/en": { "source": "CSSDA", "firstSeen": "2026-03-23", "status": "kept" },
-    "https://wearemotto.com/": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "rejected" }
+    "https://375.studio/en": { "source": "CSSDA", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://wearemotto.com/": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "rejected" },
+    "https://linusrogge.com/": { "source": "Dark Mode Design", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://foundry.basement.studio/": { "source": "Dark Mode Design", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://www.dannpetty.com/": { "source": "One Page Love", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://www.shapeshyft.co.uk/": { "source": "One Page Love", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://kubazajac.framer.website/": { "source": "One Page Love", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://obsidianassembly.com/": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://aventuradentalarts.com/": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://apollostudio.design/": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "deleted" },
+    "https://www.poppr.be/en": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "kept" },
+    "https://resn.co.nz/": { "source": "Awwwards", "firstSeen": "2026-03-23", "status": "deleted" }
   },
   "lastCycle": "2026-03-23",
-  "totalCycles": 1
+  "totalCycles": 2
 }

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meridian — Immersive Digital Experiences</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --subtle-bg: #f7f7f7;
+      --border: #e5e5e5;
+      --muted: #888888;
+      --accent: #000000;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+    .font-serif { font-family: 'Playfair Display', serif; }
+    .font-body { font-family: 'Inter', sans-serif; }
+
+    /* Decorative letter-spacing for nav */
+    .nav-spaced {
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Drag carousel */
+    .drag-carousel {
+      cursor: grab;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .drag-carousel::-webkit-scrollbar { display: none; }
+    .drag-carousel:active { cursor: grabbing; }
+    .drag-carousel > * { scroll-snap-align: start; }
+
+    /* Scroll fade-in */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Arrow hover */
+    .arrow-link .arrow-icon {
+      transition: transform 0.3s ease;
+    }
+    .arrow-link:hover .arrow-icon {
+      transform: translateX(6px);
+    }
+
+    /* Card overlay */
+    .project-card .card-overlay {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .project-card:hover .card-overlay {
+      opacity: 1;
+    }
+    .project-card:hover img {
+      transform: scale(1.03);
+    }
+    .project-card img {
+      transition: transform 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="main-nav" style="background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="fixed top-0 left-0 right-0 z-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-16 md:h-20">
+      <a href="#" class="font-heading text-xl font-semibold tracking-tight">Meridian</a>
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#work" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">W o r k</a>
+        <a href="#services" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">S e r v i c e s</a>
+        <a href="#about" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">A b o u t</a>
+        <a href="#stories" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">S t o r i e s</a>
+      </div>
+      <div class="flex items-center gap-6">
+        <span class="hidden lg:inline text-sm text-gray-500">hello@meridian.studio</span>
+        <a href="#contact" class="inline-flex items-center gap-2 text-sm font-medium bg-black text-white px-5 py-2.5 rounded-full hover:bg-gray-800 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black cursor-pointer">
+          Get in touch
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black cursor-pointer" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-6 py-6 space-y-4">
+      <a href="#work" class="block nav-spaced text-gray-700">W o r k</a>
+      <a href="#services" class="block nav-spaced text-gray-700">S e r v i c e s</a>
+      <a href="#about" class="block nav-spaced text-gray-700">A b o u t</a>
+      <a href="#stories" class="block nav-spaced text-gray-700">S t o r i e s</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 md:pt-44 md:pb-32 px-6 md:px-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="fade-in max-w-4xl">
+        <p class="nav-spaced text-gray-400 mb-6">Immersive Digital Agency</p>
+        <h1 class="font-heading text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.05] tracking-tight mb-8">
+          <span class="block">conversion</span>
+          <span class="block font-serif italic font-normal text-gray-600">through immersion</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-500 max-w-xl leading-relaxed mb-10">
+          We craft digital experiences that captivate audiences and transform engagement into measurable results.
+        </p>
+        <a href="#work" class="arrow-link inline-flex items-center gap-3 text-sm font-medium border-b-2 border-black pb-1 hover:gap-4 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black cursor-pointer">
+          Explore our work
+          <svg class="arrow-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Work — Drag Carousel -->
+  <section id="work" class="py-24 bg-[#f7f7f7]">
+    <div class="max-w-7xl mx-auto px-6 md:px-10">
+      <div class="flex items-end justify-between mb-12 fade-in">
+        <div>
+          <p class="nav-spaced text-gray-400 mb-3">Portfolio</p>
+          <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight">Selected work</h2>
+        </div>
+        <p class="hidden md:block text-sm text-gray-400">Drag to explore →</p>
+      </div>
+    </div>
+    <div class="drag-carousel flex gap-6 px-6 md:px-10 pb-4" id="carousel">
+      <!-- Card 1 — Large -->
+      <article class="project-card flex-shrink-0 w-[85vw] md:w-[550px] lg:w-[620px] rounded-lg overflow-hidden relative group">
+        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
+          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80" alt="Virtual reality headset experience with blue neon lighting" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <div class="flex gap-2 mb-3">
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">VR Experience</span>
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">WebXR</span>
+          </div>
+          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">NovaStar Labs</h3>
+          <p class="text-sm text-white/70">Immersive product launch for biotech innovator</p>
+        </div>
+        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
+        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80" alt="3D abstract colorful shapes floating in space" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <div class="flex gap-2 mb-3">
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">3D Web</span>
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Interactive</span>
+          </div>
+          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Prism Gallery</h3>
+          <p class="text-sm text-white/70">3D virtual exhibition for contemporary art collective</p>
+        </div>
+        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
+        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
+          <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80" alt="Abstract technology visualization with glowing particles" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <div class="flex gap-2 mb-3">
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">AR Campaign</span>
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Mobile</span>
+          </div>
+          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Volta Energy</h3>
+          <p class="text-sm text-white/70">Augmented reality brand activation at global summit</p>
+        </div>
+        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
+        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
+          <img src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=800&q=80" alt="Abstract minimal geometric shapes on clean background" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <div class="flex gap-2 mb-3">
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Web Experience</span>
+          </div>
+          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Horizon Finance</h3>
+          <p class="text-sm text-white/70">Scroll-driven storytelling for fintech rebrand</p>
+        </div>
+        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="project-card flex-shrink-0 w-[85vw] md:w-[550px] lg:w-[620px] rounded-lg overflow-hidden relative group">
+        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" alt="Holographic display with iridescent colors" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <div class="flex gap-2 mb-3">
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Holographic</span>
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Installation</span>
+          </div>
+          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Aether Museum</h3>
+          <p class="text-sm text-white/70">Holographic installation for national science center</p>
+        </div>
+        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
+        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
+          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80" alt="Abstract digital art with flowing gradients" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <div class="flex gap-2 mb-3">
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Spatial Audio</span>
+            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">XR</span>
+          </div>
+          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Resonance Audio</h3>
+          <p class="text-sm text-white/70">Spatial audio experience for music streaming platform</p>
+        </div>
+        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="py-20 px-6 md:px-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="fade-in mb-16">
+        <p class="nav-spaced text-gray-400 mb-3">What we do</p>
+        <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight">Solutions</h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Service 1 — Large -->
+        <div class="fade-in md:col-span-2 lg:col-span-1 lg:row-span-2 border border-gray-200 rounded-lg p-8 md:p-10 hover:border-gray-400 transition-colors duration-300 flex flex-col justify-between min-h-[320px]">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
+              <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+            </div>
+            <h3 class="font-heading text-xl font-medium mb-3">Virtual & Augmented Reality</h3>
+            <p class="text-gray-500 leading-relaxed">From WebXR to room-scale VR installations. We build immersive environments that let your audience step inside your brand story.</p>
+          </div>
+          <a href="#" class="arrow-link inline-flex items-center gap-2 text-sm font-medium mt-6 hover:gap-3 transition-all duration-200 cursor-pointer">
+            Learn more
+            <svg class="arrow-icon w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
+          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25h-13.5A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25h-13.5A2.25 2.25 0 013 12V5.25"/></svg>
+          </div>
+          <h3 class="font-heading text-xl font-medium mb-3">Interactive Web Experiences</h3>
+          <p class="text-gray-500 leading-relaxed text-sm">Scroll-driven storytelling, 3D product viewers, and micro-interactions that keep visitors engaged.</p>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
+          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
+          </div>
+          <h3 class="font-heading text-xl font-medium mb-3">Data Visualization</h3>
+          <p class="text-gray-500 leading-relaxed text-sm">Turn complex datasets into intuitive, animated visual narratives your stakeholders actually understand.</p>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
+          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/></svg>
+          </div>
+          <h3 class="font-heading text-xl font-medium mb-3">Brand Activations</h3>
+          <p class="text-gray-500 leading-relaxed text-sm">Physical-digital hybrid events that generate social buzz and lasting brand impressions.</p>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
+          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0A1.125 1.125 0 0121.75 5.625M20.625 4.5h-1.5a1.125 1.125 0 00-1.125 1.125M3.375 4.5h1.5A1.125 1.125 0 016 5.625m14.25 0v1.5c0 .621-.504 1.125-1.125 1.125M6 5.625v1.5c0 .621.504 1.125 1.125 1.125m12-2.625v7.5m0-7.5H7.125m12 0h1.5m-13.5 0h-1.5m1.5 7.5h12m-12 0V5.625m0 7.5h-1.5m13.5 0h1.5M7.125 13.125v-7.5m0 7.5h12"/></svg>
+          </div>
+          <h3 class="font-heading text-xl font-medium mb-3">Motion & Video</h3>
+          <p class="text-gray-500 leading-relaxed text-sm">Cinematic content from concept to delivery. 3D animation, motion graphics, and live-action production.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Stats -->
+  <section id="about" class="py-24 bg-[#f7f7f7] px-6 md:px-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <p class="nav-spaced text-gray-400 mb-3">About us</p>
+          <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight mb-6">We believe in the power of presence</h2>
+          <p class="text-gray-500 leading-relaxed mb-6">
+            Founded in 2018, Meridian is an independent studio of 24 strategists, designers, and technologists. We partner with forward-thinking brands to create digital experiences that demand attention.
+          </p>
+          <p class="text-gray-500 leading-relaxed mb-8">
+            Our work spans VR installations, interactive websites, AR campaigns, and spatial computing. Every project starts with a question: how do we make people feel something?
+          </p>
+          <a href="#" class="arrow-link inline-flex items-center gap-2 text-sm font-medium border-b border-black pb-1 hover:gap-3 transition-all duration-200 cursor-pointer">
+            Read our story
+            <svg class="arrow-icon w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+        <div class="fade-in grid grid-cols-2 gap-6">
+          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
+            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="87">0</p>
+            <p class="text-sm text-gray-500">Projects delivered</p>
+          </div>
+          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
+            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="24">0</p>
+            <p class="text-sm text-gray-500">Team members</p>
+          </div>
+          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
+            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="12">0</p>
+            <p class="text-sm text-gray-500">Countries reached</p>
+          </div>
+          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
+            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="96">0</p>
+            <p class="text-sm text-gray-500 flex items-center justify-center gap-1">Client satisfaction <span class="text-xs">%</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 px-6 md:px-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="fade-in mb-14">
+        <p class="nav-spaced text-gray-400 mb-3">Testimonials</p>
+        <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight">What clients say</h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <blockquote class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300 md:col-span-2 lg:col-span-1">
+          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z"/></svg>
+          <p class="text-gray-600 leading-relaxed mb-6">"Meridian transformed our product launch into an unforgettable experience. The VR installation they built generated 3x more media coverage than our previous events."</p>
+          <footer class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-heading text-sm font-medium">SL</div>
+            <div>
+              <p class="text-sm font-medium">Sarah Laurent</p>
+              <p class="text-xs text-gray-400">CMO, NovaStar Labs</p>
+            </div>
+          </footer>
+        </blockquote>
+
+        <blockquote class="fade-in border-2 border-black rounded-lg p-8 scale-[1.02]">
+          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z"/></svg>
+          <p class="text-gray-600 leading-relaxed mb-6">"Working with Meridian felt like having an in-house innovation lab. They understood our audience deeply and delivered an interactive website that increased time-on-site by 280%."</p>
+          <footer class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-heading text-sm font-medium">MK</div>
+            <div>
+              <p class="text-sm font-medium">Marcus Klein</p>
+              <p class="text-xs text-gray-400">Head of Digital, Volta Energy</p>
+            </div>
+          </footer>
+        </blockquote>
+
+        <blockquote class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
+          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z"/></svg>
+          <p class="text-gray-600 leading-relaxed mb-6">"The spatial audio experience Meridian created for our platform launch was unlike anything in our industry. Our users couldn't stop talking about it."</p>
+          <footer class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-heading text-sm font-medium">AY</div>
+            <div>
+              <p class="text-sm font-medium">Ava Yilmaz</p>
+              <p class="text-xs text-gray-400">CEO, Resonance Audio</p>
+            </div>
+          </footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter / CTA — Dark section with owl mascot -->
+  <section id="contact" class="py-24 bg-[#111111] px-6 md:px-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="fade-in">
+          <p class="nav-spaced text-gray-500 mb-3">Stay curious</p>
+          <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight text-white mb-6">Let's create something immersive</h2>
+          <p class="text-gray-400 leading-relaxed mb-8">
+            Have a project in mind? We'd love to hear about it. Drop us a line and we'll get back to you within 24 hours.
+          </p>
+          <form class="flex flex-col sm:flex-row gap-3 max-w-md" onsubmit="event.preventDefault()">
+            <input type="email" placeholder="your@email.com" class="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-white/30" />
+            <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black rounded-full text-sm font-medium hover:bg-gray-200 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white cursor-pointer">
+              Submit
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </button>
+          </form>
+        </div>
+        <!-- Owl mascot SVG -->
+        <div class="fade-in flex justify-center lg:justify-end">
+          <svg width="180" height="200" viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-20">
+            <!-- Owl body -->
+            <ellipse cx="90" cy="130" rx="60" ry="65" stroke="white" stroke-width="1.5"/>
+            <!-- Owl head -->
+            <circle cx="90" cy="70" r="40" stroke="white" stroke-width="1.5"/>
+            <!-- Left ear tuft -->
+            <path d="M60 40 L50 15 L70 35" stroke="white" stroke-width="1.5" fill="none"/>
+            <!-- Right ear tuft -->
+            <path d="M120 40 L130 15 L110 35" stroke="white" stroke-width="1.5" fill="none"/>
+            <!-- Left eye -->
+            <circle cx="75" cy="68" r="12" stroke="white" stroke-width="1.5"/>
+            <circle cx="75" cy="68" r="5" fill="white" opacity="0.3"/>
+            <!-- Right eye -->
+            <circle cx="105" cy="68" r="12" stroke="white" stroke-width="1.5"/>
+            <circle cx="105" cy="68" r="5" fill="white" opacity="0.3"/>
+            <!-- Beak -->
+            <path d="M85 78 L90 88 L95 78" stroke="white" stroke-width="1.5" fill="none"/>
+            <!-- Chest pattern -->
+            <path d="M70 110 Q90 130 110 110" stroke="white" stroke-width="1" opacity="0.5"/>
+            <path d="M73 120 Q90 140 107 120" stroke="white" stroke-width="1" opacity="0.4"/>
+            <path d="M76 130 Q90 150 104 130" stroke="white" stroke-width="1" opacity="0.3"/>
+            <!-- Feet -->
+            <path d="M75 193 L65 200 M75 193 L75 200 M75 193 L85 200" stroke="white" stroke-width="1.5"/>
+            <path d="M105 193 L95 200 M105 193 L105 200 M105 193 L115 200" stroke="white" stroke-width="1.5"/>
+            <!-- Wing left -->
+            <path d="M30 130 Q25 100 45 85" stroke="white" stroke-width="1" opacity="0.5"/>
+            <!-- Wing right -->
+            <path d="M150 130 Q155 100 135 85" stroke="white" stroke-width="1" opacity="0.5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 bg-[#0a0a0a] px-6 md:px-10 text-gray-500">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <div>
+          <a href="#" class="font-heading text-xl font-semibold text-white tracking-tight">Meridian</a>
+          <p class="text-sm mt-3 leading-relaxed">Immersive digital experiences that convert attention into action.</p>
+        </div>
+        <div>
+          <p class="nav-spaced text-gray-600 mb-4">Navigate</p>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#work" class="hover:text-white transition-colors duration-200">Work</a></li>
+            <li><a href="#services" class="hover:text-white transition-colors duration-200">Services</a></li>
+            <li><a href="#about" class="hover:text-white transition-colors duration-200">About</a></li>
+            <li><a href="#stories" class="hover:text-white transition-colors duration-200">Stories</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="nav-spaced text-gray-600 mb-4">Connect</p>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-white transition-colors duration-200">LinkedIn</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">Instagram</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200">Dribbble</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="nav-spaced text-gray-600 mb-4">Contact</p>
+          <ul class="space-y-2 text-sm">
+            <li>hello@meridian.studio</li>
+            <li>+32 2 123 45 67</li>
+            <li>Brussels, Belgium</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-gray-600">&copy; 2026 Meridian Studio. All rights reserved.</p>
+        <div class="flex gap-6 text-xs text-gray-600">
+          <a href="#" class="hover:text-white transition-colors duration-200">Privacy</a>
+          <a href="#" class="hover:text-white transition-colors duration-200">Terms</a>
+          <a href="#" class="hover:text-white transition-colors duration-200">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-triggered fade-in (repeating)
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+    fadeEls.forEach(el => fadeObserver.observe(el));
+
+    // Drag carousel
+    const carousel = document.getElementById('carousel');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    carousel.addEventListener('mousedown', (e) => {
+      isDown = true;
+      carousel.style.cursor = 'grabbing';
+      startX = e.pageX - carousel.offsetLeft;
+      scrollLeft = carousel.scrollLeft;
+    });
+    carousel.addEventListener('mouseleave', () => {
+      isDown = false;
+      carousel.style.cursor = 'grab';
+    });
+    carousel.addEventListener('mouseup', () => {
+      isDown = false;
+      carousel.style.cursor = 'grab';
+    });
+    carousel.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      carousel.scrollLeft = scrollLeft - walk;
+    });
+
+    // Counter animation
+    const counters = document.querySelectorAll('[data-count]');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = parseInt(entry.target.dataset.count);
+          let current = 0;
+          const increment = target / 40;
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+              entry.target.textContent = target;
+              clearInterval(timer);
+            } else {
+              entry.target.textContent = Math.floor(current);
+            }
+          }, 30);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(el => counterObserver.observe(el));
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Nav background on scroll
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        nav.style.borderColor = '#e5e5e5';
+      } else {
+        nav.style.borderColor = '#f5f5f5';
+      }
+    });
+  </script>
+</body>
+</html>

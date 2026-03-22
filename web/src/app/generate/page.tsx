@@ -91,6 +91,10 @@ function GeneratePageInner() {
   const [description, setDescription] = useState("");
   const [brandColor, setBrandColor] = useState(REFERENCES[1].accent);
   const [format, setFormat] = useState<OutputFormat>("code");
+  const isFreeMode = format === "prompt";
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallEmail, setPaywallEmail] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -226,20 +230,34 @@ function GeneratePageInner() {
           </div>
 
           {/* Project Description */}
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label
               htmlFor="description"
               className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium uppercase tracking-wider text-zinc-500"
             >
               Description
             </label>
+            {isFreeMode && (
+              <div
+                onClick={() => setShowPaywall(true)}
+                className="absolute inset-0 top-7 z-10 flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900/80 backdrop-blur-[2px] cursor-pointer group"
+              >
+                <div className="flex items-center gap-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Unlock with Pro
+                </div>
+              </div>
+            )}
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Landing page for an AI project management tool"
               rows={4}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 resize-none"
+              disabled={isFreeMode}
+              className={`w-full rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 resize-none ${isFreeMode ? "opacity-40" : ""}`}
             />
           </div>
 
@@ -277,24 +295,30 @@ function GeneratePageInner() {
             </label>
             <div className="flex rounded-lg border border-zinc-800 bg-zinc-900 p-1">
               <button
-                onClick={() => setFormat("code")}
-                className={`flex-1 rounded-md px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 ${
-                  format === "code"
+                onClick={() => isFreeMode ? setShowPaywall(true) : setFormat("code")}
+                className={`flex-1 rounded-md px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 relative ${
+                  !isFreeMode && format === "code"
                     ? "bg-accent-10 text-accent-light border border-accent-30"
+                    : isFreeMode
+                    ? "text-zinc-600 border border-transparent"
                     : "text-zinc-500 hover:text-zinc-300 border border-transparent"
                 }`}
               >
                 code (HTML)
+                {isFreeMode && <span className="ml-1.5 rounded border border-amber-800/50 bg-amber-900/10 px-1 py-0.5 text-[10px] text-amber-500/70">pro</span>}
               </button>
               <button
-                onClick={() => setFormat("markdown")}
-                className={`flex-1 rounded-md px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 ${
-                  format === "markdown"
+                onClick={() => isFreeMode ? setShowPaywall(true) : setFormat("markdown")}
+                className={`flex-1 rounded-md px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 relative ${
+                  !isFreeMode && format === "markdown"
                     ? "bg-accent-10 text-accent-light border border-accent-30"
+                    : isFreeMode
+                    ? "text-zinc-600 border border-transparent"
                     : "text-zinc-500 hover:text-zinc-300 border border-transparent"
                 }`}
               >
                 markdown
+                {isFreeMode && <span className="ml-1.5 rounded border border-amber-800/50 bg-amber-900/10 px-1 py-0.5 text-[10px] text-amber-500/70">pro</span>}
               </button>
               <button
                 onClick={() => setFormat("prompt")}
@@ -453,6 +477,94 @@ function GeneratePageInner() {
           )}
         </div>
       </div>
+
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowPaywall(false)}>
+          <div
+            className="mx-4 w-full max-w-md rounded-xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {!emailSubmitted ? (
+              <>
+                <div className="mb-6 text-center">
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
+                    <svg className="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h2 className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold text-zinc-100">
+                    Refmade Pro
+                  </h2>
+                  <p className="mt-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-500">
+                    Coming soon. AI-powered design generation with iterative conversation.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <div className="space-y-2 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-400">
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Generate HTML/Markdown directly
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Conversational design iteration
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Redesign existing sites
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Custom description &amp; brand
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <label className="mb-1.5 block font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">
+                      Get notified when Pro launches
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        value={paywallEmail}
+                        onChange={(e) => setPaywallEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-emerald-500 focus:outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          if (paywallEmail.includes("@")) {
+                            setEmailSubmitted(true);
+                          }
+                        }}
+                        className="shrink-0 rounded-lg bg-emerald-500 px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-zinc-950 transition-colors hover:bg-emerald-400 cursor-pointer"
+                      >
+                        Notify me
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
+                  <svg className="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h2 className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold text-zinc-100">
+                  You&apos;re on the list!
+                </h2>
+                <p className="mt-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-500">
+                  We&apos;ll notify you when Refmade Pro launches.
+                </p>
+                <button
+                  onClick={() => setShowPaywall(false)}
+                  className="mt-4 rounded-lg border border-zinc-700 bg-zinc-800 px-6 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-300 transition-colors hover:bg-zinc-700 cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

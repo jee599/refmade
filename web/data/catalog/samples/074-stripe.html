@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayGrid — Modern Payment Infrastructure</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    @keyframes meshMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .mesh-bg {
+      background: linear-gradient(135deg, #635bff22 0%, #00d4aa18 25%, #a960ee15 50%, #635bff22 75%, #00d4aa18 100%);
+      background-size: 400% 400%;
+      animation: meshMove 15s ease infinite;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #635bff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .code-block {
+      background: #0a2540;
+      color: #a3acb9;
+    }
+    .code-block .keyword { color: #635bff; }
+    .code-block .string { color: #00d4aa; }
+    .code-block .comment { color: #506477; }
+    .code-block .method { color: #ff7a59; }
+  </style>
+</head>
+<body class="bg-white text-[#0a2540]">
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-lg z-50 border-b border-[#e3e8ee]">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="#" class="text-xl font-semibold tracking-tight">PayGrid</a>
+        <div class="hidden md:flex items-center gap-6 text-sm text-[#425466]">
+          <a href="#" class="hover:text-[#0a2540] transition-colors duration-200">Products</a>
+          <a href="#" class="hover:text-[#0a2540] transition-colors duration-200">Solutions</a>
+          <a href="#" class="hover:text-[#0a2540] transition-colors duration-200">Developers</a>
+          <a href="#" class="hover:text-[#0a2540] transition-colors duration-200">Pricing</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-[#425466] hover:text-[#0a2540] transition-colors duration-200">Sign in</a>
+        <button class="bg-[#635bff] text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-[#5851db] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#635bff] focus-visible:ring-offset-2">Start now →</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="mesh-bg pt-32 pb-28 md:pt-40 md:pb-36">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 class="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6">
+            Financial infrastructure for the <span class="gradient-text">internet</span>
+          </h1>
+          <p class="text-lg text-[#425466] leading-relaxed mb-8 max-w-lg">
+            Millions of companies of all sizes use PayGrid's software and APIs to accept payments, send payouts, and manage their businesses online.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <button class="bg-[#635bff] text-white font-medium px-6 py-3 rounded-full hover:bg-[#5851db] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#635bff] focus-visible:ring-offset-2">Start now →</button>
+            <button class="border border-[#e3e8ee] bg-white text-[#0a2540] font-medium px-6 py-3 rounded-full hover:border-[#425466] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#635bff] focus-visible:ring-offset-2">Contact sales</button>
+          </div>
+        </div>
+        <div class="hidden lg:block">
+          <div class="code-block rounded-xl p-6 shadow-xl text-sm leading-relaxed">
+            <div class="flex gap-2 mb-4">
+              <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+              <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
+              <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
+            </div>
+            <div class="flex gap-4 mb-4 text-xs">
+              <button class="text-white border-b-2 border-[#635bff] pb-1 cursor-pointer">Node.js</button>
+              <button class="text-[#506477] hover:text-white pb-1 transition-colors cursor-pointer">Python</button>
+              <button class="text-[#506477] hover:text-white pb-1 transition-colors cursor-pointer">curl</button>
+            </div>
+            <pre class="font-mono"><code><span class="comment">// Create a payment intent</span>
+<span class="keyword">const</span> paymentIntent = <span class="keyword">await</span> paygrid.paymentIntents.<span class="method">create</span>({
+  amount: <span class="string">2000</span>,
+  currency: <span class="string">'usd'</span>,
+  automatic_payment_methods: {
+    enabled: <span class="string">true</span>,
+  },
+});
+
+<span class="comment">// Returns: pi_3MtwBw...</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logo Strip -->
+  <section class="bg-[#f6f9fc] py-14">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="text-center text-sm text-[#425466] mb-8">Trusted by millions of companies worldwide</p>
+      <div class="flex flex-wrap justify-center items-center gap-10 md:gap-16 grayscale opacity-50">
+        <span class="text-2xl font-bold tracking-tight">Amazon</span>
+        <span class="text-2xl font-bold tracking-tight">Google</span>
+        <span class="text-2xl font-bold tracking-tight">Shopify</span>
+        <span class="text-2xl font-bold tracking-tight">Spotify</span>
+        <span class="text-2xl font-bold tracking-tight">Slack</span>
+        <span class="text-2xl font-bold tracking-tight">Figma</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Bento -->
+  <section class="py-24 fade-in">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="text-sm font-mono text-[#635bff] uppercase tracking-[0.12em] mb-3">— Products</p>
+        <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight">A fully integrated suite of payments products</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="sm:col-span-2 bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-[#635bff] flex items-center justify-center text-white text-lg">💳</div>
+            <div>
+              <h3 class="text-xl font-semibold mb-1 group-hover:text-[#635bff] transition-colors">Payments</h3>
+              <p class="text-[#425466]">Accept payments online, in person, or through your platform.</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-[#e3e8ee] mt-4">
+            <div class="flex items-center justify-between text-sm mb-3">
+              <span class="text-[#425466]">Recent transactions</span>
+              <span class="text-[#635bff] font-medium">View all →</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#635bff]/10 flex items-center justify-center text-xs">JD</div>
+                  <div><p class="text-sm font-medium">Jenny Doe</p><p class="text-xs text-[#425466]">Visa •••• 4242</p></div>
+                </div>
+                <span class="text-sm font-medium text-[#00a67e]">+$249.00</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#00d4aa]/10 flex items-center justify-center text-xs">AK</div>
+                  <div><p class="text-sm font-medium">Alex Kim</p><p class="text-xs text-[#425466]">Mastercard •••• 5555</p></div>
+                </div>
+                <span class="text-sm font-medium text-[#00a67e]">+$89.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+          <div class="w-10 h-10 rounded-lg bg-[#00d4aa] flex items-center justify-center text-white text-lg mb-4">🔄</div>
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-[#635bff] transition-colors">Subscriptions</h3>
+          <p class="text-[#425466] text-sm leading-relaxed">Build and scale recurring revenue models with flexible billing logic.</p>
+        </div>
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+          <div class="w-10 h-10 rounded-lg bg-[#ff7a59] flex items-center justify-center text-white text-lg mb-4">🏦</div>
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-[#635bff] transition-colors">Connect</h3>
+          <p class="text-[#425466] text-sm leading-relaxed">Route payments between multiple parties with marketplace payouts.</p>
+        </div>
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+          <div class="w-10 h-10 rounded-lg bg-[#a960ee] flex items-center justify-center text-white text-lg mb-4">🛡️</div>
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-[#635bff] transition-colors">Radar</h3>
+          <p class="text-[#425466] text-sm leading-relaxed">Fight fraud with machine learning trained on billions of data points.</p>
+        </div>
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+          <div class="w-10 h-10 rounded-lg bg-[#0a2540] flex items-center justify-center text-white text-lg mb-4">📊</div>
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-[#635bff] transition-colors">Sigma</h3>
+          <p class="text-[#425466] text-sm leading-relaxed">Custom reports with SQL queries on all your PayGrid data in real time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics -->
+  <section class="bg-[#f6f9fc] py-20 fade-in">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center">
+          <p class="text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-2" style="font-variant-numeric: tabular-nums;">250M+</p>
+          <p class="text-[#425466] text-sm">API requests per day</p>
+        </div>
+        <div class="text-center">
+          <p class="text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-2" style="font-variant-numeric: tabular-nums;">99.99%</p>
+          <p class="text-[#425466] text-sm">Uptime SLA</p>
+        </div>
+        <div class="text-center">
+          <p class="text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-2" style="font-variant-numeric: tabular-nums;">135+</p>
+          <p class="text-[#425466] text-sm">Currencies supported</p>
+        </div>
+        <div class="text-center">
+          <p class="text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-2" style="font-variant-numeric: tabular-nums;">47</p>
+          <p class="text-[#425466] text-sm">Countries with local acquiring</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 fade-in">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="text-sm font-mono text-[#635bff] uppercase tracking-[0.12em] mb-3">— Testimonials</p>
+        <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight">What our customers say</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300">
+          <svg class="w-8 h-8 text-[#635bff]/20 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="text-[#0a2540] mb-6 leading-relaxed">"PayGrid gives us a unified view of transactions across all markets. The reliability is outstanding."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#635bff] flex items-center justify-center text-white text-sm font-medium">SR</div>
+            <div><p class="text-sm font-medium">Sarah Rodriguez</p><p class="text-xs text-[#425466]">CTO, CloudScale</p></div>
+          </div>
+        </div>
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border-2 border-[#0a2540] sm:scale-105 hover:shadow-md transition-all duration-300">
+          <svg class="w-8 h-8 text-[#635bff]/20 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="text-[#0a2540] mb-6 leading-relaxed">"We migrated from three separate payment providers to PayGrid. Our integration time dropped from months to days."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#00d4aa] flex items-center justify-center text-white text-sm font-medium">MK</div>
+            <div><p class="text-sm font-medium">Michael Kim</p><p class="text-xs text-[#425466]">VP Engineering, NexTrade</p></div>
+          </div>
+        </div>
+        <div class="bg-[#f6f9fc] rounded-xl p-8 border border-[#e3e8ee] hover:shadow-md transition-all duration-300">
+          <svg class="w-8 h-8 text-[#635bff]/20 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <p class="text-[#0a2540] mb-6 leading-relaxed">"The developer experience is unmatched. Our team was up and running in hours, not weeks."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#a960ee] flex items-center justify-center text-white text-sm font-medium">EL</div>
+            <div><p class="text-sm font-medium">Emma Liu</p><p class="text-xs text-[#425466]">Head of Payments, Artisan</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-[#0a2540] py-24 fade-in">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-4">Ready to get started?</h2>
+      <p class="text-[#a3acb9] text-lg mb-8 max-w-2xl mx-auto">Explore our documentation, integrate in minutes, and start accepting payments today.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <button class="bg-[#635bff] text-white font-medium px-8 py-3 rounded-full hover:bg-[#5851db] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#635bff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a2540]">Start now →</button>
+        <button class="border border-[#a3acb9]/30 text-white font-medium px-8 py-3 rounded-full hover:border-white/60 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a2540]">Contact sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a2540] border-t border-white/10 py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Products</h4>
+          <ul class="space-y-2 text-sm text-[#a3acb9]">
+            <li><a href="#" class="hover:text-white transition-colors">Payments</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Subscriptions</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Connect</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Radar</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Developers</h4>
+          <ul class="space-y-2 text-sm text-[#a3acb9]">
+            <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">API Reference</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Status</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Company</h4>
+          <ul class="space-y-2 text-sm text-[#a3acb9]">
+            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Resources</h4>
+          <ul class="space-y-2 text-sm text-[#a3acb9]">
+            <li><a href="#" class="hover:text-white transition-colors">Support</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-sm text-[#a3acb9]">PayGrid</p>
+        <p class="text-xs text-[#506477]">&copy; 2024 PayGrid, Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deployra — Your Code, Live in Seconds</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .dot-grid {
+      background-image: radial-gradient(#333 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-black text-[#ededed]">
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full bg-black/80 backdrop-blur-lg z-50 border-b border-[#333]">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="#" class="text-base font-semibold tracking-tight flex items-center gap-2">
+          <span class="text-xl">▲</span> Deployra
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm text-[#888]">
+          <a href="#" class="hover:text-white transition-colors duration-200">Products</a>
+          <a href="#" class="hover:text-white transition-colors duration-200">Solutions</a>
+          <a href="#" class="hover:text-white transition-colors duration-200">Resources</a>
+          <a href="#" class="hover:text-white transition-colors duration-200">Docs</a>
+          <a href="#" class="hover:text-white transition-colors duration-200">Pricing</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-[#888] hover:text-white transition-colors duration-200">Log In</a>
+        <button class="bg-white text-black text-sm font-medium px-4 py-2 rounded-md hover:bg-[#ededed] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">Start Deploying</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="dot-grid pt-36 pb-32 md:pt-44 md:pb-40">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 border border-[#333] rounded-md px-3 py-1 text-xs text-[#888] mb-8">
+        <span class="text-xl">▲</span> Deployra v4.0 — Now with Edge Functions
+      </div>
+      <h1 class="text-5xl md:text-7xl font-semibold tracking-[-0.04em] leading-[1.0] mb-6">
+        Your code.<br/>Live in seconds.
+      </h1>
+      <p class="text-lg text-[#888] max-w-xl mx-auto mb-10 leading-relaxed">
+        Deployra is the platform for frontend developers, providing the speed and reliability innovators need to create at the moment of inspiration.
+      </p>
+      <div class="flex justify-center gap-4">
+        <button class="bg-white text-black font-medium px-6 py-2.5 rounded-md hover:bg-[#ededed] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black flex items-center gap-2">
+          Start Deploying
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="border border-[#333] text-[#ededed] font-medium px-6 py-2.5 rounded-md hover:border-[#555] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">Get a Demo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Framework Grid -->
+  <section class="border-t border-[#333] py-16 fade-in">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="text-center text-sm text-[#888] mb-10">Works with your favorite frameworks</p>
+      <div class="flex flex-wrap justify-center items-center gap-8 md:gap-14">
+        <div class="flex flex-col items-center gap-2 text-[#888] hover:text-white transition-colors cursor-pointer">
+          <div class="w-12 h-12 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center text-2xl">⚛️</div>
+          <span class="text-xs">React</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 text-[#888] hover:text-white transition-colors cursor-pointer">
+          <div class="w-12 h-12 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center text-2xl">▲</div>
+          <span class="text-xs">Next.js</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 text-[#888] hover:text-white transition-colors cursor-pointer">
+          <div class="w-12 h-12 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center text-2xl">🟢</div>
+          <span class="text-xs">Vue</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 text-[#888] hover:text-white transition-colors cursor-pointer">
+          <div class="w-12 h-12 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center text-2xl">🔶</div>
+          <span class="text-xs">Svelte</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 text-[#888] hover:text-white transition-colors cursor-pointer">
+          <div class="w-12 h-12 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center text-2xl">🟩</div>
+          <span class="text-xs">Nuxt</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 text-[#888] hover:text-white transition-colors cursor-pointer">
+          <div class="w-12 h-12 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center text-2xl">🌐</div>
+          <span class="text-xs">Astro</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deploy Demo -->
+  <section class="border-t border-[#333] py-24 fade-in">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-semibold tracking-[-0.03em] mb-4">Push to deploy</h2>
+        <p class="text-[#888] max-w-lg mx-auto">From git push to production in seconds. Every branch gets its own preview deployment.</p>
+      </div>
+      <div class="max-w-3xl mx-auto">
+        <!-- Terminal -->
+        <div class="bg-[#111] border border-[#333] rounded-lg overflow-hidden">
+          <div class="border-b border-[#333] px-4 py-3 flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-[#333]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#333]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#333]"></span>
+            <span class="text-xs text-[#888] ml-2 font-mono">terminal</span>
+          </div>
+          <div class="p-6 font-mono text-sm space-y-2">
+            <p><span class="text-[#888]">$</span> <span class="text-[#ededed]">git push origin main</span></p>
+            <p class="text-[#888]">Enumerating objects: 12, done.</p>
+            <p class="text-[#888]">Counting objects: 100% (12/12), done.</p>
+            <p class="text-[#888]">Writing objects: 100% (7/7), 2.41 KiB, done.</p>
+            <p class="text-white mt-4">▲ Deployra</p>
+            <p class="text-[#888]">Deploying to production...</p>
+            <div class="flex items-center gap-2 mt-2">
+              <span class="w-2 h-2 rounded-full bg-[#00cc88]"></span>
+              <span class="text-[#00cc88]">Ready</span>
+              <span class="text-[#888]">— deployed to</span>
+              <span class="text-white underline">my-app.deployra.app</span>
+            </div>
+            <p class="text-[#888] text-xs mt-2">Build time: 4.2s | Region: iad1</p>
+          </div>
+        </div>
+        <!-- Deploy Steps -->
+        <div class="grid grid-cols-3 gap-4 mt-6">
+          <div class="bg-[#111] border border-[#333] rounded-lg p-4 text-center">
+            <p class="text-2xl mb-2">📝</p>
+            <p class="text-xs text-[#888]">Push code</p>
+          </div>
+          <div class="bg-[#111] border border-[#333] rounded-lg p-4 text-center">
+            <p class="text-2xl mb-2">⚡</p>
+            <p class="text-xs text-[#888]">Auto build</p>
+          </div>
+          <div class="bg-[#111] border border-[#333] rounded-lg p-4 text-center">
+            <p class="text-2xl mb-2">🌐</p>
+            <p class="text-xs text-[#888]">Live globally</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Edge Network -->
+  <section class="border-t border-[#333] py-24 fade-in">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-semibold tracking-[-0.03em] mb-4">Global edge network</h2>
+          <p class="text-[#888] leading-relaxed mb-8">Your content, cached and served from the edge closest to your users. 100+ points of presence worldwide.</p>
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <p class="text-3xl font-semibold" style="font-variant-numeric: tabular-nums;">100+</p>
+              <p class="text-xs text-[#888] mt-1">Edge locations</p>
+            </div>
+            <div>
+              <p class="text-3xl font-semibold" style="font-variant-numeric: tabular-nums;">~50ms</p>
+              <p class="text-xs text-[#888] mt-1">Global latency</p>
+            </div>
+            <div>
+              <p class="text-3xl font-semibold" style="font-variant-numeric: tabular-nums;">99.99%</p>
+              <p class="text-xs text-[#888] mt-1">Uptime guarantee</p>
+            </div>
+            <div>
+              <p class="text-3xl font-semibold" style="font-variant-numeric: tabular-nums;">10TB</p>
+              <p class="text-xs text-[#888] mt-1">Free bandwidth/mo</p>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="bg-[#111] border border-[#333] rounded-lg p-8 aspect-square flex items-center justify-center">
+            <!-- Globe visualization -->
+            <div class="relative w-48 h-48">
+              <div class="absolute inset-0 border-2 border-[#333] rounded-full"></div>
+              <div class="absolute inset-4 border border-[#333] rounded-full"></div>
+              <div class="absolute inset-8 border border-[#333] rounded-full"></div>
+              <div class="absolute top-1/2 left-0 right-0 h-px bg-[#333]"></div>
+              <div class="absolute top-0 bottom-0 left-1/2 w-px bg-[#333]"></div>
+              <!-- Dots representing edge nodes -->
+              <div class="absolute top-6 left-8 w-2 h-2 rounded-full bg-white"></div>
+              <div class="absolute top-10 right-10 w-2 h-2 rounded-full bg-white"></div>
+              <div class="absolute bottom-12 left-12 w-2 h-2 rounded-full bg-white"></div>
+              <div class="absolute bottom-8 right-6 w-2 h-2 rounded-full bg-white"></div>
+              <div class="absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-white -translate-x-1/2 -translate-y-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Performance -->
+  <section class="border-t border-[#333] py-20 fade-in">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-semibold tracking-[-0.03em] mb-4">Performance by default</h2>
+        <p class="text-[#888]">Automatic optimizations that make your site faster without any configuration.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-[#111] border border-[#333] rounded-lg p-6 hover:border-[#555] transition-all duration-300">
+          <h3 class="font-medium mb-2">Image Optimization</h3>
+          <p class="text-sm text-[#888] leading-relaxed">Automatic WebP/AVIF conversion, lazy loading, and responsive sizing.</p>
+        </div>
+        <div class="bg-[#111] border border-[#333] rounded-lg p-6 hover:border-[#555] transition-all duration-300">
+          <h3 class="font-medium mb-2">Edge Caching</h3>
+          <p class="text-sm text-[#888] leading-relaxed">Intelligent cache invalidation with instant purge across all regions.</p>
+        </div>
+        <div class="bg-[#111] border border-[#333] rounded-lg p-6 hover:border-[#555] transition-all duration-300">
+          <h3 class="font-medium mb-2">Serverless Functions</h3>
+          <p class="text-sm text-[#888] leading-relaxed">Auto-scaling backend logic with cold start times under 100ms.</p>
+        </div>
+        <div class="bg-[#111] border border-[#333] rounded-lg p-6 hover:border-[#555] transition-all duration-300">
+          <h3 class="font-medium mb-2">Analytics</h3>
+          <p class="text-sm text-[#888] leading-relaxed">Real User Monitoring with Web Vitals tracking built in.</p>
+        </div>
+        <div class="bg-[#111] border border-[#333] rounded-lg p-6 hover:border-[#555] transition-all duration-300">
+          <h3 class="font-medium mb-2">Preview Deployments</h3>
+          <p class="text-sm text-[#888] leading-relaxed">Every pull request gets a unique preview URL for team collaboration.</p>
+        </div>
+        <div class="bg-[#111] border border-[#333] rounded-lg p-6 hover:border-[#555] transition-all duration-300">
+          <h3 class="font-medium mb-2">DDoS Protection</h3>
+          <p class="text-sm text-[#888] leading-relaxed">Enterprise-grade protection included on every deployment, free.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="border-t border-[#333] py-24 fade-in">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <p class="text-6xl mb-6">▲</p>
+      <h2 class="text-3xl sm:text-4xl font-semibold tracking-[-0.03em] mb-4">Start building today</h2>
+      <p class="text-[#888] mb-10 max-w-md mx-auto">Deploy your first project in under a minute. No credit card required.</p>
+      <div class="flex justify-center gap-4">
+        <button class="bg-white text-black font-medium px-8 py-3 rounded-md hover:bg-[#ededed] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">Start Deploying →</button>
+        <button class="border border-[#333] text-[#ededed] font-medium px-8 py-3 rounded-md hover:border-[#555] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">Talk to Sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-[#333] py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid sm:grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+        <div>
+          <h4 class="text-xs text-[#888] uppercase tracking-widest mb-4">Products</h4>
+          <ul class="space-y-2 text-sm text-[#888]">
+            <li><a href="#" class="hover:text-white transition-colors">Previews</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Edge Functions</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Analytics</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Storage</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs text-[#888] uppercase tracking-widest mb-4">Resources</h4>
+          <ul class="space-y-2 text-sm text-[#888]">
+            <li><a href="#" class="hover:text-white transition-colors">Docs</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Guides</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs text-[#888] uppercase tracking-widest mb-4">Company</h4>
+          <ul class="space-y-2 text-sm text-[#888]">
+            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs text-[#888] uppercase tracking-widest mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm text-[#888]">
+            <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs text-[#888] uppercase tracking-widest mb-4">Social</h4>
+          <ul class="space-y-2 text-sm text-[#888]">
+            <li><a href="#" class="hover:text-white transition-colors">GitHub</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Twitter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-[#333] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2 text-sm text-[#888]">▲ Deployra</div>
+        <p class="text-xs text-[#888]/50">&copy; 2024 Deployra, Inc.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

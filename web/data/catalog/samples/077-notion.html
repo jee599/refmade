@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagecraft — One workspace for everything</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            warm: { bg: '#fbfaf8', subtle: '#f7f6f3', border: '#e9e5df', muted: '#6b6b6b', text: '#191919' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#fbfaf8] text-[#191919]">
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-[#e9e5df]">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="#" class="text-base font-bold tracking-tight">Pagecraft</a>
+        <div class="hidden md:flex items-center gap-6 text-sm text-[#6b6b6b]">
+          <a href="#" class="hover:text-[#191919] transition-colors duration-200">Product</a>
+          <a href="#" class="hover:text-[#191919] transition-colors duration-200">Teams</a>
+          <a href="#" class="hover:text-[#191919] transition-colors duration-200">Enterprise</a>
+          <a href="#" class="hover:text-[#191919] transition-colors duration-200">Pricing</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-[#6b6b6b] hover:text-[#191919] transition-colors duration-200">Log in</a>
+        <button class="bg-[#191919] text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-[#333] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#191919] focus-visible:ring-offset-2">Get Pagecraft free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-28 pb-24 md:pt-36 md:pb-32">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold tracking-[-0.03em] leading-[1.1] mb-6">
+        One workspace.<br/>Zero busywork.
+      </h1>
+      <p class="text-lg text-[#6b6b6b] max-w-xl mx-auto mb-8 leading-relaxed">
+        Write, plan, organize, and collaborate — all in one place. Pagecraft is the connected workspace where better, faster work happens.
+      </p>
+      <div class="flex justify-center gap-4">
+        <button class="bg-[#191919] text-white font-medium px-6 py-3 rounded-md hover:bg-[#333] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#191919] focus-visible:ring-offset-2">Get Pagecraft free</button>
+        <button class="border border-[#e9e5df] text-[#191919] font-medium px-6 py-3 rounded-md hover:border-[#6b6b6b] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#191919] focus-visible:ring-offset-2">Request a demo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logo Strip -->
+  <section class="bg-white py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="text-center text-xs text-[#6b6b6b] uppercase tracking-widest mb-6">Trusted by teams at</p>
+      <div class="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-40">
+        <span class="text-xl font-bold">Toyota</span>
+        <span class="text-xl font-bold">Figma</span>
+        <span class="text-xl font-bold">Pixar</span>
+        <span class="text-xl font-bold">Nike</span>
+        <span class="text-xl font-bold">Spotify</span>
+        <span class="text-xl font-bold">Headspace</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Cards (Bento) -->
+  <section class="py-24 fade-in">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-[-0.02em] mb-4">Everything you need, nothing you don't</h2>
+        <p class="text-[#6b6b6b] max-w-lg mx-auto">Replace scattered tools with one workspace that adapts to how your team works.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <!-- Docs card — blue accent -->
+        <div class="bg-[#e8f4fd] rounded-2xl p-8 hover:shadow-sm transition-all duration-300">
+          <span class="text-3xl mb-4 block">📝</span>
+          <h3 class="text-xl font-semibold mb-2">Docs & Notes</h3>
+          <p class="text-sm text-[#6b6b6b] leading-relaxed mb-6">Beautiful documents with drag-and-drop blocks. Embed anything: databases, images, code, bookmarks.</p>
+          <!-- Mini doc UI -->
+          <div class="bg-white rounded-xl p-4 border border-[#e9e5df]">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-sm">📄</span>
+              <span class="text-sm font-medium">Q4 Product Roadmap</span>
+            </div>
+            <div class="space-y-2 text-sm text-[#6b6b6b]">
+              <div class="flex items-center gap-2"><span class="font-medium text-[#191919]">H2</span> Launch mobile app v2</div>
+              <div class="flex items-center gap-2 pl-4">☑️ Design system update</div>
+              <div class="flex items-center gap-2 pl-4">⬜ API rate limiting</div>
+              <div class="flex items-center gap-2 pl-4">⬜ Push notifications</div>
+            </div>
+          </div>
+        </div>
+        <!-- Database card — yellow accent -->
+        <div class="bg-[#fdf4e8] rounded-2xl p-8 hover:shadow-sm transition-all duration-300">
+          <span class="text-3xl mb-4 block">📊</span>
+          <h3 class="text-xl font-semibold mb-2">Databases</h3>
+          <p class="text-sm text-[#6b6b6b] leading-relaxed mb-6">Flexible tables, boards, timelines, and calendars. Filter, sort, and view your data any way you want.</p>
+          <!-- Mini table UI -->
+          <div class="bg-white rounded-xl p-4 border border-[#e9e5df] overflow-hidden">
+            <table class="w-full text-sm">
+              <thead><tr class="border-b border-[#e9e5df] text-left text-[#6b6b6b]"><th class="pb-2 font-medium">Task</th><th class="pb-2 font-medium">Status</th><th class="pb-2 font-medium">Owner</th></tr></thead>
+              <tbody>
+                <tr class="border-b border-[#e9e5df]"><td class="py-2">Design review</td><td class="py-2"><span class="bg-[#dbeddb] text-[#2b7a2b] text-xs px-2 py-0.5 rounded">Done</span></td><td class="py-2">Alice</td></tr>
+                <tr class="border-b border-[#e9e5df]"><td class="py-2">API integration</td><td class="py-2"><span class="bg-[#e8f4fd] text-[#2270b5] text-xs px-2 py-0.5 rounded">In progress</span></td><td class="py-2">Bob</td></tr>
+                <tr><td class="py-2">User testing</td><td class="py-2"><span class="bg-[#f5f5f5] text-[#6b6b6b] text-xs px-2 py-0.5 rounded">Planned</span></td><td class="py-2">Carol</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Projects card — pink accent -->
+        <div class="bg-[#fce8f0] rounded-2xl p-8 hover:shadow-sm transition-all duration-300">
+          <span class="text-3xl mb-4 block">🎯</span>
+          <h3 class="text-xl font-semibold mb-2">Projects</h3>
+          <p class="text-sm text-[#6b6b6b] leading-relaxed mb-6">Manage any project from start to finish. Kanban boards, timelines, and custom workflows for every team.</p>
+          <!-- Mini kanban -->
+          <div class="flex gap-3">
+            <div class="flex-1 bg-white rounded-xl p-3 border border-[#e9e5df]">
+              <p class="text-xs font-medium text-[#6b6b6b] mb-2">To Do</p>
+              <div class="bg-[#f7f6f3] rounded-lg p-2 text-xs mb-1.5">Research competitors</div>
+              <div class="bg-[#f7f6f3] rounded-lg p-2 text-xs">Write brief</div>
+            </div>
+            <div class="flex-1 bg-white rounded-xl p-3 border border-[#e9e5df]">
+              <p class="text-xs font-medium text-[#6b6b6b] mb-2">Doing</p>
+              <div class="bg-[#e8f4fd] rounded-lg p-2 text-xs">Build prototype</div>
+            </div>
+            <div class="flex-1 bg-white rounded-xl p-3 border border-[#e9e5df]">
+              <p class="text-xs font-medium text-[#6b6b6b] mb-2">Done</p>
+              <div class="bg-[#dbeddb] rounded-lg p-2 text-xs">User interviews</div>
+            </div>
+          </div>
+        </div>
+        <!-- AI card — purple accent -->
+        <div class="bg-[#f0e8fd] rounded-2xl p-8 hover:shadow-sm transition-all duration-300">
+          <span class="text-3xl mb-4 block">🤖</span>
+          <h3 class="text-xl font-semibold mb-2">AI Assistant</h3>
+          <p class="text-sm text-[#6b6b6b] leading-relaxed mb-6">Ask questions, generate summaries, write drafts, and automate tasks — your built-in AI power user.</p>
+          <!-- Mini AI chat -->
+          <div class="bg-white rounded-xl p-4 border border-[#e9e5df] space-y-3">
+            <div class="bg-[#f7f6f3] rounded-lg p-3 text-sm max-w-[80%]">Summarize last week's meeting notes</div>
+            <div class="bg-[#f0e8fd] rounded-lg p-3 text-sm ml-auto max-w-[80%]">Here's a summary of your 3 meetings: Product sync covered the v2 launch timeline. Design review approved the new dashboard. Sprint retro identified 2 action items...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="bg-[#f7f6f3] py-20 fade-in">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-[-0.02em]">Teams love Pagecraft</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl p-6 border border-[#e9e5df]">
+          <p class="text-sm text-[#191919] leading-relaxed mb-6">"Pagecraft replaced 5 tools for us. Docs, tasks, wikis, spreadsheets, and meeting notes — all in one place. Our team of 7 now feels like 70."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="" class="w-10 h-10 rounded-full object-cover">
+            <div><p class="text-sm font-medium">Maria Chen</p><p class="text-xs text-[#6b6b6b]">Head of Product, Flowstate</p></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border-2 border-[#191919] sm:scale-105">
+          <p class="text-sm text-[#191919] leading-relaxed mb-6">"The flexibility is incredible. Engineering uses it for sprint planning, marketing for content calendars, and HR for onboarding. One tool, every team."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="" class="w-10 h-10 rounded-full object-cover">
+            <div><p class="text-sm font-medium">James Park</p><p class="text-xs text-[#6b6b6b]">CTO, Luminary Labs</p></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-[#e9e5df]">
+          <p class="text-sm text-[#191919] leading-relaxed mb-6">"The AI features are a game changer. I ask it to draft proposals, summarize threads, and create action items. It saves me 2 hours daily."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="" class="w-10 h-10 rounded-full object-cover">
+            <div><p class="text-sm font-medium">Sophie Laurent</p><p class="text-xs text-[#6b6b6b]">Operations Lead, Craft&Co</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download -->
+  <section class="py-16 fade-in">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h2 class="text-2xl font-bold tracking-tight mb-4">Available everywhere</h2>
+      <p class="text-[#6b6b6b] mb-8">Mac, Windows, iOS, Android, and web. Your workspace travels with you.</p>
+      <div class="flex justify-center gap-4 flex-wrap">
+        <div class="border border-[#e9e5df] rounded-xl px-6 py-3 flex items-center gap-2 text-sm hover:border-[#6b6b6b] transition-colors cursor-pointer">🍎 Mac</div>
+        <div class="border border-[#e9e5df] rounded-xl px-6 py-3 flex items-center gap-2 text-sm hover:border-[#6b6b6b] transition-colors cursor-pointer">🪟 Windows</div>
+        <div class="border border-[#e9e5df] rounded-xl px-6 py-3 flex items-center gap-2 text-sm hover:border-[#6b6b6b] transition-colors cursor-pointer">📱 iOS</div>
+        <div class="border border-[#e9e5df] rounded-xl px-6 py-3 flex items-center gap-2 text-sm hover:border-[#6b6b6b] transition-colors cursor-pointer">🤖 Android</div>
+        <div class="border border-[#e9e5df] rounded-xl px-6 py-3 flex items-center gap-2 text-sm hover:border-[#6b6b6b] transition-colors cursor-pointer">🌐 Web</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-[#191919] py-24 fade-in">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-[-0.02em] text-white mb-4">Get started for free</h2>
+      <p class="text-[#999] text-lg mb-8 max-w-lg mx-auto">Play around with it first. Pay when you're ready. Generous free tier with unlimited blocks for individuals.</p>
+      <div class="flex justify-center gap-4">
+        <button class="bg-white text-[#191919] font-medium px-8 py-3 rounded-md hover:bg-[#ededed] transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#191919]">Get Pagecraft free</button>
+        <button class="border border-white/20 text-white font-medium px-8 py-3 rounded-md hover:border-white/50 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#191919]">Request a demo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#191919] border-t border-white/10 py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Product</h4>
+          <ul class="space-y-2 text-sm text-[#999]">
+            <li><a href="#" class="hover:text-white transition-colors">AI</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Docs</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Projects</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Wikis</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Solutions</h4>
+          <ul class="space-y-2 text-sm text-[#999]">
+            <li><a href="#" class="hover:text-white transition-colors">Engineering</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Design</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Product</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Marketing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Resources</h4>
+          <ul class="space-y-2 text-sm text-[#999]">
+            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Help center</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Guides</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Templates</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white text-sm font-semibold mb-4">Company</h4>
+          <ul class="space-y-2 text-sm text-[#999]">
+            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-sm text-[#999]">Pagecraft</p>
+        <p class="text-xs text-[#999]/50">&copy; 2024 Pagecraft, Inc.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

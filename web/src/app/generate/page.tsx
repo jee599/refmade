@@ -240,13 +240,19 @@ function GeneratePageInner() {
             {isFreeMode && (
               <div
                 onClick={() => setShowPaywall(true)}
-                className="absolute inset-0 top-7 z-10 flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900/80 backdrop-blur-[2px] cursor-pointer group"
+                className="absolute inset-0 top-7 z-10 flex flex-col items-center justify-center rounded-lg border border-amber-500/20 bg-zinc-900/90 backdrop-blur-[3px] cursor-pointer group transition-all hover:border-amber-500/40 hover:bg-zinc-900/95"
               >
-                <div className="flex items-center gap-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-500 group-hover:text-zinc-300 transition-colors">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <div className="flex items-center gap-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-amber-400 group-hover:text-amber-300 transition-colors">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  Unlock with Pro
+                  Upgrade to Pro
+                </div>
+                <p className="mt-1.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                  Describe your project — AI generates it instantly
+                </p>
+                <div className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 font-[family-name:var(--font-jetbrains-mono)] text-xs text-amber-400 group-hover:bg-amber-500/20 transition-colors">
+                  Starting at $5 for 10 credits
                 </div>
               </div>
             )}

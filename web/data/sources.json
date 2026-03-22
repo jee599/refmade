@@ -1,0 +1,22 @@
+[
+  { "name": "Awwwards", "searchQuery": "site:awwwards.com site of the day {year}-{month}", "enabled": true },
+  { "name": "CSSDA", "searchQuery": "site:cssdesignawards.com website of the day {year} {month}", "enabled": true },
+  { "name": "SiteInspire", "searchQuery": "site:siteinspire.com {year} {month}", "enabled": true },
+  { "name": "Godly", "searchQuery": "site:godly.website {year}", "enabled": true },
+  { "name": "Mindsparkle", "searchQuery": "site:mindsparklemag.com {year} {month} web design", "enabled": true },
+  { "name": "The FWA", "searchQuery": "site:thefwa.com site of the day {year}", "enabled": true },
+  { "name": "Httpster", "searchQuery": "site:httpster.net {year}", "enabled": true },
+  { "name": "Lapa Ninja", "searchQuery": "site:lapa.ninja {year} landing page", "enabled": true },
+  { "name": "Land-book", "searchQuery": "site:land-book.com {year}", "enabled": true },
+  { "name": "One Page Love", "searchQuery": "site:onepagelove.com {year} {month}", "enabled": true },
+  { "name": "Best Website Gallery", "searchQuery": "site:bestwebsite.gallery {year}", "enabled": true },
+  { "name": "Muzli", "searchQuery": "site:search.muz.li web design inspiration {year}", "enabled": true },
+  { "name": "Webdesign Inspiration", "searchQuery": "site:webdesign-inspiration.com {year}", "enabled": true },
+  { "name": "Minimal Gallery", "searchQuery": "site:minimal.gallery {year}", "enabled": true },
+  { "name": "Dark Mode Design", "searchQuery": "site:darkmodedesign.com {year}", "enabled": true },
+  { "name": "Brutalist Websites", "searchQuery": "site:brutalistwebsites.com {year}", "enabled": true },
+  { "name": "Mobbin", "searchQuery": "site:mobbin.com web {year}", "enabled": true },
+  { "name": "Screenlane", "searchQuery": "site:screenlane.com {year}", "enabled": true },
+  { "name": "Refero", "searchQuery": "site:refero.design {year}", "enabled": true },
+  { "name": "Designspiration", "searchQuery": "site:designspiration.com web design {year}", "enabled": true }
+]

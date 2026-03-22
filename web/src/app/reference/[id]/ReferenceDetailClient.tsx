@@ -73,52 +73,43 @@ function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: 
   }
 
   const [baseH, baseS, baseL] = hexToHsl(baseAccent);
-  const isDark = tone === "dark";
   const palettes: DesignPalette[] = [];
 
-  const variations = [
-    // Original
-    { name: "Original", hShift: 0, sShift: 0, lShift: 0, bgMode: "default" as const },
-    // Lighter accent
-    { name: "Lighter", hShift: 0, sShift: -10, lShift: 15, bgMode: "default" as const },
-    // Deeper accent
-    { name: "Deeper", hShift: 0, sShift: 10, lShift: -15, bgMode: "default" as const },
-    // Analogous colors
-    { name: "Analogous 1", hShift: 30, sShift: 0, lShift: 0, bgMode: "default" as const },
-    { name: "Analogous 2", hShift: -30, sShift: 0, lShift: 0, bgMode: "default" as const },
-    // Complementary
-    { name: "Complementary", hShift: 180, sShift: 0, lShift: 0, bgMode: "default" as const },
-    // Triad
-    { name: "Triad 1", hShift: 120, sShift: -5, lShift: 5, bgMode: "default" as const },
-    { name: "Triad 2", hShift: 240, sShift: -5, lShift: 5, bgMode: "default" as const },
-    // Inverted (swap light/dark)
-    { name: "Inverted", hShift: 0, sShift: 0, lShift: 0, bgMode: "invert" as const },
-    // Warm tint
-    { name: "Warm", hShift: -60, sShift: 15, lShift: 0, bgMode: "default" as const },
-    // Cool tint
-    { name: "Cool", hShift: 60, sShift: 15, lShift: 0, bgMode: "default" as const },
-    // Vivid
-    { name: "Vivid", hShift: 0, sShift: 25, lShift: -5, bgMode: "default" as const },
+  // Each palette is a complete color set: accent + bg + text
+  const schemes: { name: string; accent: string; bg: string; text: string }[] = [
+    // 1. Original
+    { name: "Original", accent: baseAccent, bg: baseBg, text: baseText },
+    // 2. Dark mode with original accent
+    { name: "Dark", accent: baseAccent, bg: "#09090b", text: "#fafafa" },
+    // 3. Light mode with original accent
+    { name: "Light", accent: baseAccent, bg: "#ffffff", text: "#0f172a" },
+    // 4. Deep navy bg
+    { name: "Navy", accent: hslToHex(baseH, baseS, Math.min(baseL + 10, 70)), bg: "#0f172a", text: "#e2e8f0" },
+    // 5. Warm cream bg
+    { name: "Cream", accent: hslToHex(baseH, Math.max(baseS - 10, 20), baseL), bg: "#faf7f2", text: "#1c1917" },
+    // 6. Cool slate bg
+    { name: "Slate", accent: hslToHex(baseH, baseS, Math.min(baseL + 15, 75)), bg: "#1e293b", text: "#f1f5f9" },
+    // 7. Analogous warm
+    { name: "Warm Shift", accent: hslToHex(baseH - 30, baseS, baseL), bg: baseBg, text: baseText },
+    // 8. Analogous cool
+    { name: "Cool Shift", accent: hslToHex(baseH + 30, baseS, baseL), bg: baseBg, text: baseText },
+    // 9. Complementary on dark
+    { name: "Complement", accent: hslToHex(baseH + 180, baseS, baseL), bg: "#09090b", text: "#fafafa" },
+    // 10. Muted accent on soft bg
+    { name: "Muted", accent: hslToHex(baseH, Math.max(baseS - 25, 15), baseL + 5), bg: "#f8fafc", text: "#334155" },
+    // 11. Vivid accent on pure black
+    { name: "Vivid Dark", accent: hslToHex(baseH, Math.min(baseS + 20, 100), Math.min(baseL + 10, 65)), bg: "#000000", text: "#ffffff" },
+    // 12. Earthy tones
+    { name: "Earth", accent: hslToHex(25, 50, 45), bg: "#faf5ef", text: "#292524" },
   ];
 
-  variations.forEach((v, i) => {
-    const accent = hslToHex(baseH + v.hShift, baseS + v.sShift, baseL + v.lShift);
-    let bg: string, text: string;
-
-    if (v.bgMode === "invert") {
-      bg = isDark ? "#ffffff" : "#09090b";
-      text = isDark ? "#09090b" : "#fafafa";
-    } else {
-      bg = isDark ? "#09090b" : "#ffffff";
-      text = isDark ? "#fafafa" : "#09090b";
-    }
-
+  schemes.forEach((s, i) => {
     palettes.push({
       id: `gen-${i}`,
-      name: v.name,
-      accent,
-      bg,
-      text,
+      name: s.name,
+      accent: s.accent,
+      bg: s.bg,
+      text: s.text,
       category: "generated" as any,
     });
   });
@@ -349,22 +340,28 @@ export default function ReferenceDetailClient({
                 </button>
               )}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-4 gap-2">
               {generatedPalettes.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => applyPalette(p)}
-                  className={`group relative h-8 w-8 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 ${
+                  className={`group flex flex-col gap-1 rounded-lg border-2 p-1.5 transition-all duration-200 cursor-pointer hover:scale-[1.03] ${
                     activePaletteId === p.id
-                      ? "border-white ring-2 ring-white/20 scale-110"
-                      : "border-zinc-700 hover:border-zinc-500"
+                      ? "border-white ring-1 ring-white/20"
+                      : "border-zinc-800 hover:border-zinc-600"
                   }`}
-                  style={{
-                    backgroundColor: p.accent,
-                    boxShadow: activePaletteId === p.id ? `0 0 12px ${p.accent}40` : undefined
-                  }}
                   title={p.name}
-                />
+                >
+                  {/* 3-color preview bar */}
+                  <div className="flex h-4 w-full overflow-hidden rounded">
+                    <div className="flex-[3]" style={{ backgroundColor: p.bg }} />
+                    <div className="flex-[2]" style={{ backgroundColor: p.accent }} />
+                    <div className="flex-1" style={{ backgroundColor: p.text }} />
+                  </div>
+                  <span className="truncate w-full font-[family-name:var(--font-jetbrains-mono)] text-[9px] text-zinc-600 group-hover:text-zinc-400">
+                    {p.name}
+                  </span>
+                </button>
               ))}
             </div>
           </div>

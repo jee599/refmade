@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>061 — Editorial Minimal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Newsreader"', 'serif'],
+            body: ['"Geist Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            surface: '#FFFFFF',
+            warm: '#F7F6F3',
+            ink: '#111111',
+            border: '#EAEAEA',
+            muted: '#888888',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Geist Sans', system-ui, -apple-system, sans-serif;
+      font-weight: 400;
+      background: #FFFFFF;
+      color: #111111;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, h3 {
+      font-family: 'Newsreader', serif;
+      font-weight: 600;
+    }
+
+    /* Fade-in reveal — 600ms */
+    .ed-reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .ed-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .ed-delay-1 { transition-delay: 0.15s; }
+    .ed-delay-2 { transition-delay: 0.3s; }
+    .ed-delay-3 { transition-delay: 0.45s; }
+    .ed-delay-4 { transition-delay: 0.6s; }
+
+    /* Card hover */
+    .ed-card {
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .ed-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+
+    /* Button hover */
+    .ed-btn {
+      transition: background-color 0.2s ease;
+    }
+    .ed-btn:hover {
+      background-color: #333333;
+    }
+
+    /* Badge */
+    .ed-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid #EAEAEA;
+      border-radius: 9999px;
+      padding: 0.25rem 0.75rem;
+      color: #888888;
+      font-family: 'Geist Sans', system-ui, sans-serif;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-[#EAEAEA]">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-heading text-xl tracking-tight text-ink">Margin</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-sm text-muted hover:text-ink transition-colors">Features</a>
+        <a href="#how" class="text-sm text-muted hover:text-ink transition-colors">How It Works</a>
+        <a href="#testimonials" class="text-sm text-muted hover:text-ink transition-colors">Testimonials</a>
+        <a href="#cta" class="text-sm text-muted hover:text-ink transition-colors">Pricing</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#" class="text-sm text-muted hover:text-ink transition-colors hidden sm:block">Sign in</a>
+        <a href="#" class="ed-btn bg-ink text-white text-sm px-4 py-2 rounded-md">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-40 pb-24 md:pt-48 md:pb-32 bg-white">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <div class="ed-reveal">
+        <span class="ed-badge inline-block mb-6">Now in Public Beta</span>
+      </div>
+      <h1 class="ed-reveal ed-delay-1 font-heading text-4xl md:text-6xl lg:text-7xl tracking-tight leading-[1.1] max-w-4xl mx-auto mb-6" style="letter-spacing:-0.02em">
+        Write with clarity.<br>Think with space.
+      </h1>
+      <p class="ed-reveal ed-delay-2 text-lg md:text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
+        Margin is a minimal note-taking app that strips away distraction so your ideas have room to breathe.
+      </p>
+      <div class="ed-reveal ed-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#" class="ed-btn bg-ink text-white px-8 py-3 rounded-md text-base">Start Writing Free</a>
+        <a href="#" class="text-muted hover:text-ink transition-colors text-base flex items-center gap-2">
+          <span>See how it works</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- App Mockup -->
+  <section class="pb-20 md:pb-28 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="ed-reveal border border-[#EAEAEA] rounded-lg overflow-hidden bg-[#F7F6F3]">
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-[#EAEAEA] bg-white">
+          <div class="w-3 h-3 rounded-full bg-[#EAEAEA]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#EAEAEA]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#EAEAEA]"></div>
+          <span class="ml-4 text-xs text-muted font-mono">margin.app</span>
+        </div>
+        <div class="p-8 md:p-16">
+          <div class="max-w-lg">
+            <p class="text-xs text-muted mb-4 font-mono">March 22, 2026</p>
+            <h3 class="font-heading text-2xl md:text-3xl mb-4 tracking-tight">On the virtue of blank pages</h3>
+            <p class="text-muted leading-relaxed mb-4">
+              The blank page is not emptiness — it is potential. Every great idea began as white space waiting to be shaped by thought.
+            </p>
+            <p class="text-muted leading-relaxed">
+              Margin gives you that space. No toolbars competing for attention. No notifications breaking your flow. Just you and the words.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="py-12 bg-[#F7F6F3]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="ed-reveal flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+        <p class="text-sm text-muted">Trusted by writers at</p>
+        <div class="flex items-center gap-10 md:gap-14 flex-wrap justify-center">
+          <span class="text-muted font-heading text-lg">The Atlantic</span>
+          <span class="text-muted font-heading text-lg">Stripe</span>
+          <span class="text-muted font-heading text-lg">Vercel</span>
+          <span class="text-muted font-heading text-lg">Linear</span>
+          <span class="text-muted font-heading text-lg">Notion</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="ed-reveal ed-badge inline-block mb-4">Features</span>
+        <h2 class="ed-reveal ed-delay-1 font-heading text-3xl md:text-4xl tracking-tight mb-4">Less interface, more writing</h2>
+        <p class="ed-reveal ed-delay-2 text-muted max-w-xl mx-auto leading-relaxed">Every detail in Margin is designed to disappear, so your words take center stage.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <!-- Card 1 -->
+        <div class="ed-reveal ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <div class="w-10 h-10 rounded-md bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#111111" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 7h6M7 10h4"/></svg>
+          </div>
+          <h3 class="font-heading text-lg mb-2">Distraction-free editor</h3>
+          <p class="text-muted text-sm leading-relaxed">A clean canvas that hides everything until you need it. Toolbar appears on selection only.</p>
+        </div>
+        <!-- Card 2 -->
+        <div class="ed-reveal ed-delay-1 ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <div class="w-10 h-10 rounded-md bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#111111" stroke-width="1.5"><path d="M4 4h12v12H4z"/><path d="M4 8h12M8 8v8"/></svg>
+          </div>
+          <h3 class="font-heading text-lg mb-2">Structured notes</h3>
+          <p class="text-muted text-sm leading-relaxed">Organize with nested pages, tags, and backlinks. Your knowledge builds on itself.</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="ed-reveal ed-delay-2 ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <div class="w-10 h-10 rounded-md bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#111111" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+          </div>
+          <h3 class="font-heading text-lg mb-2">Daily journal</h3>
+          <p class="text-muted text-sm leading-relaxed">Automatic daily entries with templates. Build a writing habit without thinking about structure.</p>
+        </div>
+        <!-- Card 4 -->
+        <div class="ed-reveal ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <div class="w-10 h-10 rounded-md bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#111111" stroke-width="1.5"><path d="M3 10h14M10 3v14"/></svg>
+          </div>
+          <h3 class="font-heading text-lg mb-2">Markdown native</h3>
+          <p class="text-muted text-sm leading-relaxed">Write in Markdown with live preview. Export to PDF, HTML, or plain text anytime.</p>
+        </div>
+        <!-- Card 5 -->
+        <div class="ed-reveal ed-delay-1 ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <div class="w-10 h-10 rounded-md bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#111111" stroke-width="1.5"><path d="M5 10l3 3 7-7"/></svg>
+          </div>
+          <h3 class="font-heading text-lg mb-2">End-to-end encrypted</h3>
+          <p class="text-muted text-sm leading-relaxed">Your notes belong to you. Zero-knowledge encryption means we can never read your writing.</p>
+        </div>
+        <!-- Card 6 -->
+        <div class="ed-reveal ed-delay-2 ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <div class="w-10 h-10 rounded-md bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#111111" stroke-width="1.5"><path d="M4 16V4l6 4 6-4v12"/></svg>
+          </div>
+          <h3 class="font-heading text-lg mb-2">Offline first</h3>
+          <p class="text-muted text-sm leading-relaxed">Works without internet. Sync happens silently in the background when you reconnect.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how" class="py-20 bg-[#F7F6F3]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="ed-reveal ed-badge inline-block mb-4">How It Works</span>
+        <h2 class="ed-reveal ed-delay-1 font-heading text-3xl md:text-4xl tracking-tight">Three steps to clearer thinking</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 md:gap-12">
+        <div class="ed-reveal text-center">
+          <div class="font-mono text-sm text-muted mb-4">01</div>
+          <h3 class="font-heading text-xl mb-3">Open a blank page</h3>
+          <p class="text-muted text-sm leading-relaxed">No templates required. Press <span class="font-mono text-xs bg-white border border-[#EAEAEA] px-1.5 py-0.5 rounded">Cmd + N</span> and start writing.</p>
+        </div>
+        <div class="ed-reveal ed-delay-1 text-center">
+          <div class="font-mono text-sm text-muted mb-4">02</div>
+          <h3 class="font-heading text-xl mb-3">Write without friction</h3>
+          <p class="text-muted text-sm leading-relaxed">Markdown shortcuts, slash commands, and keyboard-first navigation. Your hands never leave the keyboard.</p>
+        </div>
+        <div class="ed-reveal ed-delay-2 text-center">
+          <div class="font-mono text-sm text-muted mb-4">03</div>
+          <h3 class="font-heading text-xl mb-3">Connect your ideas</h3>
+          <p class="text-muted text-sm leading-relaxed">Link notes with [[backlinks]]. Watch your personal knowledge graph emerge over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="ed-reveal ed-badge inline-block mb-4">Testimonials</span>
+        <h2 class="ed-reveal ed-delay-1 font-heading text-3xl md:text-4xl tracking-tight">Writers love Margin</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <div class="ed-reveal ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <p class="text-sm leading-relaxed mb-6">"I've tried every note app. Margin is the first one that actually gets out of my way. The editor feels like writing on paper."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center text-xs font-mono text-muted">SL</div>
+            <div>
+              <p class="text-sm font-medium">Sarah Lin</p>
+              <p class="text-xs text-muted">Staff Writer, The Atlantic</p>
+            </div>
+          </div>
+        </div>
+        <div class="ed-reveal ed-delay-1 ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <p class="text-sm leading-relaxed mb-6">"Backlinks changed how I think. My notes went from scattered files to a connected web of ideas. Margin made that effortless."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center text-xs font-mono text-muted">JK</div>
+            <div>
+              <p class="text-sm font-medium">James Kim</p>
+              <p class="text-xs text-muted">Product Designer, Linear</p>
+            </div>
+          </div>
+        </div>
+        <div class="ed-reveal ed-delay-2 ed-card border border-[#EAEAEA] rounded-md p-8 bg-white">
+          <p class="text-sm leading-relaxed mb-6">"The encryption and offline support sealed it. I journal every morning in Margin knowing my private thoughts stay private."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-[#F7F6F3] border border-[#EAEAEA] flex items-center justify-center text-xs font-mono text-muted">AR</div>
+            <div>
+              <p class="text-sm font-medium">Ana Reyes</p>
+              <p class="text-xs text-muted">Engineering Lead, Vercel</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta" class="py-24 bg-[#F7F6F3]">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h2 class="ed-reveal font-heading text-3xl md:text-5xl tracking-tight mb-4">Start with a blank page</h2>
+      <p class="ed-reveal ed-delay-1 text-muted max-w-lg mx-auto mb-10 leading-relaxed">Free for personal use. No credit card required. Your notes are encrypted from day one.</p>
+      <div class="ed-reveal ed-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#" class="ed-btn bg-ink text-white px-8 py-3 rounded-md text-base">Create Free Account</a>
+        <a href="#" class="text-muted hover:text-ink transition-colors text-sm">View pricing →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 bg-white border-t border-[#EAEAEA]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <p class="font-heading text-lg mb-4">Margin</p>
+          <p class="text-sm text-muted leading-relaxed">Minimal notes for<br>clearer thinking.</p>
+        </div>
+        <div>
+          <p class="text-xs text-muted uppercase tracking-widest mb-4">Product</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Features</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Pricing</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Changelog</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Download</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs text-muted uppercase tracking-widest mb-4">Company</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">About</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Blog</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs text-muted uppercase tracking-widest mb-4">Legal</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Privacy</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Terms</a></li>
+            <li><a href="#" class="text-sm text-muted hover:text-ink transition-colors">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-[#EAEAEA] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-muted">© 2026 Margin. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-muted hover:text-ink transition-colors">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </a>
+          <a href="#" class="text-muted hover:text-ink transition-colors">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- IntersectionObserver for staggered reveals -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.ed-reveal').forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

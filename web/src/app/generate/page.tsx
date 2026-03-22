@@ -124,7 +124,7 @@ function GeneratePageInner() {
 
   const handleGenerate = async () => {
     if (!description.trim()) {
-      setError("사이트 설명을 입력해주세요.");
+      setError("Please enter a site description.");
       return;
     }
 
@@ -147,11 +147,11 @@ function GeneratePageInner() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "생성에 실패했습니다.");
+        throw new Error(data.error || "Generation failed.");
       }
 
       const reader = response.body?.getReader();
-      if (!reader) throw new Error("스트림을 읽을 수 없습니다.");
+      if (!reader) throw new Error("Could not read stream.");
 
       const decoder = new TextDecoder();
       let accumulated = "";
@@ -163,7 +163,7 @@ function GeneratePageInner() {
         setOutput(accumulated);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
+      setError(err instanceof Error ? err.message : "An unknown error occurred.");
     } finally {
       setLoading(false);
     }
@@ -189,7 +189,7 @@ function GeneratePageInner() {
       <div className="w-1/2 border-r border-zinc-800 overflow-y-auto">
         <div className="p-8">
           <h1 className="font-[family-name:var(--font-space-grotesk)] text-2xl font-bold tracking-tight mb-2">
-            디자인 생성
+            Generate Design
           </h1>
           <p className="mb-8 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">
             <span className="text-accent">$</span> generate --mode interactive
@@ -197,8 +197,8 @@ function GeneratePageInner() {
 
           {/* Reference Selector */}
           <div className="mb-6">
-            <label className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium uppercase tracking-wider text-zinc-500">
-              래퍼런스 선택
+            <label className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium uppercase tracking-wider text-zinc-500">
+              Reference
             </label>
             <div className="grid grid-cols-3 gap-2">
               {REFERENCES.map((ref) => (
@@ -225,15 +225,15 @@ function GeneratePageInner() {
           <div className="mb-6">
             <label
               htmlFor="description"
-              className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium uppercase tracking-wider text-zinc-500"
+              className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium uppercase tracking-wider text-zinc-500"
             >
-              사이트 설명
+              Description
             </label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="AI 기반 프로젝트 관리 도구의 랜딩 페이지"
+              placeholder="Landing page for an AI project management tool"
               rows={4}
               className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 resize-none"
             />
@@ -241,8 +241,8 @@ function GeneratePageInner() {
 
           {/* Brand Color */}
           <div className="mb-6">
-            <label className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium uppercase tracking-wider text-zinc-500">
-              브랜드 색상
+            <label className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium uppercase tracking-wider text-zinc-500">
+              Brand Color
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -268,8 +268,8 @@ function GeneratePageInner() {
 
           {/* Output Format Toggle */}
           <div className="mb-8">
-            <label className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium uppercase tracking-wider text-zinc-500">
-              출력 형식
+            <label className="mb-2 block font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium uppercase tracking-wider text-zinc-500">
+              Output Format
             </label>
             <div className="flex rounded-lg border border-zinc-800 bg-zinc-900 p-1">
               <button
@@ -440,7 +440,7 @@ function GeneratePageInner() {
           {output && format === "prompt" && (
             <div className="p-6">
               <div className="mb-4 rounded-lg border border-accent-30 bg-accent-10 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-xs text-accent-light">
-                이 프롬프트를 Claude, ChatGPT 등 AI에 붙여넣으세요.
+                Paste this prompt into Claude, ChatGPT, or any AI.
               </div>
               <pre className="font-[family-name:var(--font-jetbrains-mono)] text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap break-words">
                 {output}

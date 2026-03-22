@@ -77,18 +77,18 @@ function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: 
   const palettes: DesignPalette[] = [];
 
   const variations = [
-    { name: "원본", hShift: 0, sShift: 0, lShift: 0 },
-    { name: "밝게", hShift: 0, sShift: -10, lShift: 15 },
-    { name: "깊게", hShift: 0, sShift: 10, lShift: -15 },
-    { name: "유사색 1", hShift: 30, sShift: 0, lShift: 0 },
-    { name: "유사색 2", hShift: -30, sShift: 0, lShift: 0 },
-    { name: "보색", hShift: 180, sShift: 0, lShift: 0 },
-    { name: "트라이어드 1", hShift: 120, sShift: -5, lShift: 5 },
-    { name: "트라이어드 2", hShift: 240, sShift: -5, lShift: 5 },
-    { name: "따뜻하게", hShift: -60, sShift: 15, lShift: 0 },
-    { name: "차갑게", hShift: 60, sShift: 15, lShift: 0 },
-    { name: "채도 낮게", hShift: 0, sShift: -30, lShift: 5 },
-    { name: "비비드", hShift: 0, sShift: 25, lShift: -5 },
+    { name: "Original", hShift: 0, sShift: 0, lShift: 0 },
+    { name: "Lighter", hShift: 0, sShift: -10, lShift: 15 },
+    { name: "Deeper", hShift: 0, sShift: 10, lShift: -15 },
+    { name: "Analogous 1", hShift: 30, sShift: 0, lShift: 0 },
+    { name: "Analogous 2", hShift: -30, sShift: 0, lShift: 0 },
+    { name: "Complementary", hShift: 180, sShift: 0, lShift: 0 },
+    { name: "Triad 1", hShift: 120, sShift: -5, lShift: 5 },
+    { name: "Triad 2", hShift: 240, sShift: -5, lShift: 5 },
+    { name: "Warm", hShift: -60, sShift: 15, lShift: 0 },
+    { name: "Cool", hShift: 60, sShift: 15, lShift: 0 },
+    { name: "Desaturated", hShift: 0, sShift: -30, lShift: 5 },
+    { name: "Vivid", hShift: 0, sShift: 25, lShift: -5 },
   ];
 
   variations.forEach((v, i) => {
@@ -230,7 +230,7 @@ export default function ReferenceDetailClient({
               {r.id}
             </span>
           </div>
-          <p className="text-sm text-zinc-400">{r.description}</p>
+          <p className="text-base text-zinc-400">{r.description}</p>
         </div>
 
         {/* Status + open in new tab */}
@@ -253,7 +253,7 @@ export default function ReferenceDetailClient({
               rel="noopener noreferrer"
               className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600 hover:text-accent-light transition-colors"
             >
-              ↗ 새 탭에서 보기
+              ↗ open in new tab
             </a>
           )}
         </div>
@@ -301,7 +301,7 @@ export default function ReferenceDetailClient({
         {sampleExists && htmlContent && (
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
+              <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold uppercase tracking-wider text-zinc-600">
                 palette <span className="text-zinc-700">--variants</span>
               </h2>
               {hasCustomChanges && (
@@ -333,7 +333,7 @@ export default function ReferenceDetailClient({
 
         {/* Colors */}
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
+          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold uppercase tracking-wider text-zinc-600">
             colors <span className="text-zinc-700">--current</span>
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -349,7 +349,7 @@ export default function ReferenceDetailClient({
           <div>
             <button
               onClick={() => setIsCustomizing(!isCustomizing)}
-              className="mb-3 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600 hover:text-accent-light transition-colors cursor-pointer"
+              className="mb-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold uppercase tracking-wider text-zinc-600 hover:text-accent-light transition-colors cursor-pointer"
             >
               fine-tune {isCustomizing ? "[-]" : "[+]"}
             </button>
@@ -424,7 +424,7 @@ export default function ReferenceDetailClient({
 
         {/* Tags */}
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
+          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold uppercase tracking-wider text-zinc-600">
             tags
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -441,7 +441,7 @@ export default function ReferenceDetailClient({
 
         {/* Inspired-by */}
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
+          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold uppercase tracking-wider text-zinc-600">
             inspired-by
           </h2>
           <div className="flex flex-wrap gap-2">

@@ -119,7 +119,7 @@ export default function ImprovePage() {
   const handleAnalyze = async () => {
     const input = tab === "url" ? url.trim() : code.trim();
     if (!input) {
-      setError(tab === "url" ? "URL을 입력해주세요." : "HTML 코드를 입력해주세요.");
+      setError(tab === "url" ? "Please enter a URL." : "Please enter HTML code.");
       return;
     }
 
@@ -142,11 +142,11 @@ export default function ImprovePage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "분석에 실패했습니다.");
+        throw new Error(data.error || "Analysis failed.");
       }
 
       const reader = response.body?.getReader();
-      if (!reader) throw new Error("스트림을 읽을 수 없습니다.");
+      if (!reader) throw new Error("Could not read stream.");
 
       const decoder = new TextDecoder();
       let accumulated = "";
@@ -171,9 +171,9 @@ export default function ImprovePage() {
       }
     } catch (err) {
       if (err instanceof SyntaxError) {
-        setError("응답을 파싱할 수 없습니다. 다시 시도해주세요.");
+        setError("Could not parse response. Please try again.");
       } else {
-        setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
+        setError(err instanceof Error ? err.message : "An unknown error occurred.");
       }
     } finally {
       setLoading(false);
@@ -197,7 +197,7 @@ export default function ImprovePage() {
       <div className="border-b border-zinc-800">
         <div className="mx-auto max-w-4xl px-6 py-8">
           <h1 className="mb-2 font-[family-name:var(--font-space-grotesk)] text-2xl font-bold tracking-tight">
-            디자인 고도화
+            Improve Design
           </h1>
           <p className="mb-8 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">
             <span className="text-accent">$</span> improve --analyze --suggest
@@ -280,7 +280,7 @@ export default function ImprovePage() {
               <textarea
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                placeholder="HTML 코드를 붙여넣으세요..."
+                placeholder="Paste HTML code here..."
                 rows={12}
                 className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 resize-none"
               />
@@ -327,7 +327,7 @@ export default function ImprovePage() {
       {promptOutput && outputMode === "prompt" && !loading && (
         <div className="mx-auto max-w-4xl px-6 py-8">
           <div className="mb-4 rounded-lg border border-accent-30 bg-accent-10 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-xs text-accent-light">
-            이 프롬프트를 Claude, ChatGPT 등 AI에 붙여넣으세요.
+            Paste this prompt into Claude, ChatGPT, or any AI.
           </div>
           <div className="flex justify-end mb-3">
             <CopyButton text={promptOutput} />
@@ -345,8 +345,8 @@ export default function ImprovePage() {
           <div className="mb-8 flex items-start gap-6 rounded-lg border border-zinc-800 bg-zinc-900/50 p-6">
             <ScoreRing score={result.score} />
             <div className="flex-1">
-              <h2 className="mb-1 font-[family-name:var(--font-space-grotesk)] text-lg font-semibold">현재 디자인 점수</h2>
-              <p className="mb-3 text-sm text-zinc-400">{result.summary}</p>
+              <h2 className="mb-1 font-[family-name:var(--font-space-grotesk)] text-lg font-semibold">Design Score</h2>
+              <p className="mb-3 text-base text-zinc-400">{result.summary}</p>
               <div className="flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-400 w-fit">
                 <span className="text-zinc-600">closest_ref:</span>
                 <span className="font-medium text-accent-light">
@@ -358,7 +358,7 @@ export default function ImprovePage() {
 
           {/* Issues List */}
           <div className="mb-8">
-            <h2 className="mb-4 font-[family-name:var(--font-space-grotesk)] text-lg font-semibold">개선 필요 항목</h2>
+            <h2 className="mb-4 font-[family-name:var(--font-space-grotesk)] text-lg font-semibold">Issues Found</h2>
             <div className="space-y-2">
               {result.issues.map((issue) => (
                 <div
@@ -371,7 +371,7 @@ export default function ImprovePage() {
                     style={{ accentColor: "var(--accent)" }}
                     readOnly
                   />
-                  <span className="flex-1 text-sm text-zinc-300">
+                  <span className="flex-1 text-base text-zinc-300">
                     {issue.description}
                   </span>
                   <SeverityBadge severity={issue.severity} />
@@ -394,7 +394,7 @@ export default function ImprovePage() {
           {showImproved && result.improvedCode && (
             <div className="mt-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="font-[family-name:var(--font-space-grotesk)] text-lg font-semibold">고도화된 코드</h2>
+                <h2 className="font-[family-name:var(--font-space-grotesk)] text-lg font-semibold">Improved Code</h2>
                 <div className="flex items-center gap-2">
                   <CopyButton text={result.improvedCode} />
                   <button

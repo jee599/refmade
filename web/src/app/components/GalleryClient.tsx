@@ -38,8 +38,19 @@ type Sort = "views" | "downloads" | "newest";
 function StatusBadge({ status }: { status: Reference["status"] }) {
   if (status === "verified") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs text-emerald-400">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse-dot" />
+      <span
+        className="inline-flex items-center gap-1.5 rounded px-2 py-0.5 font-[family-name:var(--font-jetbrains-mono)] text-xs"
+        style={{
+          borderWidth: "1px",
+          borderColor: "var(--accent-30)",
+          backgroundColor: "var(--accent-10)",
+          color: "var(--accent-light)",
+        }}
+      >
+        <span
+          className="h-1.5 w-1.5 rounded-full animate-pulse-dot"
+          style={{ backgroundColor: "var(--accent-light)" }}
+        />
         verified
       </span>
     );
@@ -55,7 +66,7 @@ function StatusBadge({ status }: { status: Reference["status"] }) {
 function ReferenceCard({ reference: r }: { reference: Reference }) {
   return (
     <Link href={`/reference/${r.id}`} className="group block">
-      <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-emerald-500/50 group-hover:shadow-lg group-hover:shadow-emerald-500/5">
+      <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-accent-50 group-hover:shadow-lg group-hover:shadow-accent-5">
         {/* Preview section */}
         {r.sampleFile ? (
           <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
@@ -93,7 +104,7 @@ function ReferenceCard({ reference: r }: { reference: Reference }) {
           </div>
 
           {/* Description */}
-          <p className="mb-2 line-clamp-1 text-sm text-zinc-400">
+          <p className="mb-2 line-clamp-1 text-base text-zinc-400">
             {r.description}
           </p>
 
@@ -114,7 +125,7 @@ function ReferenceCard({ reference: r }: { reference: Reference }) {
         </div>
 
         {/* Accent color bar */}
-        <div className="h-1 w-full bg-emerald-500/20 group-hover:bg-emerald-500/60 transition-colors" style={{ backgroundColor: undefined }} />
+        <div className="h-1 w-full bg-accent-20 transition-colors group-hover:bg-accent-60" />
         <div className="h-0.5 w-full" style={{ backgroundColor: r.accent }} />
       </div>
     </Link>
@@ -172,7 +183,7 @@ export default function GalleryClient({
               onClick={() => setFilter(btn.value)}
               className={`rounded-lg border px-4 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-sm transition-all duration-200 ${
                 filter === btn.value
-                  ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                  ? "border-accent bg-accent-10 text-accent-light"
                   : "border-zinc-700 bg-zinc-900 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
               }`}
             >
@@ -184,20 +195,20 @@ export default function GalleryClient({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as Sort)}
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-400 outline-none transition-colors focus:border-emerald-500"
+            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-400 outline-none transition-colors focus:border-accent"
           >
             <option value="views">sort:views</option>
             <option value="downloads">sort:downloads</option>
             <option value="newest">sort:newest</option>
           </select>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-emerald-500/70">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-accent-70">$</span>
             <input
               type="text"
               placeholder="search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 py-2 pl-7 pr-4 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-50 placeholder-zinc-600 outline-none transition-colors focus:border-emerald-500 sm:w-52"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 py-2 pl-7 pr-4 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-50 placeholder-zinc-600 outline-none transition-colors focus:border-accent sm:w-52"
             />
           </div>
         </div>
@@ -206,7 +217,7 @@ export default function GalleryClient({
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="py-20 text-center font-[family-name:var(--font-jetbrains-mono)] text-zinc-600">
-          <span className="text-emerald-500/50">[ERR]</span> No references match your filters.
+          <span className="text-accent-50">[ERR]</span> No references match your filters.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">

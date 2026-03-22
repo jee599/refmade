@@ -2,10 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import type { Reference } from "@/app/data/references";
-import {
-  designPalettes,
-  type DesignPalette,
-} from "@/app/data/designPalettes";
+import type { DesignPalette } from "@/app/data/designPalettes";
 
 function CopyableSwatch({
   color,
@@ -42,36 +39,73 @@ function CopyableSwatch({
   );
 }
 
-function PaletteCard({
-  palette,
-  isActive,
-  onSelect,
-}: {
-  palette: DesignPalette;
-  isActive: boolean;
-  onSelect: () => void;
-}) {
-  return (
-    <button
-      onClick={onSelect}
-      className={`group flex flex-col gap-1 rounded-lg border p-1.5 transition-all duration-200 cursor-pointer ${
-        isActive
-          ? "border-accent bg-accent-10"
-          : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-600 hover:bg-zinc-900"
-      }`}
-      style={isActive ? { outlineColor: "var(--accent)" } : undefined}
-      title={palette.name}
-    >
-      <div className="flex h-5 w-full overflow-hidden rounded-md">
-        <div className="flex-1" style={{ backgroundColor: palette.bg }} />
-        <div className="w-4" style={{ backgroundColor: palette.accent }} />
-        <div className="flex-1" style={{ backgroundColor: palette.text }} />
-      </div>
-      <span className="truncate w-full font-[family-name:var(--font-jetbrains-mono)] text-[9px] text-zinc-500 group-hover:text-zinc-400">
-        {palette.name}
-      </span>
-    </button>
-  );
+function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: string, tone: string): DesignPalette[] {
+  function hexToHsl(hex: string): [number, number, number] {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+  }
+
+  function hslToHex(h: number, s: number, l: number): string {
+    h = ((h % 360) + 360) % 360;
+    s = Math.max(0, Math.min(100, s)) / 100;
+    l = Math.max(0, Math.min(100, l)) / 100;
+    const a = s * Math.min(l, 1 - l);
+    const f = (n: number) => {
+      const k = (n + h / 30) % 12;
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+  }
+
+  const [baseH, baseS, baseL] = hexToHsl(baseAccent);
+  const isDark = tone === "dark";
+  const palettes: DesignPalette[] = [];
+
+  const variations = [
+    { name: "원본", hShift: 0, sShift: 0, lShift: 0 },
+    { name: "밝게", hShift: 0, sShift: -10, lShift: 15 },
+    { name: "깊게", hShift: 0, sShift: 10, lShift: -15 },
+    { name: "유사색 1", hShift: 30, sShift: 0, lShift: 0 },
+    { name: "유사색 2", hShift: -30, sShift: 0, lShift: 0 },
+    { name: "보색", hShift: 180, sShift: 0, lShift: 0 },
+    { name: "트라이어드 1", hShift: 120, sShift: -5, lShift: 5 },
+    { name: "트라이어드 2", hShift: 240, sShift: -5, lShift: 5 },
+    { name: "따뜻하게", hShift: -60, sShift: 15, lShift: 0 },
+    { name: "차갑게", hShift: 60, sShift: 15, lShift: 0 },
+    { name: "채도 낮게", hShift: 0, sShift: -30, lShift: 5 },
+    { name: "비비드", hShift: 0, sShift: 25, lShift: -5 },
+  ];
+
+  variations.forEach((v, i) => {
+    const accent = hslToHex(baseH + v.hShift, baseS + v.sShift, baseL + v.lShift);
+    const bg = isDark ? "#09090b" : "#ffffff";
+    const text = isDark ? "#fafafa" : "#09090b";
+    palettes.push({
+      id: `gen-${i}`,
+      name: v.name,
+      accent,
+      bg,
+      text,
+      category: "generated" as any,
+    });
+  });
+
+  return palettes;
 }
 
 export default function ReferenceDetailClient({
@@ -85,7 +119,6 @@ export default function ReferenceDetailClient({
   const defaultTextColor = r.tone === "dark" ? "#fafafa" : "#09090b";
   const textColor = defaultTextColor;
   const mutedColor = r.tone === "dark" ? "#71717a" : "#a1a1aa";
-  const subtleColor = r.tone === "dark" ? "#18181b" : "#f4f4f5";
 
   const samplePath = r.sampleFile ? `/samples/${r.sampleFile}` : null;
 
@@ -98,6 +131,11 @@ export default function ReferenceDetailClient({
 
   // Palette state
   const [activePaletteId, setActivePaletteId] = useState<string | null>(null);
+
+  const generatedPalettes = useMemo(
+    () => generateHarmonicPalettes(r.accent, r.bg, defaultTextColor, r.tone),
+    [r.accent, r.bg, defaultTextColor, r.tone]
+  );
 
   useEffect(() => {
     if (r.sampleFile) {
@@ -141,18 +179,6 @@ export default function ReferenceDetailClient({
   }, [htmlContent, customAccent, customBg, customText, r.accent, r.bg, defaultTextColor]);
 
   const hasCustomChanges = customAccent !== r.accent || customBg !== r.bg || customText !== defaultTextColor;
-
-  const handleDownloadRef = () => {
-    const content = hasCustomChanges && customizedHtml ? customizedHtml : htmlContent;
-    if (!content) return;
-    const blob = new Blob([content], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${r.id}-${r.name.toLowerCase().replace(/\s+/g, "-")}${activePaletteId ? `-${activePaletteId}` : ""}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
 
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
@@ -207,8 +233,8 @@ export default function ReferenceDetailClient({
           <p className="text-sm text-zinc-400">{r.description}</p>
         </div>
 
-        {/* Status */}
-        <div>
+        {/* Status + open in new tab */}
+        <div className="flex items-center gap-3">
           {r.status === "verified" ? (
             <span className="inline-flex items-center gap-1.5 rounded border border-accent-30 bg-accent-10 px-3 py-1 font-[family-name:var(--font-jetbrains-mono)] text-sm text-accent-light">
               <span className="h-2 w-2 rounded-full animate-pulse-dot" style={{ backgroundColor: "var(--accent-light)" }} />
@@ -220,62 +246,112 @@ export default function ReferenceDetailClient({
               draft
             </span>
           )}
+          {sampleExists && samplePath && (
+            <a
+              href={samplePath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600 hover:text-accent-light transition-colors"
+            >
+              ↗ 새 탭에서 보기
+            </a>
+          )}
         </div>
 
-        {/* ── Color Palettes ── */}
+        {/* Commands */}
+        <div className="rounded-lg border border-zinc-800 bg-[#0c0c0e] overflow-hidden">
+          <div className="flex items-center gap-1.5 border-b border-zinc-800 bg-zinc-900/50 px-3 py-2">
+            <span className="h-2 w-2 rounded-full bg-red-500/60" />
+            <span className="h-2 w-2 rounded-full bg-yellow-500/60" />
+            <span className="h-2 w-2 rounded-full bg-emerald-500/60" />
+            <span className="ml-2 font-[family-name:var(--font-jetbrains-mono)] text-[10px] text-zinc-600">refmade</span>
+          </div>
+          <div className="p-3 space-y-1">
+            <a
+              href={`/generate?ref=${r.id}&mode=prompt`}
+              className="flex items-center gap-2 rounded px-2 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-sm transition-colors hover:bg-zinc-800 group"
+            >
+              <span className="text-emerald-500">$</span>
+              <span className="text-zinc-300 group-hover:text-white">refmade export</span>
+              <span className="text-zinc-600">--prompt</span>
+              <span className="ml-auto rounded border border-emerald-800 bg-emerald-900/20 px-1.5 py-0.5 text-[10px] text-emerald-400">free</span>
+            </a>
+            <a
+              href={`/generate?ref=${r.id}`}
+              className="flex items-center gap-2 rounded px-2 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-sm transition-colors hover:bg-zinc-800 group"
+            >
+              <span className="text-emerald-500">$</span>
+              <span className="text-zinc-300 group-hover:text-white">refmade generate</span>
+              <span className="text-zinc-600">--conversation</span>
+              <span className="ml-auto rounded border border-amber-800 bg-amber-900/20 px-1.5 py-0.5 text-[10px] text-amber-400">pro</span>
+            </a>
+            <a
+              href={`/improve?ref=${r.id}`}
+              className="flex items-center gap-2 rounded px-2 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-sm transition-colors hover:bg-zinc-800 group"
+            >
+              <span className="text-emerald-500">$</span>
+              <span className="text-zinc-300 group-hover:text-white">refmade improve</span>
+              <span className="text-zinc-600">--redesign</span>
+              <span className="ml-auto rounded border border-amber-800 bg-amber-900/20 px-1.5 py-0.5 text-[10px] text-amber-400">pro</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Palette */}
         {sampleExists && htmlContent && (
           <div>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
-                팔레트
-                <span className="ml-2 text-zinc-700">({designPalettes.length})</span>
+                palette <span className="text-zinc-700">--variants</span>
               </h2>
               {hasCustomChanges && (
                 <button
                   onClick={resetColors}
                   className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
                 >
-                  초기화
+                  --reset
                 </button>
               )}
             </div>
-
-            {/* Palette grid */}
-            <div className="grid grid-cols-7 gap-1.5">
-              {designPalettes.map((p) => (
-                <PaletteCard
+            <div className="flex flex-wrap gap-2">
+              {generatedPalettes.map((p) => (
+                <button
                   key={p.id}
-                  palette={p}
-                  isActive={activePaletteId === p.id}
-                  onSelect={() => applyPalette(p)}
+                  onClick={() => applyPalette(p)}
+                  className={`group relative h-8 w-8 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 ${
+                    activePaletteId === p.id
+                      ? "border-white ring-2 ring-white/20 scale-110"
+                      : "border-zinc-700 hover:border-zinc-500"
+                  }`}
+                  style={{ backgroundColor: p.accent }}
+                  title={p.name}
                 />
               ))}
             </div>
           </div>
         )}
 
-        {/* Current Palette Display */}
+        {/* Colors */}
         <div>
-          <h2 className="mb-3 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
-            현재 색상
+          <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
+            colors <span className="text-zinc-700">--current</span>
           </h2>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-wrap gap-2">
             <CopyableSwatch color={hasCustomChanges ? customBg : r.bg} label="bg" />
             <CopyableSwatch color={hasCustomChanges ? customText : textColor} label="text" />
             <CopyableSwatch color={hasCustomChanges ? customAccent : r.accent} label="accent" />
-            <CopyableSwatch color={subtleColor} label="subtle" />
             <CopyableSwatch color={mutedColor} label="muted" />
           </div>
         </div>
 
-        {/* Manual Customizer */}
+        {/* Fine-tune */}
         {sampleExists && htmlContent && (
           <div>
             <button
               onClick={() => setIsCustomizing(!isCustomizing)}
               className="mb-3 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600 hover:text-accent-light transition-colors cursor-pointer"
             >
-              색상 미세조정 {isCustomizing ? "[-]" : "[+]"}
+              fine-tune {isCustomizing ? "[-]" : "[+]"}
             </button>
             {isCustomizing && (
               <div className="space-y-3 rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
@@ -338,7 +414,7 @@ export default function ReferenceDetailClient({
                     onClick={resetColors}
                     className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
                   >
-                    색상 초기화
+                    --reset-colors
                   </button>
                 )}
               </div>
@@ -349,7 +425,7 @@ export default function ReferenceDetailClient({
         {/* Tags */}
         <div>
           <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
-            태그
+            tags
           </h2>
           <div className="flex flex-wrap gap-2">
             {r.tags.map((tag) => (
@@ -363,10 +439,10 @@ export default function ReferenceDetailClient({
           </div>
         </div>
 
-        {/* Inspired by */}
+        {/* Inspired-by */}
         <div>
           <h2 className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-wider text-zinc-600">
-            영감
+            inspired-by
           </h2>
           <div className="flex flex-wrap gap-2">
             {r.inspired.map((site) => (
@@ -381,52 +457,6 @@ export default function ReferenceDetailClient({
               </a>
             ))}
           </div>
-        </div>
-
-        {/* Preview & Download */}
-        {sampleExists && samplePath && (
-          <div className="flex flex-col gap-2 pt-2">
-            <a
-              href={samplePath}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-accent-30 bg-accent-10 px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-accent-light transition-colors hover:bg-accent-20"
-            >
-              미리보기
-            </a>
-            {htmlContent && (
-              <button
-                onClick={handleDownloadRef}
-                className="inline-flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-700 cursor-pointer"
-              >
-                다운로드
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex flex-col gap-2 pt-2">
-          <a
-            href={`/generate?ref=${r.id}&mode=prompt`}
-            className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-zinc-950 transition-colors hover:opacity-90"
-            style={{ backgroundColor: customAccent }}
-          >
-            프롬프트 받기 (무료)
-          </a>
-          <a
-            href={`/generate?ref=${r.id}`}
-            className="inline-flex items-center justify-center rounded-lg border px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-colors hover:opacity-80"
-            style={{ borderColor: customAccent + '4d', backgroundColor: customAccent + '1a', color: customAccent }}
-          >
-            대화형식으로 고도화 (유료)
-          </a>
-          <a
-            href={`/improve?ref=${r.id}`}
-            className="inline-flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-700"
-          >
-            특정 사이트 리디자인 (유료)
-          </a>
         </div>
       </div>
     </div>

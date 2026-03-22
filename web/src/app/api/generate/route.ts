@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
 import { readFile, readdir } from "fs/promises";
 import { join } from "path";
+import { assembleGeneratePrompt } from "@/lib/promptAssembler";
 
 const CATALOG_DIR = join(
   process.cwd(),
@@ -28,7 +29,7 @@ interface GenerateRequest {
   referenceId: string;
   description: string;
   brandColor: string;
-  format: "code" | "markdown";
+  format: "code" | "markdown" | "prompt";
   model?: "haiku" | "sonnet";
 }
 
@@ -66,6 +67,19 @@ export async function POST(request: NextRequest) {
         { error: "SKILL.md를 읽을 수 없습니다." },
         { status: 500 }
       );
+    }
+
+    if (format === "prompt") {
+      const assembled = assembleGeneratePrompt({
+        skillContent,
+        referenceContent,
+        brandColor,
+        description,
+        outputFormat: "code",
+      });
+      return new Response(assembled, {
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
     }
 
     const systemPrompt =

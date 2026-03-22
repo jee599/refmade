@@ -579,7 +579,8 @@
     <!-- Hero video placeholder -->
     <div class="reveal reveal-delay-4" style="max-width: 1200px; margin: 48px auto 0; padding: 0 24px;">
       <div style="width: 100%; aspect-ratio: 16/9; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative;">
-        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px;">
+        <img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=1200&q=80&fit=crop" alt="Museum interior with dramatic lighting" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;" />
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; background: rgba(10,10,10,0.45);">
           <div class="elastic" style="width: 80px; height: 80px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 40px var(--accent-glow);">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="#000"><polygon points="9,5 20,12 9,19"/></svg>
           </div>
@@ -613,22 +614,24 @@
 
         <!-- Featured exhibit — spans 2 cols + 2 rows -->
         <div class="exhibit-card span-2" style="grid-column: span 2; grid-row: span 2;">
-          <div style="position: relative; min-height: 440px; padding: 36px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(160deg, #0d2818 0%, #0a1f14 40%, var(--bg-card) 100%);">
+          <div style="position: relative; min-height: 440px; padding: 36px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden;">
+            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&q=80&fit=crop" alt="Stock trading floor with live charts" loading="lazy" class="exhibit-card__img" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(160deg, rgba(13,40,24,0.85) 0%, rgba(10,31,20,0.75) 40%, rgba(20,20,20,0.9) 100%);"></div>
             <!-- Floating accent circles -->
-            <div style="position: absolute; top: 28px; right: 28px; display: flex; gap: 6px;">
+            <div style="position: absolute; top: 28px; right: 28px; display: flex; gap: 6px; z-index: 1;">
               <div class="elastic" style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent); opacity: 0.12;"></div>
               <div class="elastic" style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent); opacity: 0.2;"></div>
               <div class="elastic" style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent); opacity: 0.35;"></div>
             </div>
             <!-- Featured badge -->
-            <div style="position: absolute; top: 28px; left: 28px;">
+            <div style="position: absolute; top: 28px; left: 28px; z-index: 1;">
               <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #000; background: var(--accent); padding: 4px 12px; border-radius: 999px; font-weight: 600;">Featured</span>
             </div>
-            <h3 style="font-size: 30px; margin: 0 0 10px;">Dex Diamondhands</h3>
-            <p style="font-size: 15px; line-height: 1.6; color: var(--text-secondary); max-width: 40ch; margin: 0 0 20px;">
+            <h3 style="font-size: 30px; margin: 0 0 10px; position: relative; z-index: 1;">Dex Diamondhands</h3>
+            <p style="font-size: 15px; line-height: 1.6; color: var(--text-secondary); max-width: 40ch; margin: 0 0 20px; position: relative; z-index: 1;">
               Test your nerve in a live simulated trading floor. Hold or fold — your call.
             </p>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px; position: relative; z-index: 1;">
               <span class="pill" style="font-size: 10px;">Trading</span>
               <span class="pill" style="font-size: 10px;">Simulation</span>
             </div>
@@ -636,8 +639,9 @@
         </div>
 
         <!-- Exhibit 2 -->
-        <div class="exhibit-card">
-          <div style="padding: 28px; min-height: 210px; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 120px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?w=600&h=400&q=80&fit=crop" alt="Dollar bills spread out" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end;">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(254, 243, 199, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(254, 243, 199, 0.2);">&#x1f3a8;</div>
             <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Currency Designer</h3>
             <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Design your own banknote with pro tools.</p>
@@ -645,8 +649,9 @@
         </div>
 
         <!-- Exhibit 3 -->
-        <div class="exhibit-card">
-          <div style="padding: 28px; min-height: 210px; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 120px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=600&h=400&q=80&fit=crop" alt="Interactive museum exhibit" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end;">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(254, 226, 226, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(254, 226, 226, 0.2);">&#x1f514;</div>
             <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Bull vs Bear Bell Bash</h3>
             <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Ring the opening bell in a frenzy of market chaos.</p>
@@ -654,8 +659,9 @@
         </div>
 
         <!-- Exhibit 4 -->
-        <div class="exhibit-card">
-          <div style="padding: 28px; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 100px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Stacked coins close-up" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(237, 233, 254, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(237, 233, 254, 0.2);">&#x1f4a1;</div>
             <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Penny Thinkers</h3>
             <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Philosophy meets finance. Big ideas, small change.</p>
@@ -663,8 +669,9 @@
         </div>
 
         <!-- Exhibit 5 -->
-        <div class="exhibit-card">
-          <div style="padding: 28px; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 100px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins collection" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(219, 234, 254, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(219, 234, 254, 0.2);">&#x1f4b0;</div>
             <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Cash Shower Splash</h3>
             <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Step into a tornado of flying bills. Grab what you can.</p>
@@ -672,8 +679,9 @@
         </div>
 
         <!-- Exhibit 6 -->
-        <div class="exhibit-card">
-          <div style="padding: 28px; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end;">
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 100px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&q=80&fit=crop" alt="Bitcoin and digital currency" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;">
             <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--accent-glow); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(34, 197, 94, 0.2);">&#x1f916;</div>
             <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Ask MoAI</h3>
             <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Chat with our AI about anything money. It knows things.</p>
@@ -698,19 +706,19 @@
 
     <div style="overflow: hidden;" class="reveal reveal-delay-1">
       <div class="gallery-track">
-        <div class="gallery-item" style="background: linear-gradient(135deg, #0d2818, #1a3a2a);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f3db;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #2a1f0a, #3d2e14);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1fa99;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #0a1a2e, #142a44);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f48e;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #1a0a2e, #2a1444);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f3a8;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #2e0a0a, #441414);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f514;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #0a2e14, #14441e);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f4b0;</div></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=600&h=400&q=80&fit=crop" alt="Museum interior" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Coin stack" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?w=600&h=400&q=80&fit=crop" alt="Dollar bills" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&q=80&fit=crop" alt="Bitcoin digital currency" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1542222024-c39e2281f121?w=600&h=400&q=80&fit=crop" alt="Dark museum hall" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
         <!-- Duplicates for seamless loop -->
-        <div class="gallery-item" style="background: linear-gradient(135deg, #0d2818, #1a3a2a);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f3db;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #2a1f0a, #3d2e14);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1fa99;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #0a1a2e, #142a44);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f48e;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #1a0a2e, #2a1444);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f3a8;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #2e0a0a, #441414);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f514;</div></div>
-        <div class="gallery-item" style="background: linear-gradient(135deg, #0a2e14, #14441e);"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.25;">&#x1f4b0;</div></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=600&h=400&q=80&fit=crop" alt="Museum interior" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Coin stack" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?w=600&h=400&q=80&fit=crop" alt="Dollar bills" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&q=80&fit=crop" alt="Bitcoin digital currency" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1542222024-c39e2281f121?w=600&h=400&q=80&fit=crop" alt="Dark museum hall" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
       </div>
     </div>
   </section>
@@ -723,13 +731,15 @@
         <div class="game-area" style="padding: 48px; display: flex; align-items: center; gap: 48px; flex-wrap: wrap;">
           <!-- Game preview -->
           <div style="flex: 1; min-width: 280px;">
-            <div style="width: 100%; aspect-ratio: 4/3; background: linear-gradient(160deg, #0d2818, var(--bg-card)); border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; position: relative; overflow: hidden;">
+            <div style="width: 100%; aspect-ratio: 4/3; border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; position: relative; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1553729459-afe8f2e2ed65?w=600&h=400&q=80&fit=crop" alt="Piggy bank savings" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+              <div style="position: absolute; inset: 0; background: linear-gradient(160deg, rgba(13,40,24,0.7), rgba(20,20,20,0.8));"></div>
               <!-- Game placeholder coins -->
               <div style="position: absolute; top: 20%; left: 20%; width: 32px; height: 32px; border-radius: 50%; background: #fbbf24; opacity: 0.6; animation: float 3s ease-in-out infinite;"></div>
               <div style="position: absolute; top: 35%; right: 25%; width: 24px; height: 24px; border-radius: 50%; background: #fbbf24; opacity: 0.4; animation: float 3s ease-in-out 0.5s infinite;"></div>
               <div style="position: absolute; bottom: 30%; left: 35%; width: 28px; height: 28px; border-radius: 50%; background: #fbbf24; opacity: 0.5; animation: float 3s ease-in-out 1s infinite;"></div>
-              <span style="font-size: 56px; opacity: 0.3; position: relative; z-index: 1;">&#x1f416;</span>
-              <span class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; position: relative; z-index: 1;">Tap to Play</span>
+              <span style="font-size: 56px; opacity: 0.5; position: relative; z-index: 1;">&#x1f416;</span>
+              <span class="font-mono" style="font-size: 11px; color: var(--text-secondary); letter-spacing: 0.08em; text-transform: uppercase; position: relative; z-index: 1;">Tap to Play</span>
             </div>
           </div>
 
@@ -793,8 +803,8 @@
         <!-- Article 1 — featured -->
         <div class="article-card span-2 reveal reveal-delay-1" style="grid-column: span 2;">
           <div style="overflow: hidden;">
-            <div class="article-card__img" style="width: 100%; height: 220px; background: linear-gradient(135deg, #0d2818, #1a3a2a); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 56px; opacity: 0.2;">&#x1f4f0;</span>
+            <div class="article-card__img" style="width: 100%; height: 220px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1542222024-c39e2281f121?w=600&h=400&q=80&fit=crop" alt="Museum in the dark" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           </div>
           <div style="padding: 24px 28px 28px;">
@@ -810,8 +820,8 @@
         <!-- Article 2 -->
         <div class="article-card reveal reveal-delay-2">
           <div style="overflow: hidden;">
-            <div class="article-card__img" style="width: 100%; height: 150px; background: linear-gradient(135deg, #2a1f0a, #3d2e14); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 40px; opacity: 0.2;">&#x1fa99;</span>
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins collection" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           </div>
           <div style="padding: 20px 24px 24px;">
@@ -827,8 +837,8 @@
         <!-- Article 3 -->
         <div class="article-card reveal reveal-delay-3">
           <div style="overflow: hidden;">
-            <div class="article-card__img" style="width: 100%; height: 150px; background: linear-gradient(135deg, #0a1a2e, #142a44); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 40px; opacity: 0.2;">&#x1f3ae;</span>
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=600&h=400&q=80&fit=crop" alt="Interactive exhibit display" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           </div>
           <div style="padding: 20px 24px 24px;">
@@ -844,8 +854,8 @@
         <!-- Article 4 -->
         <div class="article-card reveal reveal-delay-3">
           <div style="overflow: hidden;">
-            <div class="article-card__img" style="width: 100%; height: 150px; background: linear-gradient(135deg, #2e0a14, #441420); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 40px; opacity: 0.2;">&#x1f4ca;</span>
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&q=80&fit=crop" alt="Stock market trading charts" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           </div>
           <div style="padding: 20px 24px 24px;">
@@ -861,8 +871,8 @@
         <!-- Article 5 -->
         <div class="article-card reveal reveal-delay-4">
           <div style="overflow: hidden;">
-            <div class="article-card__img" style="width: 100%; height: 150px; background: linear-gradient(135deg, #0a2e14, #14441e); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 40px; opacity: 0.2;">&#x1f3db;</span>
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Stacked coins" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           </div>
           <div style="padding: 20px 24px 24px;">

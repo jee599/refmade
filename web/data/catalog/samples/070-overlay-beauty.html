@@ -440,6 +440,11 @@
     </div>
 
     <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;padding-top:180px;padding-bottom:160px;">
+      <!-- Hero image — floating right on desktop -->
+      <div class="md-hide" style="position:absolute;right:2rem;top:180px;width:380px;height:480px;border-radius:var(--radius);overflow:hidden;z-index:2;">
+        <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&q=80&fit=crop" alt="Minimal skincare products arranged on white surface" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);" />
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(255,255,255,0.4) 100%);border-radius:var(--radius);"></div>
+      </div>
       <div style="max-width:48rem;">
 
         <!-- Pill -->
@@ -656,9 +661,9 @@
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" class="md-grid-3">
 
         <!-- Featured card (spans 2 cols) -->
-        <div class="glass fade-up" style="grid-column:span 2;padding:3rem;min-height:400px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--blob-beige),var(--blob-mauve));opacity:0.20;filter:blur(50px);"></div>
-          <div style="position:relative;">
+        <div class="glass fade-up" style="grid-column:span 2;padding:0;min-height:400px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--blob-beige),var(--blob-mauve));opacity:0.20;filter:blur(50px);z-index:1;"></div>
+          <div style="position:relative;padding:3rem;display:flex;flex-direction:column;justify-content:space-between;z-index:1;">
             <div class="pill" style="background:rgba(241,224,221,0.45);color:var(--accent);margin-bottom:1.75rem;">Bestseller</div>
             <h3 class="font-mono" style="font-size:1.4rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Sérum Lumière</h3>
             <p class="font-body" style="color:var(--text-60);font-size:0.9rem;line-height:1.75;max-width:28rem;">
@@ -672,64 +677,80 @@
             </div>
             <button class="btn-primary" style="padding:12px 26px;font-size:10px;">Add to Ritual</button>
           </div>
-        </div>
+          </div>
+          <div style="position:relative;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=600&q=80&fit=crop" alt="Serum dropper with golden liquid" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,0.3) 0%,transparent 40%);"></div>
+          </div>
 
         <!-- Card 2 -->
-        <div class="glass fade-up" style="padding:2.25rem;min-height:400px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
-          <div style="position:absolute;bottom:-10px;left:-10px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,var(--blob-blue),transparent);opacity:0.25;filter:blur(35px);"></div>
-          <div style="position:relative;">
+        <div class="glass fade-up" style="padding:0;min-height:400px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;bottom:-10px;left:-10px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,var(--blob-blue),transparent);opacity:0.25;filter:blur(35px);z-index:1;"></div>
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80&fit=crop" alt="Cream jar on minimal white background" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
             <div class="pill" style="background:rgba(197,218,255,0.35);color:var(--blob-periwinkle);margin-bottom:1.5rem;">New</div>
             <h3 class="font-mono" style="font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Voile Hydra</h3>
             <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
               Ultra-light moisture veil. Biofermented hyaluronic matrix in three molecular weights.
             </p>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
             <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$96</span>
             <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
           </div>
         </div>
 
         <!-- Card 3 -->
-        <div class="glass fade-up" style="padding:2.25rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:-5px;right:-5px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--blob-pink),transparent);opacity:0.25;filter:blur(30px);"></div>
-          <div style="position:relative;">
+        <div class="glass fade-up" style="padding:0;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-5px;right:-5px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--blob-pink),transparent);opacity:0.25;filter:blur(30px);z-index:1;"></div>
+          <div style="height:160px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&q=80&fit=crop" alt="Pink cosmetics and beauty products" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
             <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Masque Éclat</h3>
             <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
               Enzyme-activated clay. Weekly reset treatment refined by feedback loop from 210,000 skin scans.
             </p>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
             <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$74</span>
             <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
           </div>
         </div>
 
         <!-- Card 4 -->
-        <div class="glass fade-up" style="padding:2.25rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
-          <div style="position:absolute;bottom:-5px;right:10px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,var(--blob-lavender),transparent);opacity:0.20;filter:blur(25px);"></div>
-          <div style="position:relative;">
+        <div class="glass fade-up" style="padding:0;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;bottom:-5px;right:10px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,var(--blob-lavender),transparent);opacity:0.20;filter:blur(25px);z-index:1;"></div>
+          <div style="height:160px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&q=80&fit=crop" alt="Beauty product flat lay arrangement" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
             <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Brume Sensorielle</h3>
             <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
               Rose-infused mist with adaptive peptides. Locks in the bioactive layer between applications.
             </p>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
             <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$58</span>
             <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
           </div>
         </div>
 
         <!-- Card 5 -->
-        <div class="glass fade-up" style="padding:2.25rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:10px;left:-5px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--blob-gold),transparent);opacity:0.25;filter:blur(30px);"></div>
-          <div style="position:relative;">
+        <div class="glass fade-up" style="padding:0;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:10px;left:-5px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--blob-gold),transparent);opacity:0.25;filter:blur(30px);z-index:1;"></div>
+          <div style="height:160px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80&fit=crop" alt="Minimal beauty product on white background" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
             <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Crème Nuit</h3>
             <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
               Night-optimised barrier restoration. Retinoid-alternative complex with zero purge response.
             </p>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
             <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$112</span>
             <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
           </div>
@@ -834,7 +855,7 @@
               I've tried everything. Lumière is the first product that made a visible difference before I finished the first bottle. My dermatologist asked what I changed.
             </p>
             <div style="display:flex;align-items:center;gap:0.75rem;">
-              <div style="width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--blob-beige),var(--blob-mauve));"></div>
+              <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=100&q=80&fit=crop&crop=face" alt="Mia K." loading="lazy" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
               <div>
                 <span class="font-mono" style="font-size:0.75rem;color:var(--text);display:block;font-weight:500;">Mia K.</span>
                 <span class="font-mono" style="font-size:10px;color:var(--text-40);">Tokyo</span>
@@ -850,7 +871,7 @@
               Sensitive skin since my twenties. Most serums cause a reaction within three days. Lumière's barrier serum is the first thing I've used consistently for four months.
             </p>
             <div style="display:flex;align-items:center;gap:0.75rem;">
-              <div style="width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--blob-blue),rgba(197,218,255,0.4));"></div>
+              <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=100&q=80&fit=crop&crop=face" alt="Camille D." loading="lazy" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
               <div>
                 <span class="font-mono" style="font-size:0.75rem;color:var(--text);display:block;font-weight:500;">Camille D.</span>
                 <span class="font-mono" style="font-size:10px;color:var(--text-40);">Paris</span>
@@ -866,7 +887,7 @@
               The questionnaire was unexpectedly thorough. Within two weeks my formula arrived and within two more weeks the hyperpigmentation on my jawline had faded measurably.
             </p>
             <div style="display:flex;align-items:center;gap:0.75rem;">
-              <div style="width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--blob-pink),rgba(255,206,237,0.4));"></div>
+              <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=100&q=80&fit=crop&crop=face" alt="Priya N." loading="lazy" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
               <div>
                 <span class="font-mono" style="font-size:0.75rem;color:var(--text);display:block;font-weight:500;">Priya N.</span>
                 <span class="font-mono" style="font-size:10px;color:var(--text-40);">Mumbai</span>

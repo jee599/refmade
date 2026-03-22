@@ -108,6 +108,9 @@ export default function ImprovePage() {
   const [model, setModel] = useState<ModelChoice>("sonnet");
   const [outputMode, setOutputMode] = useState<"analyze" | "prompt">("analyze");
   const [promptOutput, setPromptOutput] = useState("");
+  const [showPaywall, setShowPaywall] = useState(true);
+  const [paywallEmail, setPaywallEmail] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
 
   useEffect(() => {
     setModel(getStoredModel());
@@ -419,6 +422,91 @@ export default function ImprovePage() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="mx-4 w-full max-w-md rounded-xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl">
+            {!emailSubmitted ? (
+              <>
+                <div className="mb-6 text-center">
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
+                    <svg className="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h2 className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold text-zinc-100">
+                    Refmade Pro
+                  </h2>
+                  <p className="mt-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-500">
+                    Coming soon. Redesign any site using our curated design references.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <div className="space-y-2 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-400">
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Analyze &amp; score any website
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> AI-powered redesign suggestions
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Generate improved HTML code
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400">&#x2713;</span> Match any reference style
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <label className="mb-1.5 block font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">
+                      Get notified when Pro launches
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        value={paywallEmail}
+                        onChange={(e) => setPaywallEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-emerald-500 focus:outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          if (paywallEmail.includes("@")) {
+                            setEmailSubmitted(true);
+                          }
+                        }}
+                        className="shrink-0 rounded-lg bg-emerald-500 px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-zinc-950 transition-colors hover:bg-emerald-400 cursor-pointer"
+                      >
+                        Notify me
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
+                  <svg className="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h2 className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold text-zinc-100">
+                  You&apos;re on the list!
+                </h2>
+                <p className="mt-2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-500">
+                  We&apos;ll notify you when Refmade Pro launches.
+                </p>
+              </div>
+            )}
+            <a
+              href="/"
+              className="mt-4 block text-center font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
+            >
+              ← Back to gallery
+            </a>
+          </div>
         </div>
       )}
     </div>

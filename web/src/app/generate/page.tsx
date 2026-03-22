@@ -127,6 +127,10 @@ function GeneratePageInner() {
     if (mode === "prompt") {
       setFormat("prompt");
       setEnteredAsFree(true);
+    } else {
+      // No mode=prompt → pro only, show paywall immediately
+      setShowPaywall(true);
+      setEnteredAsFree(false);
     }
   }, [searchParams]);
 

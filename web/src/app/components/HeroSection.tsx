@@ -5,30 +5,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const MONO = "font-[family-name:var(--font-jetbrains-mono)]";
 const HEADING = "font-[family-name:var(--font-space-grotesk)]";
 
-// Floating design element cards
-function FloatingCard({
-  children,
-  className = "",
-  delay,
-  duration,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay: number;
-  duration: number;
-}) {
-  return (
-    <div
-      className={`absolute rounded-lg border border-zinc-700/50 bg-zinc-900/80 px-3 py-2 backdrop-blur-sm ${className}`}
-      style={{
-        animation: `float ${duration}s ease-in-out ${delay}s infinite`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
 function useTypingAnimation(
   lines: string[],
   charDelay: number,
@@ -282,62 +258,9 @@ export default function HeroSection({
           </div>
         </div>
 
-        {/* Right: Terminal + floating cards */}
-        <div className="relative">
-          {/* Floating cards */}
-          <FloatingCard
-            className="left-[-1rem] top-[-0.5rem] z-20 sm:left-[-2rem] sm:top-[-1rem]"
-            delay={0}
-            duration={4}
-          >
-            <div className="flex gap-1.5">
-              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "var(--accent)" }} />
-              <span className="h-3 w-3 rounded-full bg-blue-400" />
-              <span className="h-3 w-3 rounded-full bg-amber-400" />
-              <span className="h-3 w-3 rounded-full bg-rose-400" />
-              <span className="h-3 w-3 rounded-full bg-violet-400" />
-            </div>
-          </FloatingCard>
-
-          <FloatingCard
-            className="right-[-0.5rem] top-[0.5rem] z-20 sm:right-[-1.5rem] sm:top-[0rem]"
-            delay={0.5}
-            duration={5}
-          >
-            <span className={`text-lg font-bold text-zinc-300 ${HEADING}`}>Aa</span>
-          </FloatingCard>
-
-          <FloatingCard
-            className="bottom-[2rem] left-[-0.5rem] z-20 sm:bottom-[1rem] sm:left-[-1.5rem]"
-            delay={1}
-            duration={4.5}
-          >
-            <div className="grid grid-cols-3 gap-0.5">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <span
-                  key={i}
-                  className={`h-2 w-2 rounded-sm ${i < 4 ? "" : "bg-zinc-700"}`}
-                  style={i < 4 ? { backgroundColor: "var(--accent-60)" } : undefined}
-                />
-              ))}
-            </div>
-          </FloatingCard>
-
-          <FloatingCard
-            className="bottom-[0.5rem] right-[0.5rem] z-20 sm:bottom-[-0.5rem] sm:right-[-0.5rem]"
-            delay={1.5}
-            duration={3.5}
-          >
-            <div
-              className="h-4 w-10 rounded-sm"
-              style={{ background: "linear-gradient(to right, var(--accent-light), var(--accent), var(--accent-70))" }}
-            />
-          </FloatingCard>
-
-          {/* Terminal block */}
-          <div className="relative z-10">
-            <TerminalBlock isVisible={isVisible} />
-          </div>
+        {/* Right: Terminal */}
+        <div>
+          <TerminalBlock isVisible={isVisible} />
         </div>
       </div>
     </div>

@@ -110,20 +110,38 @@ seen.json 대조 → 중복 제거
 10개 URL 확보 (5개는 큐레이션, 나머지는 taste 필터링용 버퍼)
 ```
 
-### 초기 소스
+### 소스 목록
 
-구현 첫 버전은 **Awwwards만** 사용. 나머지 소스(CSSDA, SiteInspire, Godly)는 Awwwards 검색 쿼리가 실제로 유효한 결과를 반환하는지 검증 후 추가한다.
+첫 사이클부터 전체 소스를 사용한다. 검색 쿼리가 실제로 결과를 반환하지 않는 소스는 Phase 5 회고에서 비활성화.
 
 ```json
 [
-  {
-    "name": "Awwwards",
-    "searchQuery": "site:awwwards.com site of the day {year}-{month}"
-  }
+  { "name": "Awwwards", "searchQuery": "site:awwwards.com site of the day {year}-{month}" },
+  { "name": "CSSDA", "searchQuery": "site:cssdesignawards.com website of the day {year} {month}" },
+  { "name": "SiteInspire", "searchQuery": "site:siteinspire.com {year} {month}" },
+  { "name": "Godly", "searchQuery": "site:godly.website {year}" },
+  { "name": "Mindsparkle", "searchQuery": "site:mindsparklemag.com {year} {month} web design" },
+  { "name": "The FWA", "searchQuery": "site:thefwa.com site of the day {year}" },
+  { "name": "Httpster", "searchQuery": "site:httpster.net {year}" },
+  { "name": "Lapa Ninja", "searchQuery": "site:lapa.ninja {year} landing page" },
+  { "name": "Land-book", "searchQuery": "site:land-book.com {year}" },
+  { "name": "One Page Love", "searchQuery": "site:onepagelove.com {year} {month}" },
+  { "name": "Best Website Gallery", "searchQuery": "site:bestwebsite.gallery {year}" },
+  { "name": "Muzli", "searchQuery": "site:search.muz.li web design inspiration {year}" },
+  { "name": "Webdesign Inspiration", "searchQuery": "site:webdesign-inspiration.com {year}" },
+  { "name": "Minimal Gallery", "searchQuery": "site:minimal.gallery {year}" },
+  { "name": "Dark Mode Design", "searchQuery": "site:darkmodedesign.com {year}" },
+  { "name": "Brutalist Websites", "searchQuery": "site:brutalistwebsites.com {year}" },
+  { "name": "Mobbin", "searchQuery": "site:mobbin.com web {year}" },
+  { "name": "Screenlane", "searchQuery": "site:screenlane.com {year}" },
+  { "name": "Refero", "searchQuery": "site:refero.design {year}" },
+  { "name": "Designspiration", "searchQuery": "site:designspiration.com web design {year}" }
 ]
 ```
 
 `{year}`, `{month}`는 실행 시점 기준으로 치환. 당월이 3월이면 `2026-03`과 `2026-02` 두 번 검색.
+
+소스 순회 전략: 모든 소스를 순서대로 검색하지 않는다. **3~4개 소스에서 10개 URL을 채우면 멈춘다.** 라운드 2에서는 라운드 1에서 안 쓴 소스부터 순회.
 
 ---
 

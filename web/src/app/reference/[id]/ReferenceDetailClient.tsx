@@ -77,30 +77,53 @@ function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: 
 
   // Each palette is a complete color set: accent + bg + text
   const schemes: { name: string; accent: string; bg: string; text: string }[] = [
-    // 1. Original
+    // === Original & Base Variants ===
     { name: "Original", accent: baseAccent, bg: baseBg, text: baseText },
-    // 2. Dark mode with original accent
     { name: "Dark", accent: baseAccent, bg: "#09090b", text: "#fafafa" },
-    // 3. Light mode with original accent
     { name: "Light", accent: baseAccent, bg: "#ffffff", text: "#0f172a" },
-    // 4. Deep navy bg
+    { name: "Lighter", accent: hslToHex(baseH, Math.max(baseS - 10, 20), Math.min(baseL + 15, 75)), bg: baseBg, text: baseText },
+    { name: "Deeper", accent: hslToHex(baseH, Math.min(baseS + 10, 100), Math.max(baseL - 15, 25)), bg: baseBg, text: baseText },
+    { name: "Vivid", accent: hslToHex(baseH, Math.min(baseS + 25, 100), Math.min(baseL + 5, 60)), bg: "#000000", text: "#ffffff" },
+    { name: "Muted", accent: hslToHex(baseH, Math.max(baseS - 30, 10), baseL + 5), bg: "#f8fafc", text: "#334155" },
+
+    // === Background Variants ===
     { name: "Navy", accent: hslToHex(baseH, baseS, Math.min(baseL + 10, 70)), bg: "#0f172a", text: "#e2e8f0" },
-    // 5. Warm cream bg
     { name: "Cream", accent: hslToHex(baseH, Math.max(baseS - 10, 20), baseL), bg: "#faf7f2", text: "#1c1917" },
-    // 6. Cool slate bg
     { name: "Slate", accent: hslToHex(baseH, baseS, Math.min(baseL + 15, 75)), bg: "#1e293b", text: "#f1f5f9" },
-    // 7. Analogous warm
-    { name: "Warm Shift", accent: hslToHex(baseH - 30, baseS, baseL), bg: baseBg, text: baseText },
-    // 8. Analogous cool
-    { name: "Cool Shift", accent: hslToHex(baseH + 30, baseS, baseL), bg: baseBg, text: baseText },
-    // 9. Complementary on dark
+    { name: "Charcoal", accent: hslToHex(baseH, baseS, Math.min(baseL + 20, 70)), bg: "#18181b", text: "#e4e4e7" },
+    { name: "Warm Gray", accent: baseAccent, bg: "#f5f5f4", text: "#1c1917" },
+    { name: "Cool Gray", accent: baseAccent, bg: "#f1f5f9", text: "#0f172a" },
+    { name: "Midnight", accent: hslToHex(baseH, baseS, Math.min(baseL + 25, 80)), bg: "#020617", text: "#f8fafc" },
+
+    // === Color Theory ===
+    { name: "Analogous 1", accent: hslToHex(baseH + 30, baseS, baseL), bg: baseBg, text: baseText },
+    { name: "Analogous 2", accent: hslToHex(baseH - 30, baseS, baseL), bg: baseBg, text: baseText },
     { name: "Complement", accent: hslToHex(baseH + 180, baseS, baseL), bg: "#09090b", text: "#fafafa" },
-    // 10. Muted accent on soft bg
-    { name: "Muted", accent: hslToHex(baseH, Math.max(baseS - 25, 15), baseL + 5), bg: "#f8fafc", text: "#334155" },
-    // 11. Vivid accent on pure black
-    { name: "Vivid Dark", accent: hslToHex(baseH, Math.min(baseS + 20, 100), Math.min(baseL + 10, 65)), bg: "#000000", text: "#ffffff" },
-    // 12. Earthy tones
+    { name: "Comp Light", accent: hslToHex(baseH + 180, baseS, baseL), bg: "#ffffff", text: "#0f172a" },
+    { name: "Triad 1", accent: hslToHex(baseH + 120, baseS, baseL), bg: baseBg, text: baseText },
+    { name: "Triad 2", accent: hslToHex(baseH + 240, baseS, baseL), bg: baseBg, text: baseText },
+    { name: "Split Comp 1", accent: hslToHex(baseH + 150, baseS, baseL), bg: "#09090b", text: "#fafafa" },
+    { name: "Split Comp 2", accent: hslToHex(baseH + 210, baseS, baseL), bg: "#09090b", text: "#fafafa" },
+
+    // === Trending Palettes ===
+    { name: "Ocean", accent: "#0ea5e9", bg: "#0c1222", text: "#e0f2fe" },
+    { name: "Emerald", accent: "#10b981", bg: "#022c22", text: "#d1fae5" },
+    { name: "Violet", accent: "#8b5cf6", bg: "#0f0720", text: "#ede9fe" },
+    { name: "Rose", accent: "#f43f5e", bg: "#1a0a10", text: "#ffe4e6" },
+    { name: "Amber", accent: "#f59e0b", bg: "#1a1005", text: "#fef3c7" },
+    { name: "Cyan", accent: "#06b6d4", bg: "#042f2e", text: "#cffafe" },
+    { name: "Indigo", accent: "#6366f1", bg: "#0a0a1e", text: "#e0e7ff" },
+    { name: "Lime", accent: "#84cc16", bg: "#0f1a05", text: "#ecfccb" },
+    { name: "Fuchsia", accent: "#d946ef", bg: "#1a0520", text: "#fae8ff" },
+    { name: "Teal", accent: "#14b8a6", bg: "#021a1a", text: "#ccfbf1" },
+
+    // === Classic Combos ===
+    { name: "Stripe", accent: "#635bff", bg: "#ffffff", text: "#0a2540" },
+    { name: "Linear", accent: "#5e6ad2", bg: "#000000", text: "#ffffff" },
+    { name: "Vercel", accent: "#ffffff", bg: "#000000", text: "#888888" },
+    { name: "Supabase", accent: "#3ecf8e", bg: "#1c1c1c", text: "#ededed" },
     { name: "Earth", accent: hslToHex(25, 50, 45), bg: "#faf5ef", text: "#292524" },
+    { name: "Mono", accent: "#71717a", bg: "#09090b", text: "#fafafa" },
   ];
 
   schemes.forEach((s, i) => {
@@ -340,7 +363,7 @@ export default function ReferenceDetailClient({
                 </button>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-6 gap-1.5 max-h-[320px] overflow-y-auto pr-1">
               {generatedPalettes.map((p) => (
                 <button
                   key={p.id}

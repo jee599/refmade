@@ -31,7 +31,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium text-emerald-400 transition-all duration-200 hover:bg-emerald-500/20 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+      className="rounded-md border border-accent-30 bg-accent-10 px-3 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium text-accent-light transition-all duration-200 hover:bg-accent-20 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
     >
       {copied ? "copied!" : "copy"}
     </button>
@@ -43,7 +43,7 @@ function ScoreRing({ score }: { score: number }) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 10) * circumference;
   const color =
-    score >= 7 ? "#10b981" : score >= 4 ? "#eab308" : "#ef4444";
+    score >= 7 ? "var(--accent)" : score >= 4 ? "#eab308" : "#ef4444";
 
   return (
     <div className="relative inline-flex items-center justify-center">
@@ -106,6 +106,8 @@ export default function ImprovePage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [showImproved, setShowImproved] = useState(false);
   const [model, setModel] = useState<ModelChoice>("sonnet");
+  const [outputMode, setOutputMode] = useState<"analyze" | "prompt">("analyze");
+  const [promptOutput, setPromptOutput] = useState("");
 
   useEffect(() => {
     setModel(getStoredModel());
@@ -124,13 +126,18 @@ export default function ImprovePage() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setPromptOutput("");
     setShowImproved(false);
 
     try {
+      const requestBody = tab === "url"
+        ? { url: input, model, format: outputMode }
+        : { code: input, model, format: outputMode };
+
       const response = await fetch("/api/improve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tab === "url" ? { url: input, model } : { code: input, model }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -150,14 +157,18 @@ export default function ImprovePage() {
         accumulated += decoder.decode(value, { stream: true });
       }
 
-      // Strip markdown code fences if present
-      let jsonStr = accumulated.trim();
-      if (jsonStr.startsWith("```")) {
-        jsonStr = jsonStr.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
-      }
+      if (outputMode === "prompt") {
+        setPromptOutput(accumulated);
+      } else {
+        // Strip markdown code fences if present
+        let jsonStr = accumulated.trim();
+        if (jsonStr.startsWith("```")) {
+          jsonStr = jsonStr.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+        }
 
-      const parsed = JSON.parse(jsonStr) as AnalysisResult;
-      setResult(parsed);
+        const parsed = JSON.parse(jsonStr) as AnalysisResult;
+        setResult(parsed);
+      }
     } catch (err) {
       if (err instanceof SyntaxError) {
         setError("응답을 파싱할 수 없습니다. 다시 시도해주세요.");
@@ -189,7 +200,7 @@ export default function ImprovePage() {
             디자인 고도화
           </h1>
           <p className="mb-8 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-600">
-            <span className="text-emerald-500">$</span> improve --analyze --suggest
+            <span className="text-accent">$</span> improve --analyze --suggest
           </p>
 
           {/* Tabs */}
@@ -198,7 +209,7 @@ export default function ImprovePage() {
               onClick={() => setTab("url")}
               className={`rounded-md px-6 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                 tab === "url"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                  ? "bg-accent-10 text-accent-light border border-accent-30"
                   : "text-zinc-500 hover:text-zinc-300 border border-transparent"
               }`}
             >
@@ -208,7 +219,7 @@ export default function ImprovePage() {
               onClick={() => setTab("code")}
               className={`rounded-md px-6 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                 tab === "code"
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                  ? "bg-accent-10 text-accent-light border border-accent-30"
                   : "text-zinc-500 hover:text-zinc-300 border border-transparent"
               }`}
             >
@@ -216,25 +227,49 @@ export default function ImprovePage() {
             </button>
           </div>
 
+          {/* Output Mode Toggle */}
+          <div className="mb-6 flex rounded-lg border border-zinc-800 bg-zinc-900 p-1 w-fit">
+            <button
+              onClick={() => setOutputMode("analyze")}
+              className={`rounded-md px-6 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+                outputMode === "analyze"
+                  ? "bg-accent-10 text-accent-light border border-accent-30"
+                  : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+              }`}
+            >
+              analyze
+            </button>
+            <button
+              onClick={() => setOutputMode("prompt")}
+              className={`rounded-md px-6 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+                outputMode === "prompt"
+                  ? "bg-accent-10 text-accent-light border border-accent-30"
+                  : "text-zinc-500 hover:text-zinc-300 border border-transparent"
+              }`}
+            >
+              prompt
+            </button>
+          </div>
+
           {/* URL Input */}
           {tab === "url" && (
             <div className="flex gap-3">
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-emerald-500/70">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-[family-name:var(--font-jetbrains-mono)] text-sm text-accent-70">$</span>
                 <input
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-3 pl-7 pr-4 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-3 pl-7 pr-4 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 />
               </div>
               <button
                 onClick={handleAnalyze}
                 disabled={loading}
-                className="shrink-0 rounded-lg bg-emerald-500 px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                className="shrink-0 rounded-lg bg-accent px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
-                {loading ? "analyzing..." : `$ analyze --model ${model}`}
+                {loading ? "analyzing..." : outputMode === "prompt" ? "$ export --prompt" : `$ analyze --model ${model}`}
               </button>
             </div>
           )}
@@ -247,14 +282,14 @@ export default function ImprovePage() {
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="HTML 코드를 붙여넣으세요..."
                 rows={12}
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 resize-none"
+                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-100 placeholder:text-zinc-600 transition-all duration-200 focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 resize-none"
               />
               <button
                 onClick={handleAnalyze}
                 disabled={loading}
-                className="rounded-lg bg-emerald-500 px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                className="rounded-lg bg-accent px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
-                {loading ? "analyzing..." : `$ analyze --model ${model}`}
+                {loading ? "analyzing..." : outputMode === "prompt" ? "$ export --prompt" : `$ analyze --model ${model}`}
               </button>
             </div>
           )}
@@ -288,8 +323,23 @@ export default function ImprovePage() {
         </div>
       )}
 
+      {/* Prompt Output */}
+      {promptOutput && outputMode === "prompt" && !loading && (
+        <div className="mx-auto max-w-4xl px-6 py-8">
+          <div className="mb-4 rounded-lg border border-accent-30 bg-accent-10 px-4 py-3 font-[family-name:var(--font-jetbrains-mono)] text-xs text-accent-light">
+            이 프롬프트를 Claude, ChatGPT 등 AI에 붙여넣으세요.
+          </div>
+          <div className="flex justify-end mb-3">
+            <CopyButton text={promptOutput} />
+          </div>
+          <pre className="rounded-lg border border-zinc-800 bg-[#0c0c0e] p-6 font-[family-name:var(--font-jetbrains-mono)] text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap break-words overflow-auto max-h-[600px]">
+            {promptOutput}
+          </pre>
+        </div>
+      )}
+
       {/* Analysis Results */}
-      {result && !loading && (
+      {result && !loading && outputMode === "analyze" && (
         <div className="mx-auto max-w-4xl px-6 py-8">
           {/* Score + Summary */}
           <div className="mb-8 flex items-start gap-6 rounded-lg border border-zinc-800 bg-zinc-900/50 p-6">
@@ -299,7 +349,7 @@ export default function ImprovePage() {
               <p className="mb-3 text-sm text-zinc-400">{result.summary}</p>
               <div className="flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-400 w-fit">
                 <span className="text-zinc-600">closest_ref:</span>
-                <span className="font-medium text-emerald-400">
+                <span className="font-medium text-accent-light">
                   #{result.closestReference.id} {result.closestReference.name}
                 </span>
               </div>
@@ -317,7 +367,8 @@ export default function ImprovePage() {
                 >
                   <input
                     type="checkbox"
-                    className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 accent-emerald-500"
+                    className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800"
+                    style={{ accentColor: "var(--accent)" }}
                     readOnly
                   />
                   <span className="flex-1 text-sm text-zinc-300">
@@ -333,7 +384,7 @@ export default function ImprovePage() {
           {!showImproved && result.improvedCode && (
             <button
               onClick={() => setShowImproved(true)}
-              className="w-full rounded-lg bg-emerald-500 px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-emerald-400 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+              className="w-full rounded-lg bg-accent px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-accent-light cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               $ show --improved-code
             </button>

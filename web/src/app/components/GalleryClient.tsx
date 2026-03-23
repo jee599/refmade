@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { Reference } from "@/app/data/references";
 
@@ -10,6 +10,10 @@ function IframePreview({ src, title }: { src: string; title: string }) {
   const rafRef = useRef<number>(0);
   const [scale, setScale] = useState(0.25);
   const [hovered, setHovered] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const scrollYRef = useRef(0);
+  // contentDocument 접근 불가 시 CSS transform 폴백
+  const [useFallback, setUseFallback] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -21,53 +25,79 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // 호버 시 iframe 내부를 실제로 스크롤 → IntersectionObserver 애니메이션도 트리거됨
+  // iframe 로드 완료 시 contentDocument 접근 가능 여부 확인
+  const handleLoad = useCallback(() => {
+    setLoaded(true);
+    try {
+      const doc = iframeRef.current?.contentDocument;
+      if (!doc || !doc.documentElement) setUseFallback(true);
+    } catch {
+      setUseFallback(true);
+    }
+  }, []);
+
+  // 호버 시 스크롤
   useEffect(() => {
     if (!hovered) {
       cancelAnimationFrame(rafRef.current);
-      // 호버 해제 시 부드럽게 맨 위로
-      try {
-        iframeRef.current?.contentWindow?.scrollTo({ top: 0, behavior: "smooth" });
-      } catch { /* cross-origin 무시 */ }
+      if (!useFallback) {
+        try {
+          iframeRef.current?.contentWindow?.scrollTo({ top: 0, behavior: "smooth" });
+        } catch { /* ignore */ }
+      }
+      scrollYRef.current = 0;
       return;
     }
 
+    if (!loaded) return;
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    const speed = 150; // px/s (고정 속도)
+    const speed = 225; // px/s
     let lastTs: number | null = null;
-    let scrollY = 0;
 
     const animate = (ts: number) => {
       if (!lastTs) lastTs = ts;
       const dt = (ts - lastTs) / 1000;
       lastTs = ts;
-      scrollY += speed * dt;
+      scrollYRef.current += speed * dt;
+
+      if (useFallback) {
+        // CSS transform 폴백 — 맨 밑까지
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      }
 
       try {
         const doc = iframe.contentDocument;
         if (doc) {
           const maxScroll = doc.documentElement.scrollHeight - doc.documentElement.clientHeight;
-          if (scrollY >= maxScroll) scrollY = maxScroll;
-          iframe.contentWindow?.scrollTo(0, scrollY);
-          if (scrollY >= maxScroll) return;
+          if (scrollYRef.current >= maxScroll) {
+            scrollYRef.current = maxScroll;
+            iframe.contentWindow?.scrollTo(0, maxScroll);
+            return; // 맨 밑 도달, 정지
+          }
+          iframe.contentWindow?.scrollTo(0, scrollYRef.current);
         }
-      } catch { /* cross-origin 무시 */ }
+      } catch {
+        setUseFallback(true);
+      }
 
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    // 약간의 딜레이 후 스크롤 시작
     const timeout = setTimeout(() => {
       rafRef.current = requestAnimationFrame(animate);
-    }, 200);
+    }, 150);
 
     return () => {
       clearTimeout(timeout);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [hovered]);
+  }, [hovered, loaded, useFallback]);
+
+  // fallback 모드에서의 transform offset 계산
+  const fallbackOffset = useFallback && hovered ? scrollYRef.current : 0;
 
   return (
     <div
@@ -82,15 +112,18 @@ function IframePreview({ src, title }: { src: string; title: string }) {
         className="pointer-events-none absolute left-0 top-0 border-0"
         style={{
           width: "1440px",
-          height: `${Math.ceil(208 / scale)}px`,
-          transform: `scale(${scale})`,
+          height: useFallback ? "5000px" : `${Math.ceil(208 / scale)}px`,
+          transform: useFallback
+            ? `scale(${scale}) translateY(-${fallbackOffset}px)`
+            : `scale(${scale})`,
           transformOrigin: "top left",
+          transition: useFallback && !hovered ? "transform 0.5s ease-out" : "none",
         }}
         title={title}
         loading="lazy"
         sandbox="allow-scripts allow-same-origin"
+        onLoad={handleLoad}
       />
-      {/* 하단 그라데이션 힌트 */}
       <div
         className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-zinc-900/60 to-transparent transition-opacity duration-300"
         style={{ opacity: hovered ? 0 : 0.8 }}

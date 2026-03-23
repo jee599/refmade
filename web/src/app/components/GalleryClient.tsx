@@ -13,9 +13,11 @@ function IframePreview({ src, title }: { src: string; title: string }) {
   const [loaded, setLoaded] = useState(false);
   const scrollYRef = useRef(0);
   const [useFallback, setUseFallback] = useState(false);
-  // 주기적 애니메이션 리플레이용 — src에 쿼리 붙여서 iframe 리로드
-  const [reloadKey, setReloadKey] = useState(0);
   const [inView, setInView] = useState(false);
+  // 더블 버퍼: 뒤에서 새 iframe 로드 → 완료 시 교체 (깜빡임 방지)
+  const [activeKey, setActiveKey] = useState(0);
+  const [nextKey, setNextKey] = useState<number | null>(null);
+  const [nextReady, setNextReady] = useState(false);
 
   // scale 계산
   useEffect(() => {
@@ -40,18 +42,28 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // 호버 안 한 상태 + 뷰포트 안에 있을 때 → 8초마다 iframe 리로드 (애니메이션 리플레이)
+  // 호버 안 한 상태 + 뷰포트 → 4초마다 뒤에서 새 iframe 준비
   useEffect(() => {
     if (hovered || !inView || !loaded) return;
     const interval = setInterval(() => {
-      setReloadKey(k => k + 1);
-      setLoaded(false);
-      setUseFallback(false);
+      setNextKey(k => (k ?? activeKey) + 1);
+      setNextReady(false);
     }, 4000);
     return () => clearInterval(interval);
-  }, [hovered, inView, loaded]);
+  }, [hovered, inView, loaded, activeKey]);
 
-  // iframe 로드 완료
+  // 뒤의 iframe 로드 완료 → 교체
+  useEffect(() => {
+    if (nextReady && nextKey !== null) {
+      setActiveKey(nextKey);
+      setNextKey(null);
+      setNextReady(false);
+      setLoaded(false);
+      setUseFallback(false);
+    }
+  }, [nextReady, nextKey]);
+
+  // 메인 iframe 로드 완료
   const handleLoad = useCallback(() => {
     setLoaded(true);
     try {
@@ -122,7 +134,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
   }, [hovered, loaded, useFallback]);
 
   const fallbackOffset = useFallback && hovered ? scrollYRef.current : 0;
-  const iframeSrc = reloadKey > 0 ? `${src}?v=${reloadKey}` : src;
+  const activeSrc = activeKey > 0 ? `${src}?v=${activeKey}` : src;
 
   return (
     <div
@@ -131,9 +143,10 @@ function IframePreview({ src, title }: { src: string; title: string }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* 메인 iframe */}
       <iframe
         ref={iframeRef}
-        src={iframeSrc}
+        src={activeSrc}
         className="pointer-events-none absolute left-0 top-0 border-0"
         style={{
           width: "1440px",
@@ -149,6 +162,22 @@ function IframePreview({ src, title }: { src: string; title: string }) {
         sandbox="allow-scripts"
         onLoad={handleLoad}
       />
+      {/* 숨겨진 프리로드 iframe — 로드 완료 시 메인과 교체 */}
+      {nextKey !== null && (
+        <iframe
+          src={`${src}?v=${nextKey}`}
+          className="pointer-events-none absolute left-0 top-0 border-0 opacity-0"
+          style={{
+            width: "1440px",
+            height: `${Math.ceil(208 / scale)}px`,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+          }}
+          title={`${title} preload`}
+          sandbox="allow-scripts"
+          onLoad={() => setNextReady(true)}
+        />
+      )}
       <div
         className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-zinc-900/60 to-transparent transition-opacity duration-300"
         style={{ opacity: hovered ? 0 : 0.8 }}

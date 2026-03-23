@@ -12,9 +12,12 @@ function IframePreview({ src, title }: { src: string; title: string }) {
   const [hovered, setHovered] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const scrollYRef = useRef(0);
-  // contentDocument 접근 불가 시 CSS transform 폴백
   const [useFallback, setUseFallback] = useState(false);
+  // 주기적 애니메이션 리플레이용 — src에 쿼리 붙여서 iframe 리로드
+  const [reloadKey, setReloadKey] = useState(0);
+  const [inView, setInView] = useState(false);
 
+  // scale 계산
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -25,7 +28,30 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // iframe 로드 완료 시 contentDocument 접근 가능 여부 확인
+  // 뷰포트 진입 감지
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // 호버 안 한 상태 + 뷰포트 안에 있을 때 → 8초마다 iframe 리로드 (애니메이션 리플레이)
+  useEffect(() => {
+    if (hovered || !inView || !loaded) return;
+    const interval = setInterval(() => {
+      setReloadKey(k => k + 1);
+      setLoaded(false);
+      setUseFallback(false);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [hovered, inView, loaded]);
+
+  // iframe 로드 완료
   const handleLoad = useCallback(() => {
     setLoaded(true);
     try {
@@ -63,7 +89,6 @@ function IframePreview({ src, title }: { src: string; title: string }) {
       scrollYRef.current += speed * dt;
 
       if (useFallback) {
-        // CSS transform 폴백 — 맨 밑까지
         rafRef.current = requestAnimationFrame(animate);
         return;
       }
@@ -75,7 +100,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
           if (scrollYRef.current >= maxScroll) {
             scrollYRef.current = maxScroll;
             iframe.contentWindow?.scrollTo(0, maxScroll);
-            return; // 맨 밑 도달, 정지
+            return;
           }
           iframe.contentWindow?.scrollTo(0, scrollYRef.current);
         }
@@ -96,8 +121,8 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     };
   }, [hovered, loaded, useFallback]);
 
-  // fallback 모드에서의 transform offset 계산
   const fallbackOffset = useFallback && hovered ? scrollYRef.current : 0;
+  const iframeSrc = reloadKey > 0 ? `${src}?v=${reloadKey}` : src;
 
   return (
     <div
@@ -108,7 +133,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     >
       <iframe
         ref={iframeRef}
-        src={src}
+        src={iframeSrc}
         className="pointer-events-none absolute left-0 top-0 border-0"
         style={{
           width: "1440px",

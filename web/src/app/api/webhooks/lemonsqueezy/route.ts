@@ -47,9 +47,7 @@ export async function POST(request: NextRequest) {
     //   data: { credits: { increment: pack.credits } },
     // });
 
-    console.log(
-      `[LemonSqueezy] Order created: userId=${userId}, pack=${creditPackId}, credits=${pack.credits}`
-    );
+    // TODO: DB 연동 시 로깅 활성화
   }
 
   return Response.json({ received: true });

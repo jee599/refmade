@@ -3,6 +3,10 @@ import { NextRequest } from "next/server";
 import { readFile, readdir } from "fs/promises";
 import { join } from "path";
 import { assembleProPrompt } from "@/lib/promptAssembler";
+import { rateLimit } from "@/lib/rateLimit";
+
+const ID_RE = /^[a-zA-Z0-9-]+$/;
+const HEX_COLOR_RE = /^#[0-9a-fA-F]{6}$/;
 
 const CATALOG_DIR = join(
   process.cwd(),
@@ -31,6 +35,11 @@ interface GenerateRequest {
 type ProFormat = "code";
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (!rateLimit(ip, "generate", 5, 60_000)) {
+    return Response.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
     const body = (await request.json()) as GenerateRequest;
     const { referenceId, description, brandColor, format, model: modelChoice } = body;
@@ -46,6 +55,20 @@ export async function POST(request: NextRequest) {
     if (!referenceId || !description) {
       return Response.json(
         { error: "referenceId and description are required." },
+        { status: 400 }
+      );
+    }
+
+    if (!ID_RE.test(referenceId)) {
+      return Response.json(
+        { error: "Invalid referenceId format." },
+        { status: 400 }
+      );
+    }
+
+    if (brandColor && !HEX_COLOR_RE.test(brandColor)) {
+      return Response.json(
+        { error: "brandColor must be a valid hex color (e.g. #1a2b3c)." },
         { status: 400 }
       );
     }

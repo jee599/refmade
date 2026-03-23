@@ -146,7 +146,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
         }}
         title={title}
         loading="lazy"
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts"
         onLoad={handleLoad}
       />
       <div

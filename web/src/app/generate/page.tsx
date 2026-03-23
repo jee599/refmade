@@ -404,11 +404,9 @@ function GeneratePageInner() {
               {format === "code" && (
                 <button
                   onClick={() => {
-                    const w = window.open("", "_blank");
-                    if (w) {
-                      w.document.write(output);
-                      w.document.close();
-                    }
+                    const blob = new Blob([output], { type: "text/html" });
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, "_blank", "noopener");
                   }}
                   className="rounded-md border border-accent-30 bg-accent-10 px-3 py-1.5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-medium text-accent-light transition-all duration-200 hover:bg-accent-20 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                 >
@@ -445,7 +443,7 @@ function GeneratePageInner() {
             <iframe
               srcDoc={output}
               className="w-full min-h-[600px] flex-1 rounded-lg border border-zinc-800"
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts"
               title="Live Preview"
             />
           )}

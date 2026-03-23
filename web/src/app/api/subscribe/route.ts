@@ -1,7 +1,10 @@
 import { google } from "googleapis";
 import { NextRequest } from "next/server";
+import { rateLimit } from "@/lib/rateLimit";
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
+
+const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
 function getAuth() {
   const encoded = process.env.GOOGLE_CREDENTIALS;
@@ -19,20 +22,21 @@ function getAuth() {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (!rateLimit(ip, "subscribe", 3, 60_000)) {
+    return Response.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
     const { email, source } = await request.json();
 
-    if (!email || !email.includes("@")) {
+    if (!email || typeof email !== "string" || !EMAIL_RE.test(email)) {
       return Response.json({ error: "Invalid email" }, { status: 400 });
     }
 
     const auth = getAuth();
     const sheets = google.sheets({ version: "v4", auth });
     const sheetId = process.env.GOOGLE_SHEET_ID;
-
-    // debug: test read first
-    const testRead = await sheets.spreadsheets.get({ spreadsheetId: sheetId });
-    console.log("Sheet title:", testRead.data.properties?.title);
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
@@ -45,18 +49,8 @@ export async function POST(request: NextRequest) {
 
     return Response.json({ success: true });
   } catch (err: unknown) {
-    const gaxiosErr = err as { message?: string; code?: number; errors?: unknown[] };
-    const detail = {
-      message: gaxiosErr.message,
-      code: gaxiosErr.code,
-      errors: gaxiosErr.errors,
-      hasCredentials: !!process.env.GOOGLE_CREDENTIALS,
-      hasSheetId: !!process.env.GOOGLE_SHEET_ID,
-      sheetIdPrefix: process.env.GOOGLE_SHEET_ID?.slice(0, 8),
-      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
-      credentialsLength: process.env.GOOGLE_CREDENTIALS?.length,
-    };
-    console.error("Subscribe error:", JSON.stringify(detail));
-    return Response.json({ error: detail }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("Subscribe error:", message);
+    return Response.json({ error: "Subscription failed. Please try again later." }, { status: 500 });
   }
 }

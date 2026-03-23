@@ -68,7 +68,16 @@ function useTypingAnimation(
   return { displayedLines, done };
 }
 
-const TERMINAL_COMMANDS = [
+type TerminalStep = {
+  text: (...args: number[]) => string;
+  maxProgress?: number;
+  speed?: number;
+  static?: boolean;
+  delay?: number;
+  color: string;
+};
+
+const TERMINAL_COMMANDS: { cmd: string; steps: TerminalStep[] }[] = [
   {
     cmd: "refmade --scan",
     steps: [
@@ -192,110 +201,106 @@ const TERMINAL_COMMANDS = [
   },
 ];
 
-type TerminalStep = {
-  text: (p: number) => string;
-  maxProgress?: number;
-  speed?: number;
-  static?: boolean;
-  delay?: number;
-  color: string;
-};
+// type moved above TERMINAL_COMMANDS
 
 function TerminalBlock({ isVisible }: { isVisible: boolean }) {
-  const [cmdIndex, setCmdIndex] = useState(0);
-  const [stepIndex, setStepIndex] = useState(-1);
-  const [progress, setProgress] = useState(0);
-  const [visibleSteps, setVisibleSteps] = useState<{ text: string; color: string }[]>([]);
+  const [lines, setLines] = useState<{ text: string; color: string }[]>([]);
+  const [cmdLabel, setCmdLabel] = useState(TERMINAL_COMMANDS[0].cmd);
   const [showCursor, setShowCursor] = useState(true);
+  const [typing, setTyping] = useState(false);
+  const stateRef = useRef({ cmdIdx: 0, stepIdx: 0, progress: 0, running: false });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const cleanup = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
   }, []);
 
-  // Reset on visibility change
-  useEffect(() => {
-    if (!isVisible) {
-      cleanup();
-      setCmdIndex(0);
-      setStepIndex(-1);
-      setProgress(0);
-      setVisibleSteps([]);
-      setShowCursor(true);
-    } else {
-      timerRef.current = setTimeout(() => setStepIndex(0), 600);
-    }
-    return cleanup;
-  }, [isVisible, cleanup]);
+  // 한 틱씩 진행하는 함수 — 자기 자신을 재귀 호출
+  const tick = useCallback(() => {
+    const s = stateRef.current;
+    if (!s.running) return;
 
-  // Process steps
-  useEffect(() => {
-    if (!isVisible || stepIndex < 0) return;
-
-    const cmd = TERMINAL_COMMANDS[cmdIndex];
+    const cmd = TERMINAL_COMMANDS[s.cmdIdx];
     if (!cmd) return;
 
-    // All steps done for this command → pause then next command
-    if (stepIndex >= cmd.steps.length) {
+    // 모든 스텝 완료 → 다음 커맨드
+    if (s.stepIdx >= cmd.steps.length) {
       timerRef.current = setTimeout(() => {
-        const nextCmd = (cmdIndex + 1) % TERMINAL_COMMANDS.length;
-        setCmdIndex(nextCmd);
-        setStepIndex(-1);
-        setProgress(0);
-        setVisibleSteps([]);
-        // Small pause before typing next command
-        timerRef.current = setTimeout(() => setStepIndex(0), 800);
-      }, 2000);
-      return () => cleanup();
-    }
-
-    const step: TerminalStep = cmd.steps[stepIndex];
-
-    if (step.static) {
-      timerRef.current = setTimeout(() => {
-        setVisibleSteps((prev) => [...prev, { text: step.text(0), color: step.color }]);
-        setStepIndex((s) => s + 1);
-      }, step.delay || 300);
-      return () => cleanup();
-    }
-
-    // Progress bar step
-    const max = step.maxProgress || 20;
-    if (progress >= max) {
-      setVisibleSteps((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = { text: step.text(max), color: step.color };
-        return updated;
-      });
-      setProgress(0);
-      setStepIndex((s) => s + 1);
+        s.cmdIdx = (s.cmdIdx + 1) % TERMINAL_COMMANDS.length;
+        s.stepIdx = 0;
+        s.progress = 0;
+        const nextCmd = TERMINAL_COMMANDS[s.cmdIdx];
+        setCmdLabel(nextCmd.cmd);
+        setLines([]);
+        setTyping(false);
+        // 커맨드 타이핑 pause
+        timerRef.current = setTimeout(() => { setTyping(true); tick(); }, 800);
+      }, 1800);
       return;
     }
 
-    if (progress === 0) {
-      setVisibleSteps((prev) => [...prev, { text: step.text(0), color: step.color }]);
+    const step = cmd.steps[s.stepIdx];
+
+    if (step.static) {
+      // static 텍스트 추가
+      setLines(prev => [...prev, { text: step.text(0), color: step.color }]);
+      s.stepIdx++;
+      timerRef.current = setTimeout(tick, step.delay || 250);
+      return;
     }
 
-    timerRef.current = setTimeout(() => {
-      const newP = progress + 1;
-      setProgress(newP);
-      setVisibleSteps((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = { text: step.text(newP), color: step.color };
-        return updated;
+    // progress bar
+    const max = step.maxProgress || 20;
+    if (s.progress === 0) {
+      setLines(prev => [...prev, { text: step.text(0), color: step.color }]);
+    }
+    s.progress++;
+    if (s.progress > max) {
+      // progress 완료 → 마지막 값으로 업데이트하고 다음 스텝
+      setLines(prev => {
+        const u = [...prev];
+        u[u.length - 1] = { text: step.text(max), color: step.color };
+        return u;
       });
-    }, step.speed || 40);
-
-    return () => cleanup();
-  }, [isVisible, cmdIndex, stepIndex, progress, cleanup]);
-
-  // Cursor blink
-  useEffect(() => {
-    const interval = setInterval(() => setShowCursor((c) => !c), 530);
-    return () => clearInterval(interval);
+      s.progress = 0;
+      s.stepIdx++;
+      timerRef.current = setTimeout(tick, 100);
+      return;
+    }
+    // progress 중간값 업데이트
+    const p = s.progress;
+    setLines(prev => {
+      const u = [...prev];
+      u[u.length - 1] = { text: step.text(p), color: step.color };
+      return u;
+    });
+    timerRef.current = setTimeout(tick, step.speed || 40);
   }, []);
 
-  const cmd = TERMINAL_COMMANDS[cmdIndex];
+  // 시작/중지
+  useEffect(() => {
+    const s = stateRef.current;
+    if (isVisible) {
+      s.cmdIdx = 0;
+      s.stepIdx = 0;
+      s.progress = 0;
+      s.running = true;
+      setCmdLabel(TERMINAL_COMMANDS[0].cmd);
+      setLines([]);
+      setTyping(false);
+      timerRef.current = setTimeout(() => { setTyping(true); tick(); }, 600);
+    } else {
+      s.running = false;
+      clearTimer();
+    }
+    return clearTimer;
+  }, [isVisible, tick, clearTimer]);
+
+  // 커서 깜빡임
+  useEffect(() => {
+    const id = setInterval(() => setShowCursor(c => !c), 530);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="overflow-hidden rounded-lg border border-zinc-700/50 bg-zinc-950/80 backdrop-blur-sm">
@@ -308,15 +313,15 @@ function TerminalBlock({ isVisible }: { isVisible: boolean }) {
       <div className={`space-y-1 p-4 text-xs leading-relaxed ${MONO}`} style={{ minHeight: "180px" }}>
         <div>
           <span className="text-accent">$</span>{" "}
-          <span className="text-zinc-300">{cmd?.cmd}</span>
-          {stepIndex < 0 && showCursor && <span className="text-accent-light">_</span>}
+          <span className="text-zinc-300">{cmdLabel}</span>
+          {!typing && showCursor && <span className="text-accent-light">_</span>}
         </div>
-        {visibleSteps.map((s, i) => (
-          <div key={`${cmdIndex}-${i}`} className={s.color}>
+        {lines.map((s, i) => (
+          <div key={`${cmdLabel}-${i}`} className={s.color}>
             {s.text}
           </div>
         ))}
-        {stepIndex >= 0 && stepIndex < (cmd?.steps.length || 0) && (
+        {typing && lines.length < (TERMINAL_COMMANDS.find(c => c.cmd === cmdLabel)?.steps.length || 99) && (
           <span className={`text-accent-light ${showCursor ? "opacity-100" : "opacity-0"}`}>_</span>
         )}
       </div>

@@ -7,6 +7,7 @@ import type { Reference } from "@/app/data/references";
 function IframePreview({ src, title }: { src: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.25);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -18,15 +19,37 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
+  // 스크롤 가능한 최대 오프셋 (scaled 기준으로 전체 페이지 높이 - 컨테이너 높이)
+  const scrollDistance = 900 * scale - 208; // 900px iframe height * scale - 208px container height
+  const maxScroll = Math.max(0, scrollDistance);
+
   return (
-    <div ref={containerRef} className="relative h-52 w-full overflow-hidden border-b border-zinc-800 bg-zinc-900">
+    <div
+      ref={containerRef}
+      className="relative h-52 w-full overflow-hidden border-b border-zinc-800 bg-zinc-900"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <iframe
         src={src}
         className="pointer-events-none absolute left-0 top-0 border-0"
-        style={{ width: "1440px", height: "900px", transform: `scale(${scale})`, transformOrigin: "top left" }}
+        style={{
+          width: "1440px",
+          height: "4000px",
+          transform: `scale(${scale}) translateY(${hovered ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
+          transformOrigin: "top left",
+          transition: hovered
+            ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)"
+            : "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
+        }}
         title={title}
         loading="lazy"
         sandbox="allow-scripts allow-same-origin"
+      />
+      {/* 호버 시 스크롤 힌트 */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-zinc-900/80 to-transparent transition-opacity duration-300"
+        style={{ opacity: hovered ? 0 : 1 }}
       />
     </div>
   );

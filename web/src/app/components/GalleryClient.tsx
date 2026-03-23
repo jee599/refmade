@@ -39,8 +39,8 @@ function IframePreview({ src, title }: { src: string; title: string }) {
           transform: `scale(${scale}) translateY(${hovered ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
           transformOrigin: "top left",
           transition: hovered
-            ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)"
-            : "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
+            ? "transform 1.6s cubic-bezier(0.25, 0.1, 0.25, 1)"
+            : "transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
         }}
         title={title}
         loading="lazy"

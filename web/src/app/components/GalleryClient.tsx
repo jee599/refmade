@@ -35,29 +35,27 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    let start: number | null = null;
-    const duration = 3000; // 3초에 맨 밑까지
+    const speed = 150; // px/s (고정 속도)
+    let lastTs: number | null = null;
+    let scrollY = 0;
 
     const animate = (ts: number) => {
-      if (!start) start = ts;
-      const elapsed = ts - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // easeInOutCubic
-      const ease = progress < 0.5
-        ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      if (!lastTs) lastTs = ts;
+      const dt = (ts - lastTs) / 1000;
+      lastTs = ts;
+      scrollY += speed * dt;
 
       try {
         const doc = iframe.contentDocument;
         if (doc) {
           const maxScroll = doc.documentElement.scrollHeight - doc.documentElement.clientHeight;
-          iframe.contentWindow?.scrollTo(0, ease * maxScroll);
+          if (scrollY >= maxScroll) scrollY = maxScroll;
+          iframe.contentWindow?.scrollTo(0, scrollY);
+          if (scrollY >= maxScroll) return;
         }
       } catch { /* cross-origin 무시 */ }
 
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
-      }
+      rafRef.current = requestAnimationFrame(animate);
     };
 
     // 약간의 딜레이 후 스크롤 시작

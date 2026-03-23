@@ -46,24 +46,6 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     }
   }, []);
 
-  // 호버 안 한 상태 + 뷰포트 → 4초마다 스크롤 바운스로 애니메이션 리플레이
-  useEffect(() => {
-    if (hovered || !inView || !loaded || !canScroll.current) return;
-    const interval = setInterval(() => {
-      const iframe = iframeRef.current;
-      if (!iframe) return;
-      try {
-        // 빠르게 아래로 스크롤 → 요소들이 뷰포트 밖으로
-        iframe.contentWindow?.scrollTo(0, 500);
-        // 200ms 후 맨 위로 smooth 복귀 → IntersectionObserver 재트리거
-        setTimeout(() => {
-          iframe.contentWindow?.scrollTo({ top: 0, behavior: "smooth" });
-        }, 200);
-      } catch { /* ignore */ }
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [hovered, inView, loaded]);
-
   // 호버 시 전체 스크롤
   useEffect(() => {
     if (!hovered) {

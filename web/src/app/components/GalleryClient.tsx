@@ -159,7 +159,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
         }}
         title={title}
         loading="lazy"
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
         onLoad={handleLoad}
       />
       {/* 숨겨진 프리로드 iframe — 로드 완료 시 메인과 교체 */}
@@ -174,7 +174,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
             transformOrigin: "top left",
           }}
           title={`${title} preload`}
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-same-origin"
           onLoad={() => setNextReady(true)}
         />
       )}

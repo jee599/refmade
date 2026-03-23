@@ -6,6 +6,8 @@ import type { Reference } from "@/app/data/references";
 
 function IframePreview({ src, title }: { src: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const rafRef = useRef<number>(0);
   const [scale, setScale] = useState(0.25);
   const [hovered, setHovered] = useState(false);
 
@@ -19,9 +21,55 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // 스크롤 가능한 최대 오프셋 (scaled 기준으로 전체 페이지 높이 - 컨테이너 높이)
-  const scrollDistance = 900 * scale - 208; // 900px iframe height * scale - 208px container height
-  const maxScroll = Math.max(0, scrollDistance);
+  // 호버 시 iframe 내부를 실제로 스크롤 → IntersectionObserver 애니메이션도 트리거됨
+  useEffect(() => {
+    if (!hovered) {
+      cancelAnimationFrame(rafRef.current);
+      // 호버 해제 시 부드럽게 맨 위로
+      try {
+        iframeRef.current?.contentWindow?.scrollTo({ top: 0, behavior: "smooth" });
+      } catch { /* cross-origin 무시 */ }
+      return;
+    }
+
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    let start: number | null = null;
+    const duration = 3000; // 3초에 맨 밑까지
+
+    const animate = (ts: number) => {
+      if (!start) start = ts;
+      const elapsed = ts - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeInOutCubic
+      const ease = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      try {
+        const doc = iframe.contentDocument;
+        if (doc) {
+          const maxScroll = doc.documentElement.scrollHeight - doc.documentElement.clientHeight;
+          iframe.contentWindow?.scrollTo(0, ease * maxScroll);
+        }
+      } catch { /* cross-origin 무시 */ }
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    // 약간의 딜레이 후 스크롤 시작
+    const timeout = setTimeout(() => {
+      rafRef.current = requestAnimationFrame(animate);
+    }, 200);
+
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [hovered]);
 
   return (
     <div
@@ -31,25 +79,23 @@ function IframePreview({ src, title }: { src: string; title: string }) {
       onMouseLeave={() => setHovered(false)}
     >
       <iframe
+        ref={iframeRef}
         src={src}
         className="pointer-events-none absolute left-0 top-0 border-0"
         style={{
           width: "1440px",
-          height: "4000px",
-          transform: `scale(${scale}) translateY(${hovered ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
+          height: `${Math.ceil(208 / scale)}px`,
+          transform: `scale(${scale})`,
           transformOrigin: "top left",
-          transition: hovered
-            ? "transform 1.6s cubic-bezier(0.25, 0.1, 0.25, 1)"
-            : "transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
         }}
         title={title}
         loading="lazy"
         sandbox="allow-scripts allow-same-origin"
       />
-      {/* 호버 시 스크롤 힌트 */}
+      {/* 하단 그라데이션 힌트 */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-zinc-900/80 to-transparent transition-opacity duration-300"
-        style={{ opacity: hovered ? 0 : 1 }}
+        className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-zinc-900/60 to-transparent transition-opacity duration-300"
+        style={{ opacity: hovered ? 0 : 0.8 }}
       />
     </div>
   );

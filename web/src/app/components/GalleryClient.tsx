@@ -20,7 +20,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
   }, []);
 
   // 스크롤 가능한 최대 오프셋 (scaled 기준으로 전체 페이지 높이 - 컨테이너 높이)
-  const scrollDistance = 900 * scale - 208; // 900px iframe height * scale - 208px container height
+  const scrollDistance = 3000 * scale - 208; // 3000px of iframe content * scale - 208px container height
   const maxScroll = Math.max(0, scrollDistance);
 
   return (

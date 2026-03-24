@@ -220,28 +220,28 @@ export default function ReferenceDetailClient({
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
       {/* Left: Preview */}
-      <div className="flex-1 border-b border-zinc-800 p-4 lg:border-b-0 lg:border-r lg:p-6" style={{ minHeight: "70vh" }}>
+      <div className="flex min-h-[70vh] flex-1 flex-col border-b border-zinc-800 p-4 lg:border-b-0 lg:border-r lg:p-6">
         {sampleExists && samplePath ? (
-          <div className="h-full overflow-hidden rounded-lg border border-zinc-800 bg-white">
+          <div className="flex-1 overflow-hidden rounded-lg border border-zinc-800 bg-white">
             {hasCustomChanges && customizedHtml ? (
               <iframe
                 srcDoc={customizedHtml}
-                className="h-full w-full"
+                className="block w-full"
                 title={`${r.name} customized preview`}
-                style={{ minHeight: "60vh" }}
+                style={{ height: "100%", minHeight: "60vh" }}
                 sandbox="allow-scripts allow-same-origin"
               />
             ) : (
               <iframe
                 src={samplePath}
-                className="h-full w-full"
+                className="block w-full"
                 title={`${r.name} preview`}
-                style={{ minHeight: "60vh" }}
+                style={{ height: "100%", minHeight: "60vh" }}
               />
             )}
           </div>
         ) : (
-          <div className="flex h-full min-h-[60vh] items-center justify-center rounded-lg border border-dashed border-zinc-800 bg-zinc-900/50">
+          <div className="flex min-h-[60vh] flex-1 items-center justify-center rounded-lg border border-dashed border-zinc-800 bg-zinc-900/50">
             <div className="text-center">
               <div className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-4xl text-zinc-700">&gt;_</div>
               <p className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-medium text-zinc-500">

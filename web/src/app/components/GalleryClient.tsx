@@ -111,7 +111,7 @@ function IframePreview({ src, title }: { src: string; title: string }) {
         className="pointer-events-none absolute left-0 top-0 border-0"
         style={{
           width: "1440px",
-          height: `${Math.ceil(208 / scale)}px`,
+          height: "6000px",
           transform: `scale(${scale})`,
           transformOrigin: "top left",
         }}

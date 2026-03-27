@@ -3,605 +3,1472 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meridian — Immersive Digital Experiences</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Immerse — Conversion Through Immersion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #ffffff;
-      --text: #111111;
-      --subtle-bg: #f7f7f7;
-      --border: #e5e5e5;
-      --muted: #888888;
-      --accent: #000000;
-    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      -webkit-font-smoothing: antialiased;
-    }
-    .font-heading { font-family: 'Space Grotesk', sans-serif; }
-    .font-serif { font-family: 'Playfair Display', serif; }
-    .font-body { font-family: 'Inter', sans-serif; }
 
-    /* Decorative letter-spacing for nav */
-    .nav-spaced {
-      letter-spacing: 0.35em;
+    :root {
+      --bg-dark: #0d0d1a;
+      --bg-card: #16162a;
+      --text-white: #ffffff;
+      --text-muted: rgba(255,255,255,0.5);
+      --text-dim: rgba(255,255,255,0.3);
+      --accent-gold: #f5c542;
+      --accent-purple: #7b5ea7;
+      --accent-purple-light: #9b7fd4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-white);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+
+    /* Nav */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 40px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(13, 13, 26, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover { color: var(--text-white); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text-white);
+      color: var(--bg-dark);
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-purple-light);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .nav-cta:focus-visible {
+      outline: 2px solid var(--accent-purple-light);
+      outline-offset: 2px;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* Photographic scene — conference/exhibition with VR user */
+    .hero-scene {
+      position: absolute;
+      top: 48%;
+      left: 54%;
+      transform: translate(-42%, -48%);
+      width: 62%;
+      max-width: 820px;
+      aspect-ratio: 16 / 10;
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0.88;
+    }
+
+    /* Conference hall base: warm overhead lighting, depth, walls, floor */
+    .hero-scene-base {
+      position: absolute;
+      inset: 0;
+      background:
+        /* Warm ceiling lights — three pools creating depth, brighter */
+        radial-gradient(ellipse 24% 16% at 30% 8%, rgba(255, 200, 120, 0.65) 0%, transparent 100%),
+        radial-gradient(ellipse 18% 12% at 62% 10%, rgba(255, 185, 100, 0.5) 0%, transparent 100%),
+        radial-gradient(ellipse 14% 9% at 80% 12%, rgba(255, 175, 95, 0.35) 0%, transparent 100%),
+        /* Light spill on ceiling/walls from overhead fixtures — wider, warmer */
+        radial-gradient(ellipse 40% 25% at 30% 15%, rgba(210, 170, 110, 0.28) 0%, transparent 100%),
+        radial-gradient(ellipse 35% 22% at 65% 14%, rgba(190, 155, 95, 0.22) 0%, transparent 100%),
+        /* Left wall with exhibition panel — bluish screen glow, brighter */
+        radial-gradient(ellipse 20% 38% at 15% 42%, rgba(170, 200, 245, 0.22) 0%, transparent 100%),
+        /* Right side booth/display area — warm ambient */
+        radial-gradient(ellipse 22% 32% at 82% 48%, rgba(190, 160, 110, 0.14) 0%, transparent 100%),
+        /* Floor: polished reflective surface with warm cast */
+        linear-gradient(to top, rgba(70, 55, 42, 0.7) 0%, rgba(55, 45, 38, 0.45) 18%, transparent 42%),
+        /* Floor reflection of overhead lights */
+        radial-gradient(ellipse 22% 10% at 32% 90%, rgba(255, 195, 115, 0.2) 0%, transparent 100%),
+        radial-gradient(ellipse 16% 8% at 60% 88%, rgba(255, 180, 105, 0.14) 0%, transparent 100%),
+        /* Ambient fill — warm interior, visible space */
+        radial-gradient(ellipse 85% 65% at 50% 42%, rgba(55, 45, 62, 0.75) 0%, rgba(28, 22, 40, 1) 100%),
+        /* Base fill — warmer, like a dimly lit exhibition hall */
+        linear-gradient(170deg, #24203e 0%, #2a2450 25%, #221e42 55%, #1a1634 100%);
+    }
+
+    /* Exhibition booth structures — geometric shapes suggesting stands */
+    .hero-scene-booths {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* Left exhibition panel/screen */
+    .hero-scene-booths::before {
+      content: '';
+      position: absolute;
+      left: 6%;
+      top: 22%;
+      width: 14%;
+      height: 42%;
+      background:
+        /* Screen surface with content glow */
+        linear-gradient(180deg, rgba(140, 170, 220, 0.12) 0%, rgba(120, 150, 200, 0.08) 60%, rgba(100, 130, 180, 0.04) 100%),
+        /* Frame edge */
+        linear-gradient(90deg, rgba(60, 55, 70, 0.6) 0%, rgba(50, 45, 65, 0.4) 3%, transparent 4%);
+      border-radius: 2px;
+      box-shadow: 0 0 30px rgba(140, 170, 220, 0.06);
+    }
+
+    /* Right side booth structure */
+    .hero-scene-booths::after {
+      content: '';
+      position: absolute;
+      right: 5%;
+      top: 25%;
+      width: 18%;
+      height: 50%;
+      background:
+        linear-gradient(180deg, rgba(80, 70, 90, 0.25) 0%, rgba(60, 52, 75, 0.2) 70%, transparent 100%),
+        linear-gradient(270deg, rgba(55, 48, 68, 0.4) 0%, transparent 40%);
+      border-radius: 2px;
+    }
+
+    /* "HOUSE OF FANS" text banner in scene — blurred, partially visible */
+    .hero-scene-banner {
+      position: absolute;
+      top: 16%;
+      left: 28%;
+      width: 44%;
+      height: 8%;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .hero-scene-banner span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
       text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.16);
+      filter: blur(0.3px);
+    }
+
+    /* Person silhouette — standing, wearing VR headset, right arm forward */
+    .hero-person-container {
+      position: absolute;
+      left: 38%;
+      top: 14%;
+      width: 28%;
+      height: 78%;
+      pointer-events: none;
+    }
+
+    /* Head, neck, torso upper body */
+    .hero-person-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        /* Head — oval, dark against warm background */
+        radial-gradient(ellipse 12% 8% at 50% 7%, #1e1a28 0%, #1e1a28 88%, transparent 89%),
+        /* VR headset — wider band across face, distinctive */
+        radial-gradient(ellipse 16% 3.5% at 50% 7%, #141220 0%, #141220 90%, transparent 91%),
+        /* VR headset front glow — bright purple/blue LED */
+        radial-gradient(ellipse 14% 2% at 50% 6.5%, rgba(120, 140, 255, 0.6) 0%, transparent 100%),
+        /* VR headset glow halo */
+        radial-gradient(ellipse 20% 5% at 50% 6.8%, rgba(100, 120, 240, 0.15) 0%, transparent 100%),
+        /* Neck */
+        radial-gradient(ellipse 5% 4.5% at 50% 13%, #221e30 0%, #221e30 82%, transparent 83%),
+        /* Torso — dark jacket, broad shoulders create clear human shape */
+        radial-gradient(ellipse 28% 16% at 50% 26%, #201c30 0%, #201c30 84%, transparent 85%),
+        /* Right shoulder extension */
+        radial-gradient(ellipse 14% 5% at 68% 22%, #1e1a2e 0%, #1e1a2e 80%, transparent 81%),
+        /* Left shoulder */
+        radial-gradient(ellipse 12% 4.5% at 34% 22%, #1e1a2e 0%, #1e1a2e 78%, transparent 79%),
+        /* Right arm — extended forward (VR controller gesture) */
+        radial-gradient(ellipse 22% 3.5% at 78% 26%, #201c2e 0%, #201c2e 76%, transparent 77%),
+        /* Right forearm + hand */
+        radial-gradient(ellipse 14% 3% at 90% 28%, #221e30 0%, #221e30 74%, transparent 75%),
+        /* Left arm — slightly raised, bent at elbow */
+        radial-gradient(ellipse 16% 3% at 28% 27%, #201c2e 0%, #201c2e 74%, transparent 75%),
+        /* Left hand area */
+        radial-gradient(ellipse 7% 3% at 18% 29%, #221e30 0%, #221e30 72%, transparent 73%);
+    }
+
+    /* Legs + floor shadow */
+    .hero-person-container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        /* Hip/waist — connecting torso to legs */
+        radial-gradient(ellipse 18% 6% at 50% 38%, #1c1828 0%, #1c1828 80%, transparent 81%),
+        /* Right leg */
+        radial-gradient(ellipse 9% 18% at 55% 56%, #1a1626 0%, #1a1626 78%, transparent 79%),
+        /* Left leg — slightly apart for stance */
+        radial-gradient(ellipse 9% 17% at 44% 57%, #1a1626 0%, #1a1626 76%, transparent 77%),
+        /* Right foot */
+        radial-gradient(ellipse 8% 2% at 56% 74%, #181424 0%, #181424 80%, transparent 81%),
+        /* Left foot */
+        radial-gradient(ellipse 8% 2% at 42% 75%, #181424 0%, #181424 78%, transparent 79%),
+        /* Floor shadow — elongated, soft */
+        radial-gradient(ellipse 70% 8% at 50% 80%, rgba(0, 0, 0, 0.5) 0%, transparent 100%),
+        /* Secondary shadow spread */
+        radial-gradient(ellipse 100% 5% at 50% 82%, rgba(0, 0, 0, 0.25) 0%, transparent 100%);
+    }
+
+    /* Warm rim light on person from overhead exhibition lights */
+    .hero-person-rim {
+      position: absolute;
+      left: 38%;
+      top: 14%;
+      width: 28%;
+      height: 78%;
+      pointer-events: none;
+      background:
+        /* Top of head rim light — warm overhead */
+        radial-gradient(ellipse 14% 3% at 50% 4%, rgba(255, 205, 135, 0.25) 0%, transparent 100%),
+        /* Right shoulder rim */
+        radial-gradient(ellipse 5% 6% at 66% 20%, rgba(255, 200, 125, 0.15) 0%, transparent 100%),
+        /* Left shoulder rim */
+        radial-gradient(ellipse 4% 5% at 36% 21%, rgba(255, 200, 125, 0.1) 0%, transparent 100%),
+        /* Torso edge highlight from side light */
+        radial-gradient(ellipse 3% 12% at 68% 26%, rgba(255, 195, 120, 0.06) 0%, transparent 100%);
+    }
+
+    /* VR headset & controller glow effects */
+    .hero-scene-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        /* VR headset front glow — spills onto face */
+        radial-gradient(ellipse 3% 2% at 52% 22%, rgba(110, 130, 255, 0.5) 0%, transparent 100%),
+        /* Glow halo around headset */
+        radial-gradient(ellipse 6% 4% at 52% 22%, rgba(100, 120, 240, 0.15) 0%, transparent 100%),
+        /* Right controller point light — bright dot */
+        radial-gradient(circle 3px at 62% 34%, rgba(155, 127, 212, 0.8) 0%, transparent 100%),
+        /* Controller glow spread */
+        radial-gradient(circle 8px at 62% 34%, rgba(155, 127, 212, 0.2) 0%, transparent 100%),
+        /* Left controller subtle light */
+        radial-gradient(circle 2px at 40% 35%, rgba(155, 127, 212, 0.4) 0%, transparent 100%),
+        /* Exhibition screen glow — left display */
+        radial-gradient(ellipse 10% 16% at 13% 42%, rgba(150, 175, 220, 0.1) 0%, transparent 100%),
+        /* Right booth ambient */
+        radial-gradient(ellipse 8% 20% at 88% 45%, rgba(130, 110, 160, 0.06) 0%, transparent 100%),
+        /* Distant booth pin lights */
+        radial-gradient(circle 2px at 10% 32%, rgba(255, 210, 140, 0.35) 0%, transparent 100%),
+        radial-gradient(circle 2px at 92% 30%, rgba(255, 195, 120, 0.25) 0%, transparent 100%),
+        radial-gradient(circle 1.5px at 87% 36%, rgba(200, 180, 255, 0.2) 0%, transparent 100%),
+        radial-gradient(circle 1.5px at 22% 28%, rgba(255, 200, 130, 0.2) 0%, transparent 100%),
+        /* Ceiling track light spots */
+        radial-gradient(circle 2px at 45% 5%, rgba(255, 220, 160, 0.25) 0%, transparent 100%),
+        radial-gradient(circle 1.5px at 70% 6%, rgba(255, 210, 150, 0.2) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Film grain texture for photographic feel */
+    .hero-scene-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.3;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 128px;
+      mix-blend-mode: overlay;
+    }
+
+    /* Secondary grain layer — finer, for depth */
+    .hero-scene-grain-fine {
+      position: absolute;
+      inset: 0;
+      opacity: 0.12;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 200px;
+      mix-blend-mode: soft-light;
+    }
+
+    /* Vignette — photographic edge darkening */
+    .hero-scene-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 60% at 50% 45%, transparent 35%, rgba(13, 13, 26, 0.65) 100%);
+      pointer-events: none;
+    }
+
+    /* Gradient overlay blending scene into page background */
+    .hero-gradient-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        /* Left text area — darker for text readability, but lets scene bleed into text */
+        linear-gradient(to right, rgba(13, 13, 26, 0.95) 3%, rgba(13, 13, 26, 0.82) 15%, rgba(13, 13, 26, 0.45) 32%, transparent 55%),
+        /* Top + bottom fade */
+        linear-gradient(to bottom, var(--bg-dark) 0%, transparent 15%, transparent 85%, var(--bg-dark) 100%),
+        /* Soft radial fade */
+        radial-gradient(ellipse at 56% 48%, transparent 22%, var(--bg-dark) 65%);
+    }
+
+    /* Full-page grain for cohesion */
+    .page-grain {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 0 60px;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 8vw, 7.5rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+      color: var(--text-white);
+      margin-bottom: 32px;
+      /* Text blends slightly with background via subtle text-shadow */
+      text-shadow: 0 0 80px rgba(13, 13, 26, 0.4);
+    }
+
+    .hero-title span { display: block; }
+
+    /* The "through" line bleeds into the image more */
+    .hero-title .title-through {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .hero-title .title-immersion {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent-gold);
+      color: #1a1a1a;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .hero-cta:hover {
+      background: #ffd666;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(245, 197, 66, 0.3);
+    }
+
+    .hero-cta:focus-visible {
+      outline: 2px solid var(--accent-gold);
+      outline-offset: 4px;
+    }
+
+    .hero-cta svg {
+      width: 18px; height: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .hero-cta:hover svg { transform: translateX(3px); }
+
+    /* Scroll indicator - left side circle with arrow */
+    .scroll-indicator {
+      position: absolute;
+      left: 40px;
+      bottom: 48px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scroll-indicator-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transform: rotate(180deg);
+    }
+
+    .scroll-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+      animation: scrollBounce 2.5s ease-in-out infinite;
+      position: relative;
+    }
+
+    .scroll-circle::before {
+      content: '';
+      position: absolute;
+      inset: -7px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .scroll-circle:hover {
+      border-color: rgba(255,255,255,0.45);
+    }
+
+    .scroll-circle svg {
+      width: 20px; height: 20px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* Sections */
+    .section {
+      padding: 120px 60px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-label {
       font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-purple-light);
+      margin-bottom: 16px;
       font-weight: 500;
     }
 
-    /* Drag carousel */
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 48px;
+    }
+
+    /* Services grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      padding: 48px 36px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent-purple);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { background: #1d1d38; }
+
+    .service-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(123, 94, 167, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: var(--accent-purple-light);
+    }
+
+    .service-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .service-card p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Portfolio - Drag Carousel */
+    .portfolio-section { padding: 120px 0; }
+
+    .portfolio-header {
+      padding: 0 60px;
+      max-width: 1400px;
+      margin: 0 auto 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .drag-hint {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .drag-carousel {
-      cursor: grab;
+      display: flex;
+      gap: 24px;
+      padding: 0 60px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      cursor: grab;
     }
+
     .drag-carousel::-webkit-scrollbar { display: none; }
     .drag-carousel:active { cursor: grabbing; }
-    .drag-carousel > * { scroll-snap-align: start; }
 
-    /* Scroll fade-in */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+    .portfolio-card {
+      flex-shrink: 0;
+      width: 520px;
+      scroll-snap-align: start;
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
     }
-    .fade-in.visible {
+
+    .portfolio-card-image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .portfolio-card-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transition: transform 0.6s ease;
+    }
+
+    .portfolio-card:hover .portfolio-card-image::before { transform: scale(1.05); }
+
+    .card-scene-vr .portfolio-card-image::before {
+      background:
+        radial-gradient(circle at 40% 50%, rgba(80, 160, 255, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 65% 35%, rgba(155, 127, 212, 0.35) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0.5) 0%, transparent 50%),
+        linear-gradient(145deg, #141430 0%, #1a1845 40%, #201a50 70%, #151230 100%);
+    }
+
+    .card-scene-3d .portfolio-card-image::before {
+      background:
+        radial-gradient(circle at 50% 40%, rgba(245, 197, 66, 0.25) 0%, transparent 35%),
+        radial-gradient(circle at 30% 60%, rgba(123, 94, 167, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(60, 120, 200, 0.2) 0%, transparent 35%),
+        linear-gradient(160deg, #181630 0%, #1e1a48 50%, #141230 100%);
+    }
+
+    .card-scene-ar .portfolio-card-image::before {
+      background:
+        radial-gradient(circle at 60% 45%, rgba(200, 120, 255, 0.3) 0%, transparent 35%),
+        radial-gradient(circle at 35% 55%, rgba(245, 197, 66, 0.15) 0%, transparent 30%),
+        radial-gradient(ellipse at 50% 85%, rgba(100, 60, 140, 0.4) 0%, transparent 40%),
+        linear-gradient(150deg, #1a1240 0%, #201650 50%, #161035 100%);
+    }
+
+    .card-scene-interactive .portfolio-card-image::before {
+      background:
+        radial-gradient(circle at 45% 40%, rgba(255, 120, 80, 0.25) 0%, transparent 35%),
+        radial-gradient(circle at 60% 65%, rgba(123, 94, 167, 0.35) 0%, transparent 40%),
+        conic-gradient(from 180deg at 50% 50%, rgba(155, 127, 212, 0.08), rgba(245, 197, 66, 0.05), rgba(80, 120, 200, 0.08), rgba(155, 127, 212, 0.08)),
+        linear-gradient(140deg, #16142e 0%, #1c1842 50%, #121028 100%);
+    }
+
+    .card-scene-webxr .portfolio-card-image::before {
+      background:
+        radial-gradient(circle at 55% 50%, rgba(60, 200, 200, 0.25) 0%, transparent 35%),
+        radial-gradient(circle at 35% 35%, rgba(123, 94, 167, 0.3) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 75%, rgba(20, 60, 100, 0.4) 0%, transparent 45%),
+        linear-gradient(155deg, #0e1428 0%, #141a3a 50%, #0e1225 100%);
+    }
+
+    .portfolio-card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .card-scene-vr .portfolio-card-image::after {
+      background:
+        linear-gradient(0deg, transparent 40%, rgba(155, 127, 212, 0.06) 41%, rgba(155, 127, 212, 0.06) 41.5%, transparent 42%),
+        linear-gradient(0deg, transparent 60%, rgba(80, 160, 255, 0.05) 60.5%, rgba(80, 160, 255, 0.05) 61%, transparent 61.5%);
+    }
+
+    .card-scene-3d .portfolio-card-image::after {
+      background:
+        radial-gradient(circle at 50% 50%, transparent 25%, rgba(245, 197, 66, 0.04) 25.5%, rgba(245, 197, 66, 0.04) 26%, transparent 26.5%),
+        radial-gradient(circle at 50% 50%, transparent 40%, rgba(123, 94, 167, 0.03) 40.5%, rgba(123, 94, 167, 0.03) 41%, transparent 41.5%);
+    }
+
+    .portfolio-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13,13,26,0.9) 0%, rgba(13,13,26,0.2) 40%, transparent 60%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .portfolio-card:hover .portfolio-card-overlay { opacity: 1; }
+
+    .portfolio-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+    }
+
+    .portfolio-card-overlay h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .portfolio-card-overlay p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .portfolio-card-arrow {
+      position: absolute;
+      top: 20px; right: 20px;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: all 0.3s ease;
+    }
+
+    .portfolio-card:hover .portfolio-card-arrow {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* Arrow hover */
-    .arrow-link .arrow-icon {
-      transition: transform 0.3s ease;
-    }
-    .arrow-link:hover .arrow-icon {
-      transform: translateX(6px);
+    /* Stats */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 80px;
     }
 
-    /* Card overlay */
-    .project-card .card-overlay {
+    .stat-item {
+      padding: 48px 36px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+
+    .stat-number .accent { color: var(--accent-purple-light); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* About */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .about-text p:first-of-type { color: rgba(255,255,255,0.75); }
+
+    .about-image {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(155, 127, 212, 0.4) 0%, transparent 45%),
+        radial-gradient(circle at 30% 65%, rgba(245, 197, 66, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 70% 60%, rgba(80, 130, 220, 0.2) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 90%, rgba(13, 13, 26, 0.6) 0%, transparent 40%),
+        linear-gradient(145deg, #181440 0%, #201850 40%, #1a1640 70%, #141030 100%);
+    }
+
+    .about-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 12% 35% at 35% 60%, rgba(0,0,0,0.35) 0%, transparent 80%),
+        radial-gradient(ellipse 12% 35% at 55% 55%, rgba(0,0,0,0.3) 0%, transparent 80%),
+        radial-gradient(ellipse 10% 30% at 70% 62%, rgba(0,0,0,0.25) 0%, transparent 80%),
+        radial-gradient(circle at 45% 35%, rgba(155, 127, 212, 0.15) 0%, transparent 20%);
+    }
+
+    /* CTA banner */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #4a3578 100%);
+      border-radius: 24px;
+      padding: 80px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    }
+
+    .cta-banner h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-banner p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.7);
+      max-width: 500px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .cta-banner-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--text-white);
+      color: var(--bg-dark);
+      padding: 16px 36px;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-banner-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .cta-banner-btn:focus-visible {
+      outline: 2px solid var(--text-white);
+      outline-offset: 4px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 80px 60px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-top: 16px;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col a:hover { color: var(--text-white); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-socials a {
+      color: var(--text-dim);
+      transition: color 0.2s ease;
+      text-decoration: none;
+    }
+
+    .footer-socials a:hover { color: var(--accent-purple-light); }
+
+    /* Cookie consent — bottom-right */
+    .cookie-bar {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      background: rgba(22, 22, 42, 0.95);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px 22px;
+      max-width: 340px;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      animation: slideUp 0.5s ease 1s both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cookie-bar a {
+      color: var(--accent-purple-light);
+      text-decoration: underline;
+    }
+
+    .cookie-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cookie-accept {
+      flex-shrink: 0;
+      background: var(--accent-gold);
+      color: #1a1a1a;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .cookie-accept:hover { background: #ffd666; }
+
+    .cookie-decline {
+      flex-shrink: 0;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cookie-decline:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: var(--text-white);
+    }
+
+    /* Scroll animation */
+    .reveal {
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .project-card:hover .card-overlay {
+
+    .reveal.visible {
       opacity: 1;
+      transform: translateY(0);
     }
-    .project-card:hover img {
-      transform: scale(1.03);
+
+    /* Mobile menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-white);
+      padding: 8px;
     }
-    .project-card img {
-      transition: transform 0.6s ease;
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: var(--bg-dark);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      color: var(--text-white);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 24px; right: 24px;
+      background: none;
+      border: none;
+      color: var(--text-white);
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .portfolio-card { width: 400px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .section { padding: 80px 20px; }
+      .hero-content { padding: 0 24px; }
+      .hero-scene {
+        width: 95%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.4;
+      }
+      .scroll-indicator { left: 20px; bottom: 40px; }
+      .scroll-indicator-text { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .portfolio-header { padding: 0 20px; }
+      .drag-carousel { padding: 0 20px; gap: 16px; }
+      .portfolio-card { width: 85vw; }
+      .portfolio-card-overlay { opacity: 1; }
+      .cta-banner { padding: 60px 24px; border-radius: 16px; }
+      .footer { padding: 60px 20px 32px; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .cookie-bar { left: 16px; right: 16px; bottom: 16px; max-width: none; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Full-page grain overlay -->
+  <div class="page-grain"></div>
+
   <!-- Nav -->
-  <nav id="main-nav" style="background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="fixed top-0 left-0 right-0 z-50 border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-16 md:h-20">
-      <a href="#" class="font-heading text-xl font-semibold tracking-tight">Meridian</a>
-      <div class="hidden md:flex items-center gap-10">
-        <a href="#work" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">W o r k</a>
-        <a href="#services" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">S e r v i c e s</a>
-        <a href="#about" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">A b o u t</a>
-        <a href="#stories" class="nav-spaced text-gray-700 hover:text-black transition-colors duration-200">S t o r i e s</a>
-      </div>
-      <div class="flex items-center gap-6">
-        <span class="hidden lg:inline text-sm text-gray-500">hello@meridian.studio</span>
-        <a href="#contact" class="inline-flex items-center gap-2 text-sm font-medium bg-black text-white px-5 py-2.5 rounded-full hover:bg-gray-800 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black cursor-pointer">
-          Get in touch
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-        </a>
-        <!-- Mobile menu button -->
-        <button id="mobile-menu-btn" class="md:hidden p-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black cursor-pointer" aria-label="Toggle menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
-        </button>
-      </div>
-    </div>
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-6 py-6 space-y-4">
-      <a href="#work" class="block nav-spaced text-gray-700">W o r k</a>
-      <a href="#services" class="block nav-spaced text-gray-700">S e r v i c e s</a>
-      <a href="#about" class="block nav-spaced text-gray-700">A b o u t</a>
-      <a href="#stories" class="block nav-spaced text-gray-700">S t o r i e s</a>
+  <nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
+    <a href="#" class="nav-logo">immerse</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <a href="#contact" class="nav-cta">Get in touch</a>
+      <button class="mobile-menu-btn" id="menuOpenBtn" aria-label="Open menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 8h16M4 16h16"/></svg>
+      </button>
     </div>
   </nav>
 
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
+    <button class="mobile-close" id="menuCloseBtn" aria-label="Close menu">
+      <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M6 18L18 6"/></svg>
+    </button>
+    <a href="#work" onclick="closeMobileMenu()">Work</a>
+    <a href="#services" onclick="closeMobileMenu()">Services</a>
+    <a href="#about" onclick="closeMobileMenu()">About</a>
+    <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
   <!-- Hero -->
-  <section class="pt-32 pb-20 md:pt-44 md:pb-32 px-6 md:px-10">
-    <div class="max-w-7xl mx-auto">
-      <div class="fade-in max-w-4xl">
-        <p class="nav-spaced text-gray-400 mb-6">Immersive Digital Agency</p>
-        <h1 class="font-heading text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.05] tracking-tight mb-8">
-          <span class="block">conversion</span>
-          <span class="block font-serif italic font-normal text-gray-600">through immersion</span>
-        </h1>
-        <p class="text-lg md:text-xl text-gray-500 max-w-xl leading-relaxed mb-10">
-          We craft digital experiences that captivate audiences and transform engagement into measurable results.
-        </p>
-        <a href="#work" class="arrow-link inline-flex items-center gap-3 text-sm font-medium border-b-2 border-black pb-1 hover:gap-4 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black cursor-pointer">
-          Explore our work
-          <svg class="arrow-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-        </a>
+  <section class="hero" aria-label="Hero section">
+    <div class="hero-bg">
+      <!-- Photographic scene: conference/exhibition hall with VR user -->
+      <div class="hero-scene">
+        <div class="hero-scene-base"></div>
+        <div class="hero-scene-booths"></div>
+        <div class="hero-scene-banner"><span>House of Fans</span></div>
+        <div class="hero-person-container"></div>
+        <div class="hero-person-rim"></div>
+        <div class="hero-scene-glow"></div>
+        <div class="hero-scene-grain"></div>
+        <div class="hero-scene-grain-fine"></div>
+        <div class="hero-scene-vignette"></div>
       </div>
+      <div class="hero-gradient-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span>conversion</span>
+        <span class="title-through">through</span>
+        <span class="title-immersion">
+          immersion
+          <a href="#work" class="hero-cta" aria-label="Discover what we do">
+            Discover what we do
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </span>
+      </h1>
+    </div>
+
+    <!-- Scroll indicator - left side -->
+    <div class="scroll-indicator">
+      <span class="scroll-indicator-text">Scroll</span>
+      <a href="#work" class="scroll-circle" aria-label="Scroll down">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+      </a>
     </div>
   </section>
 
-  <!-- Selected Work — Drag Carousel -->
-  <section id="work" class="py-24 bg-[#f7f7f7]">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-      <div class="flex items-end justify-between mb-12 fade-in">
-        <div>
-          <p class="nav-spaced text-gray-400 mb-3">Portfolio</p>
-          <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight">Selected work</h2>
-        </div>
-        <p class="hidden md:block text-sm text-gray-400">Drag to explore →</p>
+  <!-- Selected Work - Drag Carousel -->
+  <section id="work" class="portfolio-section">
+    <div class="portfolio-header reveal">
+      <div>
+        <p class="section-label">Portfolio</p>
+        <h2 class="section-title">Selected work</h2>
       </div>
+      <span class="drag-hint">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M8 12h8m0 0l-3-3m3 3l-3 3"/></svg>
+        Drag to explore
+      </span>
     </div>
-    <div class="drag-carousel flex gap-6 px-6 md:px-10 pb-4" id="carousel">
-      <!-- Card 1 — Large -->
-      <article class="project-card flex-shrink-0 w-[85vw] md:w-[550px] lg:w-[620px] rounded-lg overflow-hidden relative group">
-        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
-          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80" alt="Virtual reality headset experience with blue neon lighting" loading="lazy" class="w-full h-full object-cover" />
+
+    <div class="drag-carousel" id="carousel">
+      <article class="portfolio-card card-scene-vr">
+        <div class="portfolio-card-image"></div>
+        <div class="portfolio-card-overlay">
+          <span class="portfolio-tag">VR Experience</span>
+          <h3>NovaStar Labs</h3>
+          <p>Immersive product launch for biotech innovator</p>
         </div>
-        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
-          <div class="flex gap-2 mb-3">
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">VR Experience</span>
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">WebXR</span>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">NovaStar Labs</h3>
-          <p class="text-sm text-white/70">Immersive product launch for biotech innovator</p>
-        </div>
-        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
+        <div class="portfolio-card-arrow">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </div>
       </article>
 
-      <!-- Card 2 -->
-      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
-        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
-          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80" alt="3D abstract colorful shapes floating in space" loading="lazy" class="w-full h-full object-cover" />
+      <article class="portfolio-card card-scene-3d">
+        <div class="portfolio-card-image"></div>
+        <div class="portfolio-card-overlay">
+          <span class="portfolio-tag">3D Web</span>
+          <h3>Prism Gallery</h3>
+          <p>Virtual exhibition for contemporary art collective</p>
         </div>
-        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
-          <div class="flex gap-2 mb-3">
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">3D Web</span>
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Interactive</span>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Prism Gallery</h3>
-          <p class="text-sm text-white/70">3D virtual exhibition for contemporary art collective</p>
-        </div>
-        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
+        <div class="portfolio-card-arrow">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </div>
       </article>
 
-      <!-- Card 3 -->
-      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
-        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
-          <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80" alt="Abstract technology visualization with glowing particles" loading="lazy" class="w-full h-full object-cover" />
+      <article class="portfolio-card card-scene-ar">
+        <div class="portfolio-card-image"></div>
+        <div class="portfolio-card-overlay">
+          <span class="portfolio-tag">AR Commerce</span>
+          <h3>Luxe Atelier</h3>
+          <p>AR-powered luxury retail experience</p>
         </div>
-        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
-          <div class="flex gap-2 mb-3">
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">AR Campaign</span>
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Mobile</span>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Volta Energy</h3>
-          <p class="text-sm text-white/70">Augmented reality brand activation at global summit</p>
-        </div>
-        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
+        <div class="portfolio-card-arrow">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </div>
       </article>
 
-      <!-- Card 4 -->
-      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
-        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
-          <img src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=800&q=80" alt="Abstract minimal geometric shapes on clean background" loading="lazy" class="w-full h-full object-cover" />
+      <article class="portfolio-card card-scene-interactive">
+        <div class="portfolio-card-image"></div>
+        <div class="portfolio-card-overlay">
+          <span class="portfolio-tag">Interactive</span>
+          <h3>Synthwave Festival</h3>
+          <p>Immersive digital stage for music festival</p>
         </div>
-        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
-          <div class="flex gap-2 mb-3">
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Web Experience</span>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Horizon Finance</h3>
-          <p class="text-sm text-white/70">Scroll-driven storytelling for fintech rebrand</p>
-        </div>
-        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
+        <div class="portfolio-card-arrow">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </div>
       </article>
 
-      <!-- Card 5 -->
-      <article class="project-card flex-shrink-0 w-[85vw] md:w-[550px] lg:w-[620px] rounded-lg overflow-hidden relative group">
-        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
-          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80" alt="Holographic display with iridescent colors" loading="lazy" class="w-full h-full object-cover" />
+      <article class="portfolio-card card-scene-webxr">
+        <div class="portfolio-card-image"></div>
+        <div class="portfolio-card-overlay">
+          <span class="portfolio-tag">WebXR</span>
+          <h3>DataSphere</h3>
+          <p>3D data visualization platform for enterprise</p>
         </div>
-        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
-          <div class="flex gap-2 mb-3">
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Holographic</span>
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Installation</span>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Aether Museum</h3>
-          <p class="text-sm text-white/70">Holographic installation for national science center</p>
-        </div>
-        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 6 -->
-      <article class="project-card flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[460px] rounded-lg overflow-hidden relative group">
-        <div class="aspect-[3/2] overflow-hidden bg-gray-200">
-          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80" alt="Abstract digital art with flowing gradients" loading="lazy" class="w-full h-full object-cover" />
-        </div>
-        <div class="card-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
-          <div class="flex gap-2 mb-3">
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">Spatial Audio</span>
-            <span class="text-xs text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">XR</span>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-medium text-white mb-1">Resonance Audio</h3>
-          <p class="text-sm text-white/70">Spatial audio experience for music streaming platform</p>
-        </div>
-        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div class="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
+        <div class="portfolio-card-arrow">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </div>
       </article>
     </div>
   </section>
 
   <!-- Services -->
-  <section id="services" class="py-20 px-6 md:px-10">
-    <div class="max-w-7xl mx-auto">
-      <div class="fade-in mb-16">
-        <p class="nav-spaced text-gray-400 mb-3">What we do</p>
-        <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight">Solutions</h2>
+  <section id="services" class="section">
+    <div class="reveal">
+      <p class="section-label">What we do</p>
+      <h2 class="section-title">Crafting immersive<br>digital worlds</h2>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+        </div>
+        <h3>VR Experiences</h3>
+        <p>Custom virtual reality environments that transport users into your brand story with full sensory engagement.</p>
       </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Service 1 — Large -->
-        <div class="fade-in md:col-span-2 lg:col-span-1 lg:row-span-2 border border-gray-200 rounded-lg p-8 md:p-10 hover:border-gray-400 transition-colors duration-300 flex flex-col justify-between min-h-[320px]">
-          <div>
-            <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
-              <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
-            </div>
-            <h3 class="font-heading text-xl font-medium mb-3">Virtual & Augmented Reality</h3>
-            <p class="text-gray-500 leading-relaxed">From WebXR to room-scale VR installations. We build immersive environments that let your audience step inside your brand story.</p>
-          </div>
-          <a href="#" class="arrow-link inline-flex items-center gap-2 text-sm font-medium mt-6 hover:gap-3 transition-all duration-200 cursor-pointer">
-            Learn more
-            <svg class="arrow-icon w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
         </div>
-
-        <!-- Service 2 -->
-        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
-          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25h-13.5A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25h-13.5A2.25 2.25 0 013 12V5.25"/></svg>
-          </div>
-          <h3 class="font-heading text-xl font-medium mb-3">Interactive Web Experiences</h3>
-          <p class="text-gray-500 leading-relaxed text-sm">Scroll-driven storytelling, 3D product viewers, and micro-interactions that keep visitors engaged.</p>
+        <h3>AR Applications</h3>
+        <p>Augmented reality solutions that blend digital content with the physical world for memorable interactions.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zm0 9.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zm9.75-9.75A2.25 2.25 0 0115.75 3.75H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zm0 9.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z"/></svg>
         </div>
-
-        <!-- Service 3 -->
-        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
-          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
-          </div>
-          <h3 class="font-heading text-xl font-medium mb-3">Data Visualization</h3>
-          <p class="text-gray-500 leading-relaxed text-sm">Turn complex datasets into intuitive, animated visual narratives your stakeholders actually understand.</p>
+        <h3>3D Web Platforms</h3>
+        <p>Browser-based 3D experiences using WebGL and WebXR that run smoothly without plugins or downloads.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>
         </div>
-
-        <!-- Service 4 -->
-        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
-          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/></svg>
-          </div>
-          <h3 class="font-heading text-xl font-medium mb-3">Brand Activations</h3>
-          <p class="text-gray-500 leading-relaxed text-sm">Physical-digital hybrid events that generate social buzz and lasting brand impressions.</p>
+        <h3>Interactive Campaigns</h3>
+        <p>Digital marketing campaigns with interactive elements that boost engagement and drive conversion metrics.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/></svg>
         </div>
-
-        <!-- Service 5 -->
-        <div class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
-          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0A1.125 1.125 0 0121.75 5.625M20.625 4.5h-1.5a1.125 1.125 0 00-1.125 1.125M3.375 4.5h1.5A1.125 1.125 0 016 5.625m14.25 0v1.5c0 .621-.504 1.125-1.125 1.125M6 5.625v1.5c0 .621.504 1.125 1.125 1.125m12-2.625v7.5m0-7.5H7.125m12 0h1.5m-13.5 0h-1.5m1.5 7.5h12m-12 0V5.625m0 7.5h-1.5m13.5 0h1.5M7.125 13.125v-7.5m0 7.5h12"/></svg>
-          </div>
-          <h3 class="font-heading text-xl font-medium mb-3">Motion & Video</h3>
-          <p class="text-gray-500 leading-relaxed text-sm">Cinematic content from concept to delivery. 3D animation, motion graphics, and live-action production.</p>
+        <h3>Data Visualization</h3>
+        <p>Complex datasets transformed into intuitive 3D visualizations that make information tangible and explorable.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
         </div>
+        <h3>360 Content</h3>
+        <p>Professional 360-degree video and photography production for virtual tours, events, and branded content.</p>
       </div>
     </div>
   </section>
 
-  <!-- About / Stats -->
-  <section id="about" class="py-24 bg-[#f7f7f7] px-6 md:px-10">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="fade-in">
-          <p class="nav-spaced text-gray-400 mb-3">About us</p>
-          <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight mb-6">We believe in the power of presence</h2>
-          <p class="text-gray-500 leading-relaxed mb-6">
-            Founded in 2018, Meridian is an independent studio of 24 strategists, designers, and technologists. We partner with forward-thinking brands to create digital experiences that demand attention.
-          </p>
-          <p class="text-gray-500 leading-relaxed mb-8">
-            Our work spans VR installations, interactive websites, AR campaigns, and spatial computing. Every project starts with a question: how do we make people feel something?
-          </p>
-          <a href="#" class="arrow-link inline-flex items-center gap-2 text-sm font-medium border-b border-black pb-1 hover:gap-3 transition-all duration-200 cursor-pointer">
-            Read our story
-            <svg class="arrow-icon w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-        </div>
-        <div class="fade-in grid grid-cols-2 gap-6">
-          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
-            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="87">0</p>
-            <p class="text-sm text-gray-500">Projects delivered</p>
-          </div>
-          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
-            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="24">0</p>
-            <p class="text-sm text-gray-500">Team members</p>
-          </div>
-          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
-            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="12">0</p>
-            <p class="text-sm text-gray-500">Countries reached</p>
-          </div>
-          <div class="border border-gray-200 bg-white rounded-lg p-8 text-center">
-            <p class="font-heading text-5xl font-medium tracking-tight mb-2" data-count="96">0</p>
-            <p class="text-sm text-gray-500 flex items-center justify-center gap-1">Client satisfaction <span class="text-xs">%</span></p>
-          </div>
-        </div>
+  <!-- Stats -->
+  <section class="section" style="padding-top:0;">
+    <div class="stats-bar reveal">
+      <div class="stat-item">
+        <div class="stat-number">200<span class="accent">+</span></div>
+        <div class="stat-label">Projects delivered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">40<span class="accent">M</span></div>
+        <div class="stat-label">Users reached</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Years of experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">3.2<span class="accent">x</span></div>
+        <div class="stat-label">Avg. engagement lift</div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="py-20 px-6 md:px-10">
-    <div class="max-w-7xl mx-auto">
-      <div class="fade-in mb-14">
-        <p class="nav-spaced text-gray-400 mb-3">Testimonials</p>
-        <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight">What clients say</h2>
+  <!-- About -->
+  <section id="about" class="section">
+    <div class="reveal">
+      <p class="section-label">About us</p>
+      <h2 class="section-title">Where technology<br>meets storytelling</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>We are a team of creative technologists, designers, and developers who believe that the future of brand engagement is immersive. Every project starts with a question: how do we make people feel something they have never felt before?</p>
+        <p>From VR exhibitions to AR retail experiences, we combine cutting-edge technology with human-centered design to create moments that convert attention into action.</p>
       </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <blockquote class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300 md:col-span-2 lg:col-span-1">
-          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z"/></svg>
-          <p class="text-gray-600 leading-relaxed mb-6">"Meridian transformed our product launch into an unforgettable experience. The VR installation they built generated 3x more media coverage than our previous events."</p>
-          <footer class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-heading text-sm font-medium">SL</div>
-            <div>
-              <p class="text-sm font-medium">Sarah Laurent</p>
-              <p class="text-xs text-gray-400">CMO, NovaStar Labs</p>
-            </div>
-          </footer>
-        </blockquote>
-
-        <blockquote class="fade-in border-2 border-black rounded-lg p-8 scale-[1.02]">
-          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z"/></svg>
-          <p class="text-gray-600 leading-relaxed mb-6">"Working with Meridian felt like having an in-house innovation lab. They understood our audience deeply and delivered an interactive website that increased time-on-site by 280%."</p>
-          <footer class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-heading text-sm font-medium">MK</div>
-            <div>
-              <p class="text-sm font-medium">Marcus Klein</p>
-              <p class="text-xs text-gray-400">Head of Digital, Volta Energy</p>
-            </div>
-          </footer>
-        </blockquote>
-
-        <blockquote class="fade-in border border-gray-200 rounded-lg p-8 hover:border-gray-400 transition-colors duration-300">
-          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11h4v10H0z"/></svg>
-          <p class="text-gray-600 leading-relaxed mb-6">"The spatial audio experience Meridian created for our platform launch was unlike anything in our industry. Our users couldn't stop talking about it."</p>
-          <footer class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-heading text-sm font-medium">AY</div>
-            <div>
-              <p class="text-sm font-medium">Ava Yilmaz</p>
-              <p class="text-xs text-gray-400">CEO, Resonance Audio</p>
-            </div>
-          </footer>
-        </blockquote>
-      </div>
+      <div class="about-image" role="img" aria-label="Team working on immersive experience"></div>
     </div>
   </section>
 
-  <!-- Newsletter / CTA — Dark section with owl mascot -->
-  <section id="contact" class="py-24 bg-[#111111] px-6 md:px-10">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="fade-in">
-          <p class="nav-spaced text-gray-500 mb-3">Stay curious</p>
-          <h2 class="font-heading text-3xl sm:text-4xl font-medium tracking-tight text-white mb-6">Let's create something immersive</h2>
-          <p class="text-gray-400 leading-relaxed mb-8">
-            Have a project in mind? We'd love to hear about it. Drop us a line and we'll get back to you within 24 hours.
-          </p>
-          <form class="flex flex-col sm:flex-row gap-3 max-w-md" onsubmit="event.preventDefault()">
-            <input type="email" placeholder="your@email.com" class="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-white/30" />
-            <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black rounded-full text-sm font-medium hover:bg-gray-200 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white cursor-pointer">
-              Submit
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </button>
-          </form>
-        </div>
-        <!-- Owl mascot SVG -->
-        <div class="fade-in flex justify-center lg:justify-end">
-          <svg width="180" height="200" viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-20">
-            <!-- Owl body -->
-            <ellipse cx="90" cy="130" rx="60" ry="65" stroke="white" stroke-width="1.5"/>
-            <!-- Owl head -->
-            <circle cx="90" cy="70" r="40" stroke="white" stroke-width="1.5"/>
-            <!-- Left ear tuft -->
-            <path d="M60 40 L50 15 L70 35" stroke="white" stroke-width="1.5" fill="none"/>
-            <!-- Right ear tuft -->
-            <path d="M120 40 L130 15 L110 35" stroke="white" stroke-width="1.5" fill="none"/>
-            <!-- Left eye -->
-            <circle cx="75" cy="68" r="12" stroke="white" stroke-width="1.5"/>
-            <circle cx="75" cy="68" r="5" fill="white" opacity="0.3"/>
-            <!-- Right eye -->
-            <circle cx="105" cy="68" r="12" stroke="white" stroke-width="1.5"/>
-            <circle cx="105" cy="68" r="5" fill="white" opacity="0.3"/>
-            <!-- Beak -->
-            <path d="M85 78 L90 88 L95 78" stroke="white" stroke-width="1.5" fill="none"/>
-            <!-- Chest pattern -->
-            <path d="M70 110 Q90 130 110 110" stroke="white" stroke-width="1" opacity="0.5"/>
-            <path d="M73 120 Q90 140 107 120" stroke="white" stroke-width="1" opacity="0.4"/>
-            <path d="M76 130 Q90 150 104 130" stroke="white" stroke-width="1" opacity="0.3"/>
-            <!-- Feet -->
-            <path d="M75 193 L65 200 M75 193 L75 200 M75 193 L85 200" stroke="white" stroke-width="1.5"/>
-            <path d="M105 193 L95 200 M105 193 L105 200 M105 193 L115 200" stroke="white" stroke-width="1.5"/>
-            <!-- Wing left -->
-            <path d="M30 130 Q25 100 45 85" stroke="white" stroke-width="1" opacity="0.5"/>
-            <!-- Wing right -->
-            <path d="M150 130 Q155 100 135 85" stroke="white" stroke-width="1" opacity="0.5"/>
-          </svg>
-        </div>
-      </div>
+  <!-- CTA -->
+  <section id="contact" class="section">
+    <div class="cta-banner reveal">
+      <h2>Ready to immerse<br>your audience?</h2>
+      <p>Let's create something extraordinary together. Tell us about your project and we'll show you what's possible.</p>
+      <button class="cta-banner-btn">
+        Start a project
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </button>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="py-16 bg-[#0a0a0a] px-6 md:px-10 text-gray-500">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid md:grid-cols-4 gap-10 mb-12">
-        <div>
-          <a href="#" class="font-heading text-xl font-semibold text-white tracking-tight">Meridian</a>
-          <p class="text-sm mt-3 leading-relaxed">Immersive digital experiences that convert attention into action.</p>
-        </div>
-        <div>
-          <p class="nav-spaced text-gray-600 mb-4">Navigate</p>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#work" class="hover:text-white transition-colors duration-200">Work</a></li>
-            <li><a href="#services" class="hover:text-white transition-colors duration-200">Services</a></li>
-            <li><a href="#about" class="hover:text-white transition-colors duration-200">About</a></li>
-            <li><a href="#stories" class="hover:text-white transition-colors duration-200">Stories</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="nav-spaced text-gray-600 mb-4">Connect</p>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="hover:text-white transition-colors duration-200">LinkedIn</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">Instagram</a></li>
-            <li><a href="#" class="hover:text-white transition-colors duration-200">Dribbble</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="nav-spaced text-gray-600 mb-4">Contact</p>
-          <ul class="space-y-2 text-sm">
-            <li>hello@meridian.studio</li>
-            <li>+32 2 123 45 67</li>
-            <li>Brussels, Belgium</li>
-          </ul>
-        </div>
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="font-size:1.5rem;">immerse</a>
+        <p>Conversion through immersion. We build digital experiences that move people and move metrics.</p>
       </div>
-      <div class="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p class="text-xs text-gray-600">&copy; 2026 Meridian Studio. All rights reserved.</p>
-        <div class="flex gap-6 text-xs text-gray-600">
-          <a href="#" class="hover:text-white transition-colors duration-200">Privacy</a>
-          <a href="#" class="hover:text-white transition-colors duration-200">Terms</a>
-          <a href="#" class="hover:text-white transition-colors duration-200">Cookies</a>
-        </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#">VR Experiences</a>
+        <a href="#">AR Applications</a>
+        <a href="#">3D Web</a>
+        <a href="#">Interactive</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">LinkedIn</a>
+        <a href="#">Instagram</a>
+        <a href="#">Dribbble</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 Immerse Studio. All rights reserved.</span>
+      <div class="footer-socials">
+        <a href="#" aria-label="LinkedIn">Li</a>
+        <a href="#" aria-label="Instagram">Ig</a>
+        <a href="#" aria-label="Dribbble">Dr</a>
       </div>
     </div>
   </footer>
 
+  <!-- Cookie consent -->
+  <div class="cookie-bar" id="cookieBar" role="dialog" aria-label="Cookie consent">
+    <p>This website uses cookies to ensure you get the best experience on our website. <a href="#">privacy policy</a></p>
+    <div class="cookie-bar-actions">
+      <button class="cookie-accept" onclick="document.getElementById('cookieBar').style.display='none'">Okay</button>
+      <button class="cookie-decline" onclick="document.getElementById('cookieBar').style.display='none'">Decline</button>
+    </div>
+  </div>
+
   <script>
-    // Scroll-triggered fade-in (repeating)
-    const fadeEls = document.querySelectorAll('.fade-in');
-    const fadeObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
-    fadeEls.forEach(el => fadeObserver.observe(el));
+    // Nav scroll effect
+    const nav = document.getElementById('main-nav');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+      lastScroll = window.scrollY;
+    }, { passive: true });
+
+    // Mobile menu
+    const mobileMenu = document.getElementById('mobileMenu');
+    document.getElementById('menuOpenBtn').addEventListener('click', () => mobileMenu.classList.add('open'));
+    document.getElementById('menuCloseBtn').addEventListener('click', () => mobileMenu.classList.remove('open'));
+    function closeMobileMenu() { mobileMenu.classList.remove('open'); }
 
     // Drag carousel
     const carousel = document.getElementById('carousel');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+    let isDown = false, startX, scrollLeft;
+    carousel.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - carousel.offsetLeft; scrollLeft = carousel.scrollLeft; });
+    carousel.addEventListener('mouseleave', () => { isDown = false; });
+    carousel.addEventListener('mouseup', () => { isDown = false; });
+    carousel.addEventListener('mousemove', (e) => { if (!isDown) return; e.preventDefault(); const x = e.pageX - carousel.offsetLeft; carousel.scrollLeft = scrollLeft - (x - startX) * 1.5; });
 
-    carousel.addEventListener('mousedown', (e) => {
-      isDown = true;
-      carousel.style.cursor = 'grabbing';
-      startX = e.pageX - carousel.offsetLeft;
-      scrollLeft = carousel.scrollLeft;
-    });
-    carousel.addEventListener('mouseleave', () => {
-      isDown = false;
-      carousel.style.cursor = 'grab';
-    });
-    carousel.addEventListener('mouseup', () => {
-      isDown = false;
-      carousel.style.cursor = 'grab';
-    });
-    carousel.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - carousel.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      carousel.scrollLeft = scrollLeft - walk;
-    });
-
-    // Counter animation
-    const counters = document.querySelectorAll('[data-count]');
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const target = parseInt(entry.target.dataset.count);
-          let current = 0;
-          const increment = target / 40;
-          const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-              entry.target.textContent = target;
-              clearInterval(timer);
-            } else {
-              entry.target.textContent = Math.floor(current);
-            }
-          }, 30);
-          counterObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-    counters.forEach(el => counterObserver.observe(el));
-
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    // Nav background on scroll
-    const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        nav.style.borderColor = '#e5e5e5';
-      } else {
-        nav.style.borderColor = '#f5f5f5';
-      }
-    });
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>

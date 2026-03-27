@@ -3,757 +3,1133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>062 — Tactical Telemetry</title>
+  <title>GridGov — Unify Your APIs</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0a;
-      --bg-subtle: #111111;
-      --text: #00ff41;
-      --text-dim: #00cc33;
-      --border: #333333;
-      --muted: #666666;
-      --accent: #ff3333;
-      --font-macro: 'Space Grotesk', sans-serif;
-      --font-micro: 'JetBrains Mono', monospace;
+      --white: #ffffff;
+      --bg: #fafafa;
+      --bg-subtle: #f5f5f5;
+      --text: #0f0f0f;
+      --text-secondary: #555555;
+      --text-muted: #999999;
+      --border: #e5e5e5;
+      --border-light: #eeeeee;
+      --green: #1a9a5b;
+      --green-hover: #158a50;
+      --green-light: #e8f5ee;
+      --green-bg: #f0faf5;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'JetBrains Mono', 'Menlo', 'Monaco', monospace;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: var(--font-micro);
-      background: var(--bg);
+      font-family: var(--font);
+      background: var(--white);
       color: var(--text);
       overflow-x: hidden;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── Scanline overlay ── */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.15) 2px,
-        rgba(0, 0, 0, 0.15) 4px
-      );
-    }
-
-    /* ── CRT flicker ── */
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      92% { opacity: 1; }
-      93% { opacity: 0.8; }
-      94% { opacity: 1; }
-      96% { opacity: 0.9; }
-      97% { opacity: 1; }
-    }
-    body { animation: flicker 8s infinite; }
-
-    /* ── Typewriter ── */
-    @keyframes typewriter {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes blink-caret {
-      0%, 100% { border-color: var(--text); }
-      50% { border-color: transparent; }
-    }
-    .typewriter {
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 3px solid var(--text);
-      animation: typewriter 2.5s steps(28) 0.5s 1 normal both,
-                 blink-caret 0.75s step-end infinite;
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    /* ── Shared ── */
-    .border-all { border: 1px solid var(--border); }
-    .border-b { border-bottom: 1px solid var(--border); }
-    .border-t { border-top: 1px solid var(--border); }
-    .font-macro { font-family: var(--font-macro); font-weight: 700; }
-    .font-micro { font-family: var(--font-micro); }
-    .text-accent { color: var(--accent); }
-    .text-muted { color: var(--muted); }
-    .text-dim { color: var(--text-dim); }
-    .bg-subtle { background: var(--bg-subtle); }
-    .uppercase { text-transform: uppercase; }
-    .tracking-wide { letter-spacing: 0.1em; }
-    .tracking-tight { letter-spacing: -0.02em; }
-
-    /* ── Nav ── */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
+    /* ── Announcement Bar ── */
+    .announcement {
       background: var(--bg);
       border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      height: 48px;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .announcement a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .announcement a:hover { text-decoration: underline; }
+
+    /* ── Navigation ── */
+    nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
+      padding: 0 40px;
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    nav a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    nav a:hover { color: var(--text); }
-    .nav-links { display: flex; gap: 24px; }
-    .nav-brand { color: var(--text); font-weight: 700; font-size: 13px; }
-    .nav-status {
+    .nav-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 36px;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
       color: var(--text);
-      font-size: 10px;
+      text-decoration: none;
+      letter-spacing: -0.03em;
     }
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--text);
-      display: inline-block;
-      animation: blink-caret 1s step-end infinite;
+    .logo span { color: var(--green); }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
     }
-
-    /* ── Container ── */
-    .container {
-      max-width: 1152px;
-      margin: 0 auto;
-      padding: 0 24px;
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.15s;
     }
+    .nav-links a:hover { color: var(--text); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .btn-text:hover { color: var(--text); }
+    .btn-primary {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+      font-family: var(--font);
+    }
+    .btn-primary:hover { background: var(--green-hover); }
 
     /* ── Hero ── */
     .hero {
-      padding: 120px 0 64px;
-      position: relative;
-    }
-    .hero-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 72px 40px 64px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-content h1 {
+      font-size: 54px;
+      font-weight: 900;
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .hero-content p {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 440px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .btn-hero-primary {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+      font-family: var(--font);
+    }
+    .btn-hero-primary:hover { background: var(--green-hover); }
+    .btn-hero-secondary {
+      background: transparent;
+      color: var(--text);
       border: 1px solid var(--border);
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-family: var(--font);
     }
-    .hero-main {
-      padding: 48px 40px;
+    .btn-hero-secondary:hover {
+      border-color: #ccc;
+      background: var(--bg);
+    }
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .hero-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .hero-link:hover { color: var(--green); }
+    .hero-link svg { width: 16px; height: 16px; }
+
+    /* ── Dashboard Mockup ── */
+    .dashboard-mockup {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .dash-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .dash-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dash-dot.red { background: #ff5f57; }
+    .dash-dot.yellow { background: #febc2e; }
+    .dash-dot.green { background: #28c840; }
+    .dash-tab-bar {
+      display: flex;
+      gap: 0;
+      margin-left: 16px;
+    }
+    .dash-tab {
+      padding: 4px 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: default;
+    }
+    .dash-tab.active {
+      background: var(--white);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .dash-body {
+      display: grid;
+      grid-template-columns: 156px 1fr;
+      min-height: 380px;
+    }
+    .dash-sidebar {
       border-right: 1px solid var(--border);
+      padding: 14px 0;
+      background: var(--bg);
     }
-    .hero-side {
-      padding: 48px 40px;
+    .dash-sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: default;
+      font-weight: 500;
+    }
+    .dash-sidebar-item.active {
+      background: var(--white);
+      color: var(--text);
+      font-weight: 600;
+      border-right: 2px solid var(--green);
+    }
+    .dash-sidebar-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: var(--border);
+    }
+    .dash-sidebar-item.active .dash-sidebar-icon {
+      background: var(--green-light);
+      border: 1px solid var(--green);
+    }
+    .dash-main {
+      padding: 18px;
+    }
+    .dash-main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .dash-main-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      font-family: var(--mono);
+    }
+    .dash-main-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .dash-time-select {
+      display: flex;
+      gap: 0;
+      background: var(--bg);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .dash-time-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      font-family: var(--font);
+      cursor: default;
+      font-weight: 500;
+    }
+    .dash-time-btn.active {
+      background: var(--white);
+      color: var(--text);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    /* Stats Row */
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .dash-stat {
+      padding: 10px 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+    .dash-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .dash-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .dash-stat-change {
+      font-size: 10px;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+    .dash-stat-change.up { color: var(--green); }
+    .dash-stat-change.down { color: #e5484d; }
+
+    /* Chart */
+    .dash-chart {
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      padding: 14px;
+    }
+    .dash-chart-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .chart-area {
+      height: 80px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .chart-grid {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-    .hero h1 {
-      font-family: var(--font-macro);
-      font-weight: 700;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      line-height: 1;
-      margin-bottom: 24px;
+    .chart-grid-line {
+      height: 1px;
+      background: var(--border-light);
+      width: 100%;
     }
-    .hero-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 480px;
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 1;
     }
-    .ascii-frame {
-      font-size: 11px;
-      color: var(--border);
-      line-height: 1.4;
-      white-space: pre;
-      font-family: var(--font-micro);
+    .chart-bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      min-width: 3px;
+      transition: opacity 0.15s;
     }
-    .hero-meta {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 32px;
-    }
-    .meta-item {
-      border: 1px solid var(--border);
-      padding: 12px 16px;
-    }
-    .meta-label {
+    .chart-bar:hover { opacity: 0.8; }
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
       font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .meta-value {
-      font-size: 18px;
-      font-family: var(--font-macro);
-      font-weight: 700;
+      color: var(--text-muted);
     }
 
-    /* ── Status Bar ── */
-    .status-bar {
-      background: var(--bg-subtle);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 0;
+    /* Line chart */
+    .line-chart-container {
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      padding: 14px;
+      margin-top: 10px;
     }
-    .status-inner {
+    .line-chart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
+      margin-bottom: 10px;
     }
-    .status-item { display: flex; align-items: center; gap: 8px; }
-    .status-ok { color: var(--text); }
-    .status-warn { color: var(--accent); }
-
-    /* ── Features Grid ── */
-    .features {
-      padding: 64px 0;
+    .line-chart-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
     }
-    .section-header {
+    .line-chart-legend {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 32px;
-      padding-bottom: 12px;
+      gap: 10px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+    .legend-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    /* ── Logos Bar ── */
+    .logos-section {
+      border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+      padding: 40px;
+      text-align: center;
     }
-    .section-title {
-      font-family: var(--font-macro);
+    .logos-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+    .logos-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 48px;
+      max-width: 900px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .logo-item {
+      font-size: 17px;
       font-weight: 700;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
+      color: #c5c5c5;
+      letter-spacing: -0.01em;
     }
-    .section-label {
-      font-size: 10px;
+
+    /* ── Features Section ── */
+    .features-section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    .features-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .features-label {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .features-header h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .features-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
     .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .feature-card {
+      padding: 28px;
       border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--white);
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
-    .feature-cell {
-      padding: 32px 24px;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      transition: background 0.2s;
-    }
-    .feature-cell:hover { background: var(--bg-subtle); }
-    .feature-cell:nth-child(3n) { border-right: none; }
-    .feature-cell:nth-last-child(-n+3) { border-bottom: none; }
-    .feature-idx {
-      font-size: 9px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      margin-bottom: 16px;
-    }
-    .feature-name {
-      font-family: var(--font-macro);
-      font-weight: 700;
-      font-size: 18px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .feature-desc {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
+    .feature-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border-color: #ddd;
     }
     .feature-icon {
-      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 16px;
-      color: var(--text-dim);
     }
-
-    /* ── Dashboard ── */
-    .dashboard {
-      padding: 64px 0;
-      background: var(--bg-subtle);
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--green);
     }
-    .dash-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 0;
-      border: 1px solid var(--border);
-    }
-    .dash-main {
-      padding: 32px;
-      border-right: 1px solid var(--border);
-    }
-    .dash-sidebar {
-      display: flex;
-      flex-direction: column;
-    }
-    .dash-sidebar-item {
-      padding: 24px;
-      border-bottom: 1px solid var(--border);
-      flex: 1;
-    }
-    .dash-sidebar-item:last-child { border-bottom: none; }
-    .threat-bar {
-      height: 4px;
-      background: var(--border);
-      margin-top: 12px;
-      position: relative;
-    }
-    .threat-fill {
-      height: 100%;
-      background: var(--accent);
-      transition: width 0.3s;
-    }
-    .log-entry {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(51,51,51,0.5);
-      font-size: 11px;
-      display: flex;
-      gap: 16px;
-    }
-    .log-time { color: var(--muted); white-space: nowrap; }
-    .log-event { color: var(--text); }
-    .log-critical { color: var(--accent); }
-
-    /* ── CTA ── */
-    .cta-section {
-      padding: 80px 0;
-    }
-    .cta-box {
-      border: 2px solid var(--accent);
-      padding: 48px;
-      text-align: center;
-      position: relative;
-    }
-    .cta-box::before {
-      content: '◉ PRIORITY ALERT ◉';
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--bg);
-      padding: 0 16px;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .cta-title {
-      font-family: var(--font-macro);
+    .feature-card h3 {
+      font-size: 16px;
       font-weight: 700;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── Code Section ── */
+    .code-section {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .code-content h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
       margin-bottom: 16px;
     }
-    .cta-desc {
+    .code-content p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .code-block {
+      background: #1a1a2e;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px;
+      background: #141428;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .code-block-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .code-block-title {
+      font-size: 12px;
+      color: #777;
+      margin-left: 8px;
+      font-family: var(--mono);
+    }
+    .code-block pre {
+      padding: 20px;
+      font-family: var(--mono);
       font-size: 13px;
-      color: var(--muted);
+      line-height: 1.7;
+      color: #e0e0f0;
+      overflow-x: auto;
+    }
+    .code-keyword { color: #c792ea; }
+    .code-string { color: #c3e88d; }
+    .code-comment { color: #546e7a; }
+    .code-fn { color: #82aaff; }
+    .code-type { color: #ffcb6b; }
+
+    /* ── Metrics Section ── */
+    .metrics-section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    .metrics-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .metrics-header h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .metrics-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .metric-card {
+      text-align: center;
+      padding: 32px 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--white);
+    }
+    .metric-number {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
+    .metric-unit {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .metric-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      padding: 80px 40px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--text-secondary);
       margin-bottom: 32px;
-      max-width: 500px;
+      max-width: 480px;
       margin-left: auto;
       margin-right: auto;
     }
-    .btn-primary {
-      display: inline-block;
-      background: var(--accent);
-      color: var(--bg);
-      padding: 14px 32px;
-      font-family: var(--font-micro);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-primary:hover { background: #cc2929; }
-    .btn-secondary {
-      display: inline-block;
-      border: 1px solid var(--text);
-      color: var(--text);
-      padding: 14px 32px;
-      font-family: var(--font-micro);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      text-decoration: none;
-      margin-left: 16px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn-secondary:hover {
-      background: var(--text);
-      color: var(--bg);
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
     }
 
     /* ── Footer ── */
     footer {
-      background: var(--bg-subtle);
       border-top: 1px solid var(--border);
-      padding: 48px 0;
+      padding: 48px 40px;
+      max-width: 1280px;
+      margin: 0 auto;
     }
     .footer-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 32px;
-      font-size: 11px;
+      grid-template-columns: 2fr repeat(4, 1fr);
+      gap: 40px;
+      margin-bottom: 40px;
     }
-    .footer-brand {
-      font-family: var(--font-macro);
-      font-weight: 700;
-      font-size: 16px;
-      text-transform: uppercase;
+    .footer-brand .logo {
+      display: inline-block;
       margin-bottom: 12px;
     }
-    .footer-copy {
-      color: var(--muted);
-      font-size: 10px;
+    .footer-brand p {
+      font-size: 13px;
+      color: var(--text-muted);
       line-height: 1.6;
+      max-width: 240px;
     }
-    .footer-heading {
-      font-size: 9px;
+    .footer-col h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      margin-bottom: 12px;
+      letter-spacing: 0.06em;
     }
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .footer-links a {
-      color: var(--text-dim);
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      font-size: 13px;
+      color: var(--text-secondary);
       text-decoration: none;
-      font-size: 11px;
-      transition: color 0.2s;
+      transition: color 0.15s;
     }
-    .footer-links a:hover { color: var(--text); }
+    .footer-col a:hover { color: var(--text); }
     .footer-bottom {
-      margin-top: 32px;
-      padding-top: 16px;
       border-top: 1px solid var(--border);
+      padding-top: 24px;
       display: flex;
       justify-content: space-between;
-      font-size: 9px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
     }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .hero-main { border-right: none; border-bottom: 1px solid var(--border); }
-      .features-grid { grid-template-columns: 1fr; }
-      .feature-cell { border-right: none !important; }
-      .feature-cell:last-child { border-bottom: none; }
-      .dash-grid { grid-template-columns: 1fr; }
-      .dash-main { border-right: none; border-bottom: 1px solid var(--border); }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .hero-meta { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      .cta-box { padding: 32px 20px; }
-      .btn-secondary { margin-left: 0; margin-top: 12px; display: block; }
+    .footer-links {
+      display: flex;
+      gap: 20px;
     }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text); }
   </style>
 </head>
 <body>
+  <!-- Announcement Bar -->
+  <div class="announcement">
+    GridGov has been acquired by The Guild. <a href="#">Read the announcement &rarr;</a>
+  </div>
 
-  <!-- ── NAV ── -->
+  <!-- Navigation -->
   <nav>
-    <div style="display:flex;align-items:center;gap:24px;">
-      <span class="nav-brand">◎ AEGIS</span>
-      <div class="nav-links">
-        <a href="#features">Systems</a>
-        <a href="#dashboard">Telemetry</a>
-        <a href="#deploy">Deploy</a>
-      </div>
+    <div class="nav-left">
+      <a href="#" class="logo">Grid<span>Gov</span></a>
+      <ul class="nav-links">
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Solutions</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Enterprise</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Docs</a></li>
+      </ul>
     </div>
-    <div class="nav-status">
-      <span class="text-muted">SYS.STATUS</span>
-      <span class="status-dot"></span>
-      <span>OPERATIONAL</span>
+    <div class="nav-right">
+      <a href="#" class="btn-text">Sign in</a>
+      <a href="#" class="btn-primary">Get started</a>
     </div>
   </nav>
 
-  <!-- ── HERO ── -->
+  <!-- Hero Section -->
   <section class="hero">
-    <div class="container">
-      <div class="ascii-frame" style="margin-bottom:16px;">┌─── AEGIS DEFENSE SYSTEM v4.2.1 ───────────────────────────────────┐</div>
-      <div class="hero-grid">
-        <div class="hero-main">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.2em;color:var(--muted);margin-bottom:24px;">◉ THREAT DETECTION &amp; RESPONSE PLATFORM</div>
-          <h1><span class="typewriter">AEGIS SHIELD</span></h1>
-          <p class="hero-desc">
-            Autonomous threat detection engine. Real-time network telemetry analysis with sub-millisecond response. Zero-trust architecture. Military-grade encryption protocols.
-          </p>
-          <div style="margin-top:32px;display:flex;gap:16px;flex-wrap:wrap;">
-            <a href="#deploy" class="btn-primary">Initialize System</a>
-            <a href="#dashboard" class="btn-secondary">View Telemetry</a>
-          </div>
-        </div>
-        <div class="hero-side">
-          <div class="ascii-frame">
-│ SCAN REPORT             │
-│ ─────────────────────── │
-│ Endpoints:    14,892    │
-│ Threats:      0 active  │
-│ Latency:      0.3ms     │
-│ Uptime:       99.997%   │
-│ Protocol:     AES-256   │
-│ Last sweep:   NOW       │
-          </div>
-          <div class="hero-meta">
-            <div class="meta-item">
-              <div class="meta-label">Threats Blocked</div>
-              <div class="meta-value">2.4M</div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Response Time</div>
-              <div class="meta-value">0.3<span style="font-size:12px;color:var(--muted);">ms</span></div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Endpoints</div>
-              <div class="meta-value">14.8K</div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Uptime</div>
-              <div class="meta-value text-accent">99.99<span style="font-size:12px;">%</span></div>
-            </div>
-          </div>
-        </div>
+    <div class="hero-content">
+      <h1>Unify your APIs.<br>Govern your AI.</h1>
+      <p>Enterprise-grade governance, control, and observability for your APIs and AI apps.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-hero-primary">Try it for free</a>
+        <a href="#" class="btn-hero-secondary">Contact Sales</a>
       </div>
-      <div class="ascii-frame" style="margin-top:-1px;">└───────────────────────────────────────────────────────────────────┘</div>
+      <div class="hero-note">Try free for 90 days, no credit card required.</div>
+      <a href="#" class="hero-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+        See how our platform works
+      </a>
     </div>
-  </section>
 
-  <!-- ── STATUS BAR ── -->
-  <div class="status-bar">
-    <div class="container">
-      <div class="status-inner">
-        <div class="status-item status-ok">
-          <span class="status-dot"></span>
-          <span>FIREWALL: ACTIVE</span>
-        </div>
-        <div class="status-item status-ok">
-          <span class="status-dot"></span>
-          <span>IDS: MONITORING</span>
-        </div>
-        <div class="status-item status-warn">
-          <span style="color:var(--accent);">▣</span>
-          <span>THREAT LEVEL: ELEVATED</span>
-        </div>
-        <div class="status-item status-ok">
-          <span class="status-dot"></span>
-          <span>ENCRYPTION: AES-256</span>
+    <!-- Dashboard Mockup -->
+    <div class="dashboard-mockup">
+      <div class="dash-header">
+        <div class="dash-dot red"></div>
+        <div class="dash-dot yellow"></div>
+        <div class="dash-dot green"></div>
+        <div class="dash-tab-bar">
+          <div class="dash-tab active">Overview</div>
+          <div class="dash-tab">Analytics</div>
+          <div class="dash-tab">Logs</div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ── FEATURES ── -->
-  <section class="features" id="features">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Core Systems</h2>
-        <span class="section-label">SYS.MODULES // 6 ACTIVE</span>
-      </div>
-      <div class="features-grid">
-        <div class="feature-cell">
-          <div class="feature-idx">SYS.001</div>
-          <div class="feature-icon">├─</div>
-          <div class="feature-name">Neural IDS</div>
-          <div class="feature-desc">Deep-learning intrusion detection. Pattern recognition across 400+ attack vectors with self-evolving rulesets.</div>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-idx">SYS.002</div>
-          <div class="feature-icon">├─</div>
-          <div class="feature-name">Zero Trust</div>
-          <div class="feature-desc">Every packet authenticated. Continuous verification with cryptographic attestation at every network hop.</div>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-idx">SYS.003</div>
-          <div class="feature-icon">├─</div>
-          <div class="feature-name">Threat Intel</div>
-          <div class="feature-desc">Global threat feeds aggregated in real-time. Correlates IOCs across 12 intelligence sources simultaneously.</div>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-idx">SYS.004</div>
-          <div class="feature-icon">├─</div>
-          <div class="feature-name">Auto Response</div>
-          <div class="feature-desc">Autonomous containment in under 1ms. Isolates compromised segments without human intervention.</div>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-idx">SYS.005</div>
-          <div class="feature-icon">├─</div>
-          <div class="feature-name">Forensics</div>
-          <div class="feature-desc">Full packet capture with 90-day retention. Reconstruct attack timelines with nanosecond precision.</div>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-idx">SYS.006</div>
-          <div class="feature-icon">└─</div>
-          <div class="feature-name">Compliance</div>
-          <div class="feature-desc">SOC2, ISO 27001, HIPAA, FedRAMP automated compliance reporting with continuous audit trails.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── DASHBOARD ── -->
-  <section class="dashboard" id="dashboard">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Live Telemetry</h2>
-        <span class="section-label">FEED // REAL-TIME</span>
-      </div>
-      <div class="dash-grid">
-        <div class="dash-main">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.2em;color:var(--muted);margin-bottom:16px;">◉ EVENT LOG — LAST 24H</div>
-          <div class="log-entry">
-            <span class="log-time">03:42:17</span>
-            <span class="log-event">Port scan detected on 10.0.4.x — blocked 342 probes</span>
-          </div>
-          <div class="log-entry">
-            <span class="log-time">03:41:58</span>
-            <span class="log-critical">◉ SQL injection attempt — origin: 185.220.x.x — NEUTRALIZED</span>
-          </div>
-          <div class="log-entry">
-            <span class="log-time">03:41:33</span>
-            <span class="log-event">Certificate rotation completed — 892 endpoints updated</span>
-          </div>
-          <div class="log-entry">
-            <span class="log-time">03:40:12</span>
-            <span class="log-event">Firewall rule #4471 auto-generated from threat intel feed</span>
-          </div>
-          <div class="log-entry">
-            <span class="log-time">03:39:47</span>
-            <span class="log-critical">◉ Brute force attempt — origin: 91.134.x.x — IP BANNED</span>
-          </div>
-          <div class="log-entry">
-            <span class="log-time">03:38:22</span>
-            <span class="log-event">Anomaly score threshold adjusted: 0.72 → 0.68</span>
-          </div>
-          <div class="log-entry">
-            <span class="log-time">03:37:01</span>
-            <span class="log-event">Network segment 10.0.7.x — health check passed</span>
-          </div>
-          <div class="log-entry" style="border-bottom:none;">
-            <span class="log-time">03:36:44</span>
-            <span class="log-event">Threat intel update — 1,247 new IOCs ingested</span>
-          </div>
-        </div>
+      <div class="dash-body">
         <div class="dash-sidebar">
-          <div class="dash-sidebar-item">
-            <div class="meta-label">Threat Level</div>
-            <div class="meta-value text-accent" style="font-size:24px;">ELEVATED</div>
-            <div class="threat-bar"><div class="threat-fill" style="width:65%;"></div></div>
+          <div class="dash-sidebar-item active">
+            <div class="dash-sidebar-icon"></div>
+            api/main
           </div>
           <div class="dash-sidebar-item">
-            <div class="meta-label">Packets Analyzed</div>
-            <div class="meta-value" style="font-size:20px;">847.2M</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:4px;">↑ 12.4% vs yesterday</div>
+            <div class="dash-sidebar-icon"></div>
+            Requests
           </div>
           <div class="dash-sidebar-item">
-            <div class="meta-label">Active Rules</div>
-            <div class="meta-value" style="font-size:20px;">4,471</div>
-            <div style="font-size:10px;color:var(--text-dim);margin-top:4px;">+23 auto-generated</div>
+            <div class="dash-sidebar-icon"></div>
+            Subgraphs
           </div>
           <div class="dash-sidebar-item">
-            <div class="meta-label">Blocked Today</div>
-            <div class="meta-value text-accent" style="font-size:20px;">12,847</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:4px;">342 port scans, 2 injections</div>
+            <div class="dash-sidebar-icon"></div>
+            Policies
+          </div>
+          <div class="dash-sidebar-item">
+            <div class="dash-sidebar-icon"></div>
+            Settings
+          </div>
+        </div>
+        <div class="dash-main">
+          <div class="dash-main-header">
+            <div>
+              <div class="dash-main-title">api/main</div>
+              <div class="dash-main-subtitle">Requests &middot; 24h</div>
+            </div>
+            <div class="dash-time-select">
+              <div class="dash-time-btn">1h</div>
+              <div class="dash-time-btn active">24h</div>
+              <div class="dash-time-btn">7d</div>
+              <div class="dash-time-btn">30d</div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="dash-stats">
+            <div class="dash-stat">
+              <div class="dash-stat-label">Requests</div>
+              <div class="dash-stat-value">12.4k<span class="dash-stat-change up">+8%</span></div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-label">P95 Latency</div>
+              <div class="dash-stat-value">23ms<span class="dash-stat-change up">-12%</span></div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-label">Error Rate</div>
+              <div class="dash-stat-value">0.3%<span class="dash-stat-change down">+0.1%</span></div>
+            </div>
+          </div>
+
+          <!-- Bar Chart -->
+          <div class="dash-chart">
+            <div class="dash-chart-title">Request Volume</div>
+            <div class="chart-area">
+              <div class="chart-grid">
+                <div class="chart-grid-line"></div>
+                <div class="chart-grid-line"></div>
+                <div class="chart-grid-line"></div>
+                <div class="chart-grid-line"></div>
+              </div>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height:45%;background:var(--green);opacity:0.65"></div>
+                <div class="chart-bar" style="height:62%;background:var(--green);opacity:0.7"></div>
+                <div class="chart-bar" style="height:38%;background:var(--green);opacity:0.6"></div>
+                <div class="chart-bar" style="height:72%;background:var(--green);opacity:0.75"></div>
+                <div class="chart-bar" style="height:55%;background:var(--green);opacity:0.65"></div>
+                <div class="chart-bar" style="height:85%;background:var(--green);opacity:0.85"></div>
+                <div class="chart-bar" style="height:68%;background:var(--green);opacity:0.75"></div>
+                <div class="chart-bar" style="height:42%;background:var(--green);opacity:0.6"></div>
+                <div class="chart-bar" style="height:78%;background:var(--green);opacity:0.8"></div>
+                <div class="chart-bar" style="height:90%;background:var(--green);opacity:0.9"></div>
+                <div class="chart-bar" style="height:65%;background:var(--green);opacity:0.7"></div>
+                <div class="chart-bar" style="height:52%;background:var(--green);opacity:0.65"></div>
+                <div class="chart-bar" style="height:80%;background:var(--green);opacity:0.8"></div>
+                <div class="chart-bar" style="height:95%;background:var(--green)"></div>
+                <div class="chart-bar" style="height:72%;background:var(--green);opacity:0.75"></div>
+                <div class="chart-bar" style="height:58%;background:var(--green);opacity:0.7"></div>
+                <div class="chart-bar" style="height:48%;background:var(--green);opacity:0.65"></div>
+                <div class="chart-bar" style="height:82%;background:var(--green);opacity:0.8"></div>
+                <div class="chart-bar" style="height:60%;background:var(--green);opacity:0.7"></div>
+                <div class="chart-bar" style="height:70%;background:var(--green);opacity:0.75"></div>
+                <div class="chart-bar" style="height:55%;background:var(--green);opacity:0.65"></div>
+                <div class="chart-bar" style="height:88%;background:var(--green);opacity:0.85"></div>
+                <div class="chart-bar" style="height:76%;background:var(--green);opacity:0.8"></div>
+                <div class="chart-bar" style="height:64%;background:var(--green);opacity:0.7"></div>
+              </div>
+            </div>
+            <div class="chart-labels">
+              <span>00:00</span>
+              <span>06:00</span>
+              <span>12:00</span>
+              <span>18:00</span>
+              <span>Now</span>
+            </div>
+          </div>
+
+          <!-- Line Chart -->
+          <div class="line-chart-container">
+            <div class="line-chart-header">
+              <div class="line-chart-title">P95 Latency &middot; 24h</div>
+              <div class="line-chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Current</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#ccc"></div>Previous</div>
+              </div>
+            </div>
+            <svg width="100%" height="50" viewBox="0 0 400 50" preserveAspectRatio="none">
+              <polyline points="0,40 20,37 40,33 60,35 80,28 100,30 120,24 140,26 160,22 180,19 200,24 220,20 240,17 260,20 280,15 300,18 320,12 340,15 360,17 380,13 400,11" fill="none" stroke="#ddd" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <polyline points="0,44 20,40 40,36 60,32 80,30 100,26 120,28 140,24 160,20 180,17 200,19 220,15 240,12 260,15 280,11 300,13 320,9 340,11 360,13 380,8 400,6" fill="none" stroke="#1a9a5b" stroke-width="2"/>
+            </svg>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── CTA ── -->
-  <section class="cta-section" id="deploy">
-    <div class="container">
-      <div class="cta-box">
-        <h2 class="cta-title">Deploy AEGIS Now</h2>
-        <p class="cta-desc">Initialize your perimeter defense in under 60 seconds. No agents required. Full network visibility from first packet.</p>
-        <div>
-          <a href="#" class="btn-primary">Start Deployment</a>
-          <a href="#" class="btn-secondary">Request Briefing</a>
+  <!-- Logos -->
+  <section class="logos-section">
+    <div class="logos-label">Trusted by engineering teams worldwide</div>
+    <div class="logos-grid">
+      <div class="logo-item">Meridian</div>
+      <div class="logo-item">Crestline</div>
+      <div class="logo-item">Nordvault</div>
+      <div class="logo-item">Arcline</div>
+      <div class="logo-item">Heliograph</div>
+      <div class="logo-item">Stratum</div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features-section">
+    <div class="features-header">
+      <div class="features-label">Platform</div>
+      <h2>Everything you need to manage APIs at scale</h2>
+      <p>From federated graphs to AI gateway policies, get full visibility and control across your entire API surface.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
+        <h3>Federated Gateway</h3>
+        <p>Compose multiple GraphQL services into a single unified API endpoint with automatic schema stitching.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>AI Governance</h3>
+        <p>Set policies for LLM usage, enforce rate limits, and audit AI API calls across your organization.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>Real-time Analytics</h3>
+        <p>Monitor latency, throughput, and error rates with sub-second resolution dashboards and alerts.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        </div>
+        <h3>Edge Caching</h3>
+        <p>Globally distributed caching layer that automatically invalidates when your data changes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <h3>Access Control</h3>
+        <p>Role-based permissions with field-level authorization and JWT validation built in.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>Schema Registry</h3>
+        <p>Version, validate, and track all API schema changes with automated compatibility checks.</p>
       </div>
     </div>
   </section>
 
-  <!-- ── FOOTER ── -->
+  <!-- Code Section -->
+  <section class="code-section">
+    <div class="code-inner">
+      <div class="code-content">
+        <h2>Deploy in minutes, not weeks</h2>
+        <p>Define your gateway configuration as code. Push to Git and your API gateway updates automatically. No manual deployments, no infrastructure to manage.</p>
+        <a href="#" class="btn-hero-primary">Read the docs</a>
+      </div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="code-block-dot" style="background:#ff5f57"></div>
+          <div class="code-block-dot" style="background:#febc2e"></div>
+          <div class="code-block-dot" style="background:#28c840"></div>
+          <span class="code-block-title">gridgov.config.ts</span>
+        </div>
+        <pre><span class="code-keyword">import</span> { <span class="code-fn">defineConfig</span> } <span class="code-keyword">from</span> <span class="code-string">'@gridgov/sdk'</span>
+
+<span class="code-keyword">export default</span> <span class="code-fn">defineConfig</span>({
+  <span class="code-type">gateway</span>: {
+    <span class="code-type">subgraphs</span>: [
+      { <span class="code-type">name</span>: <span class="code-string">'users'</span>, <span class="code-type">url</span>: <span class="code-string">'https://api.users.io'</span> },
+      { <span class="code-type">name</span>: <span class="code-string">'orders'</span>, <span class="code-type">url</span>: <span class="code-string">'https://api.orders.io'</span> },
+    ],
+    <span class="code-type">ai</span>: {
+      <span class="code-type">rateLimit</span>: { <span class="code-type">rpm</span>: <span class="code-string">1000</span>, <span class="code-type">tpm</span>: <span class="code-string">100000</span> },
+      <span class="code-type">audit</span>: <span class="code-keyword">true</span>,
+    },
+    <span class="code-type">cache</span>: { <span class="code-type">rules</span>: [{ <span class="code-type">maxAge</span>: <span class="code-string">60</span> }] },
+  }
+})</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics -->
+  <section class="metrics-section">
+    <div class="metrics-header">
+      <h2>Built for performance at any scale</h2>
+      <p>Numbers from production workloads across our global network</p>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-number">99.99%</div>
+        <div class="metric-unit">Uptime SLA</div>
+        <div class="metric-desc">Across all enterprise customers</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">&lt;8ms</div>
+        <div class="metric-unit">Median Latency</div>
+        <div class="metric-desc">Global edge network</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">50B+</div>
+        <div class="metric-unit">Requests / Month</div>
+        <div class="metric-desc">Processed through our gateway</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-number">280+</div>
+        <div class="metric-unit">Edge Locations</div>
+        <div class="metric-desc">Across 6 continents</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to unify your APIs?</h2>
+    <p>Start building with GridGov today. Free for 90 days, no credit card required.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-hero-primary">Start for free</a>
+      <a href="#" class="btn-hero-secondary">Talk to sales</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-brand">◎ AEGIS</div>
-          <div class="footer-copy">
-            Autonomous threat detection &amp; response platform.<br>
-            Military-grade network defense for enterprise infrastructure.
-          </div>
-        </div>
-        <div>
-          <div class="footer-heading">Systems</div>
-          <ul class="footer-links">
-            <li><a href="#">Neural IDS</a></li>
-            <li><a href="#">Zero Trust</a></li>
-            <li><a href="#">Threat Intel</a></li>
-            <li><a href="#">Forensics</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-heading">Resources</div>
-          <ul class="footer-links">
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">API Reference</a></li>
-            <li><a href="#">Status Page</a></li>
-            <li><a href="#">Changelog</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-heading">Company</div>
-          <ul class="footer-links">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Security</a></li>
-            <li><a href="#">Compliance</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-        </div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">Grid<span>Gov</span></a>
+        <p>Enterprise API governance and observability for modern engineering teams.</p>
       </div>
-      <div class="footer-bottom">
-        <span>◉ ◎ ▣ — AEGIS DEFENSE SYSTEMS — ALL RIGHTS RESERVED</span>
-        <span>BUILD 4.2.1 // TACTICAL TELEMETRY UI</span>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Gateway</a></li>
+          <li><a href="#">Analytics</a></li>
+          <li><a href="#">AI Governance</a></li>
+          <li><a href="#">Edge Cache</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">DPA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 GridGov, Inc. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#">Twitter</a>
+        <a href="#">GitHub</a>
+        <a href="#">Discord</a>
+        <a href="#">LinkedIn</a>
       </div>
     </div>
   </footer>
-
 </body>
 </html>

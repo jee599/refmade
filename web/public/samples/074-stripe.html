@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PayGrid — Financial Infrastructure for the Internet</title>
+  <title>PayGrid - Financial Infrastructure for the Internet</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Surt:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* Stripe's core palette */
       --slate-900: #0a2540;
       --slate-800: #425466;
       --slate-700: #506477;
       --slate-600: #6b7c93;
       --slate-500: #8898aa;
-      --slate-400: #a3acb9;
+      --slate-400: #adbdcc;
       --slate-300: #c1c9d2;
       --slate-200: #e3e8ee;
       --slate-100: #f6f9fc;
@@ -25,573 +24,1098 @@
       --blurple-dark: #5851db;
       --blurple-light: #7a73ff;
       --cyan: #00d4aa;
-      --cyan-dark: #00a67e;
+      --green: #34d399;
       --orange: #ff7a59;
-      --purple: #a960ee;
-      --yellow: #f5be58;
       --blue: #0073e6;
-      --bg-dark: #0a2540;
-      --bg-darker: #061829;
-
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-
-      --max-width: 1080px;
-      --max-width-wide: 1200px;
+      --max-width: 1200px;
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { font-family: var(--font-sans); color: var(--slate-900); background: var(--white); line-height: 1.6; overflow-x: hidden; }
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
-    img { max-width: 100%; display: block; }
 
     /* ───── Navigation ───── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       padding: 0 24px; height: 64px;
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(227,232,238,0.6);
+      transition: box-shadow 0.3s, border-color 0.3s;
     }
-    .nav--transparent { background: transparent; }
-    .nav--solid {
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--slate-200);
-      box-shadow: 0 1px 3px rgba(10,37,64,0.04);
-    }
-    .nav--solid .nav__logo,
-    .nav--solid .nav__link { color: var(--slate-900); }
-    .nav--solid .nav__link:hover { color: var(--blurple); }
-    .nav--solid .nav__signin { color: var(--slate-800); }
-    .nav--solid .nav__signin:hover { color: var(--slate-900); }
-
+    .nav--scrolled { box-shadow: 0 1px 8px rgba(10,37,64,0.06); border-bottom-color: var(--slate-200); }
     .nav__inner {
-      width: 100%; max-width: var(--max-width-wide);
+      width: 100%; max-width: var(--max-width);
       display: flex; align-items: center; justify-content: space-between;
     }
-    .nav__left { display: flex; align-items: center; gap: 32px; }
+    .nav__left { display: flex; align-items: center; gap: 36px; }
     .nav__logo {
-      font-size: 18px; font-weight: 700; letter-spacing: -0.02em;
-      color: var(--white); transition: color 0.3s;
-    }
-    .nav__links { display: flex; gap: 24px; }
-    .nav__link {
-      font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.8);
-      transition: color 0.2s; letter-spacing: -0.01em;
-    }
-    .nav__link:hover { color: var(--white); }
-    .nav__right { display: flex; align-items: center; gap: 16px; }
-    .nav__signin {
-      font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.8);
-      transition: color 0.2s;
-    }
-    .nav__signin:hover { color: var(--white); }
-    .nav__cta {
-      font-size: 15px; font-weight: 600; color: var(--white);
-      background: var(--blurple); padding: 6px 16px; border-radius: 20px;
-      transition: background 0.2s, transform 0.15s;
-      letter-spacing: -0.01em;
-    }
-    .nav__cta:hover { background: var(--blurple-dark); transform: translateY(-1px); }
-
-    /* ───── Hero Section — Stripe's signature dark gradient mesh ───── */
-    .hero {
-      position: relative; min-height: 100vh; overflow: hidden;
-      background: var(--bg-dark);
-      display: flex; align-items: center; justify-content: center;
-      padding: 120px 24px 100px;
-    }
-    .hero__mesh {
-      position: absolute; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 10% 80%, rgba(99,91,255,0.5) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(0,212,170,0.35) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(169,96,238,0.3) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(0,115,230,0.25) 0%, transparent 50%),
-        radial-gradient(ellipse 40% 50% at 20% 20%, rgba(245,190,88,0.15) 0%, transparent 50%);
-      animation: meshFloat 20s ease-in-out infinite alternate;
-    }
-    @keyframes meshFloat {
-      0% { transform: scale(1) translateY(0); opacity: 1; }
-      50% { transform: scale(1.05) translateY(-10px); opacity: 0.9; }
-      100% { transform: scale(1) translateY(5px); opacity: 1; }
-    }
-    .hero__content {
-      position: relative; z-index: 1; max-width: var(--max-width);
-      width: 100%; text-align: center;
-    }
-    .hero__eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px; padding: 6px 16px 6px 8px;
-      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7);
-      margin-bottom: 32px; backdrop-filter: blur(4px);
-      transition: background 0.2s;
-    }
-    .hero__eyebrow:hover { background: rgba(255,255,255,0.12); }
-    .hero__eyebrow-badge {
-      background: var(--blurple); color: var(--white);
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.06em; padding: 3px 8px; border-radius: 12px;
-    }
-    .hero__title {
-      font-size: clamp(42px, 7vw, 94px); font-weight: 700;
-      line-height: 1.06; letter-spacing: -0.035em;
-      color: var(--white); margin-bottom: 24px;
-    }
-    .hero__title-gradient {
-      background: linear-gradient(135deg, var(--blurple-light) 0%, var(--cyan) 50%, var(--purple) 100%);
+      font-size: 22px; font-weight: 800; letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--blurple), #7c3aed);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .hero__subtitle {
-      font-size: clamp(17px, 2vw, 20px); color: var(--slate-400);
-      max-width: 600px; margin: 0 auto 40px; line-height: 1.6;
-      letter-spacing: -0.01em;
+    .nav__links { display: flex; gap: 28px; }
+    .nav__link {
+      font-size: 15px; font-weight: 500; color: var(--slate-800);
+      transition: color 0.2s;
     }
-    .hero__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .nav__link:hover { color: var(--blurple); }
+    .nav__right { display: flex; align-items: center; gap: 16px; }
+    .nav__signin {
+      font-size: 15px; font-weight: 500; color: var(--slate-800);
+      transition: color 0.2s;
+    }
+    .nav__signin:hover { color: var(--slate-900); }
+    .nav__cta {
+      font-size: 15px; font-weight: 600; color: var(--white);
+      background: var(--blurple); padding: 8px 20px; border-radius: 24px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .nav__cta:hover { background: var(--blurple-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,91,255,0.25); }
+
+    /* ───── Hero Section ───── */
+    .hero {
+      position: relative; padding: 148px 24px 48px;
+      background: var(--white);
+      overflow: hidden;
+    }
+    .hero__blob {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      filter: blur(80px); opacity: 0.5;
+    }
+    .hero__blob--1 {
+      width: 600px; height: 600px;
+      top: -120px; right: -80px;
+      background: radial-gradient(circle, rgba(99,91,255,0.18) 0%, transparent 70%);
+      animation: blobFloat1 8s ease-in-out infinite;
+    }
+    .hero__blob--2 {
+      width: 500px; height: 500px;
+      bottom: -80px; left: -120px;
+      background: radial-gradient(circle, rgba(0,212,170,0.14) 0%, transparent 70%);
+      animation: blobFloat2 10s ease-in-out infinite;
+    }
+    .hero__blob--3 {
+      width: 400px; height: 400px;
+      top: 40%; left: 40%;
+      background: radial-gradient(circle, rgba(0,115,230,0.08) 0%, transparent 70%);
+      animation: blobFloat3 12s ease-in-out infinite;
+    }
+    @keyframes blobFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-30px, 20px) scale(1.05); }
+      66% { transform: translate(20px, -15px) scale(0.95); }
+    }
+    @keyframes blobFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(25px, -20px) scale(1.08); }
+      66% { transform: translate(-15px, 25px) scale(0.97); }
+    }
+    @keyframes blobFloat3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-20px, -20px) scale(1.1); }
+    }
+
+    .hero__inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: start;
+      position: relative; z-index: 1;
+    }
+    .hero__content { position: relative; z-index: 1; }
+    .hero__badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(99,91,255,0.07); color: var(--blurple);
+      font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 20px;
+      margin-bottom: 24px; letter-spacing: 0.03em; text-transform: uppercase;
+      border: 1px solid rgba(99,91,255,0.12);
+    }
+    .hero__badge::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blurple);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .hero__title {
+      font-size: clamp(38px, 4.8vw, 56px); font-weight: 700;
+      line-height: 1.08; letter-spacing: -0.035em;
+      color: var(--slate-900); margin-bottom: 20px;
+    }
+    .hero__subtitle {
+      font-size: 18px; color: var(--slate-600);
+      max-width: 500px; line-height: 1.65; margin-bottom: 36px;
+    }
+    .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--blurple); color: var(--white);
-      font-size: 16px; font-weight: 600; padding: 12px 24px;
+      font-size: 16px; font-weight: 600; padding: 13px 28px;
       border-radius: 24px; transition: all 0.2s;
-      letter-spacing: -0.01em;
     }
-    .btn-primary:hover { background: var(--blurple-dark); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99,91,255,0.4); }
+    .btn-primary:hover { background: var(--blurple-dark); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(99,91,255,0.3); }
     .btn-primary svg { transition: transform 0.2s; }
     .btn-primary:hover svg { transform: translateX(3px); }
-    .btn-secondary {
+    .btn-outline {
       display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(255,255,255,0.2); color: var(--white);
-      font-size: 16px; font-weight: 600; padding: 12px 24px;
-      border-radius: 24px; transition: all 0.2s;
-      letter-spacing: -0.01em; background: transparent;
+      border: 1.5px solid var(--slate-300); color: var(--slate-900);
+      font-size: 16px; font-weight: 600; padding: 12px 28px;
+      border-radius: 24px; transition: all 0.2s; background: transparent;
     }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
-    .btn-secondary--dark {
-      border-color: var(--slate-200); color: var(--slate-900);
-    }
-    .btn-secondary--dark:hover { border-color: var(--slate-900); background: var(--slate-100); }
+    .btn-outline:hover { border-color: var(--slate-900); background: var(--slate-100); }
 
-    /* ───── Logo Strip ───── */
-    .logos {
-      background: var(--white); padding: 64px 24px;
-      border-bottom: 1px solid var(--slate-200);
+    /* Hero right — checklist */
+    .hero__right { position: relative; z-index: 1; padding-top: 20px; }
+    .hero__checklist { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+    .hero__checklist li {
+      display: flex; align-items: flex-start; gap: 14px;
+      font-size: 15.5px; color: var(--slate-700); line-height: 1.55;
     }
-    .logos__inner { max-width: var(--max-width-wide); margin: 0 auto; }
-    .logos__label {
-      text-align: center; font-size: 15px; color: var(--slate-600);
-      margin-bottom: 32px; font-weight: 500;
-    }
-    .logos__grid {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      align-items: center; gap: 40px;
-      opacity: 0.4;
-    }
-    .logos__grid span {
-      font-size: 20px; font-weight: 700; letter-spacing: -0.03em;
-      color: var(--slate-900);
-    }
-
-    /* ───── Section Headings ───── */
-    .section-label {
-      font-size: 17px; font-weight: 600; letter-spacing: -0.01em;
-      margin-bottom: 12px;
-    }
-    .section-label--blurple { color: var(--blurple); }
-    .section-label--cyan { color: var(--cyan); }
-    .section-label--orange { color: var(--orange); }
-    .section-label--purple { color: var(--purple); }
-
-    .section-title {
-      font-size: clamp(28px, 4vw, 48px); font-weight: 700;
-      line-height: 1.1; letter-spacing: -0.03em;
-      margin-bottom: 16px;
-    }
-    .section-desc {
-      font-size: clamp(16px, 1.5vw, 18px); color: var(--slate-600);
-      line-height: 1.6; max-width: 640px;
-    }
-
-    /* ───── Products Section (White BG) ───── */
-    .products { padding: 100px 24px; background: var(--white); }
-    .products__inner { max-width: var(--max-width-wide); margin: 0 auto; }
-    .products__header { margin-bottom: 64px; }
-    .products__grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .product-card {
-      background: var(--slate-100); border-radius: 12px;
-      padding: 32px; position: relative; overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      border: 1px solid transparent;
-    }
-    .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(10,37,64,0.08);
-      border-color: var(--slate-200);
-    }
-    .product-card__icon {
-      width: 40px; height: 40px; border-radius: 8px;
+    .hero__check {
+      flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(99,91,255,0.1); color: var(--blurple);
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px; font-size: 18px;
+      margin-top: 2px;
     }
-    .product-card__icon--blurple { background: var(--blurple); color: white; }
-    .product-card__icon--cyan { background: var(--cyan); color: white; }
-    .product-card__icon--orange { background: var(--orange); color: white; }
-    .product-card__icon--purple { background: var(--purple); color: white; }
-    .product-card__icon--dark { background: var(--slate-900); color: white; }
-    .product-card__icon--yellow { background: var(--yellow); color: var(--slate-900); }
+    .hero__check svg { width: 12px; height: 12px; }
 
-    .product-card__title {
-      font-size: 20px; font-weight: 600; letter-spacing: -0.02em;
-      margin-bottom: 8px; color: var(--slate-900);
+    /* ───── Phone + Stats Visual ───── */
+    .visual {
+      padding: 24px 24px 80px;
+      background: var(--white);
+      position: relative;
     }
-    .product-card__desc {
-      font-size: 15px; color: var(--slate-600); line-height: 1.5;
-    }
-    .product-card__link {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 15px; font-weight: 600; margin-top: 16px;
-      transition: gap 0.2s;
-    }
-    .product-card__link--blurple { color: var(--blurple); }
-    .product-card__link--cyan { color: var(--cyan-dark); }
-    .product-card__link--orange { color: var(--orange); }
-    .product-card__link--purple { color: var(--purple); }
-    .product-card__link:hover { gap: 10px; }
-
-    .product-card--featured {
-      grid-column: span 2; display: grid;
-      grid-template-columns: 1fr 1fr; gap: 32px;
-      align-items: center; padding: 40px;
-    }
-    .product-card--featured .product-card__visual {
-      background: var(--white); border-radius: 8px;
-      border: 1px solid var(--slate-200); padding: 24px;
+    .visual__inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
     }
 
-    /* ───── Code / Developer Section (Dark BG) ───── */
-    .developer {
-      background: var(--bg-dark); padding: 100px 24px;
-      position: relative; overflow: hidden;
+    /* Phone mockup — premium */
+    .phone-wrapper {
+      position: relative; display: flex; justify-content: center;
     }
-    .developer::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background:
-        radial-gradient(ellipse 50% 50% at 20% 80%, rgba(99,91,255,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 80% 20%, rgba(0,212,170,0.1) 0%, transparent 60%);
-      pointer-events: none;
+    .phone-mockup {
+      position: relative; width: 310px;
     }
-    .developer__inner {
-      max-width: var(--max-width-wide); margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
-      align-items: center; position: relative; z-index: 1;
+    .phone-mockup::before {
+      content: '';
+      position: absolute; top: 15%; left: -50px; right: -50px; bottom: -30px;
+      background: linear-gradient(160deg, rgba(99,91,255,0.1), rgba(0,212,170,0.07));
+      border-radius: 50px; filter: blur(50px);
+      z-index: 0;
     }
-    .developer__header .section-title { color: var(--white); }
-    .developer__header .section-desc { color: var(--slate-400); }
-    .developer__features { display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
-    .developer__feature {
-      display: flex; gap: 16px; align-items: flex-start;
+    .phone-frame {
+      position: relative; z-index: 1;
+      background: var(--white);
+      border-radius: 40px;
+      border: 2px solid rgba(0,0,0,0.06);
+      box-shadow:
+        0 30px 60px -12px rgba(10,37,64,0.18),
+        0 12px 28px rgba(10,37,64,0.08),
+        0 0 0 1px rgba(0,0,0,0.03),
+        inset 0 0 0 1px rgba(255,255,255,0.8);
+      overflow: hidden;
+      padding: 12px;
     }
-    .developer__feature-icon {
-      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    .phone-screen {
+      background: var(--slate-100);
+      border-radius: 28px;
+      overflow: hidden;
+    }
+    .phone-notch {
+      width: 130px; height: 30px; margin: 0 auto;
+      background: var(--white);
+      border-radius: 0 0 18px 18px;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .phone-notch::before {
+      content: '';
+      width: 10px; height: 10px; border-radius: 50%;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.1);
+    }
+    .phone-notch::after {
+      content: '';
+      width: 50px; height: 4px; border-radius: 2px;
+      background: var(--slate-200);
+      position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+    }
+    .phone-status {
+      padding: 6px 20px 4px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; font-weight: 600; color: var(--slate-900);
+      background: var(--white);
+    }
+    .phone-status__icons {
+      display: flex; gap: 4px; align-items: center;
+    }
+    .phone-checkout {
+      background: var(--white);
+      padding: 18px 16px 14px;
+    }
+    .checkout-header {
+      display: flex; align-items: center; gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--slate-200);
+      margin-bottom: 14px;
+    }
+    .checkout-avatar {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(135deg, #f3e8ff, #ddd6fe);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .checkout-merchant { font-size: 15px; font-weight: 600; color: var(--slate-900); }
+    .checkout-amount { font-size: 13px; color: var(--slate-600); margin-top: 1px; }
+    .checkout-wallets {
+      display: flex; gap: 8px; margin-bottom: 14px;
+    }
+    .wallet-btn {
+      flex: 1; padding: 10px; border-radius: 8px;
+      background: var(--slate-900); color: var(--white);
+      font-size: 13px; font-weight: 600; text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .wallet-btn--outline {
+      background: var(--white); color: var(--slate-900);
+      border: 1px solid var(--slate-200);
+    }
+    .checkout-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+      font-size: 11px; color: var(--slate-500); text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .checkout-divider::before,
+    .checkout-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--slate-200);
+    }
+    .checkout-field {
+      margin-bottom: 10px;
+    }
+    .checkout-label {
+      font-size: 11.5px; font-weight: 500; color: var(--slate-700);
+      margin-bottom: 4px;
+    }
+    .checkout-input {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--slate-200);
+      border-radius: 8px; font-size: 13.5px; color: var(--slate-800);
+      background: var(--white); font-family: var(--font-sans);
+      transition: border-color 0.2s;
+    }
+    .checkout-input--focus {
+      border-color: var(--blurple);
+      box-shadow: 0 0 0 3px rgba(99,91,255,0.08);
+    }
+    .checkout-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .checkout-btn {
+      width: 100%; padding: 12px; border-radius: 8px;
+      background: var(--blurple); color: var(--white);
+      font-size: 14px; font-weight: 600; text-align: center;
+      margin-top: 14px;
+      box-shadow: 0 2px 8px rgba(99,91,255,0.2);
+    }
+    .phone-secure {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      padding: 8px 0 4px;
+      font-size: 10.5px; color: var(--slate-500);
+      background: var(--white);
+    }
+
+    /* Floating payment badges around phone */
+    .phone-float {
+      position: absolute; z-index: 2;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 10px 16px;
+      box-shadow: 0 8px 24px rgba(10,37,64,0.1), 0 2px 6px rgba(10,37,64,0.04);
+      font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; gap: 10px;
+      animation: floatBadge 4s ease-in-out infinite;
+      border: 1px solid rgba(227,232,238,0.5);
+    }
+    .phone-float--1 {
+      top: 12%; left: -60px;
+      animation-delay: 0s;
+    }
+    .phone-float--2 {
+      bottom: 30%; right: -60px;
+      animation-delay: 2s;
+    }
+    .phone-float--3 {
+      top: 50%; left: -40px;
+      animation-delay: 1s;
+      font-size: 12px;
+    }
+    .phone-float__dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .phone-float__dot--green { background: var(--cyan); }
+    .phone-float__dot--blue { background: var(--blue); }
+    .phone-float__dot--purple { background: var(--blurple); }
+    .phone-float__icon {
+      width: 28px; height: 28px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
       font-size: 14px;
     }
-    .developer__feature-text h4 {
-      font-size: 15px; font-weight: 600; color: var(--white);
-      margin-bottom: 4px; letter-spacing: -0.01em;
-    }
-    .developer__feature-text p {
-      font-size: 14px; color: var(--slate-500); line-height: 1.5;
+    .phone-float__icon--green { background: rgba(0,212,170,0.12); }
+    .phone-float__icon--blue { background: rgba(0,115,230,0.1); }
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    /* Code Block */
-    .code-window {
-      background: #081b2f; border-radius: 12px; overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+    /* Stats area — right column */
+    .stats-area {
+      display: flex; flex-direction: column; gap: 20px;
     }
-    .code-window__toolbar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 14px 20px; background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+
+    /* Stats card — warm gradient like original */
+    .stats-card {
+      position: relative;
+      background: linear-gradient(145deg, #f0f4ff 0%, #fef6ed 25%, #fde8dd 45%, #fce4ec 65%, #f3e8ff 85%, #eef2ff 100%);
+      border-radius: 20px;
+      padding: 44px 40px;
+      overflow: hidden;
+      border: 1px solid rgba(227,232,238,0.5);
     }
-    .code-window__dot {
-      width: 12px; height: 12px; border-radius: 50%;
+    .stats-card::before {
+      content: '';
+      position: absolute; top: -60px; right: -40px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(255,122,89,0.12) 0%, transparent 70%);
     }
-    .code-window__dot--red { background: #ff5f57; }
-    .code-window__dot--yellow { background: #febc2e; }
-    .code-window__dot--green { background: #28c840; }
-    .code-window__tabs {
-      display: flex; gap: 0; margin-left: 16px;
+    .stats-card::after {
+      content: '';
+      position: absolute; bottom: -40px; left: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(99,91,255,0.06) 0%, transparent 70%);
     }
-    .code-window__tab {
-      font-size: 12px; font-weight: 500; padding: 4px 14px;
-      color: var(--slate-500); border-radius: 6px;
-      transition: all 0.2s; font-family: var(--font-sans);
+    .stats-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,212,170,0.12); color: #059669;
+      font-size: 12.5px; font-weight: 600; padding: 4px 12px; border-radius: 14px;
+      margin-bottom: 16px;
     }
-    .code-window__tab--active {
-      color: var(--white); background: rgba(255,255,255,0.08);
+    .stats-number {
+      font-size: clamp(56px, 6vw, 80px); font-weight: 800;
+      letter-spacing: -0.04em; color: var(--slate-900);
+      line-height: 1; margin-bottom: 10px;
+      font-feature-settings: 'tnum';
     }
-    .code-window__tab:hover:not(.code-window__tab--active) {
-      color: var(--slate-400);
+    .stats-number span { font-size: 0.45em; vertical-align: super; }
+    .stats-label {
+      font-size: 15px; color: var(--slate-600); max-width: 300px;
+      line-height: 1.55; position: relative; z-index: 1;
     }
-    .code-window__body {
-      padding: 24px; font-family: var(--font-mono);
-      font-size: 13px; line-height: 1.7; color: var(--slate-400);
+    .stats-chart {
+      margin-top: 24px;
+      display: flex; align-items: flex-end; gap: 3px;
+      height: 52px; position: relative; z-index: 1;
+    }
+    .stats-chart__bar {
+      flex: 1; border-radius: 3px 3px 0 0;
+      background: rgba(99,91,255,0.12);
+      transition: background 0.3s, height 0.5s ease;
+    }
+    .stats-chart__bar--active {
+      background: var(--blurple);
+    }
+    .stats-chart__bar--highlight {
+      background: linear-gradient(to top, var(--blurple), var(--blurple-light));
+    }
+
+    /* Secondary stats row */
+    .stats-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .stats-mini {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid var(--slate-200);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .stats-mini:hover {
+      border-color: rgba(99,91,255,0.15);
+      box-shadow: 0 4px 20px rgba(10,37,64,0.06);
+      transform: translateY(-2px);
+    }
+    .stats-mini__label {
+      font-size: 12px; font-weight: 600; color: var(--slate-500);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .stats-mini__number {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--slate-900); font-feature-settings: 'tnum';
+      margin-bottom: 4px;
+    }
+    .stats-mini__change {
+      font-size: 12px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+    .stats-mini__change--up { color: #059669; }
+    .stats-mini__change--neutral { color: var(--blurple); }
+    .stats-mini__sparkline {
+      display: flex; align-items: flex-end; gap: 2px;
+      height: 24px; margin-top: 12px;
+    }
+    .stats-mini__sparkline-bar {
+      flex: 1; border-radius: 2px 2px 0 0;
+      background: rgba(99,91,255,0.1);
+    }
+    .stats-mini__sparkline-bar--active { background: var(--blurple); opacity: 0.6; }
+    .stats-mini__sparkline-bar--peak { background: var(--blurple); }
+
+    /* Product showcase cards */
+    .product-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .product-card {
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(10,37,64,0.1);
+    }
+    .product-card--coral {
+      background: linear-gradient(145deg, #fff5f2, #ffe8e0, #ffd6c8);
+      border: 1px solid rgba(255,122,89,0.15);
+    }
+    .product-card--teal {
+      background: linear-gradient(145deg, #f0fdf9, #d1fae5, #a7f3d0);
+      border: 1px solid rgba(0,212,170,0.15);
+    }
+    .product-card__icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+    }
+    .product-card__icon--coral { background: rgba(255,122,89,0.2); color: #dc4a1f; }
+    .product-card__icon--teal { background: rgba(0,212,170,0.2); color: #059669; }
+    .product-card__title {
+      font-size: 14px; font-weight: 700; color: var(--slate-900);
+      margin-bottom: 4px;
+    }
+    .product-card__desc {
+      font-size: 12.5px; color: var(--slate-600); line-height: 1.5;
+    }
+    .product-card__metric {
+      margin-top: 14px;
+      font-size: 22px; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--slate-900); font-feature-settings: 'tnum';
+    }
+    .product-card__metric-label {
+      font-size: 11px; color: var(--slate-500); margin-top: 2px;
+    }
+
+    /* ───── Logos ───── */
+    .logos {
+      padding: 56px 24px;
+      border-top: 1px solid var(--slate-200);
+      border-bottom: 1px solid var(--slate-200);
+      background: var(--slate-100);
+    }
+    .logos__inner { max-width: var(--max-width); margin: 0 auto; }
+    .logos__label {
+      text-align: center; font-size: 14px; color: var(--slate-500);
+      margin-bottom: 28px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .logos__grid {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      align-items: center; gap: 48px;
+    }
+    .logos__grid span {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.03em;
+      color: var(--slate-900); opacity: 0.25;
+      transition: opacity 0.3s;
+    }
+    .logos__grid span:hover { opacity: 0.6; }
+
+    /* ───── Features Section ───── */
+    .features {
+      padding: 100px 24px;
+      background: var(--white);
+    }
+    .features__inner {
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    .features__header {
+      text-align: center; max-width: 640px; margin: 0 auto 64px;
+    }
+    .section-label {
+      font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--blurple); margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 44px); font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.12; color: var(--slate-900);
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 17px; color: var(--slate-600); line-height: 1.65;
+    }
+
+    /* Bento grid */
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 20px;
+    }
+    .feature-card {
+      padding: 36px;
+      border-radius: 16px;
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover {
+      border-color: rgba(99,91,255,0.2);
+      box-shadow: 0 8px 40px rgba(10,37,64,0.06), 0 2px 8px rgba(99,91,255,0.04);
+      transform: translateY(-3px);
+    }
+    .feature-card:hover::after { opacity: 1; }
+    .feature-card--wide {
+      grid-column: span 2;
+    }
+    .feature-card--wide::after { background: linear-gradient(90deg, var(--blurple), var(--cyan)); }
+    .feature-card:nth-child(2)::after { background: var(--cyan); }
+    .feature-card:nth-child(3)::after { background: var(--orange); }
+    .feature-card:nth-child(4)::after { background: var(--blue); }
+    .feature-card:nth-child(5)::after { background: var(--blurple); }
+    .feature-card:nth-child(6)::after { background: var(--cyan); }
+
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; font-size: 20px;
+    }
+    .feature-icon--purple { background: rgba(99,91,255,0.08); color: var(--blurple); }
+    .feature-icon--cyan { background: rgba(0,212,170,0.08); color: #059669; }
+    .feature-icon--orange { background: rgba(255,122,89,0.08); color: var(--orange); }
+    .feature-icon--blue { background: rgba(0,115,230,0.08); color: var(--blue); }
+    .feature-card h3 {
+      font-size: 18px; font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 8px; color: var(--slate-900);
+    }
+    .feature-card p {
+      font-size: 15px; color: var(--slate-600); line-height: 1.6;
+    }
+
+    /* Feature card mini-demo */
+    .feature-demo {
+      margin-top: 24px;
+      background: var(--slate-100);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--slate-700);
+      line-height: 1.7;
+      overflow: hidden;
+    }
+    .feature-demo-dark {
+      background: var(--slate-900);
+      color: #a5f3fc;
+    }
+    .feature-demo-dark .code-keyword { color: #c4b5fd; }
+    .feature-demo-dark .code-string { color: #86efac; }
+    .feature-demo-dark .code-comment { color: #64748b; }
+
+    /* Feature card mini UI mockups */
+    .feature-mini-ui {
+      margin-top: 20px;
+      background: var(--slate-100);
+      border-radius: 10px;
+      padding: 14px;
+      overflow: hidden;
+    }
+    .mini-ui-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(227,232,238,0.6);
+    }
+    .mini-ui-row:last-child { border-bottom: none; }
+    .mini-ui-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .mini-ui-bar {
+      height: 6px; border-radius: 3px; background: var(--slate-200);
+    }
+    .mini-ui-bar--accent { background: var(--blurple); opacity: 0.3; }
+    .mini-ui-bar--green { background: var(--cyan); opacity: 0.4; }
+    .mini-ui-badge {
+      display: inline-block;
+      padding: 2px 8px; border-radius: 4px;
+      font-size: 10px; font-weight: 600;
+    }
+
+    /* ───── Code Demo Section ───── */
+    .code-section {
+      padding: 80px 24px;
+      background: var(--slate-100);
+    }
+    .code-section__inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .code-section__title {
+      font-size: clamp(28px, 3.5vw, 38px); font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .code-section__desc {
+      font-size: 16px; color: var(--slate-600); line-height: 1.65;
+      margin-bottom: 28px;
+    }
+    .code-section__link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--blurple); font-weight: 600; font-size: 16px;
+      transition: gap 0.2s;
+    }
+    .code-section__link:hover { gap: 10px; }
+
+    /* Code block */
+    .code-block {
+      background: var(--slate-900);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(10,37,64,0.2);
+    }
+    .code-block__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px 0;
+    }
+    .code-block__dots {
+      display: flex; gap: 6px;
+    }
+    .code-block__dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .code-block__dot--red { background: #ff5f57; }
+    .code-block__dot--yellow { background: #febc2e; }
+    .code-block__dot--green { background: #28c840; }
+    .code-tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0 16px;
+    }
+    .code-tab {
+      padding: 12px 16px;
+      font-size: 13px; font-weight: 500;
+      color: var(--slate-500);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      font-family: var(--font-sans);
+    }
+    .code-tab--active {
+      color: var(--white);
+      border-bottom-color: var(--blurple);
+    }
+    .code-tab:hover { color: var(--slate-300); }
+    .code-content {
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      color: #e2e8f0;
       overflow-x: auto;
     }
-    .code-window__body pre { white-space: pre; }
-    .tk-keyword { color: #c4b5fd; }
-    .tk-function { color: #67e8f9; }
-    .tk-string { color: #86efac; }
-    .tk-number { color: #fde68a; }
-    .tk-comment { color: #475569; font-style: italic; }
-    .tk-property { color: #93c5fd; }
-    .tk-operator { color: #f9a8d4; }
-    .tk-const { color: #e879f9; }
-
-    /* ───── Metrics (White) ───── */
-    .metrics { padding: 80px 24px; background: var(--white); }
-    .metrics__inner {
-      max-width: var(--max-width-wide); margin: 0 auto;
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
-    }
-    .metric { text-align: center; }
-    .metric__value {
-      font-size: clamp(40px, 5vw, 64px); font-weight: 700;
-      letter-spacing: -0.04em; line-height: 1;
-      background: linear-gradient(135deg, var(--blurple) 0%, var(--cyan) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; margin-bottom: 8px;
-      font-variant-numeric: tabular-nums;
-    }
-    .metric__label {
-      font-size: 15px; color: var(--slate-600); font-weight: 500;
+    .code-content pre { white-space: pre; }
+    .code-keyword { color: #c4b5fd; }
+    .code-string { color: #86efac; }
+    .code-comment { color: #64748b; }
+    .code-func { color: #93c5fd; }
+    .code-var { color: #fbbf24; }
+    .code-number { color: #f9a8d4; }
+    .code-line-num {
+      display: inline-block; width: 28px;
+      color: #475569; user-select: none;
+      text-align: right; margin-right: 16px;
     }
 
-    /* ───── Global Scale Section (Dark) ───── */
-    .global {
-      background: var(--bg-dark); padding: 100px 24px;
-      position: relative; overflow: hidden;
+    /* ───── Stats Strip ───── */
+    .stats-strip {
+      padding: 80px 24px;
+      background: var(--slate-900);
+      position: relative;
+      overflow: hidden;
     }
-    .global::before {
-      content: ''; position: absolute; inset: 0;
+    .stats-strip::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
       background:
-        radial-gradient(ellipse 60% 40% at 70% 60%, rgba(0,212,170,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 30% 30%, rgba(169,96,238,0.1) 0%, transparent 60%);
-      pointer-events: none;
+        radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(0,212,170,0.06) 0%, transparent 50%);
     }
-    .global__inner {
-      max-width: var(--max-width-wide); margin: 0 auto;
-      position: relative; z-index: 1;
+    .stats-strip__inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+      text-align: center; position: relative;
     }
-    .global__header { text-align: center; margin-bottom: 64px; }
-    .global__header .section-title { color: var(--white); }
-    .global__header .section-desc { color: var(--slate-400); margin: 0 auto; }
-    .global__grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    .stat-item { position: relative; }
+    .stat-item::after {
+      content: '';
+      position: absolute; top: 10%; right: 0; height: 80%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent);
     }
-    .global-card {
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px; padding: 32px; transition: all 0.3s;
+    .stat-item:last-child::after { display: none; }
+    .stat-item__number {
+      font-size: clamp(36px, 4.5vw, 56px); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      font-feature-settings: 'tnum';
+      background: linear-gradient(135deg, var(--blurple-light), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 10px;
     }
-    .global-card:hover {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.12);
-      transform: translateY(-2px);
-    }
-    .global-card__icon {
-      font-size: 28px; margin-bottom: 16px;
-    }
-    .global-card__title {
-      font-size: 18px; font-weight: 600; color: var(--white);
-      margin-bottom: 8px; letter-spacing: -0.02em;
-    }
-    .global-card__desc {
-      font-size: 14px; color: var(--slate-500); line-height: 1.6;
+    .stat-item__label {
+      font-size: 15px; color: var(--slate-400); font-weight: 500;
     }
 
-    /* ───── Testimonial / Customer Section ───── */
-    .customers {
-      padding: 100px 24px; background: var(--white);
+    /* ───── How It Works ───── */
+    .how-it-works {
+      padding: 100px 24px;
+      background: var(--slate-100);
     }
-    .customers__inner { max-width: var(--max-width-wide); margin: 0 auto; }
-    .customers__header { margin-bottom: 64px; }
-    .customers__grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    .how-it-works__inner {
+      max-width: var(--max-width); margin: 0 auto;
     }
-    .customer-card {
-      background: var(--slate-100); border-radius: 12px;
-      padding: 32px; transition: all 0.3s;
+    .how-it-works__header {
+      text-align: center; max-width: 640px; margin: 0 auto 64px;
+    }
+    .steps {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute; top: 38px; left: calc(16.66% + 20px); right: calc(16.66% + 20px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--blurple), var(--cyan));
+      opacity: 0.3;
+    }
+    .step {
+      text-align: center;
+    }
+    .step__number {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--blurple); color: var(--white);
+      font-size: 18px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; position: relative; z-index: 1;
+      box-shadow: 0 4px 12px rgba(99,91,255,0.2);
+    }
+    .step h3 {
+      font-size: 18px; font-weight: 700; margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .step p {
+      font-size: 15px; color: var(--slate-600); line-height: 1.6;
+      max-width: 280px; margin: 0 auto;
+    }
+
+    /* ───── Pricing ───── */
+    .pricing {
+      padding: 100px 24px;
+      background: var(--white);
+    }
+    .pricing__inner {
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    .pricing__header {
+      text-align: center; max-width: 640px; margin: 0 auto 64px;
+    }
+    .pricing__grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      max-width: 1000px; margin: 0 auto;
+    }
+    .pricing-card {
+      padding: 36px 32px;
+      border-radius: 16px;
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      transition: all 0.3s ease;
       display: flex; flex-direction: column;
     }
-    .customer-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(10,37,64,0.06);
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(10,37,64,0.08);
     }
-    .customer-card__quote {
-      font-size: 16px; color: var(--slate-800); line-height: 1.6;
-      flex: 1; margin-bottom: 24px; letter-spacing: -0.01em;
+    .pricing-card--featured {
+      border-color: var(--blurple);
+      box-shadow: 0 4px 24px rgba(99,91,255,0.1);
+      position: relative;
+      background: linear-gradient(180deg, rgba(99,91,255,0.02) 0%, var(--white) 100%);
     }
-    .customer-card__author {
-      display: flex; align-items: center; gap: 12px;
-      border-top: 1px solid var(--slate-200); padding-top: 20px;
+    .pricing-card--featured::before {
+      content: 'Most popular';
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--blurple); color: var(--white);
+      font-size: 12px; font-weight: 700; padding: 4px 16px;
+      border-radius: 12px; text-transform: uppercase; letter-spacing: 0.04em;
     }
-    .customer-card__avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 600; color: var(--white);
+    .pricing-card__name {
+      font-size: 20px; font-weight: 700; margin-bottom: 8px;
+      letter-spacing: -0.02em;
     }
-    .customer-card__name {
-      font-size: 14px; font-weight: 600; color: var(--slate-900);
+    .pricing-card__desc {
+      font-size: 14px; color: var(--slate-600); margin-bottom: 24px;
+      line-height: 1.55;
     }
-    .customer-card__role {
-      font-size: 13px; color: var(--slate-600);
+    .pricing-card__price {
+      font-size: 44px; font-weight: 800; letter-spacing: -0.04em;
+      margin-bottom: 4px;
+      font-feature-settings: 'tnum';
+    }
+    .pricing-card__price span {
+      font-size: 16px; font-weight: 500; color: var(--slate-600);
+    }
+    .pricing-card__unit {
+      font-size: 14px; color: var(--slate-500); margin-bottom: 24px;
+    }
+    .pricing-card__features {
+      list-style: none; margin-bottom: 32px; flex: 1;
+    }
+    .pricing-card__features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--slate-700); padding: 7px 0;
+    }
+    .pricing-card__features li svg {
+      flex-shrink: 0; margin-top: 2px; color: var(--blurple);
+    }
+    .pricing-card__btn {
+      width: 100%; padding: 13px; border-radius: 10px;
+      font-size: 15px; font-weight: 600; text-align: center;
+      transition: all 0.2s;
+    }
+    .pricing-card__btn--primary {
+      background: var(--blurple); color: var(--white);
+    }
+    .pricing-card__btn--primary:hover {
+      background: var(--blurple-dark); box-shadow: 0 4px 16px rgba(99,91,255,0.25);
+    }
+    .pricing-card__btn--outline {
+      border: 1.5px solid var(--slate-300); color: var(--slate-900);
+      background: transparent;
+    }
+    .pricing-card__btn--outline:hover {
+      border-color: var(--slate-900); background: var(--slate-100);
     }
 
-    /* ───── CTA Section ───── */
+    /* ───── Testimonials ───── */
+    .testimonials {
+      padding: 100px 24px;
+      background: var(--slate-100);
+    }
+    .testimonials__inner {
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    .testimonials__header {
+      text-align: center; max-width: 640px; margin: 0 auto 56px;
+    }
+    .testimonials__grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .testimonial-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--slate-200);
+      transition: all 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(10,37,64,0.06);
+    }
+    .testimonial-card__stars {
+      display: flex; gap: 2px;
+      margin-bottom: 16px;
+    }
+    .testimonial-card__stars svg {
+      color: #f59e0b; width: 16px; height: 16px;
+    }
+    .testimonial-card__quote {
+      font-size: 15px; color: var(--slate-700);
+      line-height: 1.65; margin-bottom: 24px; flex: 1;
+    }
+    .testimonial-card__author {
+      display: flex; align-items: center; gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--slate-200);
+    }
+    .testimonial-card__avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-weight: 700; font-size: 15px;
+    }
+    .testimonial-card__name { font-size: 14px; font-weight: 700; color: var(--slate-900); }
+    .testimonial-card__role { font-size: 13px; color: var(--slate-600); }
+
+    /* ───── CTA ───── */
     .cta {
-      background: var(--bg-dark); padding: 120px 24px;
+      padding: 100px 24px;
+      background: var(--slate-900);
       position: relative; overflow: hidden;
     }
     .cta::before {
-      content: ''; position: absolute; inset: 0;
+      content: '';
+      position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px;
       background:
-        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(99,91,255,0.25) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 80% 30%, rgba(0,212,170,0.12) 0%, transparent 50%);
+        radial-gradient(ellipse at 30% 50%, rgba(99,91,255,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(0,212,170,0.08) 0%, transparent 60%);
       pointer-events: none;
     }
     .cta__inner {
-      max-width: 720px; margin: 0 auto; text-align: center;
+      max-width: 700px; margin: 0 auto; text-align: center;
       position: relative; z-index: 1;
     }
     .cta__title {
-      font-size: clamp(32px, 5vw, 56px); font-weight: 700;
-      line-height: 1.1; letter-spacing: -0.035em;
-      color: var(--white); margin-bottom: 20px;
+      font-size: clamp(32px, 4vw, 48px); font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.12;
+      color: var(--white); margin-bottom: 16px;
     }
     .cta__desc {
-      font-size: 18px; color: var(--slate-400); margin-bottom: 40px;
+      font-size: 18px; color: var(--slate-400); margin-bottom: 36px;
       line-height: 1.6;
     }
     .cta__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--white); color: var(--slate-900);
+      font-size: 16px; font-weight: 600; padding: 13px 28px;
+      border-radius: 24px; transition: all 0.2s;
+    }
+    .btn-white:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,255,255,0.15); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1.5px solid rgba(255,255,255,0.2); color: var(--white);
+      font-size: 16px; font-weight: 600; padding: 12px 28px;
+      border-radius: 24px; transition: all 0.2s; background: transparent;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
 
     /* ───── Footer ───── */
     .footer {
-      background: var(--bg-dark); border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 64px 24px 48px;
+      padding: 64px 24px 32px;
+      background: var(--slate-900);
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
-    .footer__inner { max-width: var(--max-width-wide); margin: 0 auto; }
+    .footer__inner {
+      max-width: var(--max-width); margin: 0 auto;
+    }
     .footer__grid {
-      display: grid;
-      grid-template-columns: 1.5fr repeat(4, 1fr);
-      gap: 48px; margin-bottom: 48px;
-    }
-    .footer__brand-desc {
-      font-size: 14px; color: var(--slate-500); line-height: 1.6;
-      margin-top: 12px; max-width: 260px;
+      display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 48px;
+      margin-bottom: 48px;
     }
     .footer__logo {
-      font-size: 18px; font-weight: 700; color: var(--white);
-      letter-spacing: -0.02em;
+      font-size: 22px; font-weight: 800; letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, var(--blurple-light), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .footer__tagline {
+      font-size: 14px; color: var(--slate-500); line-height: 1.6;
+      max-width: 260px;
     }
     .footer__col-title {
-      font-size: 14px; font-weight: 600; color: var(--white);
-      margin-bottom: 16px; letter-spacing: -0.01em;
+      font-size: 13px; font-weight: 700; color: var(--slate-400);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 16px;
     }
-    .footer__links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer__links a {
-      font-size: 14px; color: var(--slate-500); transition: color 0.2s;
+    .footer__col-links { list-style: none; }
+    .footer__col-links li { margin-bottom: 10px; }
+    .footer__col-links a {
+      font-size: 14px; color: var(--slate-500);
+      transition: color 0.2s;
     }
-    .footer__links a:hover { color: var(--white); }
+    .footer__col-links a:hover { color: var(--white); }
     .footer__bottom {
       border-top: 1px solid rgba(255,255,255,0.06);
-      padding-top: 32px; display: flex;
-      align-items: center; justify-content: space-between;
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .footer__copyright {
-      font-size: 13px; color: var(--slate-700);
+    .footer__copy { font-size: 13px; color: var(--slate-500); }
+    .footer__socials { display: flex; gap: 16px; }
+    .footer__socials a {
+      color: var(--slate-500); transition: color 0.2s;
     }
-    .footer__social { display: flex; gap: 16px; }
-    .footer__social a {
-      color: var(--slate-600); transition: color 0.2s;
-    }
-    .footer__social a:hover { color: var(--white); }
-
-    /* ───── Transaction mini-UI ───── */
-    .mini-ui { background: var(--white); border-radius: 8px; border: 1px solid var(--slate-200); }
-    .mini-ui__header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px; border-bottom: 1px solid var(--slate-200);
-    }
-    .mini-ui__title { font-size: 13px; font-weight: 600; color: var(--slate-800); }
-    .mini-ui__action { font-size: 12px; font-weight: 600; color: var(--blurple); }
-    .mini-ui__rows { padding: 0; }
-    .mini-ui__row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 20px; border-bottom: 1px solid var(--slate-200);
-    }
-    .mini-ui__row:last-child { border-bottom: none; }
-    .mini-ui__row-left { display: flex; align-items: center; gap: 12px; }
-    .mini-ui__avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; color: var(--white);
-    }
-    .mini-ui__row-name { font-size: 13px; font-weight: 500; color: var(--slate-900); }
-    .mini-ui__row-detail { font-size: 12px; color: var(--slate-600); }
-    .mini-ui__row-amount { font-size: 13px; font-weight: 600; color: var(--cyan-dark); }
-    .mini-ui__row-amount--pending { color: var(--slate-500); }
+    .footer__socials a:hover { color: var(--white); }
 
     /* ───── Animations ───── */
-    .reveal {
-      opacity: 0; transform: translateY(32px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    .fade-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .reveal.is-visible { opacity: 1; transform: none; }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
+    .fade-up.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.12s; }
+    .fade-up-delay-2 { transition-delay: 0.24s; }
+    .fade-up-delay-3 { transition-delay: 0.36s; }
 
     /* ───── Responsive ───── */
-    @media (max-width: 1024px) {
-      .products__grid { grid-template-columns: 1fr 1fr; }
-      .product-card--featured { grid-column: span 2; }
-      .developer__inner { grid-template-columns: 1fr; gap: 48px; }
-      .global__grid { grid-template-columns: repeat(2, 1fr); }
-      .footer__grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .hero__inner { grid-template-columns: 1fr; gap: 40px; }
+      .visual__inner { grid-template-columns: 1fr; gap: 40px; }
+      .code-section__inner { grid-template-columns: 1fr; gap: 40px; }
+      .features__grid { grid-template-columns: 1fr 1fr; }
+      .feature-card--wide { grid-column: span 2; }
+      .stats-strip__inner { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; }
+      .steps::before { display: none; }
+      .pricing__grid { grid-template-columns: 1fr; max-width: 400px; }
+      .testimonials__grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
       .nav__links { display: none; }
-      .nav__signin { display: none; }
-      .hero { min-height: auto; padding: 140px 24px 80px; }
-      .products__grid { grid-template-columns: 1fr; }
-      .product-card--featured {
-        grid-column: span 1; grid-template-columns: 1fr;
-      }
-      .metrics__inner { grid-template-columns: repeat(2, 1fr); }
-      .global__grid { grid-template-columns: 1fr; }
-      .customers__grid { grid-template-columns: 1fr; }
-      .footer__grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-      .footer__bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .phone-float { display: none; }
+      .stat-item::after { display: none; }
     }
-    @media (max-width: 480px) {
-      .metrics__inner { grid-template-columns: 1fr 1fr; gap: 24px; }
-      .hero__actions { flex-direction: column; align-items: center; }
-      .cta__actions { flex-direction: column; align-items: center; }
+    @media (max-width: 600px) {
+      .features__grid { grid-template-columns: 1fr; }
+      .feature-card--wide { grid-column: span 1; }
+      .stats-strip__inner { grid-template-columns: 1fr; gap: 32px; }
+      .stats-row { grid-template-columns: 1fr; }
+      .product-cards { grid-template-columns: 1fr; }
+      .footer__grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer__bottom { flex-direction: column; gap: 12px; }
     }
   </style>
 </head>
 <body>
 
   <!-- Navigation -->
-  <nav class="nav nav--transparent" id="mainNav">
+  <nav class="nav" id="nav">
     <div class="nav__inner">
       <div class="nav__left">
         <a href="#" class="nav__logo">PayGrid</a>
@@ -605,373 +1129,575 @@
       </div>
       <div class="nav__right">
         <a href="#" class="nav__signin">Sign in</a>
-        <button class="nav__cta">Start now
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 6H9.5M9.5 6L6.5 3M9.5 6L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        <a href="#" class="nav__cta">Start now &rarr;</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero__mesh"></div>
-    <div class="hero__content">
-      <a href="#" class="hero__eyebrow">
-        <span class="hero__eyebrow-badge">New</span>
-        PayGrid Sessions is now available
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.25 3.5L8.75 7L5.25 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <h1 class="hero__title">
-        Financial infrastructure to <span class="hero__title-gradient">grow your revenue</span>
-      </h1>
-      <p class="hero__subtitle">
-        Join the millions of companies of all sizes that use PayGrid to accept payments online and in person, embed financial services, and power custom revenue models.
-      </p>
-      <div class="hero__actions">
-        <button class="btn-primary">
-          Start now
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="btn-secondary">Contact sales</button>
+    <div class="hero__blob hero__blob--1"></div>
+    <div class="hero__blob hero__blob--2"></div>
+    <div class="hero__blob hero__blob--3"></div>
+    <div class="hero__inner">
+      <div class="hero__content fade-up">
+        <div class="hero__badge">Payments</div>
+        <h1 class="hero__title">Accept and optimize payments globally &mdash; online and in person</h1>
+        <p class="hero__subtitle">Simplify your checkout, expand your reach, and boost conversion with AI-powered tools to accept payments anywhere.</p>
+        <div class="hero__actions">
+          <a href="#" class="btn-primary">
+            Explore Payments
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#" class="btn-outline">See pricing details</a>
+        </div>
+      </div>
+      <div class="hero__right fade-up fade-up-delay-1">
+        <ul class="hero__checklist">
+          <li>
+            <span class="hero__check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Create a seamless checkout experience that adapts to every customer</span>
+          </li>
+          <li>
+            <span class="hero__check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Expand to new markets faster with 135+ currencies supported</span>
+          </li>
+          <li>
+            <span class="hero__check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Maximize acceptance rates and mitigate fraud with machine learning</span>
+          </li>
+          <li>
+            <span class="hero__check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Unify online and in-person payments in a single platform</span>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- Logo Strip -->
+  <!-- Phone + Stats -->
+  <section class="visual">
+    <div class="visual__inner">
+      <div class="phone-wrapper fade-up">
+        <div class="phone-mockup">
+          <!-- Floating badges -->
+          <div class="phone-float phone-float--1">
+            <span class="phone-float__icon phone-float__icon--green">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div>
+              <div style="font-size:12px;color:var(--slate-900);">Payment successful</div>
+              <div style="font-size:10.5px;color:var(--slate-500);font-weight:500;">$49.99 &middot; Visa ****4242</div>
+            </div>
+          </div>
+          <div class="phone-float phone-float--2">
+            <span class="phone-float__icon phone-float__icon--blue">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 00-4 4v2H3a1 1 0 00-1 1v5a1 1 0 001 1h10a1 1 0 001-1V9a1 1 0 00-1-1h-1V6a4 4 0 00-4-4z" stroke="#0073e6" stroke-width="1.5"/></svg>
+            </span>
+            <div>
+              <div style="font-size:12px;color:var(--slate-900);">3D Secure verified</div>
+              <div style="font-size:10.5px;color:var(--slate-500);font-weight:500;">Authentication passed</div>
+            </div>
+          </div>
+          <div class="phone-float phone-float--3">
+            <span class="phone-float__dot phone-float__dot--purple"></span>
+            <span style="font-size:11.5px;color:var(--slate-700);">135+ currencies</span>
+          </div>
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-notch"></div>
+              <div class="phone-status">
+                <span>9:41</span>
+                <div class="phone-status__icons">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M1 9l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3.5 6.5L6 4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><rect x="1" y="7" width="3" height="10" rx="1"/><rect x="6" y="4" width="3" height="13" rx="1"/><rect x="11" y="1" width="3" height="16" rx="1"/><rect x="16" y="4" width="3" height="13" rx="1" opacity="0.3"/></svg>
+                  <svg width="20" height="12" viewBox="0 0 25 12" fill="currentColor" opacity="0.8"><rect x="0" y="1" width="20" height="10" rx="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="21" y="4" width="2" height="4" rx="1"/><rect x="2" y="3" width="14" height="6" rx="1" fill="#34d399"/></svg>
+                </div>
+              </div>
+              <div class="phone-checkout">
+                <div class="checkout-header">
+                  <div class="checkout-avatar">&#x1F6CD;</div>
+                  <div>
+                    <div class="checkout-merchant">Ember Co.</div>
+                    <div class="checkout-amount">$49.99 USD</div>
+                  </div>
+                </div>
+                <div class="checkout-wallets">
+                  <div class="wallet-btn">&#63743; Pay</div>
+                  <div class="wallet-btn wallet-btn--outline">G Pay</div>
+                </div>
+                <div class="checkout-divider">Or pay with card</div>
+                <div class="checkout-field">
+                  <div class="checkout-label">Email</div>
+                  <div class="checkout-input">jenny@example.com</div>
+                </div>
+                <div class="checkout-field">
+                  <div class="checkout-label">Card number</div>
+                  <div class="checkout-input checkout-input--focus" style="display:flex;align-items:center;justify-content:space-between;">
+                    <span>4242 4242 4242 4242</span>
+                    <span style="display:flex;gap:4px;">
+                      <svg width="24" height="16" viewBox="0 0 34 24" fill="none"><rect width="34" height="24" rx="4" fill="#1a1f71"/><path d="M13 17l2.5-10h2.5l-2.5 10h-2.5zm8-10l-2.3 6.8L18.2 7H16l3.2 10h2.3L25 7h-2zm-11 0l-2.8 10H9.5l1.6-6.2.5 6.2H14L16 7h-2.3l-1.3 5.2L11.6 7H10z" fill="white"/></svg>
+                      <svg width="24" height="16" viewBox="0 0 34 24" fill="none"><rect width="34" height="24" rx="4" fill="#f0f0f0"/><circle cx="14" cy="12" r="7" fill="#eb001b"/><circle cx="20" cy="12" r="7" fill="#f79e1b"/><path d="M17 7.3a7 7 0 000 9.4 7 7 0 000-9.4z" fill="#ff5f00"/></svg>
+                    </span>
+                  </div>
+                </div>
+                <div class="checkout-row">
+                  <div class="checkout-field">
+                    <div class="checkout-label">Expiry</div>
+                    <div class="checkout-input">12 / 28</div>
+                  </div>
+                  <div class="checkout-field">
+                    <div class="checkout-label">CVC</div>
+                    <div class="checkout-input">&bull;&bull;&bull;</div>
+                  </div>
+                </div>
+                <div class="checkout-btn">Pay $49.99</div>
+              </div>
+              <div class="phone-secure">
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M4 7V5a4 4 0 118 0v2M3 7h10a1 1 0 011 1v6a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/></svg>
+                Secured by PayGrid
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-area fade-up fade-up-delay-1">
+        <div class="stats-card">
+          <div class="stats-badge">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M3 5l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Authorization rate
+          </div>
+          <div class="stats-number">2.2<span>%</span></div>
+          <div class="stats-label">Increase in authorization rate on average with Adaptive Acceptance</div>
+          <div class="stats-chart">
+            <div class="stats-chart__bar" style="height:30%"></div>
+            <div class="stats-chart__bar" style="height:38%"></div>
+            <div class="stats-chart__bar" style="height:35%"></div>
+            <div class="stats-chart__bar" style="height:42%"></div>
+            <div class="stats-chart__bar" style="height:48%"></div>
+            <div class="stats-chart__bar" style="height:45%"></div>
+            <div class="stats-chart__bar" style="height:52%"></div>
+            <div class="stats-chart__bar" style="height:58%"></div>
+            <div class="stats-chart__bar" style="height:55%"></div>
+            <div class="stats-chart__bar" style="height:65%"></div>
+            <div class="stats-chart__bar" style="height:70%"></div>
+            <div class="stats-chart__bar" style="height:75%"></div>
+            <div class="stats-chart__bar--active" style="height:82%;flex:1;border-radius:3px 3px 0 0;"></div>
+            <div class="stats-chart__bar--highlight" style="height:90%;flex:1;border-radius:3px 3px 0 0;"></div>
+            <div class="stats-chart__bar--highlight" style="height:100%;flex:1;border-radius:3px 3px 0 0;"></div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stats-mini">
+            <div class="stats-mini__label">Conversion rate</div>
+            <div class="stats-mini__number">94.7%</div>
+            <div class="stats-mini__change stats-mini__change--up">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 8V2M2.5 4.5L5 2l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              +3.1% vs last month
+            </div>
+            <div class="stats-mini__sparkline">
+              <div class="stats-mini__sparkline-bar" style="height:40%"></div>
+              <div class="stats-mini__sparkline-bar" style="height:55%"></div>
+              <div class="stats-mini__sparkline-bar" style="height:45%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--active" style="height:60%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--active" style="height:70%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--active" style="height:65%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--peak" style="height:85%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--peak" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="stats-mini">
+            <div class="stats-mini__label">Fraud blocked</div>
+            <div class="stats-mini__number">$2.8M</div>
+            <div class="stats-mini__change stats-mini__change--neutral">
+              <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 00-4 4v2H3a1 1 0 00-1 1v5a1 1 0 001 1h10a1 1 0 001-1V9a1 1 0 00-1-1h-1V6a4 4 0 00-4-4z" stroke="currentColor" stroke-width="1.5"/></svg>
+              Prevented this quarter
+            </div>
+            <div class="stats-mini__sparkline">
+              <div class="stats-mini__sparkline-bar" style="height:80%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--active" style="height:60%"></div>
+              <div class="stats-mini__sparkline-bar" style="height:90%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--active" style="height:50%"></div>
+              <div class="stats-mini__sparkline-bar" style="height:70%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--peak" style="height:40%"></div>
+              <div class="stats-mini__sparkline-bar" style="height:55%"></div>
+              <div class="stats-mini__sparkline-bar stats-mini__sparkline-bar--peak" style="height:30%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-cards">
+          <div class="product-card product-card--coral">
+            <div class="product-card__icon product-card__icon--coral">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="M2 10h20" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div class="product-card__title">Issuing</div>
+            <div class="product-card__desc">Create, manage, and distribute virtual and physical cards</div>
+            <div class="product-card__metric">14.2K</div>
+            <div class="product-card__metric-label">Active cards issued</div>
+          </div>
+          <div class="product-card product-card--teal">
+            <div class="product-card__icon product-card__icon--teal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="product-card__title">Connect</div>
+            <div class="product-card__desc">Multi-party payments for platforms and marketplaces</div>
+            <div class="product-card__metric">$890K</div>
+            <div class="product-card__metric-label">Monthly platform volume</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logos -->
   <section class="logos">
     <div class="logos__inner">
-      <p class="logos__label">Powering the world's most ambitious companies</p>
-      <div class="logos__grid">
+      <div class="logos__label fade-up">Trusted by millions of businesses</div>
+      <div class="logos__grid fade-up fade-up-delay-1">
         <span>Amazon</span>
         <span>Google</span>
-        <span>Microsoft</span>
         <span>Shopify</span>
-        <span>Spotify</span>
         <span>Slack</span>
         <span>Zoom</span>
+        <span>Notion</span>
         <span>Figma</span>
+        <span>Twilio</span>
       </div>
     </div>
   </section>
 
-  <!-- Products Section -->
-  <section class="products reveal">
-    <div class="products__inner">
-      <div class="products__header">
-        <p class="section-label section-label--blurple">Designed for growth</p>
-        <h2 class="section-title">A fully integrated suite of<br>financial and payments products</h2>
-        <p class="section-desc">
-          Reduce costs, grow revenue, and run your business more efficiently on a fully integrated platform. Use PayGrid to handle all of your payments-related needs.
-        </p>
+  <!-- Features -->
+  <section class="features">
+    <div class="features__inner">
+      <div class="features__header fade-up">
+        <div class="section-label">Why PayGrid</div>
+        <h2 class="section-title">A fully integrated suite of financial products</h2>
+        <p class="section-desc">From accepting payments to managing revenue, PayGrid helps you handle every step of your financial operations.</p>
       </div>
-
-      <!-- Featured Card -->
-      <div class="products__grid">
-        <div class="product-card product-card--featured">
-          <div>
-            <div class="product-card__icon product-card__icon--blurple">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="white" stroke-width="1.5"/><path d="M2 8H18" stroke="white" stroke-width="1.5"/></svg>
-            </div>
-            <h3 class="product-card__title">Payments</h3>
-            <p class="product-card__desc">Online payments — accept and optimise payments from around the world with a single integration.</p>
-            <a href="#" class="product-card__link product-card__link--blurple">
-              Learn more
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+      <div class="features__grid">
+        <div class="feature-card feature-card--wide fade-up">
+          <div class="feature-icon feature-icon--purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="M2 10h20" stroke="currentColor" stroke-width="2"/></svg>
           </div>
-          <div class="product-card__visual">
-            <div class="mini-ui">
-              <div class="mini-ui__header">
-                <span class="mini-ui__title">Recent payments</span>
-                <a href="#" class="mini-ui__action">View all</a>
-              </div>
-              <div class="mini-ui__rows">
-                <div class="mini-ui__row">
-                  <div class="mini-ui__row-left">
-                    <div class="mini-ui__avatar" style="background: var(--blurple);">JD</div>
-                    <div>
-                      <div class="mini-ui__row-name">Jenny Doe</div>
-                      <div class="mini-ui__row-detail">Visa **** 4242</div>
-                    </div>
-                  </div>
-                  <span class="mini-ui__row-amount">+$249.00</span>
-                </div>
-                <div class="mini-ui__row">
-                  <div class="mini-ui__row-left">
-                    <div class="mini-ui__avatar" style="background: var(--cyan-dark);">AK</div>
-                    <div>
-                      <div class="mini-ui__row-name">Alex Kim</div>
-                      <div class="mini-ui__row-detail">Mastercard **** 5555</div>
-                    </div>
-                  </div>
-                  <span class="mini-ui__row-amount">+$89.00</span>
-                </div>
-                <div class="mini-ui__row">
-                  <div class="mini-ui__row-left">
-                    <div class="mini-ui__avatar" style="background: var(--purple);">ML</div>
-                    <div>
-                      <div class="mini-ui__row-name">Maria Lopez</div>
-                      <div class="mini-ui__row-detail">Amex **** 1234</div>
-                    </div>
-                  </div>
-                  <span class="mini-ui__row-amount--pending" style="font-size:13px;font-weight:600;">Pending</span>
-                </div>
-              </div>
+          <h3>Online payments</h3>
+          <p>Accept payments from customers around the world with support for 135+ currencies and dozens of payment methods.</p>
+          <div class="feature-demo feature-demo-dark">
+            <pre><span class="code-comment">// Create a payment intent</span>
+<span class="code-keyword">const</span> intent = <span class="code-keyword">await</span> paygrid.paymentIntents.<span class="code-func">create</span>({
+  <span class="code-var">amount</span>: <span class="code-number">4999</span>,
+  <span class="code-var">currency</span>: <span class="code-string">'usd'</span>,
+  <span class="code-var">automatic_payment_methods</span>: { <span class="code-var">enabled</span>: <span class="code-keyword">true</span> },
+});</pre>
+          </div>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-1">
+          <div class="feature-icon feature-icon--cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Fraud prevention</h3>
+          <p>Machine learning models trained on billions of data points detect and block fraud while maximizing legitimate revenue.</p>
+          <div class="feature-mini-ui">
+            <div class="mini-ui-row">
+              <div class="mini-ui-dot" style="background:#34d399"></div>
+              <div class="mini-ui-bar" style="width:70%;background:rgba(0,212,170,0.2)"></div>
+              <span class="mini-ui-badge" style="background:rgba(0,212,170,0.1);color:#059669;">Pass</span>
+            </div>
+            <div class="mini-ui-row">
+              <div class="mini-ui-dot" style="background:#f59e0b"></div>
+              <div class="mini-ui-bar" style="width:45%;background:rgba(245,158,11,0.2)"></div>
+              <span class="mini-ui-badge" style="background:rgba(245,158,11,0.1);color:#d97706;">Review</span>
+            </div>
+            <div class="mini-ui-row">
+              <div class="mini-ui-dot" style="background:#ef4444"></div>
+              <div class="mini-ui-bar" style="width:25%;background:rgba(239,68,68,0.15)"></div>
+              <span class="mini-ui-badge" style="background:rgba(239,68,68,0.1);color:#dc2626;">Block</span>
             </div>
           </div>
         </div>
-
-        <div class="product-card">
-          <div class="product-card__icon product-card__icon--cyan">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3V17M10 3L6 7M10 3L14 7M10 17L6 13M10 17L14 13" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="feature-card fade-up fade-up-delay-2">
+          <div class="feature-icon feature-icon--orange">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 14l4-4 4 4 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <h3 class="product-card__title">Billing</h3>
-          <p class="product-card__desc">Build and scale your recurring business model with subscriptions, invoicing, and usage-based billing.</p>
-          <a href="#" class="product-card__link product-card__link--cyan">
-            Learn more
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <h3>Revenue optimization</h3>
+          <p>Recover failed payments automatically and increase authorization rates with intelligent retry logic.</p>
+          <div class="feature-mini-ui">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:11px;color:var(--slate-500);font-weight:600;">Recovery rate</span>
+              <span style="font-size:11px;color:#059669;font-weight:700;">78%</span>
+            </div>
+            <div style="height:6px;background:var(--slate-200);border-radius:3px;overflow:hidden;">
+              <div style="width:78%;height:100%;background:linear-gradient(90deg,var(--blurple),var(--cyan));border-radius:3px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;">
+              <span style="font-size:10px;color:var(--slate-500);">$124K recovered this month</span>
+              <span style="font-size:10px;color:var(--blurple);font-weight:600;">+12%</span>
+            </div>
+          </div>
         </div>
-
-        <div class="product-card">
-          <div class="product-card__icon product-card__icon--orange">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="white" stroke-width="1.5"/><path d="M10 6V10L13 13" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="feature-card fade-up">
+          <div class="feature-icon feature-icon--blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="2"/></svg>
           </div>
-          <h3 class="product-card__title">Connect</h3>
-          <p class="product-card__desc">Set up multi-party payments and payouts for your platform or marketplace.</p>
-          <a href="#" class="product-card__link product-card__link--orange">
-            Learn more
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <h3>Global reach</h3>
+          <p>Launch in new markets with local acquiring, payment methods, and currencies from a single integration.</p>
         </div>
-
-        <div class="product-card">
-          <div class="product-card__icon product-card__icon--purple">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L17 7V13L10 17L3 13V7L10 3Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 17V10M10 10L3 7M10 10L17 7" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <div class="feature-card fade-up fade-up-delay-1">
+          <div class="feature-icon feature-icon--purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 9h6v6H9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M20 9h2M20 15h2M2 9h2M2 15h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           </div>
-          <h3 class="product-card__title">Radar</h3>
-          <p class="product-card__desc">Fight fraud with machine learning powered by data from millions of businesses.</p>
-          <a href="#" class="product-card__link product-card__link--purple">
-            Learn more
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <h3>In-person payments</h3>
+          <p>Unify your online and in-person payment data with pre-certified card readers and a single API.</p>
         </div>
-
-        <div class="product-card">
-          <div class="product-card__icon product-card__icon--dark">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="white" stroke-width="1.5"/><path d="M7 10H13M7 7H13M7 13H10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="feature-card fade-up fade-up-delay-2">
+          <div class="feature-icon feature-icon--cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
           </div>
-          <h3 class="product-card__title">Sigma</h3>
-          <p class="product-card__desc">Write custom queries on all of your PayGrid data with a real-time SQL environment.</p>
-          <a href="#" class="product-card__link product-card__link--blurple">
-            Learn more
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card__icon product-card__icon--yellow">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10" stroke="#0a2540" stroke-width="1.5" stroke-linecap="round"/><path d="M7 17C8.5 15 10 14 13 13" stroke="#0a2540" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="2" stroke="#0a2540" stroke-width="1.5"/></svg>
-          </div>
-          <h3 class="product-card__title">Atlas</h3>
-          <p class="product-card__desc">Start and scale your company with everything you need from incorporation to banking.</p>
-          <a href="#" class="product-card__link product-card__link--blurple">
-            Learn more
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <h3>Developer tools</h3>
+          <p>Build with comprehensive APIs, detailed docs, and pre-built UI components that accelerate development.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Developer / Code Section -->
-  <section class="developer">
-    <div class="developer__inner">
-      <div class="developer__header reveal">
-        <p class="section-label section-label--cyan">Built for developers</p>
-        <h2 class="section-title">The best way to build<br>modern payments</h2>
-        <p class="section-desc">
-          From auth to reconciliation, PayGrid's APIs and tools make it easy to build seamless payment experiences. Start with a prebuilt UI or design a custom flow.
-        </p>
-        <div class="developer__features">
-          <div class="developer__feature">
-            <div class="developer__feature-icon" style="background: rgba(0,212,170,0.15);">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L2 8L6 12M10 4L14 8L10 12" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="developer__feature-text">
-              <h4>Client and server libraries</h4>
-              <p>Libraries in every major language with idiomatic interfaces.</p>
-            </div>
-          </div>
-          <div class="developer__feature">
-            <div class="developer__feature-icon" style="background: rgba(99,91,255,0.15);">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#635bff" stroke-width="1.5"/><path d="M5 8H11M8 5V11" stroke="#635bff" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </div>
-            <div class="developer__feature-text">
-              <h4>Prebuilt integrations</h4>
-              <p>Drop-in UI components or no-code solutions to go live fast.</p>
-            </div>
-          </div>
-          <div class="developer__feature">
-            <div class="developer__feature-icon" style="background: rgba(169,96,238,0.15);">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4H14M2 8H14M2 12H8" stroke="#a960ee" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </div>
-            <div class="developer__feature-text">
-              <h4>Detailed documentation</h4>
-              <p>Guides, references, and examples to help you ship faster.</p>
-            </div>
+  <!-- Code Demo -->
+  <section class="code-section">
+    <div class="code-section__inner">
+      <div class="code-section__content fade-up">
+        <div class="section-label">Developer experience</div>
+        <h2 class="code-section__title">Start integrating in minutes</h2>
+        <p class="code-section__desc">Explore our comprehensive documentation, quickstart guides, and client libraries for every major language.</p>
+        <a href="#" class="code-section__link">
+          Read the docs
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="code-block fade-up fade-up-delay-1">
+        <div class="code-block__header">
+          <div class="code-block__dots">
+            <div class="code-block__dot code-block__dot--red"></div>
+            <div class="code-block__dot code-block__dot--yellow"></div>
+            <div class="code-block__dot code-block__dot--green"></div>
           </div>
         </div>
-      </div>
-      <div class="reveal reveal-delay-2">
-        <div class="code-window">
-          <div class="code-window__toolbar">
-            <div class="code-window__dot code-window__dot--red"></div>
-            <div class="code-window__dot code-window__dot--yellow"></div>
-            <div class="code-window__dot code-window__dot--green"></div>
-            <div class="code-window__tabs">
-              <button class="code-window__tab code-window__tab--active">server.js</button>
-              <button class="code-window__tab">checkout.html</button>
-              <button class="code-window__tab">webhook.js</button>
-            </div>
-          </div>
-          <div class="code-window__body">
-<pre><span class="tk-comment">// Create a checkout session</span>
-<span class="tk-keyword">const</span> session = <span class="tk-keyword">await</span> paygrid.checkout.sessions.<span class="tk-function">create</span>({
-  <span class="tk-property">line_items</span>: [{
-    <span class="tk-property">price</span>: <span class="tk-string">'price_1MoBy5'</span>,
-    <span class="tk-property">quantity</span>: <span class="tk-number">1</span>,
-  }],
-  <span class="tk-property">mode</span>: <span class="tk-string">'payment'</span>,
-  <span class="tk-property">success_url</span>: <span class="tk-string">'https://example.com/success'</span>,
-  <span class="tk-property">cancel_url</span>: <span class="tk-string">'https://example.com/cancel'</span>,
-});
-
-<span class="tk-comment">// Redirect to checkout</span>
-res.<span class="tk-function">redirect</span>(<span class="tk-number">303</span>, session.<span class="tk-property">url</span>);</pre>
-          </div>
+        <div class="code-tabs">
+          <div class="code-tab code-tab--active">cURL</div>
+          <div class="code-tab">Python</div>
+          <div class="code-tab">Node.js</div>
+          <div class="code-tab">Go</div>
+        </div>
+        <div class="code-content">
+          <pre><span class="code-line-num">1</span><span class="code-func">curl</span> https://api.paygrid.com/v1/charges \
+<span class="code-line-num">2</span>  -u <span class="code-string">sk_test_4eC39Hq...:</span> \
+<span class="code-line-num">3</span>  -d <span class="code-var">amount</span>=<span class="code-number">4999</span> \
+<span class="code-line-num">4</span>  -d <span class="code-var">currency</span>=<span class="code-string">usd</span> \
+<span class="code-line-num">5</span>  -d <span class="code-var">source</span>=<span class="code-string">tok_visa</span> \
+<span class="code-line-num">6</span>  -d <span class="code-var">description</span>=<span class="code-string">"Example charge"</span></pre>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Metrics -->
-  <section class="metrics reveal">
-    <div class="metrics__inner">
-      <div class="metric">
-        <p class="metric__value">250M+</p>
-        <p class="metric__label">API requests per day</p>
+  <!-- Stats -->
+  <section class="stats-strip">
+    <div class="stats-strip__inner">
+      <div class="stat-item fade-up">
+        <div class="stat-item__number">99.99%</div>
+        <div class="stat-item__label">Historical uptime</div>
       </div>
-      <div class="metric">
-        <p class="metric__value">99.99%</p>
-        <p class="metric__label">Uptime SLA</p>
+      <div class="stat-item fade-up fade-up-delay-1">
+        <div class="stat-item__number">135+</div>
+        <div class="stat-item__label">Currencies supported</div>
       </div>
-      <div class="metric">
-        <p class="metric__value">135+</p>
-        <p class="metric__label">Currencies supported</p>
+      <div class="stat-item fade-up fade-up-delay-2">
+        <div class="stat-item__number">47</div>
+        <div class="stat-item__label">Countries with local acquiring</div>
       </div>
-      <div class="metric">
-        <p class="metric__value">47</p>
-        <p class="metric__label">Countries with local acquiring</p>
+      <div class="stat-item fade-up fade-up-delay-3">
+        <div class="stat-item__number">500M+</div>
+        <div class="stat-item__label">API requests per day</div>
       </div>
     </div>
   </section>
 
-  <!-- Global Scale -->
-  <section class="global">
-    <div class="global__inner">
-      <div class="global__header reveal">
-        <p class="section-label section-label--cyan">Global scale</p>
-        <h2 class="section-title">The backbone for<br>internet commerce</h2>
-        <p class="section-desc">
-          For enterprises with complex payment needs, PayGrid provides the infrastructure for moving money at scale across borders.
-        </p>
+  <!-- How it works -->
+  <section class="how-it-works">
+    <div class="how-it-works__inner">
+      <div class="how-it-works__header fade-up">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Get started in minutes, not months</h2>
+        <p class="section-desc">From first API call to production, PayGrid is designed to get you up and running fast.</p>
       </div>
-      <div class="global__grid">
-        <div class="global-card reveal">
-          <div class="global-card__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="#00d4aa" stroke-width="1.5"/><path d="M4 16H28M16 4C20 8 22 12 22 16C22 20 20 24 16 28M16 4C12 8 10 12 10 16C10 20 12 24 16 28" stroke="#00d4aa" stroke-width="1.5"/></svg>
-          </div>
-          <h3 class="global-card__title">Global payments</h3>
-          <p class="global-card__desc">Accept 135+ currencies and popular payment methods from around the world with a single integration.</p>
+      <div class="steps">
+        <div class="step fade-up">
+          <div class="step__number">1</div>
+          <h3>Create an account</h3>
+          <p>Sign up in seconds and access your dashboard, test environment, and API keys immediately.</p>
         </div>
-        <div class="global-card reveal reveal-delay-1">
-          <div class="global-card__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="3" stroke="#635bff" stroke-width="1.5"/><path d="M4 14H28" stroke="#635bff" stroke-width="1.5"/></svg>
-          </div>
-          <h3 class="global-card__title">Revenue optimisation</h3>
-          <p class="global-card__desc">Machine learning-powered tools to increase authorisation rates and reduce costs automatically.</p>
+        <div class="step fade-up fade-up-delay-1">
+          <div class="step__number">2</div>
+          <h3>Integrate the API</h3>
+          <p>Use our client libraries, pre-built checkout, or custom integration with comprehensive documentation.</p>
         </div>
-        <div class="global-card reveal reveal-delay-2">
-          <div class="global-card__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4V28M8 8L16 4L24 8M8 24L16 28L24 24M8 8V24M24 8V24M8 16H24" stroke="#a960ee" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </div>
-          <h3 class="global-card__title">Enterprise infrastructure</h3>
-          <p class="global-card__desc">A platform built for reliability, scale, and security with 99.99% uptime and SOC 2 compliance.</p>
-        </div>
-        <div class="global-card reveal">
-          <div class="global-card__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 6L26 12V20L16 26L6 20V12L16 6Z" stroke="#ff7a59" stroke-width="1.5" stroke-linejoin="round"/><path d="M16 26V16M6 12L16 16M26 12L16 16" stroke="#ff7a59" stroke-width="1.5"/></svg>
-          </div>
-          <h3 class="global-card__title">Modular architecture</h3>
-          <p class="global-card__desc">Use individual products or combine them to build a solution tailored to your exact business model.</p>
-        </div>
-        <div class="global-card reveal reveal-delay-1">
-          <div class="global-card__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="6" width="20" height="20" rx="4" stroke="#f5be58" stroke-width="1.5"/><path d="M12 16L15 19L21 13" stroke="#f5be58" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3 class="global-card__title">Compliance built in</h3>
-          <p class="global-card__desc">PCI DSS Level 1 certified. Handle SCA, tax calculation, and regulatory requirements out of the box.</p>
-        </div>
-        <div class="global-card reveal reveal-delay-2">
-          <div class="global-card__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 22L12 16L16 20L22 12L26 16" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="16" r="2" fill="#00d4aa"/></svg>
-          </div>
-          <h3 class="global-card__title">Real-time analytics</h3>
-          <p class="global-card__desc">Monitor performance with built-in dashboards and write custom SQL queries against all of your data.</p>
+        <div class="step fade-up fade-up-delay-2">
+          <div class="step__number">3</div>
+          <h3>Go live</h3>
+          <p>Activate your account, start accepting payments, and scale with confidence as your business grows.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Customers -->
-  <section class="customers reveal">
-    <div class="customers__inner">
-      <div class="customers__header">
-        <p class="section-label section-label--blurple">Trusted worldwide</p>
-        <h2 class="section-title">Built for ambitious companies</h2>
-        <p class="section-desc">
-          Companies of every size, from startups to public companies, use PayGrid to manage their revenue.
-        </p>
+  <!-- Pricing -->
+  <section class="pricing" id="pricing">
+    <div class="pricing__inner">
+      <div class="pricing__header fade-up">
+        <div class="section-label">Pricing</div>
+        <h2 class="section-title">Simple, transparent pricing</h2>
+        <p class="section-desc">Pay-as-you-go pricing with no setup fees, monthly fees, or hidden costs. Only pay for what you use.</p>
       </div>
-      <div class="customers__grid">
-        <div class="customer-card">
-          <p class="customer-card__quote">"PayGrid gives us a unified view of transactions across all markets. The reliability and consistency are outstanding."</p>
-          <div class="customer-card__author">
-            <div class="customer-card__avatar" style="background: var(--blurple);">SR</div>
+      <div class="pricing__grid">
+        <div class="pricing-card fade-up">
+          <div class="pricing-card__name">Integrated</div>
+          <div class="pricing-card__desc">For businesses just getting started with online payments.</div>
+          <div class="pricing-card__price">2.9% <span>+ 30&cent;</span></div>
+          <div class="pricing-card__unit">per successful card charge</div>
+          <ul class="pricing-card__features">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Prebuilt checkout page
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              100+ payment methods
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Financial reporting
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              24/7 support
+            </li>
+          </ul>
+          <button class="pricing-card__btn pricing-card__btn--outline">Get started</button>
+        </div>
+        <div class="pricing-card pricing-card--featured fade-up fade-up-delay-1">
+          <div class="pricing-card__name">Customized</div>
+          <div class="pricing-card__desc">For growing businesses that need more flexibility and control.</div>
+          <div class="pricing-card__price">2.7% <span>+ 30&cent;</span></div>
+          <div class="pricing-card__unit">per successful card charge</div>
+          <ul class="pricing-card__features">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Everything in Integrated
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Embeddable UI components
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Advanced fraud tools
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Multi-currency support
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Priority support
+            </li>
+          </ul>
+          <button class="pricing-card__btn pricing-card__btn--primary">Get started</button>
+        </div>
+        <div class="pricing-card fade-up fade-up-delay-2">
+          <div class="pricing-card__name">Enterprise</div>
+          <div class="pricing-card__desc">For large businesses with custom needs and dedicated support.</div>
+          <div class="pricing-card__price">Custom</div>
+          <div class="pricing-card__unit">volume-based pricing</div>
+          <ul class="pricing-card__features">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Everything in Customized
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Dedicated account manager
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Custom SLA
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Migration support
+            </li>
+          </ul>
+          <button class="pricing-card__btn pricing-card__btn--outline">Contact sales</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="testimonials__inner">
+      <div class="testimonials__header fade-up">
+        <div class="section-label">Testimonials</div>
+        <h2 class="section-title">Loved by businesses worldwide</h2>
+      </div>
+      <div class="testimonials__grid">
+        <div class="testimonial-card fade-up">
+          <div class="testimonial-card__stars">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+          </div>
+          <div class="testimonial-card__quote">"PayGrid has transformed how we handle payments. Authorization rates went up 11% in the first month, and we now process payments in 35 countries from a single integration."</div>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar" style="background:linear-gradient(135deg,var(--blurple),#7c3aed);">S</div>
             <div>
-              <p class="customer-card__name">Sarah Rodriguez</p>
-              <p class="customer-card__role">CTO, CloudScale</p>
+              <div class="testimonial-card__name">Sarah Chen</div>
+              <div class="testimonial-card__role">CTO, Lumina Commerce</div>
             </div>
           </div>
         </div>
-        <div class="customer-card">
-          <p class="customer-card__quote">"We migrated from three separate payment providers. Our integration time dropped from months to days and conversion increased 12%."</p>
-          <div class="customer-card__author">
-            <div class="customer-card__avatar" style="background: var(--cyan-dark);">MK</div>
+        <div class="testimonial-card fade-up fade-up-delay-1">
+          <div class="testimonial-card__stars">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+          </div>
+          <div class="testimonial-card__quote">"The developer experience is unmatched. We went from zero to processing live payments in under two hours. The API documentation is the best I've ever seen."</div>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar" style="background:linear-gradient(135deg,var(--cyan),#059669);">M</div>
             <div>
-              <p class="customer-card__name">Michael Kim</p>
-              <p class="customer-card__role">VP Engineering, NexTrade</p>
+              <div class="testimonial-card__name">Marcus Rivera</div>
+              <div class="testimonial-card__role">Lead Engineer, NovaPay</div>
             </div>
           </div>
         </div>
-        <div class="customer-card">
-          <p class="customer-card__quote">"The developer experience is unmatched. Our team was up and running in hours, not weeks. The documentation is best in class."</p>
-          <div class="customer-card__author">
-            <div class="customer-card__avatar" style="background: var(--purple);">EL</div>
+        <div class="testimonial-card fade-up fade-up-delay-2">
+          <div class="testimonial-card__stars">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.28l-4.77 2.51.91-5.32L2.27 6.7l5.34-.78L10 1z"/></svg>
+          </div>
+          <div class="testimonial-card__quote">"Switching to PayGrid saved us $180K annually in processing fees. Their fraud prevention alone paid for itself within the first quarter."</div>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar" style="background:linear-gradient(135deg,var(--orange),#dc4a1f);">A</div>
             <div>
-              <p class="customer-card__name">Emma Liu</p>
-              <p class="customer-card__role">Head of Payments, Artisan</p>
+              <div class="testimonial-card__name">Aisha Patel</div>
+              <div class="testimonial-card__role">VP Finance, Drift Studios</div>
             </div>
           </div>
         </div>
@@ -981,17 +1707,15 @@ res.<span class="tk-function">redirect</span>(<span class="tk-number">303</span>
 
   <!-- CTA -->
   <section class="cta">
-    <div class="cta__inner reveal">
+    <div class="cta__inner fade-up">
       <h2 class="cta__title">Ready to get started?</h2>
-      <p class="cta__desc">
-        Create an account instantly and start accepting payments. You can also contact us to design a custom package for your business.
-      </p>
+      <p class="cta__desc">Create an account and start accepting payments today. No contracts, no hidden fees.</p>
       <div class="cta__actions">
-        <button class="btn-primary">
+        <a href="#" class="btn-white">
           Start now
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.917 7H11.083M11.083 7L7.583 3.5M11.083 7L7.583 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="btn-secondary">Contact sales</button>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#" class="btn-ghost">Contact sales</a>
       </div>
     </div>
   </section>
@@ -1000,63 +1724,59 @@ res.<span class="tk-function">redirect</span>(<span class="tk-number">303</span>
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__grid">
-        <div>
+        <div class="footer__brand">
           <div class="footer__logo">PayGrid</div>
-          <p class="footer__brand-desc">Financial infrastructure for the internet. Accept payments, send payouts, and manage your business online.</p>
+          <p class="footer__tagline">Financial infrastructure for the internet. Millions of businesses use PayGrid to accept payments and grow revenue.</p>
         </div>
         <div>
-          <h4 class="footer__col-title">Products</h4>
-          <ul class="footer__links">
+          <div class="footer__col-title">Products</div>
+          <ul class="footer__col-links">
             <li><a href="#">Payments</a></li>
             <li><a href="#">Billing</a></li>
             <li><a href="#">Connect</a></li>
+            <li><a href="#">Terminal</a></li>
             <li><a href="#">Radar</a></li>
-            <li><a href="#">Atlas</a></li>
-            <li><a href="#">Sigma</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="footer__col-title">Developers</h4>
-          <ul class="footer__links">
+          <div class="footer__col-title">Developers</div>
+          <ul class="footer__col-links">
             <li><a href="#">Documentation</a></li>
             <li><a href="#">API Reference</a></li>
             <li><a href="#">API Status</a></li>
-            <li><a href="#">API Changelog</a></li>
-            <li><a href="#">Open Source</a></li>
+            <li><a href="#">Changelog</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="footer__col-title">Company</h4>
-          <ul class="footer__links">
+          <div class="footer__col-title">Company</div>
+          <ul class="footer__col-links">
             <li><a href="#">About</a></li>
             <li><a href="#">Customers</a></li>
-            <li><a href="#">Newsroom</a></li>
+            <li><a href="#">Partners</a></li>
             <li><a href="#">Careers</a></li>
-            <li><a href="#">Blog</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="footer__col-title">Resources</h4>
-          <ul class="footer__links">
-            <li><a href="#">Support Centre</a></li>
-            <li><a href="#">Contact Sales</a></li>
-            <li><a href="#">Privacy & Terms</a></li>
-            <li><a href="#">Licences</a></li>
-            <li><a href="#">Cookie Settings</a></li>
+          <div class="footer__col-title">Resources</div>
+          <ul class="footer__col-links">
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Licenses</a></li>
           </ul>
         </div>
       </div>
       <div class="footer__bottom">
-        <p class="footer__copyright">&copy; 2024 PayGrid, Inc. All rights reserved.</p>
-        <div class="footer__social">
+        <div class="footer__copy">&copy; 2026 PayGrid, Inc. All rights reserved.</div>
+        <div class="footer__socials">
           <a href="#" aria-label="Twitter">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M14.176 2H16.736L11.324 8.16L17.75 16H12.772L8.698 10.768L4.036 16H1.474L7.268 9.41L1.086 2H6.194L9.888 6.79L14.176 2ZM13.286 14.56H14.686L5.622 3.44H4.116L13.286 14.56Z" fill="currentColor"/></svg>
-          </a>
-          <a href="#" aria-label="LinkedIn">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4.94 6.32H2.16V15.84H4.94V6.32ZM3.55 5.16C4.46 5.16 5.2 4.42 5.2 3.51C5.2 2.6 4.46 1.86 3.55 1.86C2.64 1.86 1.9 2.6 1.9 3.51C1.9 4.42 2.64 5.16 3.55 5.16ZM15.82 15.84H13.06V11.2C13.06 10.12 13.04 8.72 11.54 8.72C10.02 8.72 9.8 9.9 9.8 11.12V15.84H7.04V6.32H9.68V7.6H9.72C10.08 6.88 11 6.12 12.36 6.12C15.18 6.12 15.82 7.98 15.82 10.4V15.84Z" fill="currentColor"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
           <a href="#" aria-label="GitHub">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5C4.86 1.5 1.5 4.86 1.5 9C1.5 12.31 3.67 15.1 6.71 16.13C7.09 16.2 7.23 15.97 7.23 15.77V14.36C5.07 14.83 4.62 13.33 4.62 13.33C4.28 12.44 3.78 12.21 3.78 12.21C3.08 11.73 3.83 11.74 3.83 11.74C4.6 11.8 5.01 12.53 5.01 12.53C5.7 13.68 6.82 13.33 7.26 13.14C7.33 12.63 7.54 12.28 7.77 12.08C6.05 11.87 4.24 11.15 4.24 8.27C4.24 7.43 4.54 6.74 5.02 6.21C4.94 5.99 4.68 5.21 5.1 4.15C5.1 4.15 5.75 3.92 7.22 4.91C7.86 4.72 8.54 4.63 9.22 4.63C9.9 4.63 10.58 4.72 11.22 4.91C12.69 3.92 13.34 4.15 13.34 4.15C13.76 5.21 13.5 5.99 13.42 6.21C13.9 6.74 14.2 7.43 14.2 8.27C14.2 11.16 12.38 11.87 10.65 12.07C10.94 12.32 11.2 12.81 11.2 13.55V15.77C11.2 15.97 11.34 16.21 11.73 16.13C14.77 15.1 16.94 12.31 16.94 9C16.94 4.86 13.58 1.5 9.44 1.5H9Z" fill="currentColor"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
         </div>
       </div>
@@ -1064,33 +1784,30 @@ res.<span class="tk-function">redirect</span>(<span class="tk-number">303</span>
   </footer>
 
   <script>
-    // Nav scroll behavior
-    const nav = document.getElementById('mainNav');
-    const heroSection = document.querySelector('.hero');
+    // Scroll-based nav shadow
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('nav--scrolled', window.scrollY > 10);
+    });
 
-    function updateNav() {
-      const heroBottom = heroSection.getBoundingClientRect().bottom;
-      if (heroBottom <= 64) {
-        nav.classList.remove('nav--transparent');
-        nav.classList.add('nav--solid');
-      } else {
-        nav.classList.remove('nav--solid');
-        nav.classList.add('nav--transparent');
-      }
-    }
-    window.addEventListener('scroll', updateNav, { passive: true });
-    updateNav();
-
-    // Scroll reveal
+    // Intersection Observer for fade-in animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
+          entry.target.classList.add('visible');
         }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Code tabs interaction
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tab.parentElement.querySelectorAll('.code-tab').forEach(t => t.classList.remove('code-tab--active'));
+        tab.classList.add('code-tab--active');
+      });
+    });
   </script>
 </body>
 </html>

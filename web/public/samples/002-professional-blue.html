@@ -3,695 +3,1681 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TaskFlow — AI-Powered Project Management</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>PayFlow — Accept and Optimize Payments Globally</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #ffffff;
-      --text: #0f172a;
-      --subtle-bg: #f8fafc;
-      --border: #e2e8f0;
-      --muted: #64748b;
-      --accent: #2563eb;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
     }
-    .font-heading { font-family: 'DM Sans', sans-serif; }
-    .font-body { font-family: 'IBM Plex Sans', sans-serif; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
-    .dot-pattern {
-      background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
-      background-size: 32px 32px;
+    :root {
+      --white: #ffffff;
+      --off-white: #f6f9fc;
+      --light-gray: #e3e8ee;
+      --border: #d8dee4;
+      --text-primary: #0a2540;
+      --text-secondary: #425466;
+      --text-muted: #8898aa;
+      --accent-purple: #635bff;
+      --accent-purple-dark: #533afd;
+      --accent-cyan: #80e9ff;
+      --accent-green: #0abb87;
+      --accent-orange: #ff6f18;
+      --accent-coral: #ff5e57;
     }
-    .card-hover {
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-primary);
+      background: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+    .nav.scrolled {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    }
+    .nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-purple);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-logo-mark svg {
+      width: 16px;
+      height: 16px;
+    }
+    .nav-logo-text {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+      letter-spacing: -0.01em;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-sign-in {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-sign-in:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--accent-purple);
+      color: var(--white);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+      letter-spacing: -0.01em;
+    }
+    .nav-cta:hover { background: var(--accent-purple-dark); }
+
+    /* Hero Section */
+    .hero {
+      padding: 120px 24px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: start;
+      position: relative;
+    }
+
+    /* Subtle gradient orbs - positioned like Stripe's mesh gradients */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(128, 233, 255, 0.18) 0%, transparent 70%);
+      top: -200px;
+      left: -200px;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(99, 91, 255, 0.15) 0%, transparent 70%);
+      top: 100px;
+      right: -100px;
+      pointer-events: none;
+    }
+
+    .hero-left {
+      padding-top: 24px;
+    }
+    .hero h1 {
+      font-size: 46px;
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      letter-spacing: -0.03em;
+      max-width: 520px;
+    }
+    .hero-description {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 32px;
+      max-width: 460px;
+      letter-spacing: -0.01em;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--accent-purple);
+      color: var(--white);
+      border: none;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: -0.01em;
+    }
+    .btn-primary:hover {
+      background: var(--accent-purple-dark);
+      transform: translateY(-1px);
+    }
+    .btn-primary svg { transition: transform 0.15s; }
+    .btn-primary:hover svg { transform: translateX(2px); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      background: transparent;
+      color: var(--accent-purple);
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.15s;
+      letter-spacing: -0.01em;
+    }
+    .btn-secondary:hover {
+      color: var(--accent-purple-dark);
+    }
+    .btn-secondary svg { transition: transform 0.15s; }
+    .btn-secondary:hover svg { transform: translateX(2px); }
+
+    /* Hero Right - Checklist */
+    .hero-right {
+      padding-top: 32px;
+    }
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .checklist-icon {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3px;
+    }
+    .checklist-icon svg {
+      width: 10px;
+      height: 10px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+    }
+    .checklist-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+    .checklist-text strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Phone + Stats Section */
+    .phone-stats-section {
+      max-width: 1200px;
+      margin: -48px auto 0;
+      padding: 0 24px 40px;
+      position: relative;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+      position: relative;
+    }
+    .phone-stats-section::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(128, 233, 255, 0.16) 0%, transparent 70%);
+      bottom: -100px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    /* Phone Mockup */
+    .phone-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+    .phone-mockup {
+      width: 300px;
+      background: var(--white);
+      border-radius: 40px;
+      box-shadow:
+        0 50px 100px -20px rgba(10, 37, 64, 0.15),
+        0 30px 60px -30px rgba(10, 37, 64, 0.12),
+        0 0 0 1px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-notch {
+      width: 130px;
+      height: 30px;
+      background: #1a1a2e;
+      border-radius: 0 0 18px 18px;
+      margin: 0 auto;
+    }
+    .phone-screen {
+      padding: 20px 22px 28px;
+    }
+    .phone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .phone-back {
+      font-size: 18px;
+      color: var(--accent-purple);
+      cursor: pointer;
+    }
+    .phone-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .phone-product {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .phone-product-img {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(145deg, #ffecd2, #fcb69f);
+      border-radius: 14px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-product-img::before {
+      content: '';
+      width: 32px;
+      height: 38px;
+      background: linear-gradient(135deg, #e8956d, #d47a55);
+      border-radius: 6px 6px 4px 4px;
+      box-shadow: inset 0 -8px 0 rgba(0,0,0,0.08);
+    }
+    .phone-product-img::after {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 3px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 2px;
+    }
+    .phone-product-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .phone-product-price {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .phone-divider {
+      height: 1px;
+      background: var(--light-gray);
+      margin: 14px 0;
+    }
+    .phone-field {
+      margin-bottom: 10px;
+    }
+    .phone-field-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .phone-field-input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1.5px solid var(--light-gray);
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-primary);
+      background: var(--white);
+      font-family: inherit;
+    }
+    .phone-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .phone-pay-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-purple);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: -0.01em;
+    }
+    .phone-methods {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .phone-method {
+      width: 38px;
+      height: 24px;
+      background: var(--off-white);
+      border-radius: 3px;
+      border: 1px solid var(--light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    /* Right Column: Stats + Feature Cards */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Stats Card */
+    .stats-card {
+      background: var(--white);
+      border: 1px solid var(--light-gray);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+    }
+    .stats-number {
+      font-size: 72px;
+      font-weight: 700;
+      color: var(--accent-purple);
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -0.04em;
+    }
+    .stats-suffix {
+      font-size: 40px;
+      font-weight: 600;
+    }
+    .stats-label {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .stats-sublabel {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .stats-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+      height: 56px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    .stats-bar {
+      width: 7px;
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(180deg, var(--accent-purple), rgba(99, 91, 255, 0.25));
+      transform-origin: bottom;
+      transform: scaleY(0);
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .stats-bar.animate { transform: scaleY(1); }
+
+    /* Feature Cards - Orange/Coral gradient like Stripe */
+    .feature-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .feature-card {
+      background: linear-gradient(135deg, #ff7a45, #ff5733);
+      border-radius: 12px;
+      padding: 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+    }
+    .feature-card-warm {
+      background: linear-gradient(135deg, #ffb347, #ff8c42);
+    }
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 13px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    .feature-card-metric {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .feature-card-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .feature-card-stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .feature-card-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .feature-card-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+    }
+    .feature-card-mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 32px;
+      margin-top: 12px;
+    }
+    .mini-bar {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 2px 2px 0 0;
+      min-width: 0;
+    }
+    .feature-card-route-map {
+      position: relative;
+      height: 40px;
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .route-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+    }
+    .route-dot-active {
+      width: 8px;
+      height: 8px;
+      background: white;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+    .route-line {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    }
+
+    /* Product Features Grid */
+    .product-features {
+      padding: 64px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .product-features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .pf-card {
+      background: var(--white);
+      border: 1px solid var(--light-gray);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .pf-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(10, 37, 64, 0.07);
+      border-color: var(--accent-purple);
+    }
+    .pf-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .pf-icon-purple { background: rgba(99, 91, 255, 0.08); }
+    .pf-icon-orange { background: rgba(255, 111, 24, 0.08); }
+    .pf-icon-green { background: rgba(10, 187, 135, 0.08); }
+    .pf-icon-cyan { background: rgba(0, 180, 216, 0.08); }
+    .pf-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .pf-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .pf-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-purple);
+      background: rgba(99, 91, 255, 0.06);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    /* Developer Section */
+    .developer-section {
+      padding: 64px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .dev-left h2 {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .dev-left p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 24px;
+      max-width: 420px;
+    }
+    .dev-links {
+      display: flex;
+      gap: 20px;
+    }
+    .dev-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-purple);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+    .dev-link:hover { color: var(--accent-purple-dark); }
+    .dev-link svg { transition: transform 0.15s; }
+    .dev-link:hover svg { transform: translateX(2px); }
+    .code-block {
+      background: #0a2540;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(10, 37, 64, 0.2);
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #ffbd2e; }
+    .code-dot:nth-child(3) { background: #28ca41; }
+    .code-lang {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.35);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    .code-body {
+      padding: 20px;
+      overflow-x: auto;
+    }
+    .code-body pre {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      white-space: pre;
+    }
+    .code-body .ck { color: #80e9ff; }
+    .code-body .cs { color: #7dd3a8; }
+    .code-body .cv { color: #ffbd2e; }
+    .code-body .cc { color: rgba(255,255,255,0.3); }
+    .code-body .cp { color: #ff7a45; }
+
+    @media (max-width: 900px) {
+      .product-features-grid { grid-template-columns: 1fr 1fr; }
+      .developer-section { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .product-features-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Capabilities Section */
+    .capabilities {
+      padding: 48px 24px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header {
+      margin-bottom: 32px;
+    }
+    .section-header h2 {
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .section-header p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+    }
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .capability-card {
+      background: var(--off-white);
+      border-radius: 12px;
+      padding: 28px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .card-hover:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    .capability-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(10, 37, 64, 0.07);
+    }
+    .capability-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .icon-purple { background: rgba(99, 91, 255, 0.1); color: var(--accent-purple); }
+    .icon-green { background: rgba(10, 187, 135, 0.1); color: var(--accent-green); }
+    .icon-cyan { background: rgba(128, 233, 255, 0.15); color: #00b4d8; }
+    .icon-orange { background: rgba(255, 111, 24, 0.1); color: var(--accent-orange); }
+    .icon-coral { background: rgba(255, 94, 87, 0.1); color: var(--accent-coral); }
+    .icon-indigo { background: rgba(83, 58, 253, 0.1); color: var(--accent-purple-dark); }
+    .capability-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .capability-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
     }
 
-    /* Gradient CTA button */
-    .btn-gradient {
-      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-      transition: box-shadow 0.2s ease, opacity 0.2s ease;
+    /* Trusted By */
+    .trusted {
+      padding: 32px 24px;
+      border-top: 1px solid var(--light-gray);
+      border-bottom: 1px solid var(--light-gray);
     }
-    .btn-gradient:hover {
-      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    .trusted-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .trusted-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .trusted-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 56px;
+      flex-wrap: wrap;
+    }
+    .trusted-logo {
+      font-weight: 800;
+      color: var(--text-primary);
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      text-transform: uppercase;
+    }
+    .trusted-logo:hover { opacity: 0.85; }
+    .trusted-logo:nth-child(1) { font-size: 20px; letter-spacing: 0.08em; }
+    .trusted-logo:nth-child(2) { font-size: 19px; letter-spacing: -0.04em; font-weight: 900; }
+    .trusted-logo:nth-child(3) { font-size: 18px; letter-spacing: 0.14em; font-weight: 700; }
+    .trusted-logo:nth-child(4) { font-size: 21px; letter-spacing: -0.02em; font-weight: 800; text-transform: lowercase; }
+    .trusted-logo:nth-child(5) { font-size: 20px; letter-spacing: 0.06em; font-weight: 900; }
+    .trusted-logo:nth-child(6) { font-size: 19px; letter-spacing: 0.1em; font-weight: 700; }
+
+    /* Pricing Section */
+    .pricing {
+      padding: 48px 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .pricing .section-header {
+      text-align: center;
+    }
+    .pricing .section-header p {
+      margin: 0 auto;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .pricing-card {
+      border: 1.5px solid var(--light-gray);
+      border-radius: 12px;
+      padding: 32px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .pricing-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(10, 37, 64, 0.07);
+    }
+    .pricing-card-featured {
+      border-color: var(--accent-purple);
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-purple);
+      color: white;
+      padding: 3px 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .pricing-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .pricing-card .price {
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      letter-spacing: -0.03em;
+    }
+    .pricing-card .price span {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .pricing-card .price-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .pricing-features li::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      border-radius: 50%;
+      background: rgba(10, 187, 135, 0.1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%230abb87' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .pricing-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      letter-spacing: -0.01em;
+    }
+    .pricing-btn-outline {
+      border: 1.5px solid var(--light-gray);
+      background: transparent;
+      color: var(--text-primary);
+    }
+    .pricing-btn-outline:hover {
+      border-color: var(--accent-purple);
+      color: var(--accent-purple);
+    }
+    .pricing-btn-filled {
+      border: none;
+      background: var(--accent-purple);
+      color: white;
+    }
+    .pricing-btn-filled:hover {
+      background: var(--accent-purple-dark);
     }
 
-    /* Glass nav */
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* CTA Banner */
+    .cta-banner {
+      padding: 48px 24px;
+      background: var(--text-primary);
+      text-align: center;
+    }
+    .cta-banner h2 {
+      font-size: 34px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 14px;
+      letter-spacing: -0.03em;
+    }
+    .cta-banner p {
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+    .cta-banner .btn-primary {
+      background: var(--accent-purple);
+      display: inline-flex;
+    }
+    .cta-banner .btn-primary:hover {
+      background: var(--accent-purple-dark);
     }
 
-    /* Scroll-triggered fade-in — repeats */
-    .fade-in {
+    /* Footer */
+    .footer {
+      background: var(--text-primary);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 64px 24px 36px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .footer-logo-mark {
+      width: 24px;
+      height: 24px;
+      background: var(--accent-purple);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .footer-logo-mark svg {
+      width: 14px;
+      height: 14px;
+    }
+    .footer-logo-text {
+      font-weight: 700;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.65;
+      max-width: 260px;
+    }
+    .footer-col h4 {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-col a:hover { color: rgba(255, 255, 255, 0.9); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+    }
+    .footer-bottom a {
+      color: rgba(255, 255, 255, 0.35);
+      text-decoration: none;
+      margin-left: 20px;
+      transition: color 0.15s;
+    }
+    .footer-bottom a:hover { color: rgba(255, 255, 255, 0.7); }
+
+    /* Scroll animations */
+    .fade-up {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .fade-in.visible {
+    .fade-up.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .fade-in-delay-1 { transition-delay: 0.1s; }
-    .fade-in-delay-2 { transition-delay: 0.2s; }
-    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-up-d1 { transition-delay: 0.08s; }
+    .fade-up-d2 { transition-delay: 0.16s; }
+    .fade-up-d3 { transition-delay: 0.24s; }
+    .fade-up-d4 { transition-delay: 0.32s; }
+    .fade-up-d5 { transition-delay: 0.4s; }
 
-    /* Chart drawing animation */
-    @keyframes draw-bar {
-      from { transform: scaleY(0); }
-      to { transform: scaleY(1); }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 100px; }
+      .hero h1 { font-size: 34px; }
+      .phone-stats-section { grid-template-columns: 1fr; }
+      .capabilities-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
     }
-    .bar-animate {
-      transform-origin: bottom;
-      transform: scaleY(0);
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 28px; }
+      .hero-buttons { flex-direction: column; align-items: flex-start; }
+      .capabilities-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .trusted-logos { gap: 32px; }
     }
-    .bar-animate.animate {
-      animation: draw-bar 0.8s ease-out forwards;
-    }
-    .bar-animate.animate.bar-d1 { animation-delay: 0.1s; }
-    .bar-animate.animate.bar-d2 { animation-delay: 0.2s; }
-    .bar-animate.animate.bar-d3 { animation-delay: 0.3s; }
-    .bar-animate.animate.bar-d4 { animation-delay: 0.4s; }
-    .bar-animate.animate.bar-d5 { animation-delay: 0.5s; }
-    .bar-animate.animate.bar-d6 { animation-delay: 0.6s; }
-    .bar-animate.animate.bar-d7 { animation-delay: 0.7s; }
-    .bar-animate.animate.bar-d8 { animation-delay: 0.8s; }
-
-    /* Progress bar fill animation */
-    @keyframes fill-progress {
-      from { width: 0%; }
-    }
-    .progress-animate {
-      width: 0%;
-    }
-    .progress-animate.animate {
-      animation: fill-progress 1.2s ease-out forwards;
-    }
-
-    /* Loading dot pulse */
-    @keyframes loading-pulse {
-      0%, 80%, 100% { opacity: 0.3; }
-      40% { opacity: 1; }
-    }
-    .loading-dot { animation: loading-pulse 1.4s infinite ease-in-out both; }
-    .loading-dot:nth-child(1) { animation-delay: 0s; }
-    .loading-dot:nth-child(2) { animation-delay: 0.16s; }
-    .loading-dot:nth-child(3) { animation-delay: 0.32s; }
-
-    /* Checkbox check animation */
-    @keyframes check-in {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .check-animate {
-      transform: scale(0);
-      opacity: 0;
-    }
-    .check-animate.animate {
-      animation: check-in 0.3s ease-out forwards;
-    }
-    .check-animate.animate.check-d1 { animation-delay: 0.8s; }
-    .check-animate.animate.check-d2 { animation-delay: 1.2s; }
-    .check-animate.animate.check-d3 { animation-delay: 1.6s; }
-
-    /* Focus-visible for all interactive */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Hover Card Tilt */
-    .tilt-card { transition:transform 0.15s ease; transform-style:preserve-3d; perspective:800px; }
-  
-
-    /* Elastic/Spring Animations */
-    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
-    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  
   </style>
 </head>
-<body class="font-body" style="background-color: var(--bg); color: var(--text);">
+<body>
 
-  <!-- Glass Nav -->
-  <nav class="glass-nav sticky top-0 z-50 border-b" style="border-color: var(--border);">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
-        <a href="/" class="font-heading text-xl font-bold tracking-tight" style="color: var(--text);">
-          <span style="color: var(--accent);">Task</span>Flow
+  <!-- Navigation -->
+  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a href="#" class="nav-logo">
+          <div class="nav-logo-mark">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4l8 16L20 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="nav-logo-text">PayFlow</span>
         </a>
-        <div class="hidden items-center gap-8 md:flex">
-          <a href="#features" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Features</a>
-          <a href="#how-it-works" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">How It Works</a>
-          <a href="#pricing" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Pricing</a>
-          <a href="#" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Docs</a>
-          <a href="#signup" class="btn-gradient rounded-lg elastic-hover px-4 py-2 text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
-        </div>
-        <button class="rounded-lg p-2 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-b').classList.toggle('hidden')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
-        </button>
+        <ul class="nav-links">
+          <li><a href="#capabilities">Products</a></li>
+          <li><a href="#">Solutions</a></li>
+          <li><a href="#">Developers</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
       </div>
-      <div id="mobile-menu-b" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
-        <a href="#features" class="block px-3 py-2 text-sm" style="color: var(--muted);">Features</a>
-        <a href="#how-it-works" class="block px-3 py-2 text-sm" style="color: var(--muted);">How It Works</a>
-        <a href="#pricing" class="block px-3 py-2 text-sm" style="color: var(--muted);">Pricing</a>
-        <a href="#" class="block px-3 py-2 text-sm" style="color: var(--muted);">Docs</a>
-        <a href="#signup" class="btn-gradient mt-2 block rounded-lg px-3 py-2 text-center text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
+      <div class="nav-right">
+        <a href="#" class="nav-sign-in">Sign in</a>
+        <a href="#" class="nav-cta">Contact sales</a>
       </div>
     </div>
   </nav>
 
-  <main>
-    <!-- Hero (Split) -->
-    <section class="relative py-24 dot-pattern" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="grid items-center gap-12 lg:grid-cols-2">
-          <!-- Left: Text -->
-          <div class="fade-in">
-            <span class="font-mono mb-6 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.2);">v2.4 — AI Workflows</span>
-            <h1 class="font-heading text-5xl font-bold md:text-6xl" style="line-height: 1.08; letter-spacing: -0.02em;">
-              Ship projects faster with <span style="background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">AI-powered</span> task routing
-            </h1>
-            <p class="mt-6 text-lg leading-relaxed" style="color: var(--muted);">
-              TaskFlow learns your team's workflow and automates the repetitive parts — assignment, status updates, handoffs. Your team plans less and ships more.
-            </p>
-            <div class="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a href="#signup" class="btn-gradient inline-flex elastic-hover items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
-                Start Free Trial
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-              </a>
-              <a href="#how-it-works" class="inline-flex items-center justify-center gap-2 rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-slate-50" style="border-color: var(--border); color: var(--text);">
-                Watch Demo
-              </a>
-            </div>
-            <p class="mt-8 text-sm" style="color: var(--muted);">Free for up to 5 members. No credit card required.</p>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-left">
+      <h1 class="fade-up">Accept and optimize payments globally&mdash;online and in person</h1>
+      <p class="hero-description fade-up fade-up-d1">Simplify your checkout, expand your reach, and boost conversion with AI-powered tools to accept payments anywhere.</p>
+      <div class="hero-buttons fade-up fade-up-d2">
+        <a href="#" class="btn-primary">
+          Explore Payments
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#pricing" class="btn-secondary">
+          See pricing details
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right fade-up fade-up-d2">
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="checklist-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <!-- Right: Browser Mockup with Internal Animations -->
-          <div class="fade-in fade-in-delay-2 overflow-hidden rounded-lg border shadow-lg" id="browser-mockup" style="border-color: var(--border); background-color: var(--subtle-bg);">
-            <!-- Browser chrome -->
-            <div class="flex items-center gap-2 border-b px-4 py-3" style="border-color: var(--border); background-color: var(--bg);">
-              <span class="h-3 w-3 rounded-full" style="background-color: #FF5F57;"></span>
-              <span class="h-3 w-3 rounded-full" style="background-color: #FEBC2E;"></span>
-              <span class="h-3 w-3 rounded-full" style="background-color: #28C840;"></span>
-              <div class="font-mono ml-3 flex-1 rounded-lg px-3 py-1 text-xs" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">
-                <span style="color: #22c55e;">https://</span>app.taskflow.com/dashboard
-              </div>
+          <span class="checklist-text"><strong>Create a seamless</strong> checkout experience</span>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="checklist-text"><strong>Expand to new markets</strong> faster</span>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="checklist-text"><strong>Maximize acceptance rates</strong> and mitigate fraud</span>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="checklist-text"><strong>Unify online and in-person</strong> payments</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phone + Stats Section -->
+  <section class="phone-stats-section">
+    <div class="phone-wrapper fade-up">
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <span class="phone-back">&larr;</span>
+            <span class="phone-label">Checkout</span>
+          </div>
+          <div class="phone-product">
+            <div class="phone-product-img"></div>
+            <div class="phone-product-name">Premium Bundle</div>
+            <div class="phone-product-price">$49.99</div>
+          </div>
+          <div class="phone-divider"></div>
+          <div class="phone-field">
+            <div class="phone-field-label">Email</div>
+            <div class="phone-field-input">alex@company.com</div>
+          </div>
+          <div class="phone-field">
+            <div class="phone-field-label">Card Number</div>
+            <div class="phone-field-input">4242 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242</div>
+          </div>
+          <div class="phone-field-row">
+            <div class="phone-field">
+              <div class="phone-field-label">Expiry</div>
+              <div class="phone-field-input">12 / 27</div>
             </div>
-            <!-- Dashboard layout with sidebar -->
-            <div class="flex" style="background-color: var(--subtle-bg);">
-              <!-- Mini sidebar -->
-              <div class="hidden w-12 flex-col items-center gap-3 border-r py-3 sm:flex" style="border-color: var(--border); background-color: var(--bg);">
-                <div class="h-6 w-6 rounded-lg" style="background-color: var(--accent); opacity: 0.9;"></div>
-                <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                <div class="mt-auto h-5 w-5 rounded-full" style="background-color: var(--border);"></div>
-              </div>
-              <!-- Main content area -->
-              <div class="flex-1 p-4">
-                <!-- Top bar -->
-                <div class="mb-3 flex items-center justify-between">
-                  <div>
-                    <p class="text-xs font-medium" style="color: var(--text);">Sprint 14 Overview</p>
-                    <p class="font-mono text-xs" style="color: var(--muted);">Mar 18 — Mar 31</p>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-mono rounded px-2 py-0.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.15);">
-                      <span class="inline-block h-1.5 w-1.5 rounded-full mr-1" style="background-color: var(--accent); animation: loading-pulse 1.4s infinite ease-in-out;"></span>
-                      Live
-                    </span>
-                  </div>
-                </div>
-                <!-- Stats row with animated progress bars -->
-                <div class="grid grid-cols-3 gap-2 mb-3">
-                  <div class="rounded-lg p-2.5" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <p class="font-mono text-xs" style="color: var(--muted);">Tasks</p>
-                    <p class="font-heading text-xl font-bold" style="color: var(--text);">24</p>
-                    <div class="mt-1 h-1.5 w-full rounded-full" style="background-color: var(--border);">
-                      <div class="h-1.5 rounded-full progress-animate" style="width: 68%; background-color: var(--accent);"></div>
-                    </div>
-                  </div>
-                  <div class="rounded-lg p-2.5" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <p class="font-mono text-xs" style="color: var(--muted);">AI Auto</p>
-                    <p class="font-heading text-xl font-bold" style="color: var(--text);">18</p>
-                    <div class="mt-1 h-1.5 w-full rounded-full" style="background-color: var(--border);">
-                      <div class="h-1.5 rounded-full progress-animate" style="width: 75%; background-color: #22c55e;"></div>
-                    </div>
-                  </div>
-                  <div class="rounded-lg p-2.5" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <p class="font-mono text-xs" style="color: var(--muted);">On Track</p>
-                    <p class="font-heading text-xl font-bold" style="color: #22c55e;">92%</p>
-                    <div class="mt-1 h-1.5 w-full rounded-full" style="background-color: var(--border);">
-                      <div class="h-1.5 rounded-full progress-animate" style="width: 92%; background-color: #22c55e;"></div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Animated chart area -->
-                <div class="mb-3 rounded-lg p-3" style="background-color: var(--bg); border: 1px solid var(--border);">
-                  <div class="mb-2 flex items-center justify-between">
-                    <p class="text-xs font-medium" style="color: var(--text);">Velocity</p>
-                    <div class="flex gap-2">
-                      <span class="font-mono text-xs" style="color: var(--muted);">7d</span>
-                      <span class="font-mono rounded px-1.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">30d</span>
-                    </div>
-                  </div>
-                  <div class="flex items-end gap-1" style="height: 40px;">
-                    <div class="flex-1 rounded-sm bar-animate bar-d1" style="height: 40%; background-color: var(--border);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d2" style="height: 55%; background-color: var(--border);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d3" style="height: 45%; background-color: var(--border);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d4" style="height: 70%; background-color: rgba(37,99,235,0.3);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d5" style="height: 60%; background-color: rgba(37,99,235,0.3);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d6" style="height: 85%; background-color: rgba(37,99,235,0.5);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d7" style="height: 75%; background-color: rgba(37,99,235,0.5);"></div>
-                    <div class="flex-1 rounded-sm bar-animate bar-d8" style="height: 95%; background-color: var(--accent);"></div>
-                  </div>
-                </div>
-                <!-- Task list with animated checkboxes -->
-                <div class="space-y-1.5">
-                  <div class="flex items-center gap-2 rounded-lg p-2" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <div class="flex h-4 w-4 items-center justify-center rounded border" style="border-color: var(--accent); background-color: rgba(37,99,235,0.08);">
-                      <svg class="check-animate check-d1" width="10" height="10" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
-                    </div>
-                    <span class="flex-1 text-xs" style="color: var(--text);">Design review — Sprint 14</span>
-                    <span class="font-mono rounded-full px-2 py-0.5 text-xs" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">Done</span>
-                  </div>
-                  <div class="flex items-center gap-2 rounded-lg p-2" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <div class="flex h-4 w-4 items-center justify-center rounded border" style="border-color: #22c55e; background-color: rgba(34,197,94,0.08);">
-                      <svg class="check-animate check-d2" width="10" height="10" fill="none" stroke="#22c55e" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
-                    </div>
-                    <span class="flex-1 text-xs" style="color: var(--text);">API integration tests</span>
-                    <span class="font-mono rounded-full px-2 py-0.5 text-xs" style="background-color: rgba(34,197,94,0.08); color: #22c55e;">Auto</span>
-                  </div>
-                  <div class="flex items-center gap-2 rounded-lg p-2" style="background-color: var(--bg); border: 1px solid var(--border);">
-                    <div class="flex h-4 w-4 items-center justify-center rounded border" style="border-color: var(--border);">
-                      <svg class="check-animate check-d3" width="10" height="10" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
-                    </div>
-                    <span class="flex-1 text-xs" style="color: var(--text);">Deploy staging env</span>
-                    <span class="font-mono rounded-full px-2 py-0.5 text-xs flex items-center gap-1" style="background-color: rgba(100,116,139,0.08); color: #64748b;">
-                      <span class="loading-dot inline-block h-1 w-1 rounded-full" style="background-color: #64748b;"></span>
-                      <span class="loading-dot inline-block h-1 w-1 rounded-full" style="background-color: #64748b;"></span>
-                      <span class="loading-dot inline-block h-1 w-1 rounded-full" style="background-color: #64748b;"></span>
-                    </span>
-                  </div>
-                </div>
-              </div>
+            <div class="phone-field">
+              <div class="phone-field-label">CVC</div>
+              <div class="phone-field-input">&bull;&bull;&bull;</div>
             </div>
+          </div>
+          <div class="phone-pay-btn">Pay $49.99</div>
+          <div class="phone-methods">
+            <div class="phone-method">VISA</div>
+            <div class="phone-method">MC</div>
+            <div class="phone-method">AMEX</div>
+            <div class="phone-method">GPay</div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Social Proof -->
-    <section class="py-12" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p class="font-body text-center text-sm font-medium" style="color: var(--muted);">Used by [N]+ teams — from 3-person startups to [N]-seat engineering orgs</p>
-      </div>
-    </section>
-
-    <!-- Features Bento Grid -->
-    <section id="features" class="py-20" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.15);">Features</span>
-          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl">Built for teams that ship</h2>
-          <p class="mt-4 text-base" style="color: var(--muted);">Powerful AI features that eliminate busywork and keep your team focused on what matters.</p>
-        </div>
-        <!-- Bento grid with varied sizing -->
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <!-- Card 1: Large (2x2) -->
-          <article class="card-hover fade-in group tilt-card rounded-lg border p-8 shadow-sm sm:col-span-2 sm:row-span-2" style="background-color: var(--bg); border-color: var(--border);">
-            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-              <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-            </div>
-            <h3 class="font-heading mb-3 text-xl font-semibold">Intelligent Task Routing</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Machine learning analyzes your team's expertise, availability, and past performance to automatically route tasks to the best person. Reduces assignment time from hours to seconds.</p>
-            <!-- Internal mockup: mini assignment flow -->
-            <div class="mt-6 rounded-lg border p-4 space-y-2" style="border-color: var(--border); background-color: var(--subtle-bg);">
-              <div class="flex items-center gap-2">
-                <div class="h-6 w-6 rounded-full" style="background-color: rgba(37,99,235,0.15);"></div>
-                <div class="h-2 flex-1 rounded-full" style="background-color: var(--border);"></div>
-                <svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
-                <div class="h-6 w-6 rounded-full" style="background-color: rgba(34,197,94,0.15);"></div>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="h-6 w-6 rounded-full" style="background-color: rgba(37,99,235,0.15);"></div>
-                <div class="h-2 w-3/4 rounded-full" style="background-color: var(--border);"></div>
-                <svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
-                <div class="h-6 w-6 rounded-full" style="background-color: rgba(249,115,22,0.15);"></div>
-              </div>
-            </div>
-          </article>
-          <!-- Card 2: Medium -->
-          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-lg font-semibold">Workflow Automation</h3>
-            <p class="text-sm leading-relaxed" style="color: var(--muted);">AI detects repetitive patterns and suggests automations. Status updates, handoffs, and notifications run on autopilot.</p>
-          </article>
-          <!-- Card 3: Medium -->
-          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-lg font-semibold">Predictive Analytics</h3>
-            <p class="text-sm leading-relaxed" style="color: var(--muted);">Real-time risk scoring flags at-risk deadlines before they slip. Rebalance workloads with one click.</p>
-          </article>
-          <!-- Card 4: Wide -->
-          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
-            <div class="flex items-start gap-6">
-              <div class="shrink-0">
-                <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-                  <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                </div>
-                <h3 class="font-heading mb-2 text-lg font-semibold">50+ Integrations</h3>
-                <p class="text-sm leading-relaxed" style="color: var(--muted);">Connect GitHub, Slack, Figma, and your entire stack. Two-way sync keeps everything aligned.</p>
-              </div>
-              <!-- Integration icons mockup -->
-              <div class="hidden sm:grid grid-cols-3 gap-2 shrink-0">
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
-                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
-                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
-                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
-                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
-                  <div class="h-5 w-5 rounded" style="background-color: var(--border);"></div>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg border" style="border-color: var(--border); background-color: var(--subtle-bg);">
-                  <span class="font-mono text-xs" style="color: var(--muted);">+44</span>
-                </div>
-              </div>
-            </div>
-          </article>
-          <!-- Card 5 -->
-          <article class="card-hover fade-in group tilt-card rounded-lg border p-6 shadow-sm sm:col-span-2" style="background-color: var(--bg); border-color: var(--border);">
-            <div class="mb-4 inline-flex rounded-lg p-2.5" style="background-color: rgba(37,99,235,0.08);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-lg font-semibold">Enterprise Security</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">SOC 2 Type II certified. End-to-end encryption, SSO, RBAC, and full audit logging.</p>
-          </article>
+    <div class="right-column fade-up fade-up-d2">
+      <div class="stats-card">
+        <div class="stats-number" id="statsCounter">2.2<span class="stats-suffix">%</span></div>
+        <div class="stats-label">increase in authorization rate</div>
+        <div class="stats-sublabel">on average with Adaptive Acceptance</div>
+        <div class="stats-chart">
+          <div class="stats-bar" style="height: 18px;" data-delay="0"></div>
+          <div class="stats-bar" style="height: 32px;" data-delay="80"></div>
+          <div class="stats-bar" style="height: 22px;" data-delay="160"></div>
+          <div class="stats-bar" style="height: 42px;" data-delay="240"></div>
+          <div class="stats-bar" style="height: 28px;" data-delay="320"></div>
+          <div class="stats-bar" style="height: 48px;" data-delay="400"></div>
+          <div class="stats-bar" style="height: 35px;" data-delay="480"></div>
+          <div class="stats-bar" style="height: 52px;" data-delay="560"></div>
+          <div class="stats-bar" style="height: 40px;" data-delay="640"></div>
+          <div class="stats-bar" style="height: 56px;" data-delay="720"></div>
         </div>
       </div>
-    </section>
 
-    <!-- How It Works -->
-    <section id="how-it-works" class="py-20" style="background-color: var(--subtle-bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.15);">How It Works</span>
-          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl">Up and running in minutes</h2>
-          <p class="mt-4 text-base" style="color: var(--muted);">No complex setup. No lengthy onboarding. Just results.</p>
+      <div class="feature-cards">
+        <div class="feature-card">
+          <h3>Revenue Recovery</h3>
+          <p>Automatically retry failed payments with ML-optimized timing. Smart dunning sequences adapt to each customer's payment behavior and timezone.</p>
+          <div class="feature-card-stats">
+            <div class="feature-card-stat-item">
+              <span class="feature-card-stat-value">$1.2M</span>
+              <span class="feature-card-stat-label">Recovered</span>
+            </div>
+            <div class="feature-card-stat-item">
+              <span class="feature-card-stat-value">68%</span>
+              <span class="feature-card-stat-label">Retry success</span>
+            </div>
+            <div class="feature-card-stat-item">
+              <span class="feature-card-stat-value">4.2d</span>
+              <span class="feature-card-stat-label">Avg recovery</span>
+            </div>
+          </div>
+          <div class="feature-card-mini-chart">
+            <div class="mini-bar" style="height: 30%;"></div>
+            <div class="mini-bar" style="height: 45%;"></div>
+            <div class="mini-bar" style="height: 38%;"></div>
+            <div class="mini-bar" style="height: 62%;"></div>
+            <div class="mini-bar" style="height: 55%;"></div>
+            <div class="mini-bar" style="height: 78%;"></div>
+            <div class="mini-bar" style="height: 85%;"></div>
+            <div class="mini-bar" style="height: 92%;"></div>
+          </div>
         </div>
-        <div class="relative grid gap-8 sm:grid-cols-3">
-          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background: linear-gradient(to right, transparent, var(--border) 15%, var(--border) 85%, transparent);" aria-hidden="true"></div>
-          <!-- Step 1 -->
-          <div class="fade-in relative text-center">
-            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 2px solid var(--accent); box-shadow: 0 0 0 8px var(--subtle-bg);">01</div>
-            <h3 class="font-heading mb-3 text-lg font-semibold">Connect your tools</h3>
-            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Import from Jira, Asana, Trello, or Linear. Your data migrates in under 5 minutes.</p>
+        <div class="feature-card feature-card-warm">
+          <h3>Smart Routing</h3>
+          <p>Dynamically route each transaction to the optimal processor based on card type, region, and real-time success rates across 195+ countries.</p>
+          <div class="feature-card-stats">
+            <div class="feature-card-stat-item">
+              <span class="feature-card-stat-value">3.1%</span>
+              <span class="feature-card-stat-label">Auth uplift</span>
+            </div>
+            <div class="feature-card-stat-item">
+              <span class="feature-card-stat-value">195+</span>
+              <span class="feature-card-stat-label">Countries</span>
+            </div>
+            <div class="feature-card-stat-item">
+              <span class="feature-card-stat-value">42ms</span>
+              <span class="feature-card-stat-label">Avg latency</span>
+            </div>
           </div>
-          <!-- Step 2 -->
-          <div class="fade-in relative text-center">
-            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 2px solid var(--accent); box-shadow: 0 0 0 8px var(--subtle-bg);">02</div>
-            <h3 class="font-heading mb-3 text-lg font-semibold">AI learns your patterns</h3>
-            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">TaskFlow observes your team for 48 hours and maps your actual workflow, not just your org chart.</p>
-          </div>
-          <!-- Step 3 -->
-          <div class="fade-in relative text-center">
-            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 2px solid var(--accent); box-shadow: 0 0 0 8px var(--subtle-bg);">03</div>
-            <h3 class="font-heading mb-3 text-lg font-semibold">Activate automations</h3>
-            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Review AI-suggested automations, approve with one click, and reclaim hours every week.</p>
+          <div class="feature-card-route-map">
+            <div class="route-dot" style="top: 20%; left: 15%;"></div>
+            <div class="route-dot" style="top: 30%; left: 45%;"></div>
+            <div class="route-dot" style="top: 50%; left: 70%;"></div>
+            <div class="route-dot route-dot-active" style="top: 35%; left: 55%;"></div>
+            <div class="route-dot" style="top: 60%; left: 30%;"></div>
+            <div class="route-line"></div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Testimonials -->
-    <section class="py-20" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl">What real users say</h2>
+  <!-- Product Features Grid -->
+  <section class="product-features">
+    <div class="section-header fade-up">
+      <h2>Everything you need to get paid</h2>
+      <p>Purpose-built payment tools that work together seamlessly, from checkout to payout.</p>
+    </div>
+    <div class="product-features-grid">
+      <div class="pf-card fade-up fade-up-d1">
+        <div class="pf-icon pf-icon-purple">
+          <svg width="24" height="24" fill="none" stroke="#635bff" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         </div>
-        <div class="grid gap-6 sm:grid-cols-3">
-          <!-- Testimonial 1 -->
-          <blockquote class="fade-in card-hover rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <p class="mb-6 text-base leading-relaxed">"AI routing killed our triage meeting. That's [N] minutes back per engineer per week. Setup took longer than I expected — maybe 3 hours, not the '5 minutes' they claim."</p>
-            <footer class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">@</div>
-              <div>
-                <cite class="font-heading block text-sm font-semibold not-italic">@schen_eng</cite>
-                <span class="text-xs" style="color: var(--muted);">via G2 review, 4/5 stars</span>
-              </div>
-            </footer>
-          </blockquote>
-          <!-- Testimonial 2 (highlighted) -->
-          <blockquote class="fade-in rounded-lg border-2 p-6 shadow-sm sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
-            <p class="mb-6 text-base leading-relaxed">"On-time delivery went from [N]% to [N]% in one quarter. The predictive stuff is genuinely useful. Mobile app is weak though — I mostly use desktop."</p>
-            <footer class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">@</div>
-              <div>
-                <cite class="font-heading block text-sm font-semibold not-italic">@marcusR</cite>
-                <span class="text-xs" style="color: var(--muted);">via X (Twitter)</span>
-              </div>
-            </footer>
-          </blockquote>
-          <!-- Testimonial 3 -->
-          <blockquote class="fade-in card-hover rounded-lg border p-6 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <p class="mb-6 text-base leading-relaxed">"GitHub PRs auto-link to tasks, Slack threads become action items. Integrations are the strong point. Pricing could be clearer — had to email sales to understand enterprise tier."</p>
-            <footer class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent);">@</div>
-              <div>
-                <cite class="font-heading block text-sm font-semibold not-italic">@aisha_p</cite>
-                <span class="text-xs" style="color: var(--muted);">via ProductHunt review</span>
-              </div>
-            </footer>
-          </blockquote>
-        </div>
+        <h3>Online Payments</h3>
+        <p>Accept cards, wallets, bank debits, and 135+ local payment methods through a single, unified API integration.</p>
+        <span class="pf-tag">135+ methods</span>
       </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="pricing" class="py-20" style="background-color: var(--subtle-bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.15);">Pricing</span>
-          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl">Transparent pricing, no surprises</h2>
-          <p class="mt-4 text-base" style="color: var(--muted);">Start free. Upgrade when you're ready. Cancel anytime.</p>
+      <div class="pf-card fade-up fade-up-d2">
+        <div class="pf-icon pf-icon-orange">
+          <svg width="24" height="24" fill="none" stroke="#ff6f18" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <div class="grid items-start gap-6 sm:grid-cols-3">
-          <!-- Starter -->
-          <article class="fade-in card-hover rounded-lg border p-8 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <h3 class="font-heading text-lg font-semibold">Starter</h3>
-            <p class="mt-1 text-sm" style="color: var(--muted);">For small teams just getting started.</p>
-            <div class="mt-6 flex items-baseline gap-1">
-              <span class="font-heading text-4xl font-bold">$0</span>
-              <span class="text-sm" style="color: var(--muted);">/month</span>
-            </div>
-            <ul class="mt-8 space-y-3" role="list">
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Up to 5 members</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>3 active projects</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Basic AI suggestions</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Community support</li>
-            </ul>
-            <a href="#signup" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-slate-50" style="border-color: var(--border); color: var(--text);">Get Started Free</a>
-          </article>
-          <!-- Pro (highlighted) -->
-          <article class="fade-in rounded-lg border-2 p-8 shadow-sm sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
-            <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background: linear-gradient(135deg, #2563eb, #4f46e5); color: #ffffff;">Most Popular</span>
-            <h3 class="font-heading text-lg font-semibold">Pro</h3>
-            <p class="mt-1 text-sm" style="color: var(--muted);">For growing teams shipping fast.</p>
-            <div class="mt-6 flex items-baseline gap-1">
-              <span class="font-heading text-4xl font-bold">$18</span>
-              <span class="text-sm" style="color: var(--muted);">/user/month</span>
-            </div>
-            <ul class="mt-8 space-y-3" role="list">
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Unlimited members</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Unlimited projects</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Full AI automation</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Predictive analytics</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Priority support</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Custom integrations</li>
-            </ul>
-            <a href="#signup" class="btn-gradient mt-8 block rounded-lg px-6 py-3 text-center text-sm font-medium" style="color: #ffffff;">Start Free Trial</a>
-          </article>
-          <!-- Enterprise -->
-          <article class="fade-in card-hover rounded-lg border p-8 shadow-sm" style="background-color: var(--bg); border-color: var(--border);">
-            <h3 class="font-heading text-lg font-semibold">Enterprise</h3>
-            <p class="mt-1 text-sm" style="color: var(--muted);">For organizations with advanced needs.</p>
-            <div class="mt-6 flex items-baseline gap-1">
-              <span class="font-heading text-4xl font-bold">Custom</span>
-            </div>
-            <ul class="mt-8 space-y-3" role="list">
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Everything in Pro</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>SSO & SAML</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>99.99% SLA</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Dedicated CSM</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Audit logs & compliance</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Custom contracts</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>On-premise deployment</li>
-            </ul>
-            <a href="#contact" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-slate-50" style="border-color: var(--border); color: var(--text);">Contact Sales</a>
-          </article>
-        </div>
+        <h3>Fraud Protection</h3>
+        <p>ML models trained on billions of transactions detect and block fraud in real time while maximizing legitimate conversions.</p>
+        <span class="pf-tag">99.5% accuracy</span>
       </div>
-    </section>
+      <div class="pf-card fade-up fade-up-d3">
+        <div class="pf-icon pf-icon-green">
+          <svg width="24" height="24" fill="none" stroke="#0abb87" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <h3>Global Payouts</h3>
+        <p>Send funds to sellers, creators, and service providers in 40+ countries with automatic currency conversion.</p>
+        <span class="pf-tag">40+ countries</span>
+      </div>
+      <div class="pf-card fade-up fade-up-d4">
+        <div class="pf-icon pf-icon-cyan">
+          <svg width="24" height="24" fill="none" stroke="#00b4d8" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <h3>Revenue Analytics</h3>
+        <p>Real-time dashboards with cohort analysis, churn prediction, and revenue forecasting to inform every decision.</p>
+        <span class="pf-tag">Real-time</span>
+      </div>
+    </div>
+  </section>
 
-    <!-- CTA -->
-    <section class="py-24" style="background: linear-gradient(180deg, #111827 0%, #030712 100%); color: #ffffff;">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center fade-in">
-          <span class="font-mono mb-6 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: rgba(37,99,235,0.15); color: #93b4f8; border: 1px solid rgba(37,99,235,0.25);">Get Started</span>
-          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: #ffffff;">Ready to automate your workflow?</h2>
-          <p class="mt-4 text-base" style="color: rgba(255,255,255,0.55);">Free to start, no credit card required.</p>
-          <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href="#signup" class="btn-gradient inline-flex elastic-hover items-center gap-2 rounded-lg px-6 py-3 text-base font-medium" style="color: #ffffff;">
-              Start Free Trial
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-            </a>
-            <a href="#" class="inline-flex items-center gap-2 rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-white/5" style="border-color: rgba(255,255,255,0.15); color: #ffffff;">
-              Schedule Demo
-            </a>
+  <!-- Developer Section -->
+  <section class="developer-section">
+    <div class="dev-left fade-up">
+      <h2>Built for developers, by developers</h2>
+      <p>Clean APIs, comprehensive SDKs, and detailed documentation. Go from zero to accepting payments in under 10 minutes.</p>
+      <div class="dev-links">
+        <a href="#" class="dev-link">
+          Read the docs
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#" class="dev-link">
+          API reference
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="fade-up fade-up-d2">
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots">
+            <div class="code-dot"></div>
+            <div class="code-dot"></div>
+            <div class="code-dot"></div>
           </div>
+          <span class="code-lang">server.ts</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="cc">// Create a payment intent in 4 lines</span>
+<span class="ck">import</span> PayFlow <span class="ck">from</span> <span class="cs">'@payflow/node'</span>;
+
+<span class="ck">const</span> payflow = <span class="ck">new</span> <span class="cv">PayFlow</span>(<span class="cs">'sk_live_...'</span>);
+
+<span class="ck">const</span> payment = <span class="ck">await</span> payflow.payments.<span class="cv">create</span>({
+  <span class="cp">amount</span>: <span class="cv">4999</span>,
+  <span class="cp">currency</span>: <span class="cs">'usd'</span>,
+  <span class="cp">payment_methods</span>: [<span class="cs">'card'</span>, <span class="cs">'apple_pay'</span>],
+  <span class="cp">metadata</span>: { <span class="cp">order_id</span>: <span class="cs">'ord_28f4'</span> }
+});
+
+<span class="cc">// Returns: { id: 'pi_3N...', status: 'succeeded' }</span></pre>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+
+  <!-- Capabilities Section -->
+  <section class="capabilities" id="capabilities">
+    <div class="section-header fade-up">
+      <h2>Built for every payment scenario</h2>
+      <p>From startups to enterprises, PayFlow handles the complexity so you can focus on growth.</p>
+    </div>
+    <div class="capabilities-grid">
+      <div class="capability-card fade-up fade-up-d1">
+        <div class="capability-icon icon-purple">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <h3>Online Payments</h3>
+        <p>Accept cards, wallets, and 135+ local payment methods with a single integration.</p>
+      </div>
+      <div class="capability-card fade-up fade-up-d2">
+        <div class="capability-icon icon-green">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
+        </div>
+        <h3>In-Person Payments</h3>
+        <p>Unified terminal solution with pre-certified hardware for seamless checkout.</p>
+      </div>
+      <div class="capability-card fade-up fade-up-d3">
+        <div class="capability-icon icon-cyan">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <h3>Global Coverage</h3>
+        <p>Process payments in 195+ countries with intelligent local acquiring and routing.</p>
+      </div>
+      <div class="capability-card fade-up fade-up-d4">
+        <div class="capability-icon icon-orange">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Fraud Prevention</h3>
+        <p>Machine learning models trained on billions of data points to stop fraud before it happens.</p>
+      </div>
+      <div class="capability-card fade-up fade-up-d5">
+        <div class="capability-icon icon-indigo">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <h3>Revenue Optimization</h3>
+        <p>Adaptive acceptance, smart retries, and card updater to maximize every transaction.</p>
+      </div>
+      <div class="capability-card fade-up">
+        <div class="capability-icon icon-coral">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3>Instant Payouts</h3>
+        <p>Pay out to sellers and service providers in minutes with real-time fund transfers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted By -->
+  <section class="trusted">
+    <div class="trusted-inner fade-up">
+      <div class="trusted-label">Trusted by industry leaders</div>
+      <div class="trusted-logos">
+        <span class="trusted-logo">Shopify</span>
+        <span class="trusted-logo">Notion</span>
+        <span class="trusted-logo">Figma</span>
+        <span class="trusted-logo">Slack</span>
+        <span class="trusted-logo">Zoom</span>
+        <span class="trusted-logo">Spotify</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <div class="section-header fade-up">
+      <h2>Simple, transparent pricing</h2>
+      <p>No hidden fees. No setup costs. Pay only for what you use.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card fade-up fade-up-d1">
+        <h3>Starter</h3>
+        <div class="price">2.9%<span> + 30&cent;</span></div>
+        <div class="price-note">per successful transaction</div>
+        <ul class="pricing-features">
+          <li>All payment methods</li>
+          <li>Basic fraud protection</li>
+          <li>Standard dashboard</li>
+          <li>Email support</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-outline">Get started</button>
+      </div>
+      <div class="pricing-card pricing-card-featured fade-up fade-up-d2">
+        <div class="pricing-badge">Most popular</div>
+        <h3>Scale</h3>
+        <div class="price">2.5%<span> + 30&cent;</span></div>
+        <div class="price-note">per successful transaction</div>
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li>Advanced fraud tools</li>
+          <li>Revenue optimization</li>
+          <li>Priority support</li>
+          <li>Custom reporting</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-filled">Start free trial</button>
+      </div>
+      <div class="pricing-card fade-up fade-up-d3">
+        <h3>Enterprise</h3>
+        <div class="price" style="font-size: 38px;">Custom</div>
+        <div class="price-note">tailored to your volume</div>
+        <ul class="pricing-features">
+          <li>Everything in Scale</li>
+          <li>Dedicated account team</li>
+          <li>Custom SLA</li>
+          <li>Compliance assistance</li>
+          <li>Volume discounts</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-outline">Contact sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner">
+    <div class="fade-up" style="max-width: 560px; margin: 0 auto;">
+      <h2>Ready to grow your revenue?</h2>
+      <p>Start accepting payments in minutes. No contracts, cancel anytime.</p>
+      <a href="#" class="btn-primary">
+        Start now &mdash; it's free
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer class="py-16" style="background-color: #020617; color: #ffffff; border-top: 1px solid rgba(255,255,255,0.06);">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
-        <div class="lg:col-span-1">
-          <span class="font-heading text-lg font-bold"><span style="color: var(--accent);">Task</span>Flow</span>
-          <p class="mt-3 text-sm" style="color: rgba(255,255,255,0.45);">AI-powered project management for teams that ship.</p>
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">
+            <div class="footer-logo-mark">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 4l8 16L20 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="footer-logo-text">PayFlow</span>
+          </a>
+          <p>Financial infrastructure for the internet. Millions of businesses use PayFlow to accept payments, send payouts, and manage operations online.</p>
         </div>
-        <nav aria-label="Product">
-          <h4 class="font-heading mb-4 text-sm font-semibold" style="color: rgba(255,255,255,0.65);">Product</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#features" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Features</a></li>
-            <li><a href="#pricing" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Pricing</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Integrations</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Changelog</a></li>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="#">Payments</a></li>
+            <li><a href="#">Terminal</a></li>
+            <li><a href="#">Connect</a></li>
+            <li><a href="#">Billing</a></li>
+            <li><a href="#">Invoicing</a></li>
           </ul>
-        </nav>
-        <nav aria-label="Company">
-          <h4 class="font-heading mb-4 text-sm font-semibold" style="color: rgba(255,255,255,0.65);">Company</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">About</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Blog</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Careers</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Contact</a></li>
+        </div>
+        <div class="footer-col">
+          <h4>Developers</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">SDKs</a></li>
+            <li><a href="#">Plugins</a></li>
           </ul>
-        </nav>
-        <nav aria-label="Resources">
-          <h4 class="font-heading mb-4 text-sm font-semibold" style="color: rgba(255,255,255,0.65);">Resources</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Documentation</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">API Reference</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Help Center</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Status</a></li>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Press</a></li>
           </ul>
-        </nav>
-        <nav aria-label="Legal">
-          <h4 class="font-heading mb-4 text-sm font-semibold" style="color: rgba(255,255,255,0.65);">Legal</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Privacy Policy</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Terms of Service</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">Security</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.4);">GDPR</a></li>
-          </ul>
-        </nav>
+        </div>
       </div>
-      <div class="mt-12 border-t pt-8" style="border-color: rgba(255,255,255,0.06);">
-        <p class="text-center text-sm" style="color: rgba(255,255,255,0.25);">&copy; 2026 TaskFlow, Inc. All rights reserved.</p>
+      <div class="footer-bottom">
+        <span>&copy; 2026 PayFlow, Inc. All rights reserved.</span>
+        <span>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookies</a>
+        </span>
       </div>
     </div>
   </footer>
 
-  <!-- Scroll-triggered animations (repeat on scroll) + mockup animations -->
   <script>
-    (function() {
-      // Repeating scroll animations for fade-in
-      var fadeEls = document.querySelectorAll('.fade-in');
-      if (!window.IntersectionObserver) {
-        fadeEls.forEach(function(el) { el.classList.add('visible'); });
-        return;
-      }
-      var fadeObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          } else {
-            entry.target.classList.remove('visible');
+    // Scroll-triggered fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          if (entry.target.querySelector('.stats-bar')) {
+            entry.target.querySelectorAll('.stats-bar').forEach((bar, i) => {
+              const delay = parseInt(bar.dataset.delay || 0, 10);
+              setTimeout(() => bar.classList.add('animate'), delay);
+            });
           }
-        });
-      }, { threshold: 0.15 });
-      fadeEls.forEach(function(el) { fadeObserver.observe(el); });
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
 
-      // Browser mockup internal animations (bars, progress, checks)
-      var mockup = document.getElementById('browser-mockup');
-      if (mockup) {
-        var bars = mockup.querySelectorAll('.bar-animate');
-        var progresses = mockup.querySelectorAll('.progress-animate');
-        var checks = mockup.querySelectorAll('.check-animate');
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-        var mockupObserver = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              bars.forEach(function(b) { b.classList.add('animate'); });
-              progresses.forEach(function(p) { p.classList.add('animate'); });
-              checks.forEach(function(c) { c.classList.add('animate'); });
-            } else {
-              bars.forEach(function(b) { b.classList.remove('animate'); });
-              progresses.forEach(function(p) { p.classList.remove('animate'); });
-              checks.forEach(function(c) { c.classList.remove('animate'); });
-            }
-          });
-        }, { threshold: 0.2 });
-        mockupObserver.observe(mockup);
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('nav');
+      if (window.scrollY > 32) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
       }
-    })();
-  
+    }, { passive: true });
 
-      // Hover Card Tilt
-      (function(){
-        document.querySelectorAll('.tilt-card').forEach(function(card){
-          card.addEventListener('mousemove', function(e){
-            var rect = card.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var y = e.clientY - rect.top;
-            var centerX = rect.width / 2;
-            var centerY = rect.height / 2;
-            var rotateX = ((y - centerY) / centerY) * -6;
-            var rotateY = ((x - centerX) / centerX) * 6;
-            card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
-          });
-          card.addEventListener('mouseleave', function(){
-            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
-          });
-        });
-      })();
-  
+    // Counter animation for 2.2%
+    function animateCounter(el) {
+      const target = 2.2;
+      const duration = 1200;
+      const start = performance.now();
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = (eased * target).toFixed(1);
+        el.innerHTML = current + '<span class="stats-suffix">%</span>';
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const counter = document.getElementById('statsCounter');
+    if (counter) counterObserver.observe(counter);
   </script>
 
 </body>

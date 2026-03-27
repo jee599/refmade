@@ -4,390 +4,962 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>052 — Grain Texture Earth</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: 'Source Sans 3', sans-serif;
-      background: #F5F0EB;
-      color: #2C2418;
+      font-family: 'Inter', sans-serif;
+      background: #0a0f0a;
+      color: #e8e4df;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    h1, h2, h3, h4 { font-family: 'Fraunces', serif; }
 
-    /* Grain overlay */
-    .grain-overlay {
+    /* ── Grain overlay ── */
+    .grain {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       pointer-events: none;
-      z-index: 999;
-      opacity:0.06;
+      z-index: 100;
+      opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 150px 150px;
     }
 
-    /* Wavy divider */
-    .wavy-divider {
+    /* ── Hero section ── */
+    .hero {
+      position: relative;
       width: 100%;
-      height: 40px;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
     }
-    .wavy-divider svg {
-      width: 100%;
-      height: 100%;
+
+    /* Simulated nighttime resort scene via layered gradients */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
     }
 
-    /* Scroll reveal */
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        /* Pool glow — cyan reflection */
+        radial-gradient(ellipse 600px 120px at 50% 68%, rgba(70, 160, 180, 0.18) 0%, transparent 100%),
+        /* Building warm lights */
+        radial-gradient(ellipse 40px 25px at 38% 52%, rgba(230, 190, 110, 0.25) 0%, transparent 100%),
+        radial-gradient(ellipse 35px 20px at 42% 50%, rgba(230, 190, 110, 0.2) 0%, transparent 100%),
+        radial-gradient(ellipse 30px 18px at 55% 51%, rgba(230, 190, 110, 0.18) 0%, transparent 100%),
+        radial-gradient(ellipse 25px 15px at 60% 53%, rgba(230, 190, 110, 0.15) 0%, transparent 100%),
+        /* String lights across */
+        radial-gradient(circle 3px at 62% 44%, rgba(255, 220, 140, 0.6) 0%, transparent 100%),
+        radial-gradient(circle 3px at 65% 43.5%, rgba(255, 220, 140, 0.5) 0%, transparent 100%),
+        radial-gradient(circle 3px at 68% 44.2%, rgba(255, 220, 140, 0.55) 0%, transparent 100%),
+        radial-gradient(circle 3px at 71% 43.8%, rgba(255, 220, 140, 0.45) 0%, transparent 100%),
+        radial-gradient(circle 3px at 74% 44.5%, rgba(255, 220, 140, 0.5) 0%, transparent 100%),
+        radial-gradient(circle 3px at 77% 44%, rgba(255, 220, 140, 0.4) 0%, transparent 100%),
+        /* Forest canopy — dark green top */
+        linear-gradient(180deg, #060d06 0%, #0a1a0e 25%, transparent 55%),
+        /* Ground dark */
+        linear-gradient(0deg, #050805 0%, transparent 35%),
+        /* Base scene atmosphere */
+        radial-gradient(ellipse 100% 80% at 50% 50%, #0d1f14 0%, #060d08 100%);
+    }
+
+    /* Building silhouette */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      left: 15%;
+      right: 20%;
+      top: 35%;
+      bottom: 30%;
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(25, 35, 28, 0.9) 15%, rgba(20, 28, 22, 0.95) 100%);
+      clip-path: polygon(0% 20%, 5% 0%, 65% 0%, 70% 15%, 100% 15%, 100% 100%, 0% 100%);
+    }
+
+    /* Pool water shape */
+    .pool {
+      position: absolute;
+      left: 25%;
+      right: 25%;
+      bottom: 22%;
+      height: 12%;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(40, 100, 120, 0.3) 0%, rgba(30, 80, 100, 0.15) 100%);
+      clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+    }
+
+    .pool::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(100, 200, 220, 0.08) 20%,
+        rgba(100, 200, 220, 0.12) 50%,
+        rgba(100, 200, 220, 0.08) 80%,
+        transparent 100%
+      );
+      animation: poolShimmer 6s ease-in-out infinite;
+    }
+
+    @keyframes poolShimmer {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* Lounge chairs silhouettes */
+    .chairs {
+      position: absolute;
+      right: 18%;
+      bottom: 34%;
+      z-index: 2;
+      display: flex;
+      gap: 12px;
+    }
+
+    .chair {
+      width: 28px;
+      height: 10px;
+      background: rgba(15, 22, 18, 0.85);
+      border-radius: 2px;
+      position: relative;
+      transform: skewX(-5deg);
+    }
+
+    .chair::before {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: -8px;
+      width: 12px;
+      height: 8px;
+      background: rgba(15, 22, 18, 0.8);
+      border-radius: 1px;
+      transform: rotate(-25deg);
+    }
+
+    /* Tree silhouettes */
+    .trees {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 55%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .tree {
+      position: absolute;
+      bottom: 0;
+    }
+
+    .tree::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(8, 18, 10, 0.95);
+    }
+
+    .tree-1::before { width: 80px; height: 280px; border-radius: 40px 40px 5px 5px; }
+    .tree-1 { left: 2%; }
+
+    .tree-2::before { width: 90px; height: 320px; border-radius: 45px 45px 5px 5px; }
+    .tree-2 { left: 8%; }
+
+    .tree-3::before { width: 70px; height: 260px; border-radius: 35px 35px 5px 5px; }
+    .tree-3 { right: 5%; }
+
+    .tree-4::before { width: 85px; height: 300px; border-radius: 42px 42px 5px 5px; }
+    .tree-4 { right: 12%; }
+
+    .tree-5::before { width: 60px; height: 240px; border-radius: 30px 30px 5px 5px; }
+    .tree-5 { left: 15%; }
+
+    /* ── Navigation ── */
+    .nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-menu {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .nav-menu:hover { color: #fff; }
+
+    .nav-lang {
+      display: flex;
+      gap: 6px;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .nav-lang span {
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: color 0.3s;
+      padding: 2px 4px;
+    }
+
+    .nav-lang span.active {
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 400;
+    }
+
+    .nav-logo-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 2px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-link {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+    .nav-link:hover { color: #fff; }
+
+    .nav-book {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .nav-book:hover { color: #fff; }
+
+    /* ── Hero heading ── */
+    .hero-heading {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(3rem, 8vw, 7.5rem);
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.92);
+      text-align: center;
+      line-height: 1.1;
+      text-shadow: 0 2px 40px rgba(0, 0, 0, 0.4);
+      white-space: nowrap;
+    }
+
+    /* ── Booking bar ── */
+    .booking-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      background: linear-gradient(0deg, rgba(5, 8, 5, 0.7) 0%, transparent 100%);
+    }
+
+    .booking-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .booking-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .booking-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.02em;
+    }
+
+    .booking-divider {
+      width: 1px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .booking-search {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.9);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .booking-search::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.4);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .booking-search:hover { color: #fff; }
+    .booking-search:hover::after { transform: scaleX(1); }
+
+    /* ── Scroll indicator ── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeInUp 1s ease 1.5s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+      50% { opacity: 0.7; transform: scaleY(1); }
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, 20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    .hero-title {
+      opacity: 0;
+      animation: titleReveal 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+
+    @keyframes titleReveal {
+      from { opacity: 0; transform: translateY(30px); letter-spacing: 0.12em; }
+      to { opacity: 1; transform: translateY(0); letter-spacing: 0.04em; }
+    }
+
+    .nav {
+      opacity: 0;
+      animation: navFade 1s ease 0.8s forwards;
+    }
+
+    @keyframes navFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .booking-bar {
+      opacity: 0;
+      animation: barSlideUp 1s ease 1.2s forwards;
+    }
+
+    @keyframes barSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Sections below hero ── */
+    .section {
+      padding: 120px 48px;
+    }
+
+    .section-dark {
+      background: #080c08;
+    }
+
+    .section-content {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      margin-bottom: 32px;
+    }
+
+    .section-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.3;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+    }
+
+    .section-text {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.45);
+      max-width: 560px;
+    }
+
+    /* ── Rooms grid ── */
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+
+    .room-card {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .room-card-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .room-card:hover .room-card-bg { transform: scale(1.05); }
+
+    .room-card-bg-1 {
+      background: linear-gradient(180deg, #1a2a1e 0%, #0d1710 60%, #080c08 100%);
+    }
+    .room-card-bg-1::after {
+      content: '';
+      position: absolute;
+      inset: 20% 15%;
+      background: radial-gradient(ellipse at center, rgba(180, 150, 100, 0.08), transparent 70%);
+    }
+
+    .room-card-bg-2 {
+      background: linear-gradient(180deg, #1e2420 0%, #12181410 60%, #080c08 100%);
+    }
+    .room-card-bg-2::after {
+      content: '';
+      position: absolute;
+      inset: 25% 20%;
+      background: radial-gradient(ellipse at center, rgba(100, 160, 180, 0.06), transparent 70%);
+    }
+
+    .room-card-bg-3 {
+      background: linear-gradient(180deg, #1a1e18 0%, #0e1310 60%, #080c08 100%);
+    }
+    .room-card-bg-3::after {
+      content: '';
+      position: absolute;
+      inset: 15% 10%;
+      background: radial-gradient(ellipse at center, rgba(140, 180, 120, 0.06), transparent 70%);
+    }
+
+    .room-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px 28px;
+      background: linear-gradient(0deg, rgba(8, 12, 8, 0.9) 0%, transparent 100%);
+    }
+
+    .room-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 6px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+
+    .room-card-detail {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.35);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Amenities ── */
+    .amenities {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      margin-top: 64px;
+    }
+
+    .amenity {
+      text-align: center;
+    }
+
+    .amenity-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .amenity-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: rgba(255, 255, 255, 0.5);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .amenity-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 6px;
+    }
+
+    .amenity-desc {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.3);
+      line-height: 1.5;
+    }
+
+    /* ── Quote section ── */
+    .quote-section {
+      text-align: center;
+      padding: 160px 48px;
+      position: relative;
+    }
+
+    .quote-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(70, 120, 80, 0.04), transparent 70%);
+      pointer-events: none;
+    }
+
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 700px;
+      margin: 0 auto;
+      letter-spacing: 0.01em;
+    }
+
+    .quote-line {
+      width: 40px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 32px auto;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 48px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .footer-links a {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.25);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: rgba(255, 255, 255, 0.6); }
+
+    .footer-copy {
+      font-size: 0.6rem;
+      color: rgba(255, 255, 255, 0.15);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Reveal animation ── */
     .reveal {
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
+
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* CTA pill */
-    .btn-sage {
-      background: #5E7A5E;
-      color: #FFFFFF;
-      padding: 14px 36px;
-      border-radius: 9999px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: background 0.2s ease;
-      display: inline-block;
-    }
-    .btn-sage:hover { background: #4A664A; }
-    .btn-sage-outline {
-      background: transparent;
-      color: #5E7A5E;
-      padding: 14px 36px;
-      border-radius: 9999px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      border: 2px solid #5E7A5E;
-      transition: all 0.2s ease;
-      display: inline-block;
-    }
-    .btn-sage-outline:hover { background: #5E7A5E; color: #FFFFFF; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
 
-    /* Feature card */
-    .earth-card {
-      background: #EDE7DF;
-      border: 1px solid #D4C9BC;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .earth-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(44,36,24,0.08);
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .rooms-grid { grid-template-columns: repeat(2, 1fr); }
+      .amenities { grid-template-columns: repeat(2, 1fr); }
     }
 
-    /* Image placeholder */
-    .img-earth {
-      background: #EDE7DF;
-      border: 1px solid #D4C9BC;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 260px;
-      border-radius: 8px;
+    @media (max-width: 768px) {
+      .nav { padding: 20px 24px; }
+      .nav-left { gap: 16px; }
+      .nav-right { gap: 16px; }
+      .nav-link { display: none; }
+      .hero-title { white-space: normal; padding: 0 24px; }
+      .booking-bar {
+        padding: 20px 24px;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .booking-divider { display: none; }
+      .section { padding: 80px 24px; }
+      .rooms-grid { grid-template-columns: 1fr; }
+      .amenities { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .footer { flex-direction: column; gap: 24px; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .quote-section { padding: 100px 24px; }
+      .chairs { display: none; }
     }
-
-    /* Botanical SVG */
-    .botanical-line {
-      stroke: #C4B8A8;
-      stroke-width: 1.5;
-      fill: none;
-    }
-
-    /* Ingredient pill */
-    .ingredient-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 20px;
-      border-radius: 9999px;
-      border: 1px solid #D4C9BC;
-      font-size: 0.875rem;
-      color: #6B5E4F;
-      white-space: nowrap;
-    }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Noise/Grain Overlay */
-    .grain-overlay { position:relative; }
-    .grain-overlay::after {
-      content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.06;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat:repeat; background-size:128px 128px;
-    }
-  
-
-    /* Staggered Grid Reveal */
-    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
-    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
-  
-
-    /* Elastic/Spring Animations */
-    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
-    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  
   </style>
 </head>
 <body>
 
-  <!-- Grain SVG filter overlay -->
-  <svg class="grain-overlay">
-    <filter id="grain">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
-      <feColorMatrix type="saturate" values="0"/>
-    </filter>
-    <rect width="100%" height="100%" filter="url(#grain)"/>
-  </svg>
+  <!-- Grain texture overlay -->
+  <div class="grain"></div>
 
-  <!-- Nav -->
-  <nav style="border-bottom: 1px solid #D4C9BC;">
-    <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
-      <span class="text-xl" style="font-family: 'Fraunces', serif; font-weight: 600;">Terraverde</span>
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#" class="text-sm" style="color: #6B5E4F;">Philosophy</a>
-        <a href="#" class="text-sm" style="color: #6B5E4F;">Products</a>
-        <a href="#" class="text-sm" style="color: #6B5E4F;">Journal</a>
-      </div>
-      <a href="#" class="btn-sage text-sm py-2 px-5">Shop Now</a>
+  <!-- ════════════ HERO ════════════ -->
+  <section class="hero">
+
+    <!-- Layered background scene -->
+    <div class="hero-bg"></div>
+
+    <!-- Pool -->
+    <div class="pool"></div>
+
+    <!-- Tree silhouettes -->
+    <div class="trees">
+      <div class="tree tree-1"></div>
+      <div class="tree tree-2"></div>
+      <div class="tree tree-3"></div>
+      <div class="tree tree-4"></div>
+      <div class="tree tree-5"></div>
     </div>
-  </nav>
 
-  <!-- Hero -->
-  <section class="py-28">
-    <div class="max-w-4xl mx-auto px-6">
-      <div class="grid md:grid-cols-2 gap-16 items-center">
-        <div class="reveal">
-          <h1 class="text-5xl md:text-7xl mb-6" style="font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;">
-            Rooted in<br>what matters
-          </h1>
-          <p class="text-lg mb-8" style="color: #6B5E4F; line-height: 1.8;">
-            Skincare that starts with soil, not a lab. Every ingredient traced back to its source, every formula tested on real skin over real time.
+    <!-- Lounge chairs -->
+    <div class="chairs">
+      <div class="chair"></div>
+      <div class="chair"></div>
+      <div class="chair"></div>
+      <div class="chair"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-menu">Menu</span>
+        <div class="nav-lang">
+          <span class="active">EN</span>
+          <span>/</span>
+          <span>UA</span>
+        </div>
+      </div>
+
+      <div class="nav-center">
+        <div class="nav-logo">Serene Haven</div>
+        <div class="nav-logo-sub">Relax Park</div>
+      </div>
+
+      <div class="nav-right">
+        <span class="nav-link">Sign In</span>
+        <span class="nav-book">Book a Room</span>
+      </div>
+    </nav>
+
+    <!-- Main heading -->
+    <div class="hero-heading">
+      <h1 class="hero-title">SERENE HAVEN RELAX PARK</h1>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+    </div>
+
+    <!-- Booking bar -->
+    <div class="booking-bar">
+      <div class="booking-field">
+        <span class="booking-label">Dates</span>
+        <span class="booking-value">27.03.2026 &mdash; 29.03.2026</span>
+      </div>
+
+      <div class="booking-divider"></div>
+
+      <div class="booking-field">
+        <span class="booking-label">Guests</span>
+        <span class="booking-value">Adults: 1, Children: 0</span>
+      </div>
+
+      <div class="booking-divider"></div>
+
+      <div class="booking-field">
+        <span class="booking-label">Rooms</span>
+        <span class="booking-value">Rooms: 1</span>
+      </div>
+
+      <div class="booking-divider"></div>
+
+      <button class="booking-search">Search</button>
+    </div>
+  </section>
+
+  <!-- ════════════ ABOUT ════════════ -->
+  <section class="section section-dark">
+    <div class="section-content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;">
+        <div>
+          <p class="section-label reveal">About the Park</p>
+          <h2 class="section-heading reveal reveal-d1">Where the forest<br>meets serenity</h2>
+          <p class="section-text reveal reveal-d2">
+            Nestled in 12 hectares of ancient pine forest, Serene Haven offers an escape from the ordinary. Modern architecture breathes alongside nature, creating spaces where every window frames a living painting.
           </p>
-          <div class="flex gap-4">
-            <a href="#" class="btn-sage">Explore collection</a>
-            <a href="#" class="btn-sage-outline">Our story</a>
+        </div>
+        <div class="reveal reveal-d3" style="aspect-ratio: 4/5; background: linear-gradient(135deg, #151f17 0%, #0c140e 100%); position: relative; overflow: hidden;">
+          <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 40%, rgba(80, 130, 90, 0.08), transparent 60%);"></div>
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(0deg, rgba(8,12,8,0.6), transparent);"></div>
+          <div style="position: absolute; bottom: 32px; left: 32px; font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; color: rgba(255,255,255,0.25); letter-spacing: 0.1em;">Forest View</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ ROOMS ════════════ -->
+  <section class="section" style="background: #070b07;">
+    <div class="section-content">
+      <p class="section-label reveal">Accommodations</p>
+      <h2 class="section-heading reveal reveal-d1">Rooms &amp; Suites</h2>
+      <p class="section-text reveal reveal-d2">Each room is designed as a retreat within a retreat. Natural materials, panoramic views, and meticulous attention to comfort.</p>
+
+      <div class="rooms-grid">
+        <div class="room-card reveal reveal-d1">
+          <div class="room-card-bg room-card-bg-1"></div>
+          <div class="room-card-info">
+            <div class="room-card-name">Forest Suite</div>
+            <div class="room-card-detail">65 m&sup2; &middot; Forest View &middot; Private Terrace</div>
           </div>
         </div>
-        <div class="reveal reveal-delay-1">
-          <svg viewBox="0 0 400 400" class="w-full max-w-sm mx-auto">
-            <path class="botanical-line" d="M200 380 C200 280 160 220 200 160 C240 100 200 40 200 20" stroke-dasharray="4 4"/>
-            <path class="botanical-line" d="M200 260 C160 240 120 260 100 240"/>
-            <path class="botanical-line" d="M200 200 C240 180 280 200 300 180"/>
-            <path class="botanical-line" d="M200 140 C170 120 140 140 120 120"/>
-            <path class="botanical-line" d="M200 300 C230 280 260 300 280 280"/>
-            <circle cx="200" cy="100" r="30" stroke="#C4B8A8" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
-            <circle cx="200" cy="100" r="8" fill="#5E7A5E" opacity="0.3"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Wavy Divider -->
-  <div class="wavy-divider">
-    <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-      <path d="M0 20 Q150 0 300 20 T600 20 T900 20 T1200 20 V40 H0 Z" fill="none" stroke="#D4C9BC" stroke-width="1"/>
-    </svg>
-  </div>
-
-  <!-- Philosophy -->
-  <section class="py-20">
-    <div class="max-w-2xl mx-auto px-6 text-center reveal">
-      <p class="text-sm uppercase tracking-widest mb-6" style="color: #5E7A5E; font-weight: 600;">Our Philosophy</p>
-      <blockquote class="text-2xl md:text-3xl mb-6" style="font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; line-height: 1.5; color: #2C2418;">
-        "We don't formulate for trends. We formulate for the person who reads ingredient lists before product names."
-      </blockquote>
-      <p class="text-base" style="color: #6B5E4F; line-height: 1.7;">
-        Every Terraverde product uses fewer than 9 ingredients. Not because minimalism sells — because complexity hides what doesn't work.
-      </p>
-    </div>
-  </section>
-
-  <!-- Wavy Divider -->
-  <div class="wavy-divider">
-    <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-      <path d="M0 20 Q150 40 300 20 T600 20 T900 20 T1200 20 V40 H0 Z" fill="none" stroke="#D4C9BC" stroke-width="1"/>
-    </svg>
-  </div>
-
-  <!-- Feature Alternating -->
-  <section class="py-24">
-    <div class="max-w-4xl mx-auto px-6">
-      <!-- Row 1: image left, text right -->
-      <div class="grid md:grid-cols-2 gap-12 items-center mb-20 reveal">
-        <div class="img-earth" style="min-height: 300px;">
-          <span class="text-sm" style="color: #C4B8A8;">[Product Image]</span>
-        </div>
-        <div>
-          <h2 class="text-3xl md:text-4xl mb-4" style="font-weight: 600; letter-spacing: -0.01em;">Morning Serum</h2>
-          <p style="color: #6B5E4F; line-height: 1.8;">
-            7 ingredients. Jojoba from Sonoran farms, vitamin C from acerola cherry, hyaluronic from bio-fermentation. Absorbs in 11 seconds — we timed it across 200+ testers, not rounded up.
-          </p>
-        </div>
-      </div>
-      <!-- Row 2: text left, image right -->
-      <div class="grid md:grid-cols-2 gap-12 items-center mb-20 reveal">
-        <div class="md:order-2">
-          <div class="img-earth" style="min-height: 260px;">
-            <span class="text-sm" style="color: #C4B8A8;">[Product Image]</span>
+        <div class="room-card reveal reveal-d2">
+          <div class="room-card-bg room-card-bg-2"></div>
+          <div class="room-card-info">
+            <div class="room-card-name">Lake Residence</div>
+            <div class="room-card-detail">85 m&sup2; &middot; Lake View &middot; Fireplace</div>
           </div>
         </div>
-        <div class="md:order-1">
-          <h2 class="text-3xl md:text-4xl mb-4" style="font-weight: 600; letter-spacing: -0.01em;">Night Recovery</h2>
-          <p style="color: #6B5E4F; line-height: 1.8;">
-            5 ingredients. Shea from Burkina Faso cooperatives, bakuchiol instead of retinol — gentler, same result over 8 weeks (we have the before/afters to prove it).
-          </p>
-        </div>
-      </div>
-      <!-- Row 3: image left, text right -->
-      <div class="grid md:grid-cols-2 gap-12 items-center reveal">
-        <div class="img-earth" style="min-height: 280px;">
-          <span class="text-sm" style="color: #C4B8A8;">[Product Image]</span>
-        </div>
-        <div>
-          <h2 class="text-3xl md:text-4xl mb-4" style="font-weight: 600; letter-spacing: -0.01em;">Barrier Balm</h2>
-          <p style="color: #6B5E4F; line-height: 1.8;">
-            6 ingredients. For the days your skin gives up — wind, cold, too much screen light. Ceramide-3 from yeast fermentation, beeswax from a single apiary in Devon.
-          </p>
+        <div class="room-card reveal reveal-d3">
+          <div class="room-card-bg room-card-bg-3"></div>
+          <div class="room-card-info">
+            <div class="room-card-name">Garden Villa</div>
+            <div class="room-card-detail">120 m&sup2; &middot; Private Garden &middot; Pool Access</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Ingredients Bar -->
-  <section class="py-16 overflow-x-auto">
-    <div class="max-w-4xl mx-auto px-6">
-      <p class="text-sm uppercase tracking-widest mb-6 text-center reveal" style="color: #5E7A5E; font-weight: 600;">Key Ingredients</p>
-      <div class="flex gap-4 justify-center flex-wrap reveal reveal-delay-1">
-        <span class="ingredient-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E7A5E" stroke-width="1.5"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/><path d="M12 6v12"/><path d="M8 10c2-2 4-2 4 0s2 2 4 0"/></svg>
-          Jojoba
-        </span>
-        <span class="ingredient-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E7A5E" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/></svg>
-          Vitamin C
-        </span>
-        <span class="ingredient-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E7A5E" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
-          Ceramide-3
-        </span>
-        <span class="ingredient-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E7A5E" stroke-width="1.5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12s1.5 2 4 2 4-2 4-2"/></svg>
-          Bakuchiol
-        </span>
-        <span class="ingredient-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E7A5E" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Shea Butter
-        </span>
+  <!-- ════════════ QUOTE ════════════ -->
+  <div class="quote-section">
+    <p class="quote-text reveal">"Luxury is not about excess. It is about the presence of nature and the absence of noise."</p>
+    <div class="quote-line reveal reveal-d1"></div>
+  </div>
+
+  <!-- ════════════ AMENITIES ════════════ -->
+  <section class="section section-dark">
+    <div class="section-content">
+      <p class="section-label reveal" style="text-align: center;">Experiences</p>
+      <h2 class="section-heading reveal reveal-d1" style="text-align: center;">Crafted for Restoration</h2>
+
+      <div class="amenities">
+        <div class="amenity reveal reveal-d1">
+          <div class="amenity-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+              <path d="M8 12s1.5 2 4 2 4-2 4-2"/>
+              <path d="M9 9h.01M15 9h.01"/>
+            </svg>
+          </div>
+          <div class="amenity-name">Spa & Wellness</div>
+          <div class="amenity-desc">Thermal pools, saunas, and signature treatments</div>
+        </div>
+        <div class="amenity reveal reveal-d2">
+          <div class="amenity-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11l18-5v12L3 23V11z"/>
+              <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+            </svg>
+          </div>
+          <div class="amenity-name">Fine Dining</div>
+          <div class="amenity-desc">Farm-to-table cuisine with local ingredients</div>
+        </div>
+        <div class="amenity reveal reveal-d3">
+          <div class="amenity-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="amenity-name">Activities</div>
+          <div class="amenity-desc">Guided forest walks, yoga, and meditation</div>
+        </div>
+        <div class="amenity reveal reveal-d4">
+          <div class="amenity-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="amenity-name">Conference</div>
+          <div class="amenity-desc">Modern meeting spaces surrounded by nature</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonial -->
-  <section class="py-20">
-    <div class="max-w-2xl mx-auto px-6">
-      <div class="earth-card rounded-lg p-8 reveal" style="border-left: 4px solid #5E7A5E;">
-        <p class="text-lg mb-6" style="line-height: 1.8;">
-          "I've been using the morning serum for 14 weeks. My dermatologist literally asked what I changed — she thought I'd done a peel. I hadn't. Also the bottle lasted way longer than expected, I'm still on the first one and I use it daily."
-        </p>
-        <div>
-          <p class="font-semibold text-sm" style="font-family: 'Fraunces', serif;">S. Andersson</p>
-          <p class="text-xs" style="color: #6B5E4F;">Sensitive skin, Stockholm. Customer since Aug 2024.</p>
-        </div>
-      </div>
+  <!-- ════════════ FOOTER ════════════ -->
+  <footer class="footer">
+    <div class="footer-logo">Serene Haven</div>
+    <div class="footer-links">
+      <a href="#">Rooms</a>
+      <a href="#">Dining</a>
+      <a href="#">Spa</a>
+      <a href="#">Events</a>
+      <a href="#">Contact</a>
     </div>
-  </section>
-
-  <!-- CTA Section (dark inversion) -->
-  <section class="py-28" style="background: #2C2418;">
-    <div class="max-w-2xl mx-auto px-6 text-center reveal">
-      <h2 class="text-3xl md:text-4xl mb-6" style="font-family: 'Fraunces', serif; font-weight: 600; color: #F5F0EB; letter-spacing: -0.01em;">
-        Start with what your skin actually needs
-      </h2>
-      <p class="text-base mb-8" style="color: #D4C9BC; line-height: 1.7;">
-        Take the 2-minute skin quiz. We'll recommend the 1–2 products that make sense for you — not 12.
-      </p>
-      <a href="#" class="btn-sage text-lg px-10 py-4">Take the skin quiz</a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="py-12" style="background: #2C2418; border-top: 1px solid #3D3226;">
-    <div class="max-w-4xl mx-auto px-6">
-      <div class="grid md:grid-cols-3 gap-8 mb-8">
-        <div>
-          <span class="text-lg" style="font-family: 'Fraunces', serif; font-weight: 600; color: #F5F0EB;">Terraverde</span>
-          <p class="text-sm mt-2" style="color: #D4C9BC;">Rooted in what matters.</p>
-        </div>
-        <div>
-          <p class="text-sm font-semibold mb-3" style="color: #F5F0EB;">Shop</p>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-sm" style="color: #D4C9BC;">All Products</a></li>
-            <li><a href="#" class="text-sm" style="color: #D4C9BC;">Sets</a></li>
-            <li><a href="#" class="text-sm" style="color: #D4C9BC;">Refills</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="text-sm font-semibold mb-3" style="color: #F5F0EB;">About</p>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-sm" style="color: #D4C9BC;">Our Story</a></li>
-            <li><a href="#" class="text-sm" style="color: #D4C9BC;">Ingredients</a></li>
-            <li><a href="#" class="text-sm" style="color: #D4C9BC;">Contact</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="pt-8" style="border-top: 1px solid #3D3226;">
-        <p class="text-sm text-center" style="color: #6B5E4F;">&copy; 2025 Terraverde. All rights reserved.</p>
-      </div>
-    </div>
+    <div class="footer-copy">&copy; 2026 Serene Haven Relax Park</div>
   </footer>
 
   <script>
+    // Scroll reveal observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
         }
       });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  
+    }, { threshold: 0.15 });
 
-      // Staggered Grid Reveal
-      (function(){
-        var staggerEls = document.querySelectorAll('.stagger-item');
-        if(!staggerEls.length) return;
-        var staggerObs = new IntersectionObserver(function(entries){
-          entries.forEach(function(entry){
-            if(entry.isIntersecting){
-              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
-              items.forEach(function(item, i){
-                var row = Math.floor(i / 3);
-                var col = i % 3;
-                var delay = (row + col) * 100;
-                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
-              });
-            } else {
-              entry.target.classList.remove('stagger-visible');
-            }
-          });
-        }, {threshold:0.1});
-        staggerEls.forEach(function(el){ staggerObs.observe(el); });
-      })();
-  
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>

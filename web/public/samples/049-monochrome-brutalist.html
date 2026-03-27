@@ -4,26 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>049 — Monochrome Brutalist</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Instrument Sans', sans-serif;
-      background: #FFFFFF;
-      color: #000000;
-      overflow-x: hidden;
-      font-weight: 400;
-    }
-    h1, h2, h3, h4 { font-family: 'Instrument Sans', sans-serif; font-weight: 400; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Scroll reveal — repeats */
+    :root {
+      --green: #10b981;
+      --green-hover: #059669;
+      --black: #0a0a0a;
+      --gray-50: #fafafa;
+      --gray-100: #f5f5f5;
+      --gray-200: #e5e5e5;
+      --gray-300: #d4d4d4;
+      --gray-400: #a3a3a3;
+      --gray-500: #737373;
+      --gray-600: #525252;
+      --gray-700: #404040;
+      --gray-800: #262626;
+      --gray-900: #171717;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fff;
+      color: var(--black);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.3); }
+      50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    }
+    @keyframes dashDraw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes chartGrow {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+
+    .fade-in-up { animation: fadeInUp 0.7s ease-out both; }
+    .fade-in-up-delay-1 { animation: fadeInUp 0.7s ease-out 0.1s both; }
+    .fade-in-up-delay-2 { animation: fadeInUp 0.7s ease-out 0.2s both; }
+    .fade-in-up-delay-3 { animation: fadeInUp 0.7s ease-out 0.3s both; }
+    .fade-in-up-delay-4 { animation: fadeInUp 0.7s ease-out 0.4s both; }
+    .slide-in-right { animation: slideInRight 0.8s ease-out 0.3s both; }
+
+    /* Scroll reveal */
     .reveal {
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .reveal.visible {
       opacity: 1;
@@ -33,377 +87,740 @@
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* Thick border card */
-    .brut-card {
-      border: 3px solid #000000;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-    .brut-card-header {
-      background: #000000;
-      color: #FFFFFF;
-      padding: 12px 20px;
-      font-weight: 500;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    .brut-card-body {
-      padding: 24px;
-    }
-
-    /* Invert hover */
-    .invert-hover {
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-    .invert-hover:hover {
-      background: #000000;
-      color: #FFFFFF;
-    }
-
-    /* Black button */
-    .btn-black {
-      background: #000000;
-      color: #FFFFFF;
-      padding: 16px 40px;
-      font-weight: 500;
-      font-size: 1rem;
-      border: 3px solid #000000;
-      display: inline-block;
-      transition: all 0.2s ease;
-      letter-spacing: 0.02em;
-    }
-    .btn-black:hover {
-      background: #FFFFFF;
-      color: #000000;
-    }
-
-    /* Ghost button */
-    .btn-ghost-brut {
-      background: #FFFFFF;
-      color: #000000;
-      padding: 16px 40px;
-      font-weight: 500;
-      font-size: 1rem;
-      border: 3px solid #000000;
-      display: inline-block;
-      transition: all 0.2s ease;
-    }
-    .btn-ghost-brut:hover {
-      background: #000000;
-      color: #FFFFFF;
-    }
-
-    /* Code block */
-    .code-brut {
-      background: #000000;
-      color: #E5E7EB;
-      border-radius: 2px;
-      padding: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-x: auto;
-      border: 3px solid #000000;
-    }
-
-    /* Process box */
-    .process-box {
-      border: 3px solid #000000;
+    /* Top Banner */
+    .top-banner {
+      background: var(--gray-100);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 8px 24px;
       text-align: center;
-      padding: 32px 20px;
-      transition: background 0.2s ease, color 0.2s ease;
+      font-size: 13px;
+      color: var(--gray-600);
     }
-    .process-box:hover {
-      background: #000000;
-      color: #FFFFFF;
+    .top-banner a {
+      color: var(--green);
+      font-weight: 500;
+      margin-left: 4px;
     }
-    .process-number {
-      font-size: 3rem;
+    .top-banner a:hover { text-decoration: underline; }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo svg { width: 24px; height: 24px; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--gray-600);
       font-weight: 400;
-      letter-spacing: -0.04em;
-      line-height: 1;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-contact {
+      font-size: 14px;
+      color: var(--gray-600);
+      font-weight: 400;
+      transition: color 0.15s;
+    }
+    .nav-contact:hover { color: var(--black); }
+
+    /* Buttons */
+    .btn-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-green:hover {
+      background: var(--green-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-green-lg {
+      padding: 12px 24px;
+      font-size: 15px;
+      border-radius: 8px;
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: var(--gray-700);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-300);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: var(--gray-500);
+      color: var(--black);
+      background: var(--gray-50);
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 72px 24px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .hero-text h1 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+    .hero-text p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--gray-500);
+      max-width: 440px;
+      margin-bottom: 28px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .hero-note {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 32px;
+    }
+    .hero-link {
+      font-size: 14px;
+      color: var(--gray-500);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.15s;
+    }
+    .hero-link:hover { color: var(--black); }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+      overflow: hidden;
+      position: relative;
+    }
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .dash-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .dash-tabs {
+      display: flex;
+      gap: 0;
+    }
+    .dash-tab {
+      font-size: 12px;
+      padding: 4px 12px;
+      color: var(--gray-500);
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      cursor: pointer;
+    }
+    .dash-tab:first-child { border-radius: 4px 0 0 4px; }
+    .dash-tab:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+    .dash-tab.active {
+      background: var(--gray-900);
+      color: #fff;
+      border-color: var(--gray-900);
+    }
+    .dash-body {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .dash-stat {
+      padding: 12px 0;
+    }
+    .dash-stat-label {
+      font-size: 11px;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .dash-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: -0.02em;
+    }
+    .dash-stat-change {
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .dash-stat-change.negative { color: #ef4444; }
+
+    /* Chart area */
+    .dash-chart {
+      grid-column: 1 / -1;
+      height: 100px;
+      position: relative;
+      border-top: 1px solid var(--gray-100);
+      padding-top: 12px;
+    }
+    .dash-chart-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dash-chart-legend {
+      display: flex;
+      gap: 12px;
+      font-size: 10px;
+      color: var(--gray-400);
+    }
+    .dash-chart-legend span { display: flex; align-items: center; gap: 4px; }
+    .dash-chart-legend .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .chart-svg { width: 100%; height: 60px; }
+
+    /* Sidebar in dashboard */
+    .dash-sidebar {
+      border-left: 1px solid var(--gray-200);
+      padding: 16px;
+    }
+    .dash-sidebar-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 12px;
+    }
+    .dash-sidebar-item:last-child { border-bottom: none; }
+    .dash-sidebar-label { color: var(--gray-600); }
+    .dash-sidebar-value { color: var(--black); font-weight: 500; font-variant-numeric: tabular-nums; }
+    .dash-sidebar-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gray-400);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    /* Full dashboard layout */
+    .dash-full {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+    }
+    .dash-main { padding: 16px 20px; }
+
+    /* Subgraph bars */
+    .subgraph-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .subgraph-label {
+      font-size: 11px;
+      color: var(--gray-500);
+      width: 70px;
+      flex-shrink: 0;
+    }
+    .subgraph-track {
+      flex: 1;
+      height: 6px;
+      background: var(--gray-100);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .subgraph-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease-out;
+    }
+
+    /* Sections */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .section-sm {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 0;
+    }
+
+    /* Section title */
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-400);
+      font-weight: 500;
       margin-bottom: 12px;
     }
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--black);
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--gray-500);
+      line-height: 1.6;
+      max-width: 560px;
+    }
 
-    /* Image placeholder */
-    .img-placeholder {
-      border: 3px solid #000000;
-      background: #FAFAFA;
+    /* Feature cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--gray-200);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .feature-card {
+      background: #fff;
+      padding: 32px 28px;
+      transition: background 0.2s;
+    }
+    .feature-card:hover { background: var(--gray-50); }
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--gray-100);
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 300px;
+      margin-bottom: 16px;
+    }
+    .feature-icon svg { width: 18px; height: 18px; color: var(--gray-700); }
+    .feature-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--black);
+    }
+    .feature-card p {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.6;
     }
 
-    /* Thick divider */
-    .thick-divider {
-      border: none;
-      border-top: 3px solid #000000;
-      margin: 0;
+    /* How it works */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
     }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Marquee/Ticker Strip */
-    @keyframes marqueeScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .marquee-strip { overflow:hidden; white-space:nowrap; }
-    .marquee-inner { display:inline-flex; animation:marqueeScroll 20s linear infinite; }
-    .marquee-inner:hover { animation-play-state:paused; }
-  
+    .step-card {
+      text-align: center;
+      padding: 32px 16px;
+    }
+    .step-number {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--gray-200);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 12px;
+      transition: color 0.3s;
+    }
+    .step-card:hover .step-number { color: var(--green); }
+    .step-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .step-card p {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.5;
+    }
 
-    /* Staggered Grid Reveal */
-    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
-    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
-  
+    /* Code block */
+    .code-block {
+      background: var(--gray-900);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--gray-800);
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .code-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .code-body {
+      padding: 20px;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #e5e7eb;
+      overflow-x: auto;
+    }
+    .code-comment { color: #6b7280; }
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #34d399; }
+    .code-fn { color: #60a5fa; }
 
-    /* Elastic/Spring Animations */
-    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
-    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  
+    /* Trusted by */
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .logo-placeholder {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-300);
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .logo-placeholder:hover { color: var(--gray-500); }
+
+    /* Testimonial */
+    .testimonial-card {
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .testimonial-card blockquote {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--gray-700);
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--gray-200);
+    }
+    .testimonial-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--gray-900);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .testimonial-name { font-size: 14px; font-weight: 600; }
+    .testimonial-role { font-size: 13px; color: var(--gray-500); }
+
+    /* CTA */
+    .cta-section {
+      background: var(--gray-900);
+      padding: 80px 24px;
+      text-align: center;
+      color: #fff;
+    }
+    .cta-section h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      color: var(--gray-400);
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--gray-200);
+      padding: 40px 24px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--gray-500);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--black); }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; padding: 48px 20px 32px; }
+      .hero-text h1 { font-size: 36px; }
+      .nav-links { display: none; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-full { grid-template-columns: 1fr; }
+      .dash-sidebar { border-left: none; border-top: 1px solid var(--gray-200); }
+      .section-title { font-size: 28px; }
+      .footer-inner { flex-direction: column; gap: 16px; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Top Banner -->
+  <div class="top-banner fade-in-up">
+    GraphNode has been acquired by CloudStack.<a href="#">Read the announcement &rarr;</a>
+  </div>
+
   <!-- Nav -->
-  <nav class="border-b-2 border-black" style="border-bottom-width: 3px;">
-    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-black flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/>
-          </svg>
-        </div>
-        <span class="text-lg font-medium tracking-tight">[Product]</span>
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v4m0 12v4M2 12h4m12 0h4m-3.5-6.5l-2.8 2.8M8.3 15.7l-2.8 2.8m0-13.1l2.8 2.8m7.4 7.4l2.8 2.8"/>
+        </svg>
+        GraphNode
       </div>
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#" class="text-sm text-black hover:underline underline-offset-4 transition-all duration-200">About</a>
-        <a href="#" class="text-sm text-black hover:underline underline-offset-4 transition-all duration-200">Features</a>
-        <a href="#" class="text-sm text-black hover:underline underline-offset-4 transition-all duration-200">Docs</a>
+      <div class="nav-links">
+        <a href="#">Products</a>
+        <a href="#">Solutions</a>
+        <a href="#">Resources</a>
+        <a href="#">Extensions</a>
+        <a href="#">Pricing</a>
       </div>
-      <a href="#" class="btn-black text-sm !py-3 !px-6">Get Access</a>
+      <div class="nav-right">
+        <a href="#" class="nav-contact">Contact</a>
+        <a href="#" class="btn-green">Get started</a>
+      </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="py-32 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal">
-        <h1 class="text-6xl md:text-7xl lg:text-8xl font-normal leading-none mb-8" style="letter-spacing: -0.04em;">
-          Build without<br>compromise
-        </h1>
+  <section class="hero">
+    <div class="hero-text">
+      <h1 class="fade-in-up">Unify your APIs.<br>Govern your AI.</h1>
+      <p class="fade-in-up-delay-1">Enterprise-grade governance, control, and observability for APIs and AI apps.</p>
+      <div class="hero-actions fade-in-up-delay-2">
+        <a href="#" class="btn-green btn-green-lg">Try it for free</a>
+        <a href="#" class="btn-outline">Contact Sales</a>
       </div>
-      <div class="reveal reveal-delay-1 max-w-xl">
-        <p class="text-lg text-gray-600 leading-relaxed mb-10">
-          [Your product tagline — one clear sentence about what you build and for whom. No adjectives, just function.]
-        </p>
-      </div>
-      <div class="reveal reveal-delay-2 flex flex-col sm:flex-row gap-4">
-        <a href="#" class="btn-black">Start Building</a>
-        <a href="#" class="btn-ghost-brut">Read Docs</a>
-      </div>
+      <p class="hero-note fade-in-up-delay-3">Try it free for 30 days, no credit card required.</p>
+      <a href="#features" class="hero-link fade-in-up-delay-4">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+        See how our platform works
+      </a>
     </div>
-  </section>
 
-  <hr class="thick-divider">
-
-  <!-- Feature Grid — 2x2 thick-bordered cards with black headers -->
-  <section class="py-24 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal mb-16">
-        <h2 class="text-4xl md:text-5xl font-normal tracking-tight" style="letter-spacing: -0.03em;">Core capabilities</h2>
+    <!-- Dashboard Preview -->
+    <div class="dashboard-preview slide-in-right">
+      <div class="dash-header">
+        <h3>Overview</h3>
+        <div class="dash-tabs">
+          <div class="dash-tab active">24h</div>
+          <div class="dash-tab">7d</div>
+          <div class="dash-tab">30d</div>
+        </div>
       </div>
-
-      <div class="grid md:grid-cols-2 gap-0">
-        <!-- Card 1 — taller -->
-        <div class="reveal brut-card" style="margin-right: -3px; margin-bottom: -3px;">
-          <div class="brut-card-header">Infrastructure</div>
-          <div class="brut-card-body" style="min-height: 220px;">
-            <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Core infrastructure feature]</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">[Specific technical detail — what it handles, throughput, supported protocols. Two sentences max.]</p>
+      <div class="dash-full">
+        <div class="dash-main">
+          <!-- Stats Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div class="dash-stat" style="animation: countUp 0.5s ease-out 0.6s both;">
+              <div class="dash-stat-label">Requests</div>
+              <div class="dash-stat-value">2.4M</div>
+              <div class="dash-stat-change">+12.3%</div>
+            </div>
+            <div class="dash-stat" style="animation: countUp 0.5s ease-out 0.8s both;">
+              <div class="dash-stat-label">Errors</div>
+              <div class="dash-stat-value">0.02%</div>
+              <div class="dash-stat-change">-8.1%</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Card 2 — shorter -->
-        <div class="reveal reveal-delay-1 brut-card" style="margin-bottom: -3px;">
-          <div class="brut-card-header">Security</div>
-          <div class="brut-card-body" style="min-height: 180px;">
-            <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Security feature]</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">[Actual security practices — encryption, access control, compliance certifications.]</p>
-          </div>
-        </div>
-
-        <!-- Card 3 — shorter -->
-        <div class="reveal reveal-delay-1 brut-card" style="margin-right: -3px;">
-          <div class="brut-card-header">API</div>
-          <div class="brut-card-body" style="min-height: 180px;">
-            <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[API feature]</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">[Endpoints, SDK support, rate limits — concrete API details.]</p>
-          </div>
-        </div>
-
-        <!-- Card 4 — taller -->
-        <div class="reveal reveal-delay-2 brut-card">
-          <div class="brut-card-header">Monitoring</div>
-          <div class="brut-card-body" style="min-height: 220px;">
-            <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Monitoring feature]</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">[Real-time dashboards, alerting channels, log retention period — specifics.]</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="thick-divider">
-
-  <!-- Code Section -->
-  <section class="py-16 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="reveal mb-8">
-        <h2 class="text-3xl md:text-4xl font-normal tracking-tight" style="letter-spacing: -0.03em;">Quick start</h2>
-      </div>
-      <div class="reveal reveal-delay-1">
-        <div class="code-brut">
-          <div><span style="color: #9CA3AF;"># Install</span></div>
-          <div>npm install @[your-product]/sdk</div>
-          <div>&nbsp;</div>
-          <div><span style="color: #9CA3AF;"># Initialize</span></div>
-          <div>import { Client } from '@[your-product]/sdk'</div>
-          <div>&nbsp;</div>
-          <div>const client = new Client({</div>
-          <div>&nbsp;&nbsp;apiKey: process.env.[YOUR_PRODUCT]_KEY,</div>
-          <div>})</div>
-          <div>&nbsp;</div>
-          <div><span style="color: #9CA3AF;"># Deploy</span></div>
-          <div>await client.deploy({ region: 'us-east-1' })</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="thick-divider">
-
-  <!-- Product Showcase -->
-  <section class="py-20 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal mb-8">
-        <h2 class="text-3xl md:text-4xl font-normal tracking-tight" style="letter-spacing: -0.03em;">See it in action</h2>
-      </div>
-      <div class="reveal reveal-delay-1">
-        <div class="img-placeholder">
-          <div class="text-center">
-            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          <!-- P95 Latency Chart -->
+          <div class="dash-chart" style="animation: fadeIn 0.6s ease-out 1s both;">
+            <div class="dash-chart-title">
+              <span>P95 Latency</span>
+              <div class="dash-chart-legend">
+                <span><span class="dot" style="background: var(--green);"></span> Current</span>
+                <span><span class="dot" style="background: var(--gray-300);"></span> Previous</span>
+              </div>
+            </div>
+            <svg class="chart-svg" viewBox="0 0 400 60" preserveAspectRatio="none">
+              <!-- Previous period (gray) -->
+              <polyline
+                points="0,45 30,40 60,42 90,38 120,44 150,35 180,40 210,38 240,42 270,36 300,40 330,38 360,42 400,40"
+                fill="none"
+                stroke="#d4d4d4"
+                stroke-width="1.5"
+                stroke-dasharray="500"
+                stroke-dashoffset="500"
+                style="animation: dashDraw 1.5s ease-out 1.2s forwards;"
+              />
+              <!-- Current period (green) -->
+              <polyline
+                points="0,50 30,35 60,38 90,20 120,28 150,15 180,22 210,18 240,25 270,12 300,18 330,10 360,15 400,8"
+                fill="none"
+                stroke="#10b981"
+                stroke-width="2"
+                stroke-dasharray="500"
+                stroke-dashoffset="500"
+                style="animation: dashDraw 1.5s ease-out 1.4s forwards;"
+              />
             </svg>
-            <p class="text-sm text-gray-400 mono">[Product Screenshot — Full Width]</p>
           </div>
-        </div>
-        <p class="text-sm text-gray-500 mt-4 mono">[Caption: Dashboard showing real-time metrics for your deployment.]</p>
-      </div>
-    </div>
-  </section>
 
-  <hr class="thick-divider">
-
-  <!-- Use Cases — text blocks -->
-  <section class="py-20 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal mb-12">
-        <h2 class="text-3xl md:text-4xl font-normal tracking-tight" style="letter-spacing: -0.03em;">Built for</h2>
-      </div>
-      <div class="reveal grid md:grid-cols-3 gap-0">
-        <div class="brut-card invert-hover p-8" style="border-right-width: 0;">
-          <h3 class="text-lg mb-3 font-medium" style="letter-spacing: -0.01em;">[Platform Teams]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">[How platform teams use this — internal developer platforms, service catalogs, deployment automation.]</p>
-        </div>
-        <div class="brut-card invert-hover p-8" style="border-right-width: 0;">
-          <h3 class="text-lg mb-3 font-medium" style="letter-spacing: -0.01em;">[Backend Engineers]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">[How backend engineers use this — API management, database operations, monitoring setup.]</p>
-        </div>
-        <div class="brut-card invert-hover p-8">
-          <h3 class="text-lg mb-3 font-medium" style="letter-spacing: -0.01em;">[DevOps]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">[How DevOps uses this — CI/CD pipelines, infrastructure as code, incident response.]</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="thick-divider">
-
-  <!-- Process Steps -->
-  <section class="py-28 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal mb-16">
-        <h2 class="text-4xl md:text-5xl font-normal tracking-tight" style="letter-spacing: -0.03em;">How it works</h2>
-      </div>
-
-      <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-0">
-        <div class="process-box" style="border-right-width: 0;">
-          <div class="process-number">01</div>
-          <h3 class="text-sm font-medium uppercase tracking-wider">[Connect]</h3>
-        </div>
-        <div class="process-box" style="border-right-width: 0;">
-          <div class="process-number">02</div>
-          <h3 class="text-sm font-medium uppercase tracking-wider">[Configure]</h3>
-        </div>
-        <div class="process-box" style="border-right-width: 0;">
-          <div class="process-number">03</div>
-          <h3 class="text-sm font-medium uppercase tracking-wider">[Deploy]</h3>
-        </div>
-        <div class="process-box">
-          <div class="process-number">04</div>
-          <h3 class="text-sm font-medium uppercase tracking-wider">[Scale]</h3>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="thick-divider">
-
-  <!-- Trusted By — text-only inline -->
-  <section class="py-12 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="reveal text-center">
-        <p class="text-sm text-gray-400 mb-6 uppercase tracking-widest mono">Trusted by [your metric] engineering teams</p>
-        <div class="flex flex-wrap justify-center gap-6">
-          <div class="brut-card px-5 py-3 invert-hover" style="border-width: 2px;">
-            <span class="text-xs mono">[TEAM A]</span>
-          </div>
-          <div class="brut-card px-5 py-3 invert-hover" style="border-width: 2px;">
-            <span class="text-xs mono">[TEAM B]</span>
-          </div>
-          <div class="brut-card px-5 py-3 invert-hover" style="border-width: 2px;">
-            <span class="text-xs mono">[TEAM C]</span>
-          </div>
-          <div class="brut-card px-5 py-3 invert-hover" style="border-width: 2px;">
-            <span class="text-xs mono">[TEAM D]</span>
-          </div>
-          <div class="brut-card px-5 py-3 invert-hover" style="border-width: 2px;">
-            <span class="text-xs mono">[TEAM E]</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="thick-divider">
-
-  <!-- Testimonial -->
-  <section class="py-16 px-6">
-    <div class="max-w-3xl mx-auto">
-      <div class="reveal">
-        <div class="brut-card">
-          <div class="brut-card-body py-10 px-8 md:px-12">
-            <p class="mono text-sm text-gray-400 mb-4">// feedback</p>
-            <blockquote class="text-lg md:text-xl font-normal leading-relaxed mb-8" style="letter-spacing: -0.01em;">
-              "[Specific, raw feedback — mention a concrete before/after. e.g. 'Our deploy pipeline was 23 manual steps in a wiki doc nobody read. Now it is one command. We shipped to production 4 times last week instead of once a month.']"
-            </blockquote>
-            <div class="flex items-center gap-4 border-t-2 border-black pt-6">
-              <div class="w-10 h-10 bg-black flex items-center justify-center">
-                <span class="text-white text-sm font-medium mono">SE</span>
+          <!-- Subgraphs -->
+          <div style="margin-top: 16px; animation: fadeIn 0.6s ease-out 1.6s both;">
+            <div class="dash-sidebar-title">Subgraphs</div>
+            <div class="subgraph-bar">
+              <span class="subgraph-label">users</span>
+              <div class="subgraph-track">
+                <div class="subgraph-fill" style="width: 85%; background: var(--green);"></div>
               </div>
-              <div>
-                <p class="text-sm font-medium">[Your Name]</p>
-                <p class="text-sm text-gray-500 mono">[Staff Engineer], [Your Company]</p>
+            </div>
+            <div class="subgraph-bar">
+              <span class="subgraph-label">products</span>
+              <div class="subgraph-track">
+                <div class="subgraph-fill" style="width: 72%; background: var(--gray-700);"></div>
               </div>
+            </div>
+            <div class="subgraph-bar">
+              <span class="subgraph-label">orders</span>
+              <div class="subgraph-track">
+                <div class="subgraph-fill" style="width: 58%; background: var(--gray-400);"></div>
+              </div>
+            </div>
+            <div class="subgraph-bar">
+              <span class="subgraph-label">analytics</span>
+              <div class="subgraph-track">
+                <div class="subgraph-fill" style="width: 45%; background: var(--gray-300);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right sidebar -->
+        <div class="dash-sidebar" style="animation: fadeIn 0.6s ease-out 1.2s both;">
+          <div class="dash-sidebar-title">API Health</div>
+          <div class="dash-sidebar-item">
+            <span class="dash-sidebar-label">Uptime</span>
+            <span class="dash-sidebar-value" style="color: var(--green);">99.99%</span>
+          </div>
+          <div class="dash-sidebar-item">
+            <span class="dash-sidebar-label">Avg latency</span>
+            <span class="dash-sidebar-value">23ms</span>
+          </div>
+          <div class="dash-sidebar-item">
+            <span class="dash-sidebar-label">Throughput</span>
+            <span class="dash-sidebar-value">1.2k/s</span>
+          </div>
+          <div class="dash-sidebar-item">
+            <span class="dash-sidebar-label">Cache hit</span>
+            <span class="dash-sidebar-value">94.2%</span>
+          </div>
+          <div style="margin-top: 16px;">
+            <div class="dash-sidebar-title">Active graphs</div>
+            <div class="dash-sidebar-item">
+              <span class="dash-sidebar-label">Production</span>
+              <span class="dash-sidebar-value">4</span>
+            </div>
+            <div class="dash-sidebar-item">
+              <span class="dash-sidebar-label">Staging</span>
+              <span class="dash-sidebar-value">2</span>
             </div>
           </div>
         </div>
@@ -411,140 +828,273 @@
     </div>
   </section>
 
-  <hr class="thick-divider">
+  <hr class="section-divider">
 
-  <!-- Deep Dive — alternating layout -->
-  <section class="py-24 px-6">
-    <div class="max-w-5xl mx-auto space-y-0">
-      <div class="reveal mb-16">
-        <h2 class="text-4xl md:text-5xl font-normal tracking-tight" style="letter-spacing: -0.03em;">Under the hood</h2>
+  <!-- Trusted By -->
+  <section style="padding: 40px 24px;">
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+      <p class="reveal" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-400); margin-bottom: 24px;">Trusted by engineering teams worldwide</p>
+      <div class="logos-row reveal reveal-delay-1">
+        <span class="logo-placeholder">Vercel</span>
+        <span class="logo-placeholder">Stripe</span>
+        <span class="logo-placeholder">Linear</span>
+        <span class="logo-placeholder">Notion</span>
+        <span class="logo-placeholder">Figma</span>
+        <span class="logo-placeholder">Clerk</span>
       </div>
+    </div>
+  </section>
 
-      <div class="reveal grid md:grid-cols-2 gap-0">
-        <div class="brut-card p-8 md:p-10" style="border-right-width: 0; border-bottom-width: 0;">
-          <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Architecture]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed mb-4">[Describe the technical architecture — distributed, edge-deployed, serverless. Two sentences with specific technology choices.]</p>
-          <a href="#" class="text-sm text-black underline underline-offset-4 hover:no-underline transition-all duration-200">Read architecture docs →</a>
+  <hr class="section-divider">
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="reveal" style="margin-bottom: 48px;">
+      <p class="section-label">Platform</p>
+      <h2 class="section-title">Everything you need to<br>manage APIs at scale</h2>
+      <p class="section-subtitle">A unified platform for federation, governance, and observability across all your API endpoints.</p>
+    </div>
+
+    <div class="feature-grid reveal reveal-delay-1">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
-        <div class="brut-card p-8 md:p-10" style="border-bottom-width: 0;">
-          <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Performance]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed mb-4">[Latency, throughput, cold start times — concrete numbers with context. "p99 latency of [X]ms at [Y] requests/second."]</p>
-          <a href="#" class="text-sm text-black underline underline-offset-4 hover:no-underline transition-all duration-200">View benchmarks →</a>
-        </div>
+        <h3>Federated Gateway</h3>
+        <p>Compose multiple GraphQL and REST APIs into a single unified endpoint with automatic schema stitching.</p>
       </div>
-      <div class="reveal reveal-delay-1 grid md:grid-cols-2 gap-0">
-        <div class="brut-card p-8 md:p-10" style="border-right-width: 0;">
-          <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Reliability]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed mb-4">[Redundancy, failover, SLA guarantees — "multi-region active-active with automatic failover in [X]ms."]</p>
-          <a href="#" class="text-sm text-black underline underline-offset-4 hover:no-underline transition-all duration-200">SLA details →</a>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <div class="brut-card p-8 md:p-10">
-          <h3 class="text-xl mb-3" style="letter-spacing: -0.02em;">[Compliance]</h3>
-          <p class="text-gray-600 text-sm leading-relaxed mb-4">[Certifications, data residency options, audit capabilities — SOC 2, GDPR, HIPAA, with specific scope.]</p>
-          <a href="#" class="text-sm text-black underline underline-offset-4 hover:no-underline transition-all duration-200">Security whitepaper →</a>
+        <h3>Access Control</h3>
+        <p>Fine-grained field-level permissions with role-based policies. Define who can access what, down to the resolver.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>Real-time Analytics</h3>
+        <p>Monitor request volume, latency percentiles, and error rates across all subgraphs with 1-second granularity.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>Edge Caching</h3>
+        <p>Automatic response caching at the edge with intelligent invalidation. Sub-10ms cache hit latency globally.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Schema Registry</h3>
+        <p>Version, validate, and track every schema change with automated compatibility checks and rollback support.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        </div>
+        <h3>CI/CD Integration</h3>
+        <p>GitHub Actions, GitLab CI, and CLI tooling for schema checks in pull requests. Break nothing, ship faster.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- How it works -->
+  <section class="section-sm">
+    <div class="reveal" style="text-align: center; margin-bottom: 48px;">
+      <p class="section-label">How it works</p>
+      <h2 class="section-title" style="margin-left: auto; margin-right: auto;">From zero to production in 4 steps</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-number">01</div>
+        <h3>Connect</h3>
+        <p>Point to your existing APIs and data sources</p>
+      </div>
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-number">02</div>
+        <h3>Compose</h3>
+        <p>Automatically federate schemas into a unified graph</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-number">03</div>
+        <h3>Govern</h3>
+        <p>Set access policies, rate limits, and compliance rules</p>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-number">04</div>
+        <h3>Ship</h3>
+        <p>Deploy to the edge and monitor everything in real time</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Code -->
+  <section class="section-sm">
+    <div class="reveal" style="margin-bottom: 32px;">
+      <p class="section-label">Quick start</p>
+      <h2 class="section-title">Deploy in under 60 seconds</h2>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dot" style="background: #ef4444;"></div>
+          <div class="code-dot" style="background: #f59e0b;"></div>
+          <div class="code-dot" style="background: #22c55e;"></div>
+        </div>
+        <div class="code-body">
+          <div><span class="code-comment"># Install the CLI</span></div>
+          <div>npx @graphnode/cli init</div>
+          <div>&nbsp;</div>
+          <div><span class="code-comment"># Add your subgraphs</span></div>
+          <div><span class="code-keyword">import</span> { <span class="code-fn">defineConfig</span> } <span class="code-keyword">from</span> <span class="code-string">'@graphnode/sdk'</span></div>
+          <div>&nbsp;</div>
+          <div><span class="code-keyword">export default</span> <span class="code-fn">defineConfig</span>({</div>
+          <div>&nbsp;&nbsp;subgraphs: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ name: <span class="code-string">'users'</span>, url: <span class="code-string">'https://api.example.com/users'</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ name: <span class="code-string">'products'</span>, url: <span class="code-string">'https://api.example.com/products'</span> },</div>
+          <div>&nbsp;&nbsp;],</div>
+          <div>&nbsp;&nbsp;governance: { auth: <span class="code-string">'rbac'</span>, rateLimit: <span class="code-string">'1000/min'</span> },</div>
+          <div>})</div>
+          <div>&nbsp;</div>
+          <div><span class="code-comment"># Deploy to the edge</span></div>
+          <div>npx graphnode deploy --prod</div>
         </div>
       </div>
     </div>
   </section>
 
-  <hr class="thick-divider">
+  <hr class="section-divider">
 
-  <!-- FAQ -->
-  <section class="py-20 px-6">
-    <div class="max-w-3xl mx-auto">
-      <div class="reveal mb-12">
-        <h2 class="text-3xl md:text-4xl font-normal tracking-tight" style="letter-spacing: -0.03em;">Common questions</h2>
+  <!-- Use Cases -->
+  <section class="section">
+    <div class="reveal" style="margin-bottom: 48px;">
+      <p class="section-label">Solutions</p>
+      <h2 class="section-title">Built for every team</h2>
+    </div>
+    <div class="feature-grid reveal reveal-delay-1" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="feature-card" style="padding: 36px 28px;">
+        <h3 style="margin-bottom: 12px;">Platform Teams</h3>
+        <p>Centralized API gateway with self-service onboarding. Teams publish subgraphs independently without breaking the supergraph.</p>
       </div>
+      <div class="feature-card" style="padding: 36px 28px;">
+        <h3 style="margin-bottom: 12px;">Backend Engineers</h3>
+        <p>Type-safe schema composition with automatic conflict detection. Focus on domain logic while the platform handles routing.</p>
+      </div>
+      <div class="feature-card" style="padding: 36px 28px;">
+        <h3 style="margin-bottom: 12px;">Security & Compliance</h3>
+        <p>SOC 2 Type II certified. Field-level audit logs, data residency controls, and automated PII detection across all queries.</p>
+      </div>
+    </div>
+  </section>
 
-      <div class="space-y-0">
-        <div class="reveal brut-card invert-hover p-6" style="border-bottom-width: 0;">
-          <h3 class="text-base font-medium mb-2">[What is the free tier?]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Direct answer — limits, included features, upgrade path.]</p>
-        </div>
-        <div class="reveal reveal-delay-1 brut-card invert-hover p-6" style="border-bottom-width: 0;">
-          <h3 class="text-base font-medium mb-2">[How do I migrate existing infrastructure?]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Migration tooling, timeline, support level — be specific.]</p>
-        </div>
-        <div class="reveal reveal-delay-2 brut-card invert-hover p-6">
-          <h3 class="text-base font-medium mb-2">[Where is data stored?]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Regions, encryption, retention period — concrete answers.]</p>
+  <hr class="section-divider">
+
+  <!-- Testimonial -->
+  <section class="section-sm">
+    <div class="reveal">
+      <div class="testimonial-card">
+        <blockquote>"We were managing 14 separate API gateways with different auth systems. GraphNode unified everything in a week. Our p99 latency dropped from 340ms to 18ms and we retired 3 internal tools."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JK</div>
+          <div>
+            <div class="testimonial-name">James Kim</div>
+            <div class="testimonial-role">Staff Engineer, CloudPay</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <hr class="thick-divider">
+  <hr class="section-divider">
 
-  <!-- CTA Section -->
-  <section class="py-24 px-6">
-    <div class="max-w-3xl mx-auto text-center">
-      <div class="reveal">
-        <h2 class="text-4xl md:text-5xl font-normal tracking-tight mb-6" style="letter-spacing: -0.03em;">Start shipping today</h2>
-        <p class="text-gray-600 max-w-md mx-auto mb-10">No setup friction. One command to start. Free tier included.</p>
-        <a href="#" class="btn-black text-lg !py-5 !px-12">Get Access</a>
+  <!-- Performance Stats -->
+  <section class="section-sm">
+    <div class="reveal" style="text-align: center; margin-bottom: 48px;">
+      <p class="section-label">Performance</p>
+      <h2 class="section-title" style="margin-left: auto; margin-right: auto;">Numbers that matter</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--gray-200); border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden;">
+      <div class="reveal" style="background: #fff; padding: 40px 24px; text-align: center;">
+        <div style="font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: var(--black);">18ms</div>
+        <div style="font-size: 13px; color: var(--gray-500); margin-top: 4px;">P95 latency</div>
+      </div>
+      <div class="reveal reveal-delay-1" style="background: #fff; padding: 40px 24px; text-align: center;">
+        <div style="font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: var(--black);">99.99%</div>
+        <div style="font-size: 13px; color: var(--gray-500); margin-top: 4px;">Uptime SLA</div>
+      </div>
+      <div class="reveal reveal-delay-2" style="background: #fff; padding: 40px 24px; text-align: center;">
+        <div style="font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: var(--black);">300+</div>
+        <div style="font-size: 13px; color: var(--gray-500); margin-top: 4px;">Edge locations</div>
+      </div>
+      <div class="reveal reveal-delay-3" style="background: #fff; padding: 40px 24px; text-align: center;">
+        <div style="font-size: 36px; font-weight: 800; letter-spacing: -0.03em; color: var(--black);">10B+</div>
+        <div style="font-size: 13px; color: var(--gray-500); margin-top: 4px;">Requests/month</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div style="max-width: 560px; margin: 0 auto;">
+      <h2 class="reveal">Start building with GraphNode</h2>
+      <p class="reveal reveal-delay-1">Free for teams up to 5 members. No credit card required.</p>
+      <div class="reveal reveal-delay-2" style="display: flex; gap: 12px; justify-content: center;">
+        <a href="#" class="btn-green btn-green-lg" style="animation: pulseGlow 2s ease-in-out infinite 2s;">Try it for free</a>
+        <a href="#" class="btn-outline" style="border-color: var(--gray-600); color: var(--gray-300);">Contact Sales</a>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="border-t-2 border-black py-12 px-6" style="border-top-width: 3px;">
-    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-black flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/>
-          </svg>
-        </div>
-        <span class="text-sm font-medium">[Product]</span>
+  <footer>
+    <div class="footer-inner">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>
+        </svg>
+        <span style="font-weight: 600; font-size: 14px;">GraphNode</span>
       </div>
-      <div class="flex gap-6 text-sm text-gray-500">
-        <a href="#" class="invert-hover px-2 py-1 transition-all duration-200">Privacy</a>
-        <a href="#" class="invert-hover px-2 py-1 transition-all duration-200">Terms</a>
-        <a href="#" class="invert-hover px-2 py-1 transition-all duration-200">Docs</a>
-        <a href="#" class="invert-hover px-2 py-1 transition-all duration-200">GitHub</a>
+      <div class="footer-links">
+        <a href="#">Products</a>
+        <a href="#">Solutions</a>
+        <a href="#">Pricing</a>
+        <a href="#">Docs</a>
+        <a href="#">Blog</a>
+        <a href="#">GitHub</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
       </div>
+      <div class="footer-copy">&copy; 2026 GraphNode, Inc.</div>
     </div>
   </footer>
 
-  <!-- Scroll Reveal Script — repeats on scroll -->
+  <!-- Scroll Reveal -->
   <script>
-    const revealObserver = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => {
-      revealObserver.observe(el);
-    });
-  
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-      // Staggered Grid Reveal
-      (function(){
-        var staggerEls = document.querySelectorAll('.stagger-item');
-        if(!staggerEls.length) return;
-        var staggerObs = new IntersectionObserver(function(entries){
-          entries.forEach(function(entry){
-            if(entry.isIntersecting){
-              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
-              items.forEach(function(item, i){
-                var row = Math.floor(i / 3);
-                var col = i % 3;
-                var delay = (row + col) * 100;
-                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
-              });
-            } else {
-              entry.target.classList.remove('stagger-visible');
-            }
-          });
-        }, {threshold:0.1});
-        staggerEls.forEach(function(el){ staggerObs.observe(el); });
-      })();
-  
+    // Animate subgraph bars on load
+    setTimeout(() => {
+      document.querySelectorAll('.subgraph-fill').forEach(bar => {
+        const target = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => { bar.style.width = target; }, 100);
+      });
+    }, 1800);
   </script>
 
 </body>

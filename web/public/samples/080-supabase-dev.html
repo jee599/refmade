@@ -3,460 +3,1480 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenStack — Open Source Backend Platform</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>CloudBase — The Open Source Backend Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
       --bg-root: #171717;
       --bg-surface: #1c1c1c;
-      --bg-elevated: #242424;
+      --bg-elevated: #212121;
+      --bg-deeper: #111111;
       --bg-code: #0d0d0d;
-      --border: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.06);
       --border-strong: rgba(255,255,255,0.1);
       --text: #ededed;
       --text-secondary: #8f8f8f;
+      --text-muted: #666666;
       --green: #3ECF8E;
-      --green-dim: rgba(62,207,142,0.15);
+      --green-dark: #2ea872;
+      --green-dim: rgba(62,207,142,0.12);
       --green-glow: rgba(62,207,142,0.06);
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--bg-root);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+      overflow-x: hidden;
     }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    a { text-decoration: none; color: inherit; }
+    button { border: none; background: none; cursor: pointer; font-family: inherit; }
 
-    .green-glow { text-shadow: 0 0 40px rgba(62,207,142,0.25); }
+    .font-mono { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+
+    /* Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
 
     /* Buttons */
-    .btn-green {
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       background: var(--green);
       color: #000;
-      border: none;
-      border-radius: 6px;
+      font-size: 14px;
       font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
     }
-    .btn-green:hover { opacity: 0.9; }
+    .btn-primary:hover { background: #4dd99a; box-shadow: 0 0 20px rgba(62,207,142,0.15); }
 
     .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       background: transparent;
       color: var(--text);
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
+      font-size: 14px;
       font-weight: 500;
-      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid var(--border-strong);
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
-    .btn-outline:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+    .btn-outline:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.2); }
 
-    /* Code block */
-    .code-block {
+    /* Nav */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(23,23,23,0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-left { display: flex; align-items: center; gap: 28px; }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+    .nav-logo-icon { width: 20px; height: 20px; position: relative; }
+    .nav-logo-icon svg { width: 20px; height: 20px; }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding: 5px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .nav-github:hover { border-color: var(--border-strong); color: var(--text); }
+    .nav-github svg { width: 14px; height: 14px; }
+    .nav-right .sign-in { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+    .nav-right .sign-in:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: 150px 24px 72px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140%;
+      max-width: 1400px;
+      height: 650px;
+      background: radial-gradient(ellipse 50% 50% at 50% 20%, rgba(62,207,142,0.09) 0%, rgba(62,207,142,0.03) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 0%, transparent 70%);
+    }
+    .hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: 68px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 24px;
+    }
+    .hero h1 .green-line {
+      background: linear-gradient(135deg, #3ECF8E 0%, #2ea872 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-description {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 32px;
+    }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 56px;
+    }
+
+    /* Social proof badges */
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .hero-badge:hover { border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
+    .hero-badge svg { width: 16px; height: 16px; }
+
+    /* Logo marquee */
+    .logo-marquee {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--bg-root);
+    }
+    .logo-marquee-label {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+    .marquee-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    }
+    .marquee-track {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      animation: marquee 35s linear infinite;
+      width: max-content;
+    }
+    .logo-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .logo-item svg { width: 20px; height: 20px; opacity: 0.5; }
+    .logo-item span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      opacity: 0.35;
+      letter-spacing: -0.01em;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Feature section */
+    .features {
+      padding: 120px 24px 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .features-header {
+      margin-bottom: 64px;
+    }
+    .features-header h2 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .features-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      line-height: 1.6;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1024px) {
+      .feature-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      padding: 32px;
+      transition: background 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover { background: #202020; }
+    .feature-card:first-child {
+      grid-column: 1 / -1;
+    }
+    @media (min-width: 768px) {
+      .feature-card:first-child { grid-column: 1 / 3; }
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .feature-tag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: var(--green-dim);
+      color: var(--green);
+    }
+
+    /* Code preview inside feature card */
+    .feature-code {
       background: var(--bg-code);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 20px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      line-height: 1.7;
+      font-size: 12.5px;
+      line-height: 1.8;
       overflow-x: auto;
     }
+    .feature-code .kw { color: #c084fc; }
+    .feature-code .fn { color: #60a5fa; }
+    .feature-code .str { color: #3ECF8E; }
+    .feature-code .cm { color: #444; }
+    .feature-code .var { color: #ededed; }
 
-    /* Product card */
-    .product-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      transition: all 0.2s ease;
+    /* Dashboard section */
+    .dashboard-section {
+      padding: 100px 24px 120px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
-    .product-card:hover {
-      border-color: rgba(255,255,255,0.12);
-      transform: translateY(-2px);
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 48px;
     }
-
-    /* Icon container */
-    .icon-container {
-      width: 40px; height: 40px;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* Marquee */
-    .marquee-track { display: flex; animation: marquee 25s linear infinite; }
-    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-    /* Hero gradient */
-    .hero-gradient {
-      background: radial-gradient(ellipse 60% 40% at 50% 0%, var(--green-glow) 0%, transparent 60%);
-    }
-
-    /* Section label */
-    .section-label {
+    .dashboard-header .section-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--green);
+      margin-bottom: 12px;
+    }
+    .dashboard-header h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      margin-bottom: 12px;
+    }
+    .dashboard-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
 
-    /* Stat card */
-    .stat-value {
-      font-weight: 700;
-      font-size: 40px;
-      letter-spacing: -0.03em;
+    .dashboard-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .dashboard-tab {
+      font-size: 13px;
+      padding: 6px 16px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+    .dashboard-tab:hover { color: var(--text); }
+    .dashboard-tab.active {
+      background: var(--green-dim);
       color: var(--green);
     }
 
-    /* Dashboard mockup */
-    .dashboard-bar {
-      height: 6px;
+    .dashboard-mock {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-code);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);
+    }
+    .dashboard-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+    }
+    .dashboard-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dashboard-body {
+      display: flex;
+      min-height: 340px;
+    }
+    .dashboard-sidebar {
+      width: 200px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      transition: background 0.1s;
+      margin-bottom: 1px;
+    }
+    .sidebar-item:hover { background: rgba(255,255,255,0.03); }
+    .sidebar-item.active {
+      background: var(--green-dim);
+      color: var(--green);
+    }
+    .sidebar-item svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .dashboard-main { flex: 1; padding: 20px 24px; }
+    .dashboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .dashboard-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-weight: 400;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .dashboard-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dashboard-table .mono { font-family: 'JetBrains Mono', monospace; color: var(--text-muted); font-size: 11px; }
+    .status-badge {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 8px;
       border-radius: 3px;
-      background: var(--green);
-      opacity: 0.8;
+    }
+
+    /* Frameworks */
+    .frameworks {
+      padding: 56px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      background: var(--bg-elevated);
+    }
+    .frameworks-label { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+    .frameworks-list {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .framework-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .framework-item:hover { opacity: 1; }
+    .framework-item svg { width: 18px; height: 18px; }
+
+    /* Customer stories */
+    .stories-section {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .stories-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .stories-header .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .stories-header h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      margin-bottom: 12px;
+    }
+    .stories-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 768px) {
+      .stories-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1024px) {
+      .stories-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .story-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .story-card:hover { border-color: var(--border-strong); box-shadow: 0 4px 24px rgba(0,0,0,0.2); }
+    .story-logo {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .story-logo .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .story-card blockquote {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+    .story-author {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Open source section */
+    .oss-section {
+      padding: 120px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      position: relative;
+    }
+    .oss-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse 70% 70% at 50% 0%, rgba(62,207,142,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .oss-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .oss-section > p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      position: relative;
+    }
+    .stats-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .stat { text-align: center; }
+    .stat-value {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 13px; color: var(--text-secondary); }
+    .stat-divider {
+      width: 1px;
+      height: 48px;
+      background: var(--border-strong);
+    }
+
+    /* CTA */
+    .cta-section {
+      padding: 140px 24px;
+      text-align: center;
+      position: relative;
+      background: var(--bg-deeper);
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 800px;
+      height: 200px;
+      background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(62,207,142,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .cta-section h2 .green-line {
+      background: linear-gradient(135deg, #3ECF8E 0%, #2ea872 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto 40px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 64px 24px 32px;
+      background: #0a0a0a;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-compliance {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .compliance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .compliance-badge svg { width: 14px; height: 14px; color: var(--green); }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .footer-logo-icon {
+      width: 20px;
+      height: 20px;
+      position: relative;
+    }
+    .footer-logo-icon svg { width: 20px; height: 20px; }
+    .footer-logo span { font-weight: 600; color: var(--text); font-size: 13px; }
+    .footer-tagline {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 240px;
+    }
+    .footer-socials {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .footer-socials a {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      color: var(--text-muted);
+      transition: color 0.15s;
+    }
+    .footer-socials a:hover { color: var(--text); }
+    .footer-socials a svg { width: 16px; height: 16px; }
+    .footer h4 {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .footer ul { list-style: none; }
+    .footer li { margin-bottom: 8px; }
+    .footer li a { font-size: 13px; transition: color 0.15s; }
+    .footer li a:hover { color: var(--text); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      font-size: 11px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-github { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .hero h1 { font-size: 40px; }
+      .hero-description { font-size: 15px; }
+      .hero-badges { gap: 8px; }
+      .hero-badge { font-size: 12px; padding: 5px 10px; }
+      .features-header h2 { font-size: 32px; }
+      .dashboard-sidebar { display: none; }
+      .stats-row { gap: 32px; }
+      .stat-divider { display: none; }
+      .cta-section h2 { font-size: 36px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .oss-section h2 { font-size: 32px; }
+      .dashboard-header h2 { font-size: 28px; }
+      .stories-header h2 { font-size: 28px; }
+      .footer-compliance { flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
-  <!-- Nav -->
-  <nav class="fixed top-0 w-full z-50" style="background: rgba(23,23,23,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);">
-    <div class="max-w-[1200px] mx-auto px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-[26px] h-[26px] rounded-md flex items-center justify-center" style="background: var(--green);">
-          <svg class="w-[14px] h-[14px] text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a href="#" class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 109 113" fill="none">
+              <path d="M63.708 110.284c-2.86 3.601-8.658 1.628-8.727-2.97l-1.007-67.251h45.22c8.19 0 12.758 9.46 7.665 15.874l-43.15 54.347z" fill="url(#logo-a)"/>
+              <path d="M63.708 110.284c-2.86 3.601-8.658 1.628-8.727-2.97l-1.007-67.251h45.22c8.19 0 12.758 9.46 7.665 15.874l-43.15 54.347z" fill="url(#logo-b)" fill-opacity=".2"/>
+              <path d="M45.317 2.07c2.86-3.601 8.657-1.628 8.726 2.97l.442 67.251H9.83c-8.19 0-12.759-9.46-7.665-15.875L45.317 2.07z" fill="#3ECF8E"/>
+              <defs>
+                <linearGradient id="logo-a" x1="53.974" y1="54.974" x2="94.163" y2="71.829" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#249361"/>
+                  <stop offset="1" stop-color="#3ECF8E"/>
+                </linearGradient>
+                <linearGradient id="logo-b" x1="36.156" y1="30.578" x2="54.484" y2="79.837" gradientUnits="userSpaceOnUse">
+                  <stop/>
+                  <stop offset="1" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          CloudBase
+        </a>
+        <div class="nav-links">
+          <a href="#products">Product</a>
+          <a href="#developers">Developers</a>
+          <a href="#">Solutions</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#">Docs</a>
+          <a href="#">Blog</a>
         </div>
-        <span class="font-semibold text-[15px]">OpenStack</span>
       </div>
-      <div class="hidden md:flex items-center gap-7 text-[13px] text-[#8f8f8f]">
-        <a href="#products" class="hover:text-white transition-colors">Products</a>
-        <a href="#developers" class="hover:text-white transition-colors">Developers</a>
-        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-        <a href="#" class="hover:text-white transition-colors">Docs</a>
-        <a href="#" class="hover:text-white transition-colors">Blog</a>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="#" class="text-[13px] text-[#8f8f8f] hover:text-white transition-colors">Sign in</a>
-        <a href="#" class="btn-green text-[13px] px-4 py-[7px]">Start your project</a>
+      <div class="nav-right">
+        <a href="#" class="nav-github">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          99.7K
+        </a>
+        <a href="#" class="sign-in">Sign in</a>
+        <a href="#" class="btn-primary" style="padding: 6px 14px; font-size: 13px;">Start your project</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="pt-[140px] pb-[100px] md:pt-[180px] md:pb-[120px] text-center px-6 hero-gradient">
-    <div class="max-w-[800px] mx-auto">
-      <div class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[12px] font-medium mb-8" style="background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2);">
-        <span class="w-1.5 h-1.5 rounded-full" style="background: var(--green);"></span>
-        Now in General Availability
-      </div>
-      <h1 class="font-bold text-[48px] md:text-[68px] leading-[1.05] mb-6 green-glow" style="letter-spacing: -0.035em;">
-        Build in a weekend.<br><span style="color: var(--green);">Scale to millions.</span>
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="fade-up">
+        Build in a weekend<br>
+        <span class="green-line">Scale to millions</span>
       </h1>
-      <p class="text-[17px] md:text-[19px] max-w-[600px] mx-auto mb-10 leading-[1.6] text-[#8f8f8f]">
-        OpenStack is an open source backend platform. Start your project with a Postgres database, Authentication, instant APIs, Edge Functions, Realtime subscriptions, Storage, and Vector embeddings.
+      <p class="hero-description fade-up delay-1">
+        CloudBase is the Postgres development platform. Start your project with a Postgres database, Authentication, instant APIs, Edge Functions, Realtime subscriptions, Storage, and Vector embeddings.
       </p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#" class="btn-green text-[14px] px-6 py-[11px]">Start your project</a>
-        <a href="#" class="btn-outline text-[14px] px-6 py-[11px]">Request a demo</a>
+      <div class="hero-ctas fade-up delay-2">
+        <a href="#" class="btn-primary">Start your project</a>
+        <a href="#" class="btn-outline">Request a demo</a>
       </div>
-    </div>
-  </section>
-
-  <!-- Code Preview -->
-  <section class="pb-20 px-6">
-    <div class="max-w-[640px] mx-auto">
-      <div class="code-block p-5">
-        <div class="flex items-center gap-2 mb-4">
-          <div class="w-3 h-3 rounded-full" style="background: #ff5f57;"></div>
-          <div class="w-3 h-3 rounded-full" style="background: #febc2e;"></div>
-          <div class="w-3 h-3 rounded-full" style="background: #28c840;"></div>
-          <span class="ml-auto text-[11px] text-[#8f8f8f]">index.ts</span>
-        </div>
-        <pre style="color: #8f8f8f;"><span style="color: #c084fc;">import</span> <span style="color: #ededed;">{ createClient }</span> <span style="color: #c084fc;">from</span> <span style="color: #3ECF8E;">'@openstack/sdk'</span>
-
-<span style="color: #c084fc;">const</span> <span style="color: #ededed;">client</span> = <span style="color: #60a5fa;">createClient</span>(<span style="color: #3ECF8E;">'your-project-url'</span>, <span style="color: #3ECF8E;">'your-anon-key'</span>)
-
-<span style="color: #555;">// Fetch data with realtime subscriptions</span>
-<span style="color: #c084fc;">const</span> { <span style="color: #ededed;">data</span>, <span style="color: #ededed;">error</span> } = <span style="color: #c084fc;">await</span> <span style="color: #ededed;">client</span>
-  .<span style="color: #60a5fa;">from</span>(<span style="color: #3ECF8E;">'posts'</span>)
-  .<span style="color: #60a5fa;">select</span>(<span style="color: #3ECF8E;">'*'</span>)
-  .<span style="color: #60a5fa;">order</span>(<span style="color: #3ECF8E;">'created_at'</span>, { <span style="color: #ededed;">ascending</span>: <span style="color: #c084fc;">false</span> })</pre>
+      <div class="hero-badges fade-up delay-3">
+        <a href="#" class="hero-badge">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          99.7K
+        </a>
+        <a href="#" class="hero-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/></svg>
+          Discord
+        </a>
+        <a href="#" class="hero-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter
+        </a>
+        <a href="#" class="hero-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          SOC2
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Logo Marquee -->
-  <section class="py-10" style="background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-    <div class="overflow-hidden">
+  <section class="logo-marquee fade-up">
+    <p class="logo-marquee-label">Trusted by fast-growing companies worldwide</p>
+    <div class="marquee-container">
       <div class="marquee-track">
-        <div class="flex items-center gap-16 px-8 opacity-30 shrink-0">
-          <span class="font-semibold text-[15px] whitespace-nowrap">GitHub</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Notion</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">1Password</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Humata</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Chatbase</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Maergo</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Pika</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Quivr</span>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.642 6.477a9.58 9.58 0 00-.668-2.157 5.248 5.248 0 00-1.28-1.644 5.134 5.134 0 00-1.665-1.04 7.457 7.457 0 00-2.267-.47C16.592.106 16.259.093 12 .093S7.408.106 6.238.166a7.457 7.457 0 00-2.267.47 5.134 5.134 0 00-1.665 1.04A5.248 5.248 0 001.026 3.32 9.58 9.58 0 00.358 5.477C.206 6.638.097 7.808.097 12s.109 5.362.261 6.523a9.58 9.58 0 00.668 2.157 5.248 5.248 0 001.28 1.644 5.134 5.134 0 001.665 1.04 7.457 7.457 0 002.267.47c1.17.06 1.503.073 5.762.073s4.592-.013 5.762-.073a7.457 7.457 0 002.267-.47 5.134 5.134 0 001.665-1.04 5.248 5.248 0 001.28-1.644 9.58 9.58 0 00.668-2.157c.152-1.161.261-2.33.261-6.523s-.109-5.362-.261-6.523z"/></svg>
+          <span>Mozilla</span>
         </div>
-        <div class="flex items-center gap-16 px-8 opacity-30 shrink-0">
-          <span class="font-semibold text-[15px] whitespace-nowrap">GitHub</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Notion</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">1Password</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Humata</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Chatbase</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Maergo</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Pika</span>
-          <span class="font-semibold text-[15px] whitespace-nowrap">Quivr</span>
+        <div class="logo-item">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>GitHub</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+          <span>1Password</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg>
+          <span>PwC</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span>Pika</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2V7zm0 8h2v2h-2v-2z"/></svg>
+          <span>Humata</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v18M3 12h18"/></svg>
+          <span>Udio</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z"/></svg>
+          <span>LangChain</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l4-4 4 4M3 16l4 4 4-4M13 8l4-4 4 4M13 16l4 4 4-4"/></svg>
+          <span>Resend</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          <span>Loops</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <span>Mobbin</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+          <span>Gopuff</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
+          <span>Chatbase</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v14h14V5H6z"/></svg>
+          <span>Betashares</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>Submagic</span>
+        </div>
+        <!-- duplicate for seamless loop -->
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.642 6.477a9.58 9.58 0 00-.668-2.157 5.248 5.248 0 00-1.28-1.644 5.134 5.134 0 00-1.665-1.04 7.457 7.457 0 00-2.267-.47C16.592.106 16.259.093 12 .093S7.408.106 6.238.166a7.457 7.457 0 00-2.267.47 5.134 5.134 0 00-1.665 1.04A5.248 5.248 0 001.026 3.32 9.58 9.58 0 00.358 5.477C.206 6.638.097 7.808.097 12s.109 5.362.261 6.523a9.58 9.58 0 00.668 2.157 5.248 5.248 0 001.28 1.644 5.134 5.134 0 001.665 1.04 7.457 7.457 0 002.267.47c1.17.06 1.503.073 5.762.073s4.592-.013 5.762-.073a7.457 7.457 0 002.267-.47 5.134 5.134 0 001.665-1.04 5.248 5.248 0 001.28-1.644 9.58 9.58 0 00.668-2.157c.152-1.161.261-2.33.261-6.523s-.109-5.362-.261-6.523z"/></svg>
+          <span>Mozilla</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>GitHub</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+          <span>1Password</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg>
+          <span>PwC</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span>Pika</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2V7zm0 8h2v2h-2v-2z"/></svg>
+          <span>Humata</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v18M3 12h18"/></svg>
+          <span>Udio</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z"/></svg>
+          <span>LangChain</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l4-4 4 4M3 16l4 4 4-4M13 8l4-4 4 4M13 16l4 4 4-4"/></svg>
+          <span>Resend</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          <span>Loops</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <span>Mobbin</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+          <span>Gopuff</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
+          <span>Chatbase</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v14h14V5H6z"/></svg>
+          <span>Betashares</span>
+        </div>
+        <div class="logo-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>Submagic</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Product Features -->
-  <section id="products" class="py-24 px-6">
-    <div class="max-w-[1200px] mx-auto fade-in">
-      <div class="text-center mb-16">
-        <div class="section-label mb-3">Products</div>
-        <h2 class="font-semibold text-[32px] sm:text-[40px]" style="letter-spacing: -0.025em;">Everything you need to build</h2>
+  <!-- Products / Features -->
+  <section id="products" class="features">
+    <div class="features-header fade-up">
+      <h2>Build faster with<br>every feature you need</h2>
+      <p>Everything from authentication to real-time data, built into a single platform that scales with you.</p>
+    </div>
+
+    <div class="feature-grid fade-up">
+      <!-- Database (wide card) -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: var(--green-dim);">
+          <svg width="20" height="20" fill="none" stroke="#3ECF8E" stroke-width="1.5" viewBox="0 0 24 24">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+            <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+            <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
+          </svg>
+        </div>
+        <h3>Postgres Database <span class="feature-tag">Core</span></h3>
+        <p>Every project is a full Postgres database, the world's most trusted relational database. With realtime functionality, database backups, extensions, and more.</p>
+        <div class="feature-code">
+<pre><span class="kw">import</span> <span class="var">{ createClient }</span> <span class="kw">from</span> <span class="str">'@cloudbase/sdk'</span>
+
+<span class="kw">const</span> <span class="var">cloudbase</span> = <span class="fn">createClient</span>(<span class="str">'url'</span>, <span class="str">'key'</span>)
+
+<span class="cm">// Fetch data with realtime subscriptions</span>
+<span class="kw">const</span> { <span class="var">data</span>, <span class="var">error</span> } = <span class="kw">await</span> <span class="var">cloudbase</span>
+  .<span class="fn">from</span>(<span class="str">'posts'</span>)
+  .<span class="fn">select</span>(<span class="str">'*'</span>)
+  .<span class="fn">order</span>(<span class="str">'created_at'</span>, { <span class="var">ascending</span>: <span class="kw">false</span> })</pre>
+        </div>
       </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div class="sm:col-span-2 product-card">
-          <div class="icon-container mb-4" style="background: var(--green-dim);">
-            <svg class="w-5 h-5" fill="none" stroke="#3ECF8E" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
-          </div>
-          <h3 class="font-semibold text-[16px] mb-2">Database</h3>
-          <p class="text-[13px] leading-[1.6] text-[#8f8f8f]">Every project is a full Postgres database with realtime functionality, database backups, extensions, and a powerful table editor.</p>
+
+      <!-- Authentication -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(96,165,250,0.12);">
+          <svg width="20" height="20" fill="none" stroke="#60a5fa" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="product-card">
-          <div class="icon-container mb-4" style="background: rgba(96,165,250,0.12);">
-            <svg class="w-5 h-5" fill="none" stroke="#60a5fa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[16px] mb-2">Auth</h3>
-          <p class="text-[13px] leading-[1.6] text-[#8f8f8f]">Add user sign ups and logins, securing your data with Row Level Security.</p>
+        <h3>Authentication</h3>
+        <p>Add user sign ups and logins, securing your data with Row Level Security. Supports social auth, magic links, phone auth, and more.</p>
+      </div>
+
+      <!-- Edge Functions -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(251,146,60,0.12);">
+          <svg width="20" height="20" fill="none" stroke="#fb923c" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="product-card">
-          <div class="icon-container mb-4" style="background: rgba(251,146,60,0.12);">
-            <svg class="w-5 h-5" fill="none" stroke="#fb923c" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[16px] mb-2">Edge Functions</h3>
-          <p class="text-[13px] leading-[1.6] text-[#8f8f8f]">Write custom code without deploying or scaling servers.</p>
+        <h3>Edge Functions</h3>
+        <p>Easily write custom code without deploying or scaling servers. Globally distributed for low latency. TypeScript by default.</p>
+      </div>
+
+      <!-- Storage -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(168,85,247,0.12);">
+          <svg width="20" height="20" fill="none" stroke="#a855f7" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="product-card">
-          <div class="icon-container mb-4" style="background: rgba(168,85,247,0.12);">
-            <svg class="w-5 h-5" fill="none" stroke="#a855f7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-          </div>
-          <h3 class="font-semibold text-[16px] mb-2">Storage</h3>
-          <p class="text-[13px] leading-[1.6] text-[#8f8f8f]">Store, organize, and serve large files with policies.</p>
+        <h3>Storage</h3>
+        <p>Store, organize, and serve large files. From videos to images, with fine-grained policies and permissions that are easy to manage.</p>
+      </div>
+
+      <!-- Realtime -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(251,191,36,0.12);">
+          <svg width="20" height="20" fill="none" stroke="#fbbf24" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728M8.464 15.536a5 5 0 010-7.072m7.072 0a5 5 0 010 7.072M12 12h.01" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="product-card">
-          <div class="icon-container mb-4" style="background: rgba(251,191,36,0.12);">
-            <svg class="w-5 h-5" fill="none" stroke="#fbbf24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[16px] mb-2">Realtime</h3>
-          <p class="text-[13px] leading-[1.6] text-[#8f8f8f]">Listen to database changes, broadcast messages, and sync presence.</p>
+        <h3>Realtime</h3>
+        <p>Build multiplayer experiences with real-time data synchronization. Listen to database changes, broadcast, and presence.</p>
+      </div>
+
+      <!-- Vector -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(244,114,182,0.12);">
+          <svg width="20" height="20" fill="none" stroke="#f472b6" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="product-card">
-          <div class="icon-container mb-4" style="background: rgba(244,114,182,0.12);">
-            <svg class="w-5 h-5" fill="none" stroke="#f472b6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[16px] mb-2">Vectors</h3>
-          <p class="text-[13px] leading-[1.6] text-[#8f8f8f]">Store and search vector embeddings for AI applications.</p>
+        <h3>Vector Embeddings</h3>
+        <p>Integrate your favorite ML models to store, index, and search vector embeddings. Powered by pgvector for similarity search at scale.</p>
+      </div>
+
+      <!-- Data APIs -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(45,212,191,0.12);">
+          <svg width="20" height="20" fill="none" stroke="#2dd4bf" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
+        <h3>Data APIs</h3>
+        <p>Instant ready-to-use RESTful and GraphQL APIs. Auto-generated from your database schema with full type safety.</p>
       </div>
     </div>
   </section>
 
   <!-- Dashboard Preview -->
-  <section class="py-24 px-6" style="background: var(--bg-surface); border-top: 1px solid var(--border);">
-    <div class="max-w-[1000px] mx-auto fade-in">
-      <div class="text-center mb-12">
-        <div class="section-label mb-3">Dashboard</div>
-        <h2 class="font-semibold text-[32px] sm:text-[40px] mb-4" style="letter-spacing: -0.025em;">Manage everything from one place</h2>
-        <p class="text-[15px] max-w-[520px] mx-auto text-[#8f8f8f]">A powerful dashboard that gives you full control over your database, auth, storage, and more.</p>
+  <section class="dashboard-section fade-up">
+    <div class="dashboard-header">
+      <p class="section-label">Dashboard</p>
+      <h2>Manage everything in one place</h2>
+      <p>Stay productive and manage your app without leaving the dashboard.</p>
+    </div>
+    <div class="dashboard-tabs">
+      <button class="dashboard-tab active">Table Editor</button>
+      <button class="dashboard-tab">SQL Editor</button>
+      <button class="dashboard-tab">RLS Policies</button>
+    </div>
+    <div class="dashboard-mock">
+      <div class="dashboard-titlebar">
+        <div class="dashboard-dot" style="background: #ff5f57;"></div>
+        <div class="dashboard-dot" style="background: #febc2e;"></div>
+        <div class="dashboard-dot" style="background: #28c840;"></div>
+        <span style="margin-left: 12px; font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">CloudBase Dashboard</span>
       </div>
-      <!-- Dashboard Mockup -->
-      <div class="rounded-[10px] overflow-hidden" style="border: 1px solid var(--border); background: var(--bg-code);">
-        <!-- Top bar -->
-        <div class="flex items-center gap-3 px-4 py-3 border-b" style="border-color: var(--border);">
-          <div class="w-3 h-3 rounded-full" style="background: #ff5f57;"></div>
-          <div class="w-3 h-3 rounded-full" style="background: #febc2e;"></div>
-          <div class="w-3 h-3 rounded-full" style="background: #28c840;"></div>
-          <span class="ml-4 text-[12px] text-[#8f8f8f]">OpenStack Dashboard</span>
+      <div class="dashboard-body">
+        <div class="dashboard-sidebar">
+          <div class="sidebar-item active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 3.5 4 8 4s8-2 8-4V7"/></svg>
+            Table Editor
+          </div>
+          <div class="sidebar-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.7 5.7L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.6l6-6A6 6 0 1121 9z"/></svg>
+            Authentication
+          </div>
+          <div class="sidebar-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.9-7.9A5 5 0 1115.9 6a5 5 0 011 9.9"/></svg>
+            Storage
+          </div>
+          <div class="sidebar-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Edge Functions
+          </div>
+          <div class="sidebar-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            SQL Editor
+          </div>
+          <div class="sidebar-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6m6 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m6-10v10"/></svg>
+            Reports
+          </div>
         </div>
-        <div class="flex">
-          <!-- Sidebar -->
-          <div class="w-[200px] shrink-0 p-4 border-r hidden md:block" style="border-color: var(--border); background: rgba(0,0,0,0.3);">
-            <div class="space-y-1">
-              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded text-[12px] font-medium" style="background: var(--green-dim); color: var(--green);">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 3.5 4 8 4s8-2 8-4V7"/></svg>
-                Table Editor
-              </div>
-              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded text-[12px] text-[#8f8f8f]">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.7 5.7L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.6l6-6A6 6 0 1121 9z"/></svg>
-                Authentication
-              </div>
-              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded text-[12px] text-[#8f8f8f]">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.9-7.9A5 5 0 1115.9 6a5 5 0 011 9.9"/></svg>
-                Storage
-              </div>
-              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded text-[12px] text-[#8f8f8f]">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                Edge Functions
-              </div>
-              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded text-[12px] text-[#8f8f8f]">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-                SQL Editor
-              </div>
+        <div class="dashboard-main">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <span style="font-size: 14px; font-weight: 500;">Table: <span class="font-mono" style="color: var(--green);">posts</span></span>
+            <div style="display: flex; gap: 8px;">
+              <button style="font-size: 11px; padding: 4px 12px; border-radius: 4px; background: var(--green-dim); color: var(--green);">Insert row</button>
+              <button style="font-size: 11px; padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-secondary);">Filter</button>
+              <button style="font-size: 11px; padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-secondary);">Sort</button>
             </div>
           </div>
-          <!-- Main content -->
-          <div class="flex-1 p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-[14px] font-medium">Table: <span class="font-mono text-[#3ECF8E]">posts</span></h3>
-              <div class="flex gap-2">
-                <button class="text-[11px] px-3 py-1 rounded" style="background: var(--green-dim); color: var(--green);">Insert row</button>
-                <button class="text-[11px] px-3 py-1 rounded text-[#8f8f8f]" style="border: 1px solid var(--border);">Filter</button>
-              </div>
-            </div>
-            <!-- Table -->
-            <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--border);">
-              <table class="w-full text-[12px]">
-                <thead>
-                  <tr style="background: rgba(255,255,255,0.03);">
-                    <th class="text-left px-3 py-2 font-mono font-normal text-[#8f8f8f]" style="border-bottom: 1px solid var(--border);">id</th>
-                    <th class="text-left px-3 py-2 font-mono font-normal text-[#8f8f8f]" style="border-bottom: 1px solid var(--border);">title</th>
-                    <th class="text-left px-3 py-2 font-mono font-normal text-[#8f8f8f]" style="border-bottom: 1px solid var(--border);">status</th>
-                    <th class="text-left px-3 py-2 font-mono font-normal text-[#8f8f8f]" style="border-bottom: 1px solid var(--border);">created_at</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom: 1px solid var(--border);">
-                    <td class="px-3 py-2.5 font-mono text-[#8f8f8f]">1</td>
-                    <td class="px-3 py-2.5">Getting Started with OpenStack</td>
-                    <td class="px-3 py-2.5"><span class="text-[10px] px-1.5 py-0.5 rounded" style="background: var(--green-dim); color: var(--green);">published</span></td>
-                    <td class="px-3 py-2.5 font-mono text-[#8f8f8f]">2026-03-20</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid var(--border);">
-                    <td class="px-3 py-2.5 font-mono text-[#8f8f8f]">2</td>
-                    <td class="px-3 py-2.5">Edge Functions Deep Dive</td>
-                    <td class="px-3 py-2.5"><span class="text-[10px] px-1.5 py-0.5 rounded" style="background: rgba(251,191,36,0.12); color: #fbbf24;">draft</span></td>
-                    <td class="px-3 py-2.5 font-mono text-[#8f8f8f]">2026-03-21</td>
-                  </tr>
-                  <tr>
-                    <td class="px-3 py-2.5 font-mono text-[#8f8f8f]">3</td>
-                    <td class="px-3 py-2.5">Realtime Subscriptions Guide</td>
-                    <td class="px-3 py-2.5"><span class="text-[10px] px-1.5 py-0.5 rounded" style="background: var(--green-dim); color: var(--green);">published</span></td>
-                    <td class="px-3 py-2.5 font-mono text-[#8f8f8f]">2026-03-22</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th style="width: 48px;">id</th>
+                  <th>title</th>
+                  <th>author</th>
+                  <th style="width: 90px;">status</th>
+                  <th style="width: 110px;">created_at</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono">1</td>
+                  <td>Getting Started with CloudBase</td>
+                  <td style="font-size: 12px;">admin@cloudbase.io</td>
+                  <td><span class="status-badge" style="background: var(--green-dim); color: var(--green);">published</span></td>
+                  <td class="mono">2026-03-20</td>
+                </tr>
+                <tr>
+                  <td class="mono">2</td>
+                  <td>Edge Functions Deep Dive</td>
+                  <td style="font-size: 12px;">dev@example.com</td>
+                  <td><span class="status-badge" style="background: rgba(251,191,36,0.12); color: #fbbf24;">draft</span></td>
+                  <td class="mono">2026-03-21</td>
+                </tr>
+                <tr>
+                  <td class="mono">3</td>
+                  <td>Realtime Subscriptions Guide</td>
+                  <td style="font-size: 12px;">admin@cloudbase.io</td>
+                  <td><span class="status-badge" style="background: var(--green-dim); color: var(--green);">published</span></td>
+                  <td class="mono">2026-03-22</td>
+                </tr>
+                <tr>
+                  <td class="mono">4</td>
+                  <td>Vector Search with pgvector</td>
+                  <td style="font-size: 12px;">dev@example.com</td>
+                  <td><span class="status-badge" style="background: rgba(96,165,250,0.12); color: #60a5fa;">review</span></td>
+                  <td class="mono">2026-03-23</td>
+                </tr>
+                <tr>
+                  <td class="mono">5</td>
+                  <td>Authentication Best Practices</td>
+                  <td style="font-size: 12px;">admin@cloudbase.io</td>
+                  <td><span class="status-badge" style="background: var(--green-dim); color: var(--green);">published</span></td>
+                  <td class="mono">2026-03-24</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--text-muted);">
+            <span>5 rows</span>
+            <span class="font-mono">public.posts</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Framework Support -->
-  <section class="py-14 px-6" style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-    <div class="max-w-[800px] mx-auto text-center fade-in">
-      <p class="text-[13px] font-medium mb-8 text-[#8f8f8f]">Works with your favorite frameworks</p>
-      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 opacity-40">
-        <span class="font-semibold text-[14px]">Next.js</span>
-        <span class="font-semibold text-[14px]">React</span>
-        <span class="font-semibold text-[14px]">Vue</span>
-        <span class="font-semibold text-[14px]">Svelte</span>
-        <span class="font-semibold text-[14px]">Flutter</span>
-        <span class="font-semibold text-[14px]">Kotlin</span>
-        <span class="font-semibold text-[14px]">Swift</span>
+  <!-- Frameworks -->
+  <section class="frameworks fade-up">
+    <p class="frameworks-label">Use CloudBase with any framework</p>
+    <div class="frameworks-list">
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 01-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 00-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 00-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 01-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 01-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 01.174-.143c.096-.047.134-.051.534-.051.469 0 .534.012.674.117a466.4 466.4 0 012.691 4.042l2.647 3.975 1.336 2.006.076-.05c.726-.476 1.406-1.041 1.975-1.644 1.59-1.69 2.635-3.726 3.031-5.903.096-.659.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.86-8.292-8.209-9.695a12.773 12.773 0 00-2.545-.523A19.93 19.93 0 0011.572 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 01.237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 01.233-.296c.096-.05.13-.054.5-.054z"/></svg>
+        Next.js
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.23 12.004a2.236 2.236 0 010-4.472 2.236 2.236 0 010 4.472zm-5.467 0a2.236 2.236 0 010-4.472 2.236 2.236 0 010 4.472zM12 18.468a2.236 2.236 0 010-4.472 2.236 2.236 0 010 4.472z"/><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+        React
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 3.5L12 2l11 1.5v17L12 22 1 20.5V3.5zM12 6.5L5.5 18h3l1.3-2.5h4.4L15.5 18h3L12 6.5zm0 3.5l1.7 3.5h-3.4L12 10z"/></svg>
+        Vue
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.13 2L3.27 6.96l.01 10.47 3.65 2.13V11.6l5.2-3.04 5.19 3.04v7.96l3.65-2.13V6.96L12.13 2z"/></svg>
+        Svelte
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zM14.314 6.6L6 14.916 9.7 18.6l8.014-8.014-3.4-3.986zM6 18.6L2.3 22.3h7.37L14.314 18.6H6z"/></svg>
+        Flutter
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l-.65 3.34h13.59L17.5 8.5H3.92l-.66 3.33h13.59l-.76 3.81-5.48 1.81-4.75-1.81.33-1.64H2.85l-.79 4 7.85 3 9.05-3 1.2-6.03.24-1.21L21.94 3H5z"/></svg>
+        Kotlin
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5C6.2 1.5 1.5 6.2 1.5 12S6.2 22.5 12 22.5 22.5 17.8 22.5 12 17.8 1.5 12 1.5zm0 3c4.14 0 7.5 3.36 7.5 7.5s-3.36 7.5-7.5 7.5S4.5 16.14 4.5 12 7.86 4.5 12 4.5z"/></svg>
+        SolidJS
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.25 2.26l-.08-.04-.01.02C13.46 2.09 12.74 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-4.75-3.31-8.72-7.75-9.74zM19.41 11h-4.07a16.66 16.66 0 00-1.09-5.59c2.64 1.08 4.58 3.42 5.16 5.59z"/></svg>
+        Nuxt
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 8.25a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        Python
+      </a>
+      <a href="#" class="framework-item">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.527 12.2062c.015.526.015 1.052.015 1.578 0 5.988-4.559 9.227-9.394 9.227C5.486 23.0112 2 20.9032 2 20.9032l.557-1.785s3.486 2.108 7.148 2.108c3.662 0 7.82-2.764 7.82-7.834 0-.526 0-1.052-.015-1.578l1.017.393z"/></svg>
+        Swift
+      </a>
+    </div>
+  </section>
+
+  <!-- Customer Stories -->
+  <section class="stories-section">
+    <div class="stories-header fade-up">
+      <p class="section-label">Customer Stories</p>
+      <h2>Trusted by developers worldwide</h2>
+    </div>
+    <div class="stories-grid">
+      <div class="story-card fade-up">
+        <div class="story-logo">
+          <div class="dot" style="background: #3ECF8E;"></div>
+          Quivr
+        </div>
+        <blockquote>"We migrated from Firebase to CloudBase and reduced our infrastructure costs by 60%. The Postgres experience is unmatched."</blockquote>
+        <div class="story-author">Stan Girard, Founder</div>
+      </div>
+      <div class="story-card fade-up delay-1">
+        <div class="story-logo">
+          <div class="dot" style="background: #60a5fa;"></div>
+          Chatbase
+        </div>
+        <blockquote>"CloudBase let us go from idea to $1M ARR in 5 months. The speed of development is incredible."</blockquote>
+        <div class="story-author">Yasser Elsaid, CEO</div>
+      </div>
+      <div class="story-card fade-up delay-2">
+        <div class="story-logo">
+          <div class="dot" style="background: #fb923c;"></div>
+          Mobbin
+        </div>
+        <blockquote>"Row Level Security and Auth made it effortless to build a secure multi-tenant app. We shipped in weeks, not months."</blockquote>
+        <div class="story-author">Javier Yep, Co-founder</div>
       </div>
     </div>
   </section>
 
-  <!-- Open Source / Community -->
-  <section class="py-24 px-6">
-    <div class="max-w-[800px] mx-auto text-center fade-in">
-      <div class="section-label mb-3">Open Source</div>
-      <h2 class="font-semibold text-[32px] sm:text-[40px] mb-6" style="letter-spacing: -0.025em;">Built with the community</h2>
-      <p class="text-[17px] mb-12 leading-[1.6] text-[#8f8f8f]">OpenStack is open source. Star us on GitHub, contribute code, or build your own integrations.</p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
-        <div class="text-center">
-          <div class="stat-value">68K+</div>
-          <div class="text-[13px] text-[#8f8f8f]">GitHub Stars</div>
+  <!-- Open Source -->
+  <section class="oss-section">
+    <div class="fade-up">
+      <p class="font-mono" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); margin-bottom: 12px;">Open Source</p>
+      <h2>Built with the community</h2>
+      <p>CloudBase is built in the open because great developer tools should be transparent, inspectable, and owned by the community. Read, contribute, self-host. You're never locked in.</p>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-value">99K+</div>
+          <div class="stat-label">GitHub Stars</div>
         </div>
-        <div class="hidden sm:block w-px h-12" style="background: var(--border);"></div>
-        <div class="text-center">
+        <div class="stat-divider"></div>
+        <div class="stat">
           <div class="stat-value">1M+</div>
-          <div class="text-[13px] text-[#8f8f8f]">Databases</div>
+          <div class="stat-label">Databases</div>
         </div>
-        <div class="hidden sm:block w-px h-12" style="background: var(--border);"></div>
-        <div class="text-center">
+        <div class="stat-divider"></div>
+        <div class="stat">
           <div class="stat-value">200K+</div>
-          <div class="text-[13px] text-[#8f8f8f]">Developers</div>
+          <div class="stat-label">Developers</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="py-28 px-6" style="background: var(--bg-code);">
-    <div class="max-w-[640px] mx-auto text-center fade-in">
-      <h2 class="font-bold text-[32px] sm:text-[48px] mb-6" style="letter-spacing: -0.03em;">Start building today</h2>
-      <p class="text-[17px] mb-10 text-[#8f8f8f]">Free tier includes unlimited API requests, 500MB database, 1GB file storage, and 50K monthly active users.</p>
-      <a href="#" class="btn-green inline-block text-[14px] px-8 py-[12px]">Start your project -- it's free</a>
+  <section class="cta-section">
+    <div class="fade-up" style="position: relative;">
+      <h2>Build in a weekend,<br><span class="green-line">scale to millions</span></h2>
+      <p>Start with a generous free tier. No credit card required. Scale when you're ready.</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary" style="font-size: 15px; padding: 10px 24px;">Start your project</a>
+        <a href="#" class="btn-outline" style="font-size: 15px; padding: 10px 24px;">Request a demo</a>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="py-16 px-6" style="background: #0a0a0a; color: #8f8f8f; border-top: 1px solid var(--border);">
-    <div class="max-w-[1200px] mx-auto">
-      <div class="grid sm:grid-cols-5 gap-8 mb-12">
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-compliance">
+        <div class="compliance-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          SOC2 Type 2
+        </div>
+        <div class="compliance-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          HIPAA
+        </div>
+      </div>
+      <div class="footer-grid">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-5 h-5 rounded-md flex items-center justify-center" style="background: var(--green);">
-              <svg class="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <div class="footer-logo">
+            <div class="footer-logo-icon">
+              <svg viewBox="0 0 109 113" fill="none">
+                <path d="M63.708 110.284c-2.86 3.601-8.658 1.628-8.727-2.97l-1.007-67.251h45.22c8.19 0 12.758 9.46 7.665 15.874l-43.15 54.347z" fill="url(#flogo-a)"/>
+                <path d="M45.317 2.07c2.86-3.601 8.657-1.628 8.726 2.97l.442 67.251H9.83c-8.19 0-12.759-9.46-7.665-15.875L45.317 2.07z" fill="#3ECF8E"/>
+                <defs>
+                  <linearGradient id="flogo-a" x1="53.974" y1="54.974" x2="94.163" y2="71.829" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#249361"/>
+                    <stop offset="1" stop-color="#3ECF8E"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
-            <span class="font-semibold text-white text-[13px]">OpenStack</span>
+            <span>CloudBase</span>
+          </div>
+          <p class="footer-tagline">The open source Firebase alternative. Build production-grade applications with a Postgres backend.</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Twitter">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" aria-label="GitHub">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            </a>
+            <a href="#" aria-label="Discord">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/></svg>
+            </a>
+            <a href="#" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
           </div>
         </div>
         <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.08em]">Product</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">Database</a></li><li><a href="#" class="hover:text-white transition-colors">Auth</a></li><li><a href="#" class="hover:text-white transition-colors">Storage</a></li><li><a href="#" class="hover:text-white transition-colors">Functions</a></li></ul>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Database</a></li>
+            <li><a href="#">Auth</a></li>
+            <li><a href="#">Storage</a></li>
+            <li><a href="#">Functions</a></li>
+            <li><a href="#">Realtime</a></li>
+            <li><a href="#">Vector</a></li>
+            <li><a href="#">Pricing</a></li>
+          </ul>
         </div>
         <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.08em]">Resources</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">Documentation</a></li><li><a href="#" class="hover:text-white transition-colors">Guides</a></li><li><a href="#" class="hover:text-white transition-colors">Blog</a></li></ul>
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Guides</a></li>
+            <li><a href="#">Integrations</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Status</a></li>
+          </ul>
         </div>
         <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.08em]">Company</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">About</a></li><li><a href="#" class="hover:text-white transition-colors">Careers</a></li><li><a href="#" class="hover:text-white transition-colors">Open Source</a></li></ul>
+          <h4>Developers</h4>
+          <ul>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">CLI</a></li>
+            <li><a href="#">Contributing</a></li>
+            <li><a href="#">Open Source</a></li>
+            <li><a href="#">DevTo</a></li>
+          </ul>
         </div>
         <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.08em]">Legal</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">Privacy</a></li><li><a href="#" class="hover:text-white transition-colors">Terms</a></li><li><a href="#" class="hover:text-white transition-colors">DPA</a></li></ul>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">DPA</a></li>
+            <li><a href="#">SLA</a></li>
+          </ul>
         </div>
       </div>
-      <div class="border-t pt-8 text-[11px] text-center" style="border-color: var(--border);">&copy; 2026 OpenStack Inc. All rights reserved.</div>
+      <div class="footer-bottom">
+        &copy; 2026 CloudBase Inc. All rights reserved.
+      </div>
     </div>
   </footer>
 
   <script>
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>

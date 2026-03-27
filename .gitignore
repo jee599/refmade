@@ -7,3 +7,4 @@ web/.next/
 web/.env.local
 *.png
 node_modules
+.vercel

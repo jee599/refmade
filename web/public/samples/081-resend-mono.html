@@ -3,355 +3,858 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dispatch — Email API for Developers</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>MailForge — Email for developers</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
-    :root {
-      --bg: #000000;
-      --surface: #0a0a0a;
-      --elevated: #111111;
-      --border: #1a1a1a;
-      --border-hover: #262626;
-      --text: #ededed;
-      --muted: #666666;
-      --dimmer: #444444;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #000;
+      color: #ededed;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
-    .font-mono { font-family: 'Geist Mono', 'JetBrains Mono', monospace; }
 
-    .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .font-serif { font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; }
+    .font-mono { font-family: 'Geist Mono', 'SF Mono', 'Fira Code', monospace; }
+
+    /* Subtle ambient background glow — matching Resend's bottom-right lighting */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      bottom: -25%;
+      right: -5%;
+      width: 75%;
+      height: 85%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 40%, transparent 70%);
+      filter: blur(20px);
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      bottom: 0%;
+      right: 15%;
+      width: 55%;
+      height: 65%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 45%, transparent 65%);
+      filter: blur(50px);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .animate-fade-in-up {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    .animate-fade-in {
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+    .delay-4 { animation-delay: 0.55s; }
+    .delay-5 { animation-delay: 0.7s; }
+
+    /* Scroll animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 20px;
+      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-link-arrow::after {
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-left: 3.5px solid transparent;
+      border-right: 3.5px solid transparent;
+      border-top: 4px solid currentColor;
+      margin-left: 5px;
+      vertical-align: middle;
+      position: relative;
+      top: -0.5px;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-right a {
+      font-size: 13px;
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-right a:hover { color: #fff; }
 
     /* Buttons */
-    .btn-white {
-      background: #ffffff;
-      color: #000000;
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: #000;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 6px;
       border: none;
-      border-radius: 6px;
-      font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s ease;
+      text-decoration: none;
+      transition: background 0.15s ease, transform 0.15s ease;
     }
-    .btn-white:hover { background: #e5e5e5; }
+    .btn-primary:hover {
+      background: #e5e5e5;
+    }
+    .btn-primary:active { transform: scale(0.98); }
 
-    .btn-ghost {
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      color: #999;
+      font-size: 13px;
       font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
       cursor: pointer;
+      text-decoration: none;
       transition: all 0.15s ease;
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.03); border-color: var(--border-hover); color: var(--text); }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.3);
+      color: #ededed;
+    }
+    .btn-outline:active { transform: scale(0.98); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+    }
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: 56px;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      font-weight: 300;
+      font-size: clamp(52px, 8vw, 84px);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+    .hero-sub {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #666;
+      max-width: 440px;
+      margin-bottom: 40px;
+    }
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Section containers */
+    .section {
+      padding: 120px 32px;
+      position: relative;
+    }
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
     /* Code block */
-    .code-block {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-family: 'Geist Mono', 'JetBrains Mono', monospace;
-      font-size: 13px;
-      line-height: 1.7;
+    .code-container {
+      max-width: 580px;
+      margin: 0 auto;
     }
-
-    /* Grid features */
-    .feature-grid {
-      display: grid;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .code-block {
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 24px;
       overflow: hidden;
     }
-    .feature-cell {
-      padding: 28px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+    .code-dots {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
     }
-    .feature-cell:nth-child(3n) { border-right: none; }
-    .feature-cell:nth-last-child(-n+3) { border-bottom: none; }
-    @media (max-width: 640px) {
-      .feature-cell { border-right: none; }
-      .feature-cell:last-child { border-bottom: none; }
+    .code-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #222;
+    }
+    .code-block pre {
+      font-family: 'Geist Mono', 'SF Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #555;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .code-block .kw { color: #888; }
+    .code-block .str { color: #6a9955; }
+    .code-block .txt { color: #ccc; }
+    .code-block .cmt { color: #444; }
+
+    /* Integrations */
+    .integrations-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #444;
+      margin-bottom: 32px;
+    }
+    .integrations-row {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .integration-item {
+      font-size: 14px;
+      color: #555;
+      transition: color 0.2s ease;
+    }
+    .integration-item:hover { color: #aaa; }
+
+    /* Features grid */
+    .features-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .features-header h2 {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .features-header p {
+      font-size: 14px;
+      color: #666;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .feature-item {
+      padding: 32px;
+      background: #0a0a0a;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.3s ease;
+    }
+    .feature-item:hover { background: #0f0f0f; }
+    .feature-item:nth-child(3n) { border-right: none; }
+    .feature-item:nth-last-child(-n+3) { border-bottom: none; }
+    .feature-num {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      color: #444;
+      margin-bottom: 16px;
+    }
+    .feature-item h3 {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #ededed;
+    }
+    .feature-item p {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #666;
     }
 
     /* Email preview */
-    .email-preview {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .preview-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #444;
+      margin-bottom: 20px;
+    }
+    .preview-text h2 {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      margin-bottom: 16px;
+    }
+    .preview-text p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #666;
+      margin-bottom: 28px;
+    }
+    .email-card {
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .email-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .email-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1a1a1a;
+    }
+    .email-sender-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #ededed;
+    }
+    .email-sender-addr {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      color: #666;
+    }
+    .email-subject {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .email-to {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    .email-body {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #666;
+    }
+    .email-body p { margin-bottom: 12px; }
+    .email-key {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px;
+      padding: 10px 14px;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      color: #ededed;
+      margin-top: 8px;
     }
 
-    /* Pricing grid */
+    /* Pricing */
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .pricing-header h2 {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .pricing-header p {
+      font-size: 14px;
+      color: #666;
+    }
     .pricing-grid {
       display: grid;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
       overflow: hidden;
+      max-width: 900px;
+      margin: 0 auto;
     }
-    .pricing-cell {
-      padding: 32px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
+    .pricing-card {
+      padding: 36px;
+      background: #0a0a0a;
+      border-right: 1px solid rgba(255,255,255,0.06);
     }
-    .pricing-cell:last-child { border-right: none; }
-    @media (max-width: 640px) {
-      .pricing-cell { border-right: none; border-bottom: 1px solid var(--border); }
-      .pricing-cell:last-child { border-bottom: none; }
+    .pricing-card:last-child { border-right: none; }
+    .pricing-tier {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px;
+      color: #444;
+      margin-bottom: 4px;
+    }
+    .pricing-tier.highlight { color: #ededed; }
+    .pricing-amount {
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .pricing-amount span {
+      font-size: 14px;
+      font-weight: 400;
+      color: #666;
+    }
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .pricing-features li {
+      font-size: 13px;
+      color: #666;
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pricing-features li::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #444;
+      flex-shrink: 0;
+    }
+    .pricing-card .btn-primary,
+    .pricing-card .btn-outline {
+      width: 100%;
     }
 
-    /* Separator line */
-    .sep { height: 1px; background: var(--border); }
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 140px 32px;
+    }
+    .cta-section h2 {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      margin-bottom: 14px;
+    }
+    .cta-section p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 48px 32px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 16px;
+      font-weight: 500;
+      color: #ededed;
+    }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: #666;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy {
+      text-align: center;
+      margin-top: 40px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      color: #444;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 0 20px; }
+      .hero h1 { font-size: 42px; }
+      .section { padding: 80px 20px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-item { border-right: none; }
+      .feature-item:last-child { border-bottom: none; }
+      .preview-grid { grid-template-columns: 1fr; gap: 48px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-card { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .pricing-card:last-child { border-bottom: none; }
+      .footer-inner { flex-direction: column; gap: 20px; }
+      .cta-section { padding: 80px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 36px; }
+      .hero-buttons { flex-direction: column; width: 100%; }
+      .hero-buttons a { width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
-  <!-- Nav -->
-  <nav class="fixed top-0 w-full z-50" style="background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);">
-    <div class="max-w-[960px] mx-auto px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <span class="font-medium text-[14px]">Dispatch</span>
-        <div class="hidden md:flex items-center gap-5 text-[13px] text-[#666]">
-          <a href="#" class="hover:text-white transition-colors">Docs</a>
-          <a href="#" class="hover:text-white transition-colors">Pricing</a>
-          <a href="#" class="hover:text-white transition-colors">Changelog</a>
-          <a href="#" class="hover:text-white transition-colors">Blog</a>
-        </div>
+
+  <!-- Navigation -->
+  <nav class="animate-fade-in">
+    <div class="nav-inner">
+      <div style="display:flex; align-items:center; gap:36px;">
+        <a href="#" class="nav-logo">MailForge</a>
+        <ul class="nav-links">
+          <li><a href="#features" class="nav-link-arrow">Features</a></li>
+          <li><a href="#" class="nav-link-arrow">Company</a></li>
+          <li><a href="#" class="nav-link-arrow">Resources</a></li>
+          <li><a href="#">Help</a></li>
+          <li><a href="#">Docs</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
       </div>
-      <div class="flex items-center gap-4">
-        <a href="#" class="text-[13px] text-[#666] hover:text-white transition-colors">Sign in</a>
-        <a href="#" class="btn-white text-[13px] px-3.5 py-[6px]">Get Started</a>
+      <div class="nav-right">
+        <a href="#">Log In</a>
+        <a href="#" class="btn-primary" style="padding: 7px 16px;">Get Started</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="pt-[140px] pb-[100px] md:pt-[180px] md:pb-[120px] text-center px-6">
-    <div class="max-w-[640px] mx-auto">
-      <h1 class="font-medium text-[44px] md:text-[56px] leading-[1.08] mb-6" style="letter-spacing: -0.035em;">
-        Email API<br>for developers
-      </h1>
-      <p class="text-[16px] max-w-[440px] mx-auto mb-10 leading-[1.6] text-[#666]">
-        Build, test, and send transactional emails at scale. Simple API, powerful deliverability.
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content" style="position:relative; z-index:1;">
+      <h1 class="animate-fade-in-up delay-1">Email for<br>developers</h1>
+      <p class="hero-sub animate-fade-in-up delay-2">
+        The best way to reach humans instead of spam folders.<br>
+        Deliver transactional and marketing emails at scale.
       </p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#" class="btn-white text-[13px] px-5 py-[9px]">Get Started &mdash; Free</a>
-        <a href="#" class="btn-ghost text-[13px] px-5 py-[9px]">Documentation</a>
+      <div class="hero-buttons animate-fade-in-up delay-3">
+        <a href="#" class="btn-primary">Get Started</a>
+        <a href="#" class="btn-outline">Documentation</a>
       </div>
     </div>
   </section>
 
   <!-- Code Example -->
-  <section class="pb-24 px-6">
-    <div class="max-w-[560px] mx-auto fade-in">
-      <div class="code-block p-5">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-1.5">
-            <div class="w-2.5 h-2.5 rounded-full" style="background: #333;"></div>
-            <div class="w-2.5 h-2.5 rounded-full" style="background: #333;"></div>
-            <div class="w-2.5 h-2.5 rounded-full" style="background: #333;"></div>
-          </div>
-          <span class="font-mono text-[11px] text-[#444]">send.ts</span>
+  <section class="section" style="padding-top: 80px;">
+    <div class="code-container reveal">
+      <div class="code-block">
+        <div class="code-dots">
+          <span></span><span></span><span></span>
         </div>
-        <pre class="font-mono" style="color: #666; overflow-x: auto;"><span style="color: #c084fc;">import</span> <span style="color: #ededed;">{ Dispatch }</span> <span style="color: #c084fc;">from</span> <span style="color: #6ee7b7;">'dispatch'</span>;
+        <pre><span class="kw">import</span> <span class="txt">{ MailForge }</span> <span class="kw">from</span> <span class="str">'mailforge'</span>;
 
-<span style="color: #c084fc;">const</span> <span style="color: #ededed;">dispatch</span> = <span style="color: #c084fc;">new</span> <span style="color: #ededed;">Dispatch</span>(<span style="color: #6ee7b7;">'dp_123456789'</span>);
+<span class="kw">const</span> <span class="txt">mailforge</span> = <span class="kw">new</span> <span class="txt">MailForge</span>(<span class="str">'mf_123456789'</span>);
 
-<span style="color: #c084fc;">await</span> <span style="color: #ededed;">dispatch</span>.<span style="color: #ededed;">emails</span>.<span style="color: #ededed;">send</span>({
-  <span style="color: #ededed;">from</span>: <span style="color: #6ee7b7;">'hello@yourdomain.com'</span>,
-  <span style="color: #ededed;">to</span>: <span style="color: #6ee7b7;">'user@example.com'</span>,
-  <span style="color: #ededed;">subject</span>: <span style="color: #6ee7b7;">'Welcome aboard'</span>,
-  <span style="color: #ededed;">html</span>: <span style="color: #6ee7b7;">'&lt;p&gt;Thanks for signing up!&lt;/p&gt;'</span>,
+<span class="kw">await</span> <span class="txt">mailforge</span>.<span class="txt">emails</span>.<span class="txt">send</span>({
+  <span class="txt">from</span>: <span class="str">'hello@yourdomain.com'</span>,
+  <span class="txt">to</span>: <span class="str">'user@example.com'</span>,
+  <span class="txt">subject</span>: <span class="str">'Welcome aboard'</span>,
+  <span class="txt">html</span>: <span class="str">'&lt;p&gt;Thanks for signing up!&lt;/p&gt;'</span>,
 });</pre>
       </div>
     </div>
   </section>
 
-  <div class="sep max-w-[960px] mx-auto"></div>
+  <div class="section-divider"></div>
+
+  <!-- Integrations -->
+  <section class="section" style="padding: 60px 32px;">
+    <div class="section-inner reveal">
+      <p class="integrations-label">Works with your stack</p>
+      <div class="integrations-row">
+        <span class="integration-item">Next.js</span>
+        <span class="integration-item">Remix</span>
+        <span class="integration-item">Astro</span>
+        <span class="integration-item">Nuxt</span>
+        <span class="integration-item">SvelteKit</span>
+        <span class="integration-item">Express</span>
+        <span class="integration-item">Fastify</span>
+        <span class="integration-item">Django</span>
+        <span class="integration-item">Rails</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
 
   <!-- Features -->
-  <section class="py-24 px-6">
-    <div class="max-w-[960px] mx-auto fade-in">
-      <div class="text-center mb-14">
-        <h2 class="font-medium text-[28px] sm:text-[32px] mb-3" style="letter-spacing: -0.025em;">Simple by design</h2>
-        <p class="text-[14px] text-[#666]">Everything you need to send emails. Nothing you don't.</p>
+  <section class="section" id="features">
+    <div class="section-inner reveal">
+      <div class="features-header">
+        <h2>Simple by design</h2>
+        <p>Everything you need to send emails. Nothing you don't.</p>
       </div>
-      <div class="feature-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="feature-cell">
-          <div class="font-mono text-[11px] text-[#444] mb-3">01</div>
-          <h3 class="font-medium text-[15px] mb-2">REST API</h3>
-          <p class="text-[13px] leading-[1.6] text-[#666]">Send emails with a single POST request. No complex configuration required.</p>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-num">01</div>
+          <h3>REST API</h3>
+          <p>Send emails with a single POST request. No complex configuration required.</p>
         </div>
-        <div class="feature-cell">
-          <div class="font-mono text-[11px] text-[#444] mb-3">02</div>
-          <h3 class="font-medium text-[15px] mb-2">SDKs</h3>
-          <p class="text-[13px] leading-[1.6] text-[#666]">Official libraries for Node.js, Python, Ruby, Go, Java, Elixir, and more.</p>
+        <div class="feature-item">
+          <div class="feature-num">02</div>
+          <h3>SDKs</h3>
+          <p>Official libraries for Node.js, Python, Ruby, Go, Java, Elixir, and more.</p>
         </div>
-        <div class="feature-cell">
-          <div class="font-mono text-[11px] text-[#444] mb-3">03</div>
-          <h3 class="font-medium text-[15px] mb-2">React Email</h3>
-          <p class="text-[13px] leading-[1.6] text-[#666]">Build beautiful emails with React components. Preview in your browser.</p>
+        <div class="feature-item">
+          <div class="feature-num">03</div>
+          <h3>React Email</h3>
+          <p>Build beautiful emails with React components. Preview in your browser.</p>
         </div>
-        <div class="feature-cell">
-          <div class="font-mono text-[11px] text-[#444] mb-3">04</div>
-          <h3 class="font-medium text-[15px] mb-2">Webhooks</h3>
-          <p class="text-[13px] leading-[1.6] text-[#666]">Get notified when emails are delivered, opened, clicked, or bounced.</p>
+        <div class="feature-item">
+          <div class="feature-num">04</div>
+          <h3>Webhooks</h3>
+          <p>Get notified when emails are delivered, opened, clicked, or bounced.</p>
         </div>
-        <div class="feature-cell">
-          <div class="font-mono text-[11px] text-[#444] mb-3">05</div>
-          <h3 class="font-medium text-[15px] mb-2">Domain Verification</h3>
-          <p class="text-[13px] leading-[1.6] text-[#666]">Automatic SPF, DKIM, and DMARC setup with guided DNS configuration.</p>
+        <div class="feature-item">
+          <div class="feature-num">05</div>
+          <h3>Domain Verification</h3>
+          <p>Automatic SPF, DKIM, and DMARC setup with guided DNS configuration.</p>
         </div>
-        <div class="feature-cell">
-          <div class="font-mono text-[11px] text-[#444] mb-3">06</div>
-          <h3 class="font-medium text-[15px] mb-2">Analytics</h3>
-          <p class="text-[13px] leading-[1.6] text-[#666]">Track delivery rates, opens, clicks, and bounces in real time.</p>
+        <div class="feature-item">
+          <div class="feature-num">06</div>
+          <h3>Analytics</h3>
+          <p>Track delivery rates, opens, clicks, and bounces in real time.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="sep max-w-[960px] mx-auto"></div>
+  <div class="section-divider"></div>
 
   <!-- Email Preview -->
-  <section class="py-24 px-6">
-    <div class="max-w-[960px] mx-auto fade-in">
-      <div class="grid md:grid-cols-2 gap-14 items-center">
-        <div>
-          <div class="font-mono text-[11px] text-[#444] uppercase tracking-[0.1em] mb-4">Preview</div>
-          <h2 class="font-medium text-[28px] sm:text-[32px] mb-4" style="letter-spacing: -0.025em;">See what your users see</h2>
-          <p class="leading-[1.6] mb-6 text-[14px] text-[#666]">Preview your emails across clients -- Gmail, Outlook, Apple Mail -- before you hit send. Catch issues before your users do.</p>
-          <a href="#" class="btn-white inline-block text-[13px] px-5 py-[9px]">Try it free</a>
+  <section class="section">
+    <div class="section-inner reveal">
+      <div class="preview-grid">
+        <div class="preview-text">
+          <div class="preview-label">Preview</div>
+          <h2>See what your users see</h2>
+          <p>Preview your emails across clients &mdash; Gmail, Outlook, Apple Mail &mdash; before you hit send. Catch issues before your users do.</p>
+          <a href="#" class="btn-primary">Try it free</a>
         </div>
-        <div class="email-preview p-6">
-          <div class="flex items-center gap-3 mb-4 pb-4" style="border-bottom: 1px solid var(--border);">
-            <div class="w-8 h-8 rounded-full" style="background: var(--border);"></div>
+        <div class="email-card">
+          <div class="email-card-header">
+            <div class="email-avatar"></div>
             <div>
-              <div class="text-[13px] font-medium">Dispatch</div>
-              <div class="font-mono text-[11px] text-[#666]">hello@dispatch.dev</div>
+              <div class="email-sender-name">MailForge</div>
+              <div class="email-sender-addr">hello@mailforge.dev</div>
             </div>
           </div>
-          <div class="mb-3">
-            <div class="text-[14px] font-medium mb-1">Welcome to Dispatch</div>
-            <div class="font-mono text-[11px] text-[#666]">To: developer@example.com</div>
+          <div>
+            <div class="email-subject">Welcome to MailForge</div>
+            <div class="email-to">To: developer@example.com</div>
           </div>
-          <div class="text-[13px] leading-[1.6] text-[#666]">
-            <p class="mb-3">Hi there,</p>
-            <p class="mb-3">Welcome to Dispatch! You're all set to start sending emails through our API.</p>
-            <p class="mb-4">Here's your API key to get started:</p>
-            <div class="font-mono text-[12px] p-3 rounded" style="background: var(--bg); border: 1px solid var(--border); color: var(--text);">dp_live_aBcDeFgHiJkLmNoPqRsT</div>
+          <div class="email-body">
+            <p>Hi there,</p>
+            <p>Welcome to MailForge. You're all set to start sending emails through our API.</p>
+            <p>Here's your API key to get started:</p>
+            <div class="email-key">mf_live_aBcDeFgHiJkLmNoPqRsT</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="sep max-w-[960px] mx-auto"></div>
+  <div class="section-divider"></div>
 
   <!-- SDK Languages -->
-  <section class="py-16 px-6">
-    <div class="max-w-[720px] mx-auto text-center fade-in">
-      <p class="font-mono text-[11px] text-[#444] uppercase tracking-[0.1em] mb-8">Official SDKs</p>
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">Node.js</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">Python</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">Ruby</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">Go</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">Java</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">Elixir</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-md" style="background: var(--surface); border: 1px solid var(--border);">PHP</span>
+  <section class="section" style="padding: 72px 32px;">
+    <div class="section-inner" style="max-width: 720px; text-align: center;">
+      <div class="reveal">
+        <p class="integrations-label" style="text-align: center;">Official SDKs</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px;">
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">Node.js</span>
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">Python</span>
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">Ruby</span>
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">Go</span>
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">Java</span>
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">Elixir</span>
+          <span class="font-mono" style="font-size: 12px; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);">PHP</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="sep max-w-[960px] mx-auto"></div>
+  <div class="section-divider"></div>
 
   <!-- Pricing -->
-  <section class="py-24 px-6">
-    <div class="max-w-[820px] mx-auto fade-in">
-      <div class="text-center mb-14">
-        <h2 class="font-medium text-[28px] sm:text-[32px] mb-3" style="letter-spacing: -0.025em;">Simple pricing</h2>
-        <p class="text-[14px] text-[#666]">Start for free. Scale as you grow.</p>
+  <section class="section" id="pricing">
+    <div class="section-inner reveal">
+      <div class="pricing-header">
+        <h2>Simple pricing</h2>
+        <p>Start for free. Scale as you grow.</p>
       </div>
-      <div class="pricing-grid grid-cols-1 sm:grid-cols-3">
-        <div class="pricing-cell">
-          <div class="font-mono text-[12px] text-[#444] mb-1">Free</div>
-          <div class="font-medium text-[32px] mb-5" style="letter-spacing: -0.03em;">$0</div>
-          <ul class="space-y-2 text-[13px] text-[#666] mb-8">
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>100 emails/day</li>
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>1 domain</li>
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>REST API</li>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-tier">Free</div>
+          <div class="pricing-amount">$0</div>
+          <ul class="pricing-features">
+            <li>100 emails/day</li>
+            <li>1 domain</li>
+            <li>REST API</li>
           </ul>
-          <a href="#" class="btn-ghost block text-center text-[13px] px-4 py-[9px]">Get started</a>
+          <a href="#" class="btn-outline">Get started</a>
         </div>
-        <div class="pricing-cell">
-          <div class="font-mono text-[12px] text-white mb-1">Pro</div>
-          <div class="font-medium text-[32px] mb-5" style="letter-spacing: -0.03em;">$20<span class="text-[14px] font-normal text-[#666]">/mo</span></div>
-          <ul class="space-y-2 text-[13px] text-[#666] mb-8">
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>50,000 emails/mo</li>
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>Unlimited domains</li>
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>Webhooks + analytics</li>
+        <div class="pricing-card">
+          <div class="pricing-tier highlight">Pro</div>
+          <div class="pricing-amount">$20<span>/mo</span></div>
+          <ul class="pricing-features">
+            <li>50,000 emails/mo</li>
+            <li>Unlimited domains</li>
+            <li>Webhooks + analytics</li>
           </ul>
-          <a href="#" class="btn-white block text-center text-[13px] px-4 py-[9px]">Get started</a>
+          <a href="#" class="btn-primary">Get started</a>
         </div>
-        <div class="pricing-cell">
-          <div class="font-mono text-[12px] text-[#444] mb-1">Enterprise</div>
-          <div class="font-medium text-[32px] mb-5" style="letter-spacing: -0.03em;">Custom</div>
-          <ul class="space-y-2 text-[13px] text-[#666] mb-8">
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>Unlimited emails</li>
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>Dedicated IP</li>
-            <li class="flex items-center gap-2"><span class="text-[#444]">&bull;</span>SLA & support</li>
+        <div class="pricing-card">
+          <div class="pricing-tier">Enterprise</div>
+          <div class="pricing-amount">Custom</div>
+          <ul class="pricing-features">
+            <li>Unlimited emails</li>
+            <li>Dedicated IP</li>
+            <li>SLA & support</li>
           </ul>
-          <a href="#" class="btn-ghost block text-center text-[13px] px-4 py-[9px]">Contact us</a>
+          <a href="#" class="btn-outline">Contact us</a>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="sep max-w-[960px] mx-auto"></div>
+  <div class="section-divider"></div>
 
   <!-- CTA -->
-  <section class="py-24 px-6">
-    <div class="max-w-[480px] mx-auto text-center fade-in">
-      <h2 class="font-medium text-[28px] sm:text-[32px] mb-4" style="letter-spacing: -0.025em;">Start sending emails today</h2>
-      <p class="text-[13px] text-[#666] mb-8">Free to start. No credit card required.</p>
-      <a href="#" class="btn-white inline-block text-[13px] px-6 py-[9px]">Get your API key</a>
-    </div>
-  </section>
+  <div class="cta-section reveal">
+    <h2>Start sending emails today</h2>
+    <p>Free to start. No credit card required.</p>
+    <a href="#" class="btn-primary" style="padding: 12px 28px; font-size: 14px;">Get your API key</a>
+  </div>
 
   <!-- Footer -->
-  <footer class="py-12 px-6" style="border-top: 1px solid var(--border);">
-    <div class="max-w-[960px] mx-auto">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <span class="font-medium text-[13px]">Dispatch</span>
-        <div class="flex items-center gap-5 text-[13px] text-[#666]">
-          <a href="#" class="hover:text-white transition-colors">Docs</a>
-          <a href="#" class="hover:text-white transition-colors">GitHub</a>
-          <a href="#" class="hover:text-white transition-colors">Twitter</a>
-          <a href="#" class="hover:text-white transition-colors">Privacy</a>
-        </div>
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-logo">MailForge</span>
+      <div class="footer-links">
+        <a href="#">Docs</a>
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+        <a href="#">Privacy</a>
       </div>
-      <div class="mt-8 font-mono text-[11px] text-center text-[#444]">&copy; 2026 Dispatch Inc.</div>
     </div>
+    <div class="footer-copy">&copy; 2026 MailForge Inc.</div>
   </footer>
 
   <script>
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>

@@ -4,514 +4,1217 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>048 — Pastel Gradient Card</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #FAFAFA;
-      color: #1F2937;
-      overflow-x: hidden;
-      font-weight: 400;
-    }
-    h1, h2, h3, h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Scroll reveal — repeats */
-    .reveal {
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Nav */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid #f0f0f0;
+      transition: box-shadow 0.3s ease;
+    }
+    .nav.scrolled {
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #1a1a1a;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: #16a34a;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg {
+      width: 18px;
+      height: 18px;
+      color: white;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a:hover {
+      color: #1a1a1a;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #16a34a;
+      transition: width 0.2s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-right a {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-right a:hover {
+      color: #1a1a1a;
+    }
+    .btn-signup {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 24px;
+      background: #16a34a;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-signup:hover {
+      background: #15803d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: transparent;
+      color: #1a1a1a;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-outline:hover {
+      border-color: #16a34a;
+      color: #16a34a;
+    }
+
+    /* Hero */
+    .hero {
+      padding-top: 120px;
+      padding-bottom: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: 32px;
+      padding-right: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      min-height: 80vh;
+    }
+    .hero-left {
+      max-width: 560px;
+    }
+    .social-proof-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8f8f8;
+      border-radius: 100px;
+      padding: 6px 16px 6px 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .social-proof-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: #16a34a;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .hero-title {
+      font-size: clamp(42px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
       opacity: 0;
       transform: translateY(20px);
+      animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+    .hero-subtitle {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 440px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease 0.3s forwards;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: #16a34a;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 10px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
+    }
+    .btn-cta:hover {
+      background: #15803d;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
+    }
+    .btn-cta svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s ease;
+    }
+    .btn-cta:hover svg {
+      transform: translateX(3px);
+    }
+    .no-cc {
+      font-size: 13px;
+      color: #999;
+    }
+
+    /* Rating badges */
+    .ratings {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+    .rating-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rating-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+      color: white;
+    }
+    .rating-icon.g2 {
+      background: #ff492c;
+    }
+    .rating-icon.capterra {
+      background: #0f6bff;
+    }
+    .rating-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .rating-stars {
+      display: flex;
+      gap: 1px;
+      margin-bottom: 2px;
+    }
+    .rating-stars svg {
+      width: 14px;
+      height: 14px;
+      color: #f59e0b;
+    }
+    .rating-label {
+      font-size: 12px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    /* Hero Right - Editor Preview */
+    .hero-right {
+      position: relative;
+      opacity: 0;
+      transform: translateX(30px);
+      animation: fadeLeft 0.8s ease 0.3s forwards;
+    }
+    .editor-preview {
+      background: #f9f9f9;
+      border-radius: 16px;
+      border: 1px solid #e8e8e8;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+      position: relative;
+    }
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      gap: 8px;
+    }
+    .toolbar-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .toolbar-dot.red { background: #ff5f57; }
+    .toolbar-dot.yellow { background: #febc2e; }
+    .toolbar-dot.green { background: #28c840; }
+    .toolbar-url {
+      margin-left: 12px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #999;
+      flex: 1;
+    }
+    .editor-body {
+      padding: 24px;
+      min-height: 360px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 16px;
+    }
+    .editor-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sidebar-block {
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .sidebar-block:hover {
+      border-color: #16a34a;
+      color: #16a34a;
+      transform: translateX(2px);
+    }
+    .sidebar-block svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.5;
+    }
+    .editor-canvas {
+      background: white;
+      border: 2px dashed #e0e0e0;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      position: relative;
+    }
+    .canvas-header {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    .canvas-header-text {
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    .canvas-block {
+      background: #f8faf8;
+      border: 1px solid #e8ede8;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .canvas-img-placeholder {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #e0f2e0, #d0e8d0);
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .canvas-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .canvas-line {
+      height: 8px;
+      background: #e8e8e8;
+      border-radius: 4px;
+    }
+    .canvas-line:nth-child(1) { width: 85%; }
+    .canvas-line:nth-child(2) { width: 65%; }
+    .canvas-line:nth-child(3) { width: 45%; }
+    .canvas-btn-placeholder {
+      display: inline-block;
+      background: #16a34a;
+      border-radius: 6px;
+      padding: 10px 28px;
+      align-self: flex-start;
+    }
+    .canvas-btn-text {
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Floating elements on editor */
+    .float-badge {
+      position: absolute;
+      background: white;
+      border-radius: 12px;
+      padding: 10px 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: floatBounce 3s ease-in-out infinite;
+      z-index: 10;
+    }
+    .float-badge.top-right {
+      top: -16px;
+      right: -16px;
+      animation-delay: 0s;
+    }
+    .float-badge.bottom-left {
+      bottom: -16px;
+      left: -16px;
+      animation-delay: 1s;
+    }
+    .float-badge .check {
+      width: 20px;
+      height: 20px;
+      background: #16a34a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .float-badge .check svg {
+      width: 12px;
+      height: 12px;
+      color: white;
+    }
+
+    @keyframes floatBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Logo Bar */
+    .logo-bar {
+      padding: 48px 32px;
+      border-top: 1px solid #f0f0f0;
+      background: #fafafa;
+    }
+    .logo-bar-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .logo-brand {
+      font-size: 18px;
+      font-weight: 800;
+      color: #bbb;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    .logo-brand:hover {
+      color: #888;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 100px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #16a34a;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: #777;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid #f0f0f0;
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: #e0e0e0;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      transform: translateY(-4px);
+    }
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #16a34a;
+    }
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 80px 32px;
+      background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    }
+    .stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 48px;
+      font-weight: 900;
+      color: #16a34a;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    /* Templates Section */
+    .templates {
+      padding: 100px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .templates-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .template-card {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #eee;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .template-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    .template-preview {
+      height: 200px;
+      position: relative;
+    }
+    .template-preview.t1 { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .template-preview.t2 { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .template-preview.t3 { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+    .template-preview.t4 { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+    .template-preview-inner {
+      position: absolute;
+      inset: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      gap: 6px;
+    }
+    .tpl-line {
+      height: 6px;
+      border-radius: 3px;
+      background: #f0f0f0;
+    }
+    .tpl-line:nth-child(1) { width: 60%; background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .tpl-line:nth-child(2) { width: 80%; }
+    .tpl-line:nth-child(3) { width: 50%; }
+    .tpl-block {
+      flex: 1;
+      background: #f8f8f8;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+    .template-info {
+      padding: 14px 16px;
+      background: white;
+    }
+    .template-info h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .template-info span {
+      font-size: 12px;
+      color: #999;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 100px 32px;
+      text-align: center;
+      background: #1a1a1a;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 60%;
+      height: 200%;
+      background: radial-gradient(ellipse, rgba(22, 163, 74, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section .section-title {
+      color: white;
+      position: relative;
+    }
+    .cta-section .section-subtitle {
+      color: #aaa;
+      position: relative;
+    }
+    .cta-section .btn-cta {
+      position: relative;
+      margin-top: 32px;
+      font-size: 16px;
+      padding: 18px 40px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 48px 32px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: #999;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #555;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeLeft {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.15s; }
-    .reveal-delay-3 { transition-delay: 0.2s; }
-    .reveal-delay-4 { transition-delay: 0.25s; }
-    .reveal-delay-5 { transition-delay: 0.3s; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
 
-    /* Pastel gradient cards */
-    .pastel-card {
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding-top: 100px;
+        min-height: auto;
+      }
+      .hero-left { max-width: 100%; }
+      .editor-body {
+        grid-template-columns: 1fr;
+      }
+      .editor-sidebar { display: none; }
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .templates-showcase {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
-    .pastel-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-right .demo-link { display: none; }
+      .hero-title { font-size: 36px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr; gap: 32px; }
+      .templates-showcase { grid-template-columns: 1fr; }
+      .logo-bar-inner { justify-content: center; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
     }
-    .grad-pink-lavender { background: linear-gradient(135deg, #FDE2E4, #E2E0F4); }
-    .grad-mint-sky { background: linear-gradient(135deg, #D5F5E3, #DBEAFE); }
-    .grad-peach-rose { background: linear-gradient(135deg, #FDE8D0, #FCE7F3); }
-    .grad-lavender-blue { background: linear-gradient(135deg, #E8DDFF, #DBEAFE); }
-    .grad-sky-mint { background: linear-gradient(135deg, #BAE6FD, #D1FAE5); }
-    .grad-rose-pink { background: linear-gradient(135deg, #FECDD3, #FDE2E4); }
-
-    /* Gradient blob */
-    .hero-blob {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.5;
-      animation: blobFloat 15s ease-in-out infinite;
-      pointer-events: none;
-    }
-    .blob-a {
-      background: linear-gradient(135deg, #E8DDFF, #DBEAFE);
-      top: -80px;
-      left: 45%;
-    }
-    .blob-b {
-      background: linear-gradient(135deg, #FDE2E4, #FCE7F3);
-      top: -40px;
-      left: 55%;
-      width: 200px;
-      height: 200px;
-      animation-delay: -5s;
-    }
-    @keyframes blobFloat {
-      0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-      33% { transform: translate(20px, -20px) scale(1.1) rotate(120deg); }
-      66% { transform: translate(-20px, 10px) scale(0.9) rotate(240deg); }
-    }
-
-    /* Pill button */
-    .pill-btn {
-      border-radius: 9999px;
-      padding: 14px 32px;
-      font-weight: 600;
-      display: inline-block;
-      transition: all 0.3s ease;
-    }
-    .pill-btn:hover { transform: translateY(-2px); }
-    .pill-primary { background: #8B5CF6; color: white; }
-    .pill-primary:hover { background: #7C3AED; }
-    .pill-ghost { background: white; color: #6B7280; border: 1px solid #E5E7EB; }
-    .pill-ghost:hover { background: #F9FAFB; }
-
-    /* Icon circle */
-    .icon-circle {
-      width: 48px;
-      height: 48px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      flex-shrink: 0;
-    }
-    .icon-circle svg {
-      width: 24px;
-      height: 24px;
-      color: #8B5CF6;
-    }
-
-    /* Step connector */
-    .step-dot {
-      width: 36px;
-      height: 36px;
-      background: #8B5CF6;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .step-connector {
-      border-top: 2px dashed #D1D5DB;
-      flex: 1;
-      margin-top: 18px;
-    }
-
-    /* Product frame */
-    .product-frame {
-      border-radius: 16px;
-      border: 2px solid #E8DDFF;
-      overflow: hidden;
-      box-shadow: 0 4px 24px rgba(139, 92, 246, 0.06);
-    }
-    .product-frame-header {
-      background: linear-gradient(135deg, #E8DDFF, #DBEAFE);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .frame-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Animated Gradient Mesh */
-    @keyframes meshShift1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.15)} 66%{transform:translate(-30px,30px) scale(0.9)} }
-    @keyframes meshShift2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-60px,50px) scale(0.95)} }
-    @keyframes meshShift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,40px)} 66%{transform:translate(-40px,-20px)} }
-    .mesh-blob { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
-    .mesh-blob-1 { animation:meshShift1 15s ease-in-out infinite; }
-    .mesh-blob-2 { animation:meshShift2 18s ease-in-out infinite; }
-    .mesh-blob-3 { animation:meshShift3 20s ease-in-out infinite; }
-  
-
-    /* Elastic/Spring Animations */
-    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
-    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  
-
-    /* Staggered Grid Reveal */
-    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
-    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
-  
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-9 h-9 bg-violet-100 rounded-xl flex items-center justify-center">
-          <svg class="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
-          </svg>
-        </div>
-        <span class="font-semibold text-lg text-gray-800">[Product]</span>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <span class="logo-text">MailCraft</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#">Product</a></li>
+          <li><a href="#">Email Templates</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
       </div>
-      <div class="hidden md:flex items-center gap-6">
-        <a href="#" class="text-sm text-gray-500 hover:text-violet-500 transition-colors duration-200">Features</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-violet-500 transition-colors duration-200">Pricing</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-violet-500 transition-colors duration-200">Blog</a>
+      <div class="nav-right">
+        <a href="#" style="font-size:13px; color:#16a34a; font-weight:500; display:flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Talk to Sales
+        </a>
+        <a href="#" class="demo-link" style="font-size:14px; color:#555; font-weight:500; text-decoration:none;">Login</a>
+        <a href="#" class="btn-signup">Sign Up</a>
+        <a href="#" class="btn-outline">Try Demo Editor</a>
       </div>
-      <a href="#" class="pill-btn pill-primary text-sm !py-2.5 !px-5">Get Started</a>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="pt-36 pb-28 px-6 relative overflow-hidden">
-    <div class="hero-blob blob-a"></div>
-    <div class="hero-blob blob-b"></div>
-    <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="reveal">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-tight mb-6" style="letter-spacing: -0.02em;">
-          The friendly way to<br>manage your [workflow]
-        </h1>
-      </div>
-      <div class="reveal reveal-delay-1">
-        <p class="text-lg text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed">
-          [Your product tagline — describe the core benefit in simple, approachable language. No jargon.]
-        </p>
-      </div>
-      <div class="reveal reveal-delay-2 flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#" class="pill-btn pill-primary">Try It Free</a>
-        <a href="#" class="pill-btn pill-ghost">See How It Works</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Feature Cards Grid — rainbow pastel -->
-  <section class="py-24 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="reveal text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4">Everything in one place</h2>
-        <p class="text-gray-500 max-w-md mx-auto">Simple tools that work together to keep your [workflow] on track.</p>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="social-proof-badge">
+        <span class="dot"></span>
+        85% of Fortune 500 use MailCraft
       </div>
 
-      <div class="grid md:grid-cols-3 gap-5">
-        <div class="reveal pastel-card grad-pink-lavender">
-          <div class="icon-circle mb-5">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold mb-2">[Task Management]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Specific capability — drag-and-drop boards, due dates, assignees, filters.]</p>
-        </div>
+      <h1 class="hero-title">Drag-n-Drop HTML Email Template Builder</h1>
 
-        <div class="reveal reveal-delay-1 pastel-card grad-mint-sky md:translate-y-6">
-          <div class="icon-circle mb-5">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold mb-2">[Team Collaboration]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Real-time editing, comments, @mentions, shared spaces — concrete features.]</p>
-        </div>
+      <p class="hero-subtitle">
+        Build professional, responsive email templates in minutes. No coding skills needed. Export to any ESP with one click.
+      </p>
 
-        <div class="reveal reveal-delay-2 pastel-card grad-lavender-blue">
-          <div class="icon-circle mb-5">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold mb-2">[Analytics]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Visual reports, burndown charts, velocity tracking — actionable insights.]</p>
-        </div>
+      <div class="hero-cta">
+        <a href="#" class="btn-cta">
+          Get Started Free
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+        <span class="no-cc">No credit card required</span>
+      </div>
 
-        <div class="reveal reveal-delay-3 pastel-card grad-sky-mint md:col-span-2">
-          <div class="flex items-start gap-6">
-            <div class="icon-circle">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
+      <div class="ratings">
+        <div class="rating-badge">
+          <div class="rating-icon g2">G2</div>
+          <div class="rating-info">
+            <div class="rating-stars">
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20" style="opacity:0.3"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
             </div>
-            <div>
-              <h3 class="text-lg font-semibold mb-2">[Automations]</h3>
-              <p class="text-sm text-gray-600 leading-relaxed">[Trigger-action workflows, scheduled tasks, integrations with [tools]. Set it and forget it.]</p>
+            <span class="rating-label">4.6 on G2</span>
+          </div>
+        </div>
+        <div class="rating-badge">
+          <div class="rating-icon capterra">C</div>
+          <div class="rating-info">
+            <div class="rating-stars">
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <span class="rating-label">4.8 on Capterra</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Right: Editor Preview -->
+    <div class="hero-right">
+      <div class="editor-preview">
+        <div class="editor-toolbar">
+          <div class="toolbar-dot red"></div>
+          <div class="toolbar-dot yellow"></div>
+          <div class="toolbar-dot green"></div>
+          <div class="toolbar-url">mailcraft.io/editor</div>
+        </div>
+        <div class="editor-body">
+          <div class="editor-sidebar">
+            <div class="sidebar-block">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+              Text Block
+            </div>
+            <div class="sidebar-block">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Image
+            </div>
+            <div class="sidebar-block">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+              Button
+            </div>
+            <div class="sidebar-block">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+              Layout
+            </div>
+            <div class="sidebar-block">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/></svg>
+              Spacer
             </div>
           </div>
-        </div>
-
-        <div class="reveal reveal-delay-4 pastel-card grad-rose-pink">
-          <div class="icon-circle mb-5">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold mb-2">[Security]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[SSO, 2FA, audit logs, role-based access — specifics, not "enterprise-grade".]</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Social Proof Inline -->
-  <section class="py-8 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="reveal flex flex-col md:flex-row items-center justify-center gap-6 text-center">
-        <div class="pastel-card grad-lavender-blue px-6 py-4 !shadow-none">
-          <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Active teams</p>
-          <p class="text-lg font-semibold text-violet-600">[your metric]</p>
-        </div>
-        <div class="pastel-card grad-mint-sky px-6 py-4 !shadow-none">
-          <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">Tasks completed</p>
-          <p class="text-lg font-semibold text-green-600">[your metric]</p>
-        </div>
-        <div class="pastel-card grad-pink-lavender px-6 py-4 !shadow-none">
-          <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">User rating</p>
-          <p class="text-lg font-semibold text-pink-600">[your rating]</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Product Section -->
-  <section class="py-20 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="reveal">
-        <div class="product-frame">
-          <div class="product-frame-header">
-            <div class="frame-dot bg-red-300"></div>
-            <div class="frame-dot bg-yellow-300"></div>
-            <div class="frame-dot bg-green-300"></div>
-            <span class="ml-3 text-xs text-gray-500 font-medium">[your-product].app</span>
-          </div>
-          <div class="bg-white p-8 md:p-12">
-            <div class="rounded-2xl border border-violet-100 h-56 flex items-center justify-center" style="background: linear-gradient(135deg, #F5F3FF, #EFF6FF);">
-              <div class="text-center">
-                <svg class="w-12 h-12 mx-auto mb-3 text-violet-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <p class="text-sm text-violet-400 font-medium">[Product Screenshot]</p>
+          <div class="editor-canvas">
+            <div class="canvas-header">
+              <div class="canvas-header-text">Your Email Header</div>
+            </div>
+            <div class="canvas-block">
+              <div class="canvas-img-placeholder"></div>
+              <div class="canvas-lines">
+                <div class="canvas-line"></div>
+                <div class="canvas-line"></div>
+                <div class="canvas-line"></div>
               </div>
             </div>
+            <div class="canvas-block">
+              <div class="canvas-lines" style="width:100%">
+                <div class="canvas-line" style="width:90%"></div>
+                <div class="canvas-line" style="width:70%"></div>
+              </div>
+            </div>
+            <div class="canvas-btn-placeholder">
+              <span class="canvas-btn-text">Shop Now</span>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Floating badges -->
+      <div class="float-badge top-right">
+        <span class="check">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </span>
+        Responsive
+      </div>
+      <div class="float-badge bottom-left">
+        <span class="check">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </span>
+        AMP Ready
       </div>
     </div>
   </section>
 
-  <!-- How It Works — 3 steps -->
-  <section class="py-16 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="reveal text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4">How it works</h2>
-      </div>
-
-      <div class="reveal flex flex-col md:flex-row items-start gap-6 md:gap-0">
-        <!-- Step 1 -->
-        <div class="flex-1 text-center px-4">
-          <div class="flex justify-center mb-4">
-            <div class="step-dot">1</div>
-          </div>
-          <div class="inline-block rounded-full bg-violet-50 px-4 py-2 mb-3">
-            <span class="text-sm font-medium text-violet-600">[Connect]</span>
-          </div>
-          <p class="text-sm text-gray-500 leading-relaxed">[First step — what the user does to get started. One sentence.]</p>
-        </div>
-
-        <div class="step-connector hidden md:block"></div>
-
-        <!-- Step 2 -->
-        <div class="flex-1 text-center px-4">
-          <div class="flex justify-center mb-4">
-            <div class="step-dot">2</div>
-          </div>
-          <div class="inline-block rounded-full bg-green-50 px-4 py-2 mb-3">
-            <span class="text-sm font-medium text-green-600">[Configure]</span>
-          </div>
-          <p class="text-sm text-gray-500 leading-relaxed">[Second step — how they set up their workflow. One sentence.]</p>
-        </div>
-
-        <div class="step-connector hidden md:block"></div>
-
-        <!-- Step 3 -->
-        <div class="flex-1 text-center px-4">
-          <div class="flex justify-center mb-4">
-            <div class="step-dot">3</div>
-          </div>
-          <div class="inline-block rounded-full bg-blue-50 px-4 py-2 mb-3">
-            <span class="text-sm font-medium text-blue-600">[Launch]</span>
-          </div>
-          <p class="text-sm text-gray-500 leading-relaxed">[Third step — the outcome they get. One sentence.]</p>
-        </div>
-      </div>
+  <!-- Logo Bar -->
+  <div class="logo-bar">
+    <div class="logo-bar-inner">
+      <span class="logo-brand">MAERSK</span>
+      <span class="logo-brand" style="font-family: sans-serif;">airbnb</span>
+      <span class="logo-brand">Adobe</span>
+      <span class="logo-brand" style="letter-spacing: 0.02em;">Microsoft</span>
+      <span class="logo-brand">Spotify</span>
     </div>
-  </section>
+  </div>
 
-  <!-- Testimonial — pastel gradient card -->
-  <section class="py-24 px-6">
-    <div class="max-w-3xl mx-auto">
-      <div class="reveal">
-        <div class="pastel-card grad-lavender-blue p-10 md:p-12">
-          <svg class="w-10 h-10 text-violet-300 mb-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983z"/>
+  <!-- Features Section -->
+  <section class="features">
+    <div class="section-header">
+      <span class="section-label reveal">Why MailCraft</span>
+      <h2 class="section-title reveal reveal-d1">Build Emails That Convert</h2>
+      <p class="section-subtitle reveal reveal-d2">Professional-grade email creation tools trusted by marketing teams worldwide.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
           </svg>
-          <blockquote class="text-lg md:text-xl font-semibold leading-relaxed mb-6 text-gray-800">
-            "[Specific, raw feedback — mention a pain point solved. e.g. 'I was using 4 different tools to manage one project. Now my entire team lives in [Product] and our weekly sync went from 45 minutes to 12.']"
-          </blockquote>
-          <div class="flex items-center gap-4">
-            <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-sm">
-              <span class="text-violet-500 font-semibold text-sm">MR</span>
-            </div>
-            <div>
-              <p class="font-semibold text-sm text-gray-800">[Your Name]</p>
-              <p class="text-gray-500 text-sm">[Your Title], [Your Company]</p>
-            </div>
-          </div>
         </div>
+        <h3>Drag-n-Drop Editor</h3>
+        <p>Visually design emails by dragging content blocks into your canvas. Zero coding required.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-d1">
+        <div class="feature-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3>Mobile Responsive</h3>
+        <p>Every template automatically adapts to any screen size. Preview on desktop, tablet, and phone.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-d2">
+        <div class="feature-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+          </svg>
+        </div>
+        <h3>Clean HTML Export</h3>
+        <p>Export production-ready HTML that works across 50+ email clients. One click, zero headaches.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-d1">
+        <div class="feature-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+          </svg>
+        </div>
+        <h3>Brand Kit</h3>
+        <p>Lock in your colors, fonts, and logo. Every email stays on-brand without manual checking.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-d2">
+        <div class="feature-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <h3>Team Collaboration</h3>
+        <p>Invite teammates, leave comments, approve designs. Built for marketing teams of any size.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-d3">
+        <div class="feature-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h3>AMP for Email</h3>
+        <p>Add interactive elements like carousels, accordions, and forms directly inside your emails.</p>
       </div>
     </div>
   </section>
 
-  <!-- Deep Dive — alternating layout -->
-  <section class="py-20 px-6" style="background: linear-gradient(135deg, #F5F3FF08, #EFF6FF08);">
-    <div class="max-w-5xl mx-auto space-y-20">
-      <div class="reveal grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <span class="inline-block text-xs font-semibold text-violet-600 uppercase tracking-widest bg-violet-50 rounded-full px-4 py-2 mb-4">Smart Workflows</span>
-          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight mb-4" style="letter-spacing: -0.02em;">[Workflow feature title]</h2>
-          <p class="text-gray-500 leading-relaxed mb-6">[Two sentences about how this feature improves daily work. Mention specific triggers, automations, or time saved.]</p>
-          <ul class="space-y-3 mb-6">
-            <li class="flex items-center gap-3 text-sm text-gray-600">
-              <svg class="w-5 h-5 text-violet-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              [Specific sub-feature]
-            </li>
-            <li class="flex items-center gap-3 text-sm text-gray-600">
-              <svg class="w-5 h-5 text-violet-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              [Another capability]
-            </li>
-            <li class="flex items-center gap-3 text-sm text-gray-600">
-              <svg class="w-5 h-5 text-violet-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              [Third detail with concrete output]
-            </li>
-          </ul>
-        </div>
-        <div class="reveal reveal-delay-1">
-          <div class="pastel-card grad-mint-sky p-8">
-            <div class="h-48 bg-white/60 rounded-xl flex items-center justify-center">
-              <span class="text-sm text-green-400 font-medium">[Workflow Screenshot]</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="reveal grid md:grid-cols-2 gap-12 items-center">
-        <div class="reveal reveal-delay-1 md:order-1">
-          <div class="pastel-card grad-pink-lavender p-8">
-            <div class="h-48 bg-white/60 rounded-xl flex items-center justify-center">
-              <span class="text-sm text-pink-400 font-medium">[Template Screenshot]</span>
-            </div>
-          </div>
-        </div>
-        <div class="md:order-2">
-          <span class="inline-block text-xs font-semibold text-pink-600 uppercase tracking-widest bg-pink-50 rounded-full px-4 py-2 mb-4">Templates</span>
-          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight mb-4" style="letter-spacing: -0.02em;">[Templates feature title]</h2>
-          <p class="text-gray-500 leading-relaxed mb-6">[Two sentences about pre-built templates. How many are available? What categories? Can users create custom ones?]</p>
-          <a href="#" class="pill-btn pill-primary text-sm !py-3 !px-6">Browse Templates</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="py-20 px-6">
-    <div class="max-w-3xl mx-auto">
-      <div class="reveal text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">Common questions</h2>
-      </div>
-      <div class="space-y-4">
-        <div class="reveal pastel-card grad-lavender-blue p-6">
-          <h3 class="text-base font-semibold mb-2">[Is there a free plan?]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Honest answer — what is free, team size limits, feature restrictions.]</p>
-        </div>
-        <div class="reveal reveal-delay-1 pastel-card grad-mint-sky p-6">
-          <h3 class="text-base font-semibold mb-2">[Can I import from other tools?]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Specific tools supported, CSV import, API migration — concrete details.]</p>
-        </div>
-        <div class="reveal reveal-delay-2 pastel-card grad-rose-pink p-6">
-          <h3 class="text-base font-semibold mb-2">[How secure is my data?]</h3>
-          <p class="text-sm text-gray-600 leading-relaxed">[Encryption standard, data location, compliance — not vague promises.]</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="py-20 px-6">
-    <div class="max-w-3xl mx-auto text-center">
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stats-inner">
       <div class="reveal">
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4">Start organizing today</h2>
-        <p class="text-gray-500 max-w-md mx-auto mb-8">Free to use, no credit card needed. Your [workflow] will thank you.</p>
-        <a href="#" class="pill-btn pill-primary text-lg !py-4 !px-10">Get Started Free</a>
+        <div class="stat-number">1M+</div>
+        <div class="stat-label">Emails created monthly</div>
+      </div>
+      <div class="reveal reveal-d1">
+        <div class="stat-number">1,200+</div>
+        <div class="stat-label">Pre-built templates</div>
+      </div>
+      <div class="reveal reveal-d2">
+        <div class="stat-number">85%</div>
+        <div class="stat-label">Fortune 500 adoption</div>
       </div>
     </div>
+  </section>
+
+  <!-- Templates Showcase -->
+  <section class="templates">
+    <div class="section-header">
+      <span class="section-label reveal">Template Library</span>
+      <h2 class="section-title reveal reveal-d1">Start With a Template</h2>
+      <p class="section-subtitle reveal reveal-d2">Over 1,200 professionally designed email templates. Pick one, customize it, send it.</p>
+    </div>
+
+    <div class="templates-showcase">
+      <div class="template-card reveal">
+        <div class="template-preview t1">
+          <div class="template-preview-inner">
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-block"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Welcome Series</h4>
+          <span>E-commerce</span>
+        </div>
+      </div>
+      <div class="template-card reveal reveal-d1">
+        <div class="template-preview t2">
+          <div class="template-preview-inner">
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-block"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Newsletter</h4>
+          <span>SaaS</span>
+        </div>
+      </div>
+      <div class="template-card reveal reveal-d2">
+        <div class="template-preview t3">
+          <div class="template-preview-inner">
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-block"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Product Launch</h4>
+          <span>Marketing</span>
+        </div>
+      </div>
+      <div class="template-card reveal reveal-d3">
+        <div class="template-preview t4">
+          <div class="template-preview-inner">
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-line"></div>
+            <div class="tpl-block"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Transactional</h4>
+          <span>Automated</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <span class="section-label reveal" style="color:#4ade80;">Ready to build?</span>
+    <h2 class="section-title reveal reveal-d1">Start Creating Emails Today</h2>
+    <p class="section-subtitle reveal reveal-d2">Free plan available. No credit card needed. Set up in under 2 minutes.</p>
+    <a href="#" class="btn-cta reveal reveal-d3">
+      Get Started Free
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+      </svg>
+    </a>
   </section>
 
   <!-- Footer -->
-  <footer class="py-12 px-6 border-t border-gray-100">
-    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-violet-100 rounded-lg flex items-center justify-center">
-          <svg class="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
+  <footer class="footer">
+    <div class="footer-inner">
+      <a href="#" class="logo" style="text-decoration:none;">
+        <div class="logo-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
           </svg>
         </div>
-        <span class="font-semibold text-sm text-gray-800">[Product]</span>
+        <span class="logo-text">MailCraft</span>
+      </a>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Blog</a>
+        <a href="#">Help Center</a>
+        <a href="#">Status</a>
+        <a href="#">Twitter</a>
       </div>
-      <div class="flex gap-6 text-sm text-gray-400">
-        <a href="#" class="hover:text-violet-500 transition-colors duration-200">Privacy</a>
-        <a href="#" class="hover:text-violet-500 transition-colors duration-200">Terms</a>
-        <a href="#" class="hover:text-violet-500 transition-colors duration-200">Docs</a>
-        <a href="#" class="hover:text-violet-500 transition-colors duration-200">Twitter</a>
-      </div>
+      <span class="footer-copy">&copy; 2026 MailCraft</span>
     </div>
   </footer>
 
-  <!-- Scroll Reveal Script — repeats on scroll -->
   <script>
-    const revealObserver = new IntersectionObserver((entries) => {
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Scroll reveal with repeat
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
@@ -519,35 +1222,9 @@
           entry.target.classList.remove('visible');
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => {
-      revealObserver.observe(el);
-    });
-  
-
-      // Staggered Grid Reveal
-      (function(){
-        var staggerEls = document.querySelectorAll('.stagger-item');
-        if(!staggerEls.length) return;
-        var staggerObs = new IntersectionObserver(function(entries){
-          entries.forEach(function(entry){
-            if(entry.isIntersecting){
-              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
-              items.forEach(function(item, i){
-                var row = Math.floor(i / 3);
-                var col = i % 3;
-                var delay = (row + col) * 100;
-                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
-              });
-            } else {
-              entry.target.classList.remove('stagger-visible');
-            }
-          });
-        }, {threshold:0.1});
-        staggerEls.forEach(function(el){ staggerObs.observe(el); });
-      })();
-  
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 
 </body>

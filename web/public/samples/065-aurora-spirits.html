@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maison Noir — Born From the Untouched Wilderness</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Aurora Spirits — Born From the Untouched Wilderness</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -17,7 +16,9 @@
       --text-dim: rgba(255,255,255,0.82);
       --border: rgba(255,255,255,0.08);
       --muted: #7a7a7a;
-      --accent: #3a6b4a;
+      --accent: #2d6b4a;
+      --accent-dark: #1a4030;
+      --gate-bg: #636363;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-slow: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
@@ -31,9 +32,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
@@ -47,6 +46,100 @@
 
     .font-serif {
       font-family: 'Instrument Serif', Georgia, serif;
+    }
+
+    /* ── Age Gate Overlay ───────────────────────────────── */
+    .age-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--gate-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s var(--ease), visibility 0.8s;
+    }
+
+    .age-gate.dismissed {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .age-gate-card {
+      background: #f5f5f3;
+      width: min(310px, 85vw);
+      padding: 2.4rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .age-gate-brand-top {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 2.1rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: #111111;
+      margin-bottom: 1.3rem;
+    }
+
+    .age-gate-brand-bottom {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 2.1rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: #111111;
+      margin-top: 1.3rem;
+    }
+
+    .age-gate-question {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-size: 0.78rem;
+      color: #3a3a3a;
+      margin-bottom: 1rem;
+      line-height: 1.45;
+    }
+
+    .age-gate-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .age-gate-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      padding: 8px 20px;
+      border-radius: 5px;
+      border: none;
+      background: #222222;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .age-gate-btn:hover {
+      background: #111111;
+      transform: translateY(-1px);
+    }
+
+    .age-gate-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ── Body locked while gate is visible ──────────────── */
+    body.gate-locked {
+      overflow: hidden;
     }
 
     /* ── Split-paragraph clip-path + skew reveal ────────── */
@@ -152,6 +245,33 @@
       background: rgba(255,255,255,0.04);
     }
 
+    /* ── Accent pill button ──────────────────────────── */
+    .btn-accent {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 9999px;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        background 0.4s ease,
+        border-color 0.4s ease,
+        transform 0.2s ease;
+    }
+    .btn-accent:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
     /* ── Section label ───────────────────────────────── */
     .section-label {
       font-size: 10px;
@@ -168,14 +288,14 @@
     }
 
     /* ── Stagger delay utilities ─────────────────────── */
-    .stagger-1 { transition-delay: 80ms !important; }
-    .stagger-2 { transition-delay: 160ms !important; }
-    .stagger-3 { transition-delay: 240ms !important; }
-    .stagger-4 { transition-delay: 320ms !important; }
-    .stagger-5 { transition-delay: 400ms !important; }
-    .stagger-6 { transition-delay: 480ms !important; }
-    .stagger-7 { transition-delay: 560ms !important; }
-    .stagger-8 { transition-delay: 640ms !important; }
+    .stagger-1 { transition-delay: 50ms !important; }
+    .stagger-2 { transition-delay: 100ms !important; }
+    .stagger-3 { transition-delay: 150ms !important; }
+    .stagger-4 { transition-delay: 200ms !important; }
+    .stagger-5 { transition-delay: 250ms !important; }
+    .stagger-6 { transition-delay: 300ms !important; }
+    .stagger-7 { transition-delay: 350ms !important; }
+    .stagger-8 { transition-delay: 400ms !important; }
 
     /* ── Hero ────────────────────────────────────────── */
     .hero {
@@ -191,7 +311,6 @@
       text-align: center;
     }
 
-    /* Subtle ambient aurora wash */
     .hero::before {
       content: '';
       position: absolute;
@@ -202,13 +321,12 @@
       background:
         radial-gradient(
           ellipse 60% 50% at 50% 60%,
-          rgba(45, 80, 60, 0.08) 0%,
+          rgba(45, 107, 74, 0.1) 0%,
           transparent 70%
         );
       pointer-events: none;
     }
 
-    /* Film grain */
     .hero::after {
       content: '';
       position: absolute;
@@ -364,22 +482,87 @@
       background: linear-gradient(135deg, #122840 0%, #1e4060 50%, #0a1828 100%);
     }
 
+    /* ── Accent line ────────────────────────────────── */
+    .accent-line {
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto 2rem;
+    }
+
+    /* ── Stat counter ───────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-item {
+      padding: clamp(2rem, 4vw, 3rem);
+      text-align: center;
+      position: relative;
+    }
+
+    .stat-item + .stat-item {
+      border-left: 1px solid var(--border);
+    }
+
+    .stat-number {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
     /* ── Responsive ─────────────────────────────────── */
     @media (max-width: 768px) {
       .story-grid { grid-template-columns: 1fr !important; }
       .products-grid { grid-template-columns: 1fr !important; }
       .creator-grid { grid-template-columns: 1fr 1fr !important; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .stat-item + .stat-item { border-left: none; border-top: 1px solid var(--border); }
       .footer-bottom { flex-direction: column; align-items: flex-start !important; }
     }
   </style>
 </head>
-<body>
+<body class="gate-locked">
+
+<!-- ── AGE VERIFICATION GATE ─────────────────────────── -->
+<div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-label="Age verification">
+  <div class="age-gate-card">
+    <div class="age-gate-brand-top">AURORA</div>
+
+    <div style="margin: 0 auto; max-width: 220px;">
+      <p class="age-gate-question">Are you the legal drinking age where you live?</p>
+      <div class="age-gate-buttons">
+        <button class="age-gate-btn" id="ageYes" aria-label="Yes, I am of legal drinking age">YES</button>
+        <button class="age-gate-btn" id="ageNo" aria-label="No, I am not of legal drinking age">NO</button>
+      </div>
+    </div>
+
+    <div class="age-gate-brand-bottom">SPIRITS</div>
+  </div>
+</div>
+
 
 <!-- ── NAV ───────────────────────────────────────────── -->
 <nav aria-label="Main navigation">
-  <a href="#" class="nav-logo">Maison Noir</a>
+  <a href="#" class="nav-logo">Aurora Spirits</a>
   <div style="display:flex; align-items:center; gap:2.5rem;">
-    <div style="display:none;" class="md:flex" id="nav-links">
+    <div style="display:none;" id="nav-links">
       <div style="display:flex; gap:2.5rem;">
         <a href="#story" class="nav-link">Our Story</a>
         <a href="#bottle" class="nav-link">The Bottle</a>
@@ -403,7 +586,6 @@
 <!-- ── HERO ─────────────────────────────────────────── -->
 <section class="hero" aria-label="Hero">
 
-  <!-- Hero background image -->
   <img src="https://images.unsplash.com/photo-1506806732259-39c2d0268443?w=1400&q=80&fit=crop" alt="Northern lights aurora over dark landscape" loading="eager" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.35; z-index:0;" />
 
   <div style="position:relative; z-index:3; max-width:720px; padding:0 2rem;">
@@ -419,16 +601,35 @@
     </h1>
 
     <p class="fade-up stagger-4" style="font-size:0.95rem; line-height:1.8; color:var(--muted); max-width:480px; margin:0 auto 3rem; text-align:center;">
-      From the silence of the northern valleys, a clarity emerges. Maison Noir is born from places where nature still decides the rules.
+      From the silence of the northern valleys, a clarity emerges. Aurora Spirits is born from places where nature still decides the rules.
     </p>
 
-    <div class="fade-up stagger-6" style="display:flex; justify-content:center;">
-      <a href="#story" class="btn-pill">Discover our story</a>
+    <div class="fade-up stagger-6" style="display:flex; justify-content:center; gap:1rem;">
+      <a href="#story" class="btn-accent">Discover our story</a>
+      <a href="#collection" class="btn-pill">View spirits</a>
     </div>
   </div>
 
-  <!-- Bottom gradient -->
   <div style="position:absolute; bottom:0; left:0; right:0; height:200px; background:linear-gradient(to bottom, transparent, #000); pointer-events:none; z-index:2;"></div>
+</section>
+
+
+<!-- ── STATS BAR ────────────────────────────────────── -->
+<section aria-label="Key facts">
+  <div class="stat-grid fade-up">
+    <div class="stat-item">
+      <div class="stat-number">400+</div>
+      <div class="stat-label">Iterations perfected</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">12</div>
+      <div class="stat-label">Years of craft</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Artificial additives</div>
+    </div>
+  </div>
 </section>
 
 
@@ -438,7 +639,6 @@
 
     <div class="story-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:clamp(3rem, 8vw, 7rem); align-items:start;">
 
-      <!-- Left column -->
       <div>
         <div class="section-label fade-up" style="margin-bottom:2rem;">Our Story</div>
 
@@ -449,14 +649,13 @@
         </h2>
 
         <p class="fade-up stagger-2" style="color:var(--muted); line-height:1.85; margin:0 0 1.8rem; font-size:0.92rem;">
-          Founded by master distiller Elena Kors in a converted greenhouse outside Oslo, Maison Noir began with a single experiment: what happens when you freeze fermentation at its most volatile moment?
+          Founded by master distiller Elena Kors in a converted greenhouse outside Oslo, Aurora Spirits began with a single experiment: what happens when you freeze fermentation at its most volatile moment?
         </p>
         <p class="fade-up stagger-3" style="color:var(--muted); line-height:1.85; margin:0; font-size:0.92rem;">
           Water born from a landscape carved for thousands of years by glaciers. No additives. No sugar. No artificial flavouring. Every bottle carries the mineral silence of permafrost and the first green push of Arctic spring.
         </p>
       </div>
 
-      <!-- Right column -->
       <div>
         <div class="fade-up stagger-3" style="margin-bottom:3rem; overflow:hidden;">
           <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80&fit=crop" alt="Dark misty forest landscape" loading="lazy" style="width:100%; height:280px; object-fit:cover; margin-bottom:2rem;" />
@@ -470,7 +669,6 @@
       </div>
     </div>
 
-    <!-- Divider -->
     <hr class="dim fade-up stagger-6" style="margin-top:clamp(4rem, 8vw, 7rem);">
   </div>
 </section>
@@ -482,56 +680,56 @@
 
     <div style="text-align:center; margin-bottom:clamp(3rem, 6vw, 5rem);">
       <div class="section-label fade-up" style="margin-bottom:2rem; justify-content:center; display:flex;">The Bottle</div>
+      <div class="accent-line fade-up stagger-1"></div>
       <h2 class="font-serif fade-up stagger-1" style="font-size:clamp(2.2rem, 5vw, 3.5rem); font-weight:400; letter-spacing:-0.02em; line-height:1.08; margin:0;">
         <span class="split-line" style="justify-content:center; display:flex;"><span class="split-inner" data-stagger="0">Every detail</span></span>
         <span class="split-line" style="justify-content:center; display:flex;"><span class="split-inner" data-stagger="1">tells a <span style="font-style:italic;">story.</span></span></span>
       </h2>
     </div>
 
-    <!-- 4 bottle detail quadrants -->
     <div class="bottle-detail fade-up stagger-2">
 
       <div class="bottle-detail-item">
         <div class="bottle-detail-num">01</div>
-        <div class="section-label" style="margin-bottom:1.5rem; color:var(--muted);">The Name</div>
+        <div class="section-label" style="margin-bottom:1.5rem; color:var(--accent);">The Name</div>
         <h3 class="font-serif" style="font-size:1.4rem; font-weight:400; line-height:1.25; margin:0 0 1.2rem;">
           Aurora meets the earth
         </h3>
         <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0; max-width:340px;">
-          Maison Noir. A name that speaks to the darkness between the lights — the long northern night that makes the aurora possible.
+          Aurora Spirits. A name that speaks to the light born from darkness  the long northern night that makes the aurora possible.
         </p>
       </div>
 
       <div class="bottle-detail-item">
         <div class="bottle-detail-num">02</div>
-        <div class="section-label" style="margin-bottom:1.5rem; color:var(--muted);">The Closure</div>
+        <div class="section-label" style="margin-bottom:1.5rem; color:var(--accent);">The Closure</div>
         <h3 class="font-serif" style="font-size:1.4rem; font-weight:400; line-height:1.25; margin:0 0 1.2rem;">
           Sealed with intention
         </h3>
         <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0; max-width:340px;">
-          The cap carries a green iridescence — aurora meeting opal. A tactile signal that what's inside was crafted with the same precision.
+          The cap carries a green iridescence  aurora meeting opal. A tactile signal that what's inside was crafted with the same precision.
         </p>
       </div>
 
       <div class="bottle-detail-item">
         <div class="bottle-detail-num">03</div>
-        <div class="section-label" style="margin-bottom:1.5rem; color:var(--muted);">The Glass</div>
+        <div class="section-label" style="margin-bottom:1.5rem; color:var(--accent);">The Glass</div>
         <h3 class="font-serif" style="font-size:1.4rem; font-weight:400; line-height:1.25; margin:0 0 1.2rem;">
           Hand-blown emerald
         </h3>
         <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0; max-width:340px;">
-          Every bottle is individually shaped. The deep emerald tint comes from iron oxide — the same mineral found in Nordic glacier water.
+          Every bottle is individually shaped. The deep emerald tint comes from iron oxide  the same mineral found in Nordic glacier water.
         </p>
       </div>
 
       <div class="bottle-detail-item">
         <div class="bottle-detail-num">04</div>
-        <div class="section-label" style="margin-bottom:1.5rem; color:var(--muted);">The Base</div>
+        <div class="section-label" style="margin-bottom:1.5rem; color:var(--accent);">The Base</div>
         <h3 class="font-serif" style="font-size:1.4rem; font-weight:400; line-height:1.25; margin:0 0 1.2rem;">
           Ripple pattern
         </h3>
         <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0; max-width:340px;">
-          The bottom of each bottle carries concentric rings — a reference to the ripple effect of a single drop on still, glacial water.
+          The bottom of each bottle carries concentric rings  a reference to the ripple effect of a single drop on still, glacial water.
         </p>
       </div>
     </div>
@@ -540,14 +738,19 @@
 
 
 <!-- ── PHILOSOPHY INTERLUDE ───────────────────────────── -->
-<section style="background:var(--bg-alt); padding:clamp(5rem, 10vw, 8rem) 2rem;" aria-label="Quote">
-  <div style="max-width:780px; margin:0 auto; text-align:center;">
+<section style="background:var(--bg-alt); padding:clamp(5rem, 10vw, 8rem) 2rem; position:relative;" aria-label="Quote">
+  <!-- Subtle green glow -->
+  <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:400px; background:radial-gradient(ellipse, rgba(45,107,74,0.06) 0%, transparent 70%); pointer-events:none;"></div>
+
+  <div style="max-width:780px; margin:0 auto; text-align:center; position:relative;">
 
     <blockquote class="font-serif fade-up" style="font-size:clamp(1.5rem, 3.2vw, 2.3rem); font-weight:400; letter-spacing:-0.01em; line-height:1.35; margin:0 0 2.5rem; font-style:italic; color:var(--text-dim);">
       <span class="split-line" style="justify-content:center; display:flex;"><span class="split-inner" data-stagger="0">&ldquo;We do not rush the frost.</span></span>
       <span class="split-line" style="justify-content:center; display:flex;"><span class="split-inner" data-stagger="1">We do not hurry the thaw.</span></span>
       <span class="split-line" style="justify-content:center; display:flex;"><span class="split-inner" data-stagger="2">The spirit arrives when it is ready.&rdquo;</span></span>
     </blockquote>
+
+    <div class="accent-line fade-up stagger-3" style="margin-bottom:1.5rem;"></div>
 
     <p class="fade-up stagger-4" style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted);">
       Elena Kors &mdash; Founder &amp; Master Distiller
@@ -571,10 +774,9 @@
       </p>
     </div>
 
-    <!-- Stacked product cards -->
     <div style="display:flex; flex-direction:column; gap:1px;">
 
-      <!-- Product 1: Boreal (Vodka) -->
+      <!-- Product 1: Boreal -->
       <div class="product-card fade-up stagger-3" tabindex="0" role="article">
         <div style="display:grid; grid-template-columns:1fr 1fr; min-height:0;" class="products-grid">
           <div class="swatch swatch-classic" style="min-height:280px; position:relative;">
@@ -586,7 +788,7 @@
             </div>
           </div>
           <div style="padding:clamp(2rem, 4vw, 3.5rem); display:flex; flex-direction:column; justify-content:center;">
-            <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:1.5rem;">Vodka &middot; 750ml</div>
+            <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem;">Vodka &middot; 750ml</div>
             <h3 class="font-serif" style="font-size:clamp(1.6rem, 3vw, 2.2rem); font-weight:400; margin:0 0 1rem; line-height:1.15; letter-spacing:-0.01em;">Boreal</h3>
             <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0 0 2rem; max-width:340px;">
               Pine resin, frozen earth, the green silence after snowfall. Distilled from glacier water and filtered through volcanic rock.
@@ -598,7 +800,7 @@
         </div>
       </div>
 
-      <!-- Product 2: Polaris (Seltzer) -->
+      <!-- Product 2: Polaris -->
       <div class="product-card fade-up stagger-4" tabindex="0" role="article">
         <div style="display:grid; grid-template-columns:1fr 1fr; min-height:0;" class="products-grid">
           <div class="swatch swatch-arctic" style="min-height:280px; position:relative;">
@@ -610,7 +812,7 @@
             </div>
           </div>
           <div style="padding:clamp(2rem, 4vw, 3.5rem); display:flex; flex-direction:column; justify-content:center;">
-            <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:1.5rem;">Seltzer &middot; 355ml</div>
+            <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem;">Seltzer &middot; 355ml</div>
             <h3 class="font-serif" style="font-size:clamp(1.6rem, 3vw, 2.2rem); font-weight:400; margin:0 0 1rem; line-height:1.15; letter-spacing:-0.01em;">Polaris</h3>
             <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0 0 2rem; max-width:340px;">
               Midnight juniper, cold mineral springs, aurora reflected on still water. A light seltzer with real botanical character.
@@ -622,7 +824,7 @@
         </div>
       </div>
 
-      <!-- Product 3: Solstice (Mocktail) -->
+      <!-- Product 3: Solstice -->
       <div class="product-card fade-up stagger-5" tabindex="0" role="article">
         <div style="display:grid; grid-template-columns:1fr 1fr; min-height:0;" class="products-grid">
           <div class="swatch swatch-rose" style="min-height:280px; position:relative;">
@@ -634,7 +836,7 @@
             </div>
           </div>
           <div style="padding:clamp(2rem, 4vw, 3.5rem); display:flex; flex-direction:column; justify-content:center;">
-            <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:1.5rem;">Mocktail &middot; 355ml</div>
+            <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem;">Mocktail &middot; 355ml</div>
             <h3 class="font-serif" style="font-size:clamp(1.6rem, 3vw, 2.2rem); font-weight:400; margin:0 0 1rem; line-height:1.15; letter-spacing:-0.01em;">Solstice</h3>
             <p style="color:var(--muted); font-size:0.88rem; line-height:1.8; margin:0 0 2rem; max-width:340px;">
               Cloudberry, rhubarb, the last amber light of midsummer. Zero alcohol, full expression.
@@ -662,7 +864,6 @@
       </h2>
     </div>
 
-    <!-- Creator gallery grid -->
     <div class="creator-grid fade-up stagger-2" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1px;">
 
       <div class="creator-card">
@@ -722,6 +923,7 @@
   <div style="max-width:680px; margin:0 auto; text-align:center;">
 
     <div class="section-label fade-up" style="margin-bottom:2rem; justify-content:center; display:flex;">Leave No Trace</div>
+    <div class="accent-line fade-up stagger-1"></div>
 
     <h2 class="font-serif fade-up stagger-1" style="font-size:clamp(2rem, 4vw, 3rem); font-weight:400; letter-spacing:-0.02em; line-height:1.12; margin:0 0 2rem;">
       <span class="split-line" style="justify-content:center; display:flex;"><span class="split-inner" data-stagger="0">Respect the land</span></span>
@@ -729,12 +931,16 @@
     </h2>
 
     <p class="fade-up stagger-3" style="color:var(--muted); font-size:0.92rem; line-height:1.85; margin:0 0 1.8rem;">
-      Every aspect of our process is designed to return more than it takes. Carbon-neutral distillation, recycled glass, compostable packaging. The wilderness shaped our spirit — we intend to keep it wild.
+      Every aspect of our process is designed to return more than it takes. Carbon-neutral distillation, recycled glass, compostable packaging. The wilderness shaped our spirit  we intend to keep it wild.
     </p>
 
-    <p class="fade-up stagger-4" style="color:var(--muted); font-size:0.92rem; line-height:1.85; margin:0;">
+    <p class="fade-up stagger-4" style="color:var(--muted); font-size:0.92rem; line-height:1.85; margin:0 0 2.5rem;">
       1% of every bottle sold goes directly to boreal forest restoration projects across Scandinavia.
     </p>
+
+    <div class="fade-up stagger-5" style="display:flex; justify-content:center;">
+      <a href="#" class="btn-accent">Our sustainability pledge</a>
+    </div>
   </div>
 </section>
 
@@ -743,7 +949,6 @@
 <footer style="background:var(--bg-alt); border-top:1px solid var(--border); padding:clamp(4rem, 8vw, 6rem) 2rem 2.5rem;" aria-label="Footer">
   <div style="max-width:1080px; margin:0 auto;">
 
-    <!-- Newsletter row -->
     <div class="fade-up" style="display:flex; justify-content:space-between; align-items:end; flex-wrap:wrap; gap:2rem; margin-bottom:clamp(3rem, 6vw, 5rem);">
       <div>
         <h2 class="font-serif" style="font-size:clamp(1.4rem, 3vw, 2rem); font-weight:400; letter-spacing:-0.01em; margin:0 0 0.5rem;">
@@ -764,11 +969,10 @@
 
     <hr class="dim" style="margin-bottom:2.5rem;">
 
-    <!-- Footer bottom -->
     <div class="footer-bottom" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem;">
       <div>
-        <a href="#" class="nav-logo" style="font-size:17px;">Maison Noir</a>
-        <p style="font-size:11px; color:var(--muted); margin:8px 0 0; letter-spacing:0.03em;">&copy; 2026 Maison Noir. All rights reserved.</p>
+        <a href="#" class="nav-logo" style="font-size:17px;">Aurora Spirits</a>
+        <p style="font-size:11px; color:var(--muted); margin:8px 0 0; letter-spacing:0.03em;">&copy; 2026 Aurora Spirits. All rights reserved.</p>
       </div>
 
       <div style="display:flex; gap:2.5rem; align-items:center;">
@@ -782,55 +986,80 @@
 </footer>
 
 
-<!-- ── Scroll-triggered animation controller ─────────── -->
+<!-- ── Age Gate + Scroll Animation Controller ─────────── -->
 <script>
 (function () {
   'use strict';
 
-  // IntersectionObserver for split-line reveals
-  const splitObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
+  // Age gate logic
+  var gate = document.getElementById('ageGate');
+  var yesBtn = document.getElementById('ageYes');
+  var noBtn = document.getElementById('ageNo');
 
-      const container = entry.target;
-      const inners = container.querySelectorAll('.split-inner');
+  function dismissGate() {
+    gate.classList.add('dismissed');
+    document.body.classList.remove('gate-locked');
+    // Start scroll animations after gate is dismissed
+    initScrollAnimations();
+  }
 
-      inners.forEach((el) => {
-        const stagger = parseInt(el.dataset.stagger || '0', 10);
-        setTimeout(() => {
-          el.classList.add('revealed');
-        }, stagger * 120);
+  yesBtn.addEventListener('click', dismissGate);
+
+  noBtn.addEventListener('click', function () {
+    // Redirect to a neutral page or show message
+    gate.querySelector('.age-gate-question').textContent = 'Sorry, you must be of legal drinking age to enter.';
+    gate.querySelector('.age-gate-buttons').style.display = 'none';
+  });
+
+  // Focus trap for accessibility
+  yesBtn.focus();
+
+  function initScrollAnimations() {
+    // IntersectionObserver for split-line reveals
+    var splitObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+
+        var container = entry.target;
+        var inners = container.querySelectorAll('.split-inner');
+
+        inners.forEach(function (el) {
+          var stagger = parseInt(el.dataset.stagger || '0', 10);
+          setTimeout(function () {
+            el.classList.add('revealed');
+          }, stagger * 50);
+        });
+
+        splitObserver.unobserve(container);
       });
-
-      splitObserver.unobserve(container);
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -80px 0px'
     });
-  }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -80px 0px'
-  });
 
-  // Observe all containers that hold split-inner elements
-  document.querySelectorAll('h1, h2, blockquote').forEach((el) => {
-    if (el.querySelector('.split-inner')) {
-      splitObserver.observe(el);
-    }
-  });
-
-  // IntersectionObserver for fade-up reveals
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('visible');
-      fadeObserver.unobserve(entry.target);
+    // Observe all containers that hold split-inner elements
+    document.querySelectorAll('h1, h2, blockquote').forEach(function (el) {
+      if (el.querySelector('.split-inner')) {
+        splitObserver.observe(el);
+      }
     });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -60px 0px'
-  });
 
-  document.querySelectorAll('.fade-up').forEach((el) => {
-    fadeObserver.observe(el);
-  });
+    // IntersectionObserver for fade-up reveals
+    var fadeObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -60px 0px'
+    });
+
+    document.querySelectorAll('.fade-up').forEach(function (el) {
+      fadeObserver.observe(el);
+    });
+  }
 })();
 </script>
 

@@ -1,541 +1,1197 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>048 — Candy Glass v2</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>058 — Candy Glass</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            heading: ['"Space Grotesk"', 'sans-serif'],
-            body: ['"DM Sans"', 'sans-serif'],
-          },
-          colors: {
-            surface: '#fdf4ff',
-            candy: {
-              pink: '#f9a8d4',
-              lilac: '#c4b5fd',
-              mint: '#6ee7b7',
-              peach: '#fcd34d',
-              sky: '#93c5fd',
-            },
-            ink: '#1e1b4b',
-            muted: '#7c7399',
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2fb157;
+      --green-dark: #27994b;
+      --black: #1a1a1a;
+      --gray-900: #2d2d2d;
+      --gray-700: #4a4a4a;
+      --gray-600: #6b6b6b;
+      --gray-500: #888;
+      --gray-400: #a0a0a0;
+      --gray-300: #ccc;
+      --gray-200: #e5e5e5;
+      --gray-150: #eee;
+      --gray-100: #f5f5f5;
+      --gray-50: #fafafa;
+      --white: #ffffff;
+    }
+
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: #fdf4ff;
-      color: #1e1b4b;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--white);
+      color: var(--black);
       overflow-x: hidden;
-    }
-    h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
-
-    /* Floating candy blobs */
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.3;
-      pointer-events: none;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    @keyframes blobFloat1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -20px) scale(1.1); }
-      66% { transform: translate(-20px, 15px) scale(0.95); }
-    }
-    @keyframes blobFloat2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(-25px, 25px) scale(1.05); }
-      66% { transform: translate(15px, -30px) scale(0.9); }
-    }
-    @keyframes blobFloat3 {
-      0%, 100% { transform: translate(0, 0) scale(0.95); }
-      50% { transform: translate(20px, 20px) scale(1.1); }
+    /* ── Header ── */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
     }
 
-    .blob-1 { animation: blobFloat1 12s ease-in-out infinite; }
-    .blob-2 { animation: blobFloat2 15s ease-in-out infinite; }
-    .blob-3 { animation: blobFloat3 10s ease-in-out infinite; }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-    /* Frosted glass card */
-    .glass-card {
-      background: linear-gradient(135deg, rgba(249,168,212,0.15), rgba(196,181,253,0.15));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.5);
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 19px;
+      color: var(--black);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-icon {
+      width: 30px;
+      height: 30px;
+      background: var(--green);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
-      overflow: hidden;
-      border-radius: 16px;
     }
 
-    /* Rainbow refraction border */
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 17px;
-      padding: 1.5px;
-      background: linear-gradient(135deg, #f9a8d4, #c4b5fd, #6ee7b7, #93c5fd, #fcd34d, #f9a8d4);
-      background-size: 300% 300%;
-      animation: rainbowBorder 6s linear infinite;
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      z-index: 0;
-    }
-    @keyframes rainbowBorder {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 300% 50%; }
+    .logo-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--white);
     }
 
-    .glass-card > * { position: relative; z-index: 1; }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
 
-    /* Alt glass card for variety */
-    .glass-card-mint {
-      background: linear-gradient(135deg, rgba(110,231,183,0.15), rgba(147,197,253,0.15));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.5);
+    .nav a {
+      text-decoration: none;
+      color: var(--gray-900);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav a:hover { color: var(--black); }
+
+    .nav-dropdown {
       position: relative;
-      overflow: hidden;
-      border-radius: 16px;
+      cursor: pointer;
     }
-    .glass-card-mint::before {
+
+    .nav-dropdown::after {
       content: '';
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-left: 3.5px solid transparent;
+      border-right: 3.5px solid transparent;
+      border-top: 3.5px solid var(--gray-500);
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-700);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .header-link:hover { color: var(--black); }
+
+    .btn-signup {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background: var(--green);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .btn-signup:hover { background: var(--green-dark); }
+
+    .btn-demo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background: transparent;
+      color: var(--gray-900);
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+
+    .btn-demo:hover {
+      border-color: var(--gray-300);
+      background: var(--gray-50);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding-top: 108px;
+      padding-bottom: 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-left: 40px;
+      padding-right: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .hero-left {
+      padding-top: 44px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: var(--gray-100);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-600);
+      margin-bottom: 20px;
+    }
+
+    .hero-badge strong {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -2.5px;
+      color: var(--black);
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 32px;
+      background: var(--green);
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-cta:hover { background: var(--green-dark); }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 28px;
+    }
+
+    .hero-ratings {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .rating-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rating-stars {
+      display: flex;
+      gap: 1px;
+    }
+
+    .star {
+      width: 15px;
+      height: 15px;
+      color: #f59e0b;
+    }
+
+    .rating-info {
+      line-height: 1.3;
+    }
+
+    .rating-score {
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    .rating-score strong {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    .rating-platform {
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    /* ── Hero Right: Editor Preview ── */
+    .hero-right {
+      position: relative;
+      padding-top: 12px;
+    }
+
+    .editor-frame {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    .editor-titlebar {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-50);
+      gap: 7px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .url-bar {
+      flex: 1;
+      margin-left: 10px;
+      height: 26px;
+      background: var(--white);
+      border-radius: 5px;
+      border: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      min-height: 320px;
+    }
+
+    .editor-panel {
+      border-right: 1px solid var(--gray-200);
+      padding: 14px;
+      background: var(--white);
+    }
+
+    .panel-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--gray-400);
+      margin-bottom: 8px;
+    }
+
+    .panel-group { margin-bottom: 14px; }
+
+    .panel-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 9px;
+      border-radius: 5px;
+      font-size: 12px;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .panel-row:hover { background: var(--gray-100); }
+
+    .panel-row.active {
+      background: rgba(47,177,87,0.08);
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .panel-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      border: 1.5px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .panel-icon svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .editor-canvas {
+      padding: 20px;
+      background: var(--gray-100);
+      position: relative;
+    }
+
+    .email-card {
+      background: var(--white);
+      border-radius: 6px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      overflow: hidden;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .email-card-header {
+      height: 44px;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+
+    .email-card-body { padding: 16px; }
+
+    .email-img {
+      width: 100%;
+      height: 88px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .email-img svg {
+      width: 28px;
+      height: 28px;
+      color: var(--green);
+      opacity: 0.4;
+    }
+
+    .skel { height: 7px; background: var(--gray-200); border-radius: 3px; margin-bottom: 7px; }
+    .skel-80 { width: 80%; }
+    .skel-60 { width: 60%; }
+    .skel-100 { width: 100%; }
+
+    .email-card-btn {
+      display: inline-block;
+      padding: 7px 20px;
+      background: var(--green);
+      border-radius: 4px;
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .drag-dots {
       position: absolute;
-      inset: -1px;
-      border-radius: 17px;
-      padding: 1.5px;
-      background: linear-gradient(135deg, #6ee7b7, #93c5fd, #c4b5fd, #f9a8d4, #6ee7b7);
-      background-size: 300% 300%;
-      animation: rainbowBorder 8s linear infinite;
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      z-index: 0;
-    }
-    .glass-card-mint > * { position: relative; z-index: 1; }
-
-    /* Scroll reveal */
-    .candy-reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .candy-reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .candy-delay-1 { transition-delay: 0.12s; }
-    .candy-delay-2 { transition-delay: 0.24s; }
-    .candy-delay-3 { transition-delay: 0.36s; }
-    .candy-delay-4 { transition-delay: 0.48s; }
-
-    /* CTA shimmer */
-    @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
-    .cta-shimmer {
-      background: linear-gradient(90deg, #c4b5fd, #f9a8d4, #6ee7b7, #c4b5fd);
-      background-size: 200% auto;
-      animation: shimmer 4s linear infinite;
-      color: #1e1b4b;
+      top: 72px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
 
-    /* Hover lift */
-    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(196,181,253,0.2); }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Animated Gradient Mesh */
-    @keyframes meshShift1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.15)} 66%{transform:translate(-30px,30px) scale(0.9)} }
-    @keyframes meshShift2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-60px,50px) scale(0.95)} }
-    @keyframes meshShift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,40px)} 66%{transform:translate(-40px,-20px)} }
-    .mesh-blob { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
-    .mesh-blob-1 { animation:meshShift1 15s ease-in-out infinite; }
-    .mesh-blob-2 { animation:meshShift2 18s ease-in-out infinite; }
-    .mesh-blob-3 { animation:meshShift3 20s ease-in-out infinite; }
-  
+    .drag-handle {
+      width: 26px;
+      height: 26px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 5px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+    }
 
-    /* Spring Animations */
-    .spring-entrance { transition:transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease; }
-    .spring-bounce:hover { transform:translateY(-4px); transition:transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
-  
+    .drag-handle svg {
+      width: 12px;
+      height: 12px;
+      color: var(--gray-400);
+    }
 
-    /* Elastic/Spring Animations */
-    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
-    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  
+    .drag-stem {
+      width: 1px;
+      height: 36px;
+      background: var(--gray-200);
+    }
+
+    /* ── Logo Bar ── */
+    .logo-bar {
+      border-top: 1px solid var(--gray-200);
+      padding: 36px 40px 40px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .logo-bar-label {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .logo-bar-label strong {
+      color: var(--gray-600);
+    }
+
+    .logos-row {
+      display: flex;
+      align-items: center;
+      gap: 44px;
+      flex-wrap: wrap;
+    }
+
+    .logo-mark {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gray-400);
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      user-select: none;
+    }
+
+    .logo-mark .sym { font-size: 20px; }
+
+    /* ── Features ── */
+    .features {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 72px 40px;
+    }
+
+    .features-head {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .features-head h2 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .features-head p {
+      font-size: 15px;
+      color: var(--gray-600);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feat {
+      padding: 28px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .feat:hover {
+      border-color: var(--gray-300);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    .feat-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gray-100);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .feat-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--green);
+    }
+
+    .feat h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .feat p {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      background: var(--gray-100);
+      padding: 56px 40px;
+    }
+
+    .stats-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+
+    .stats-grid h3 {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+
+    .stats-grid p {
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 72px 40px;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      font-size: 15px;
+      color: var(--gray-600);
+      margin-bottom: 28px;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btns {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 28px;
+      background: transparent;
+      color: var(--gray-900);
+      font-size: 15px;
+      font-weight: 500;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gray-300);
+      background: var(--gray-50);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--gray-200);
+      padding: 44px 40px 28px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .footer-cols {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .logo { margin-bottom: 10px; }
+
+    .footer-brand p {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.6;
+      max-width: 260px;
+    }
+
+    .footer-col h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--black);
+      margin-bottom: 14px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 13px;
+      color: var(--gray-600);
+      text-decoration: none;
+      margin-bottom: 9px;
+      transition: color 0.12s;
+    }
+
+    .footer-col a:hover { color: var(--black); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .footer-bottom p {
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    .footer-badges {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge svg {
+      width: 10px;
+      height: 10px;
+      color: var(--green);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .social-links a {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: all 0.12s;
+    }
+
+    .social-links a:hover {
+      border-color: var(--gray-300);
+      color: var(--black);
+    }
+
+    .social-links a svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ── Cookie Banner ── */
+    .cookie-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.18);
+      z-index: 199;
+      animation: fadeUp 0.25s ease;
+    }
+
+    .cookie-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.06);
+      padding: 24px 28px;
+      max-width: 400px;
+      width: 90%;
+      z-index: 200;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translate(-50%, -48%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .cookie-modal h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .cookie-modal p {
+      font-size: 12px;
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .cookie-modal p a {
+      color: var(--green);
+      text-decoration: underline;
+    }
+
+    .cookie-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cookie-btns button {
+      flex: 1;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .cookie-btns .btn-custom {
+      background: var(--white);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-200);
+    }
+
+    .cookie-btns .btn-custom:hover {
+      border-color: var(--gray-300);
+      background: var(--gray-50);
+    }
+
+    .cookie-btns .btn-ok {
+      background: var(--green);
+      color: var(--white);
+      border: none;
+    }
+
+    .cookie-btns .btn-ok:hover {
+      background: var(--green-dark);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floating blobs background -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div class="blob blob-1" style="width: 400px; height: 400px; background: #f9a8d4; top: 10%; left: -5%;"></div>
-    <div class="blob blob-2" style="width: 350px; height: 350px; background: #c4b5fd; top: 40%; right: -8%;"></div>
-    <div class="blob blob-3" style="width: 300px; height: 300px; background: #6ee7b7; bottom: 10%; left: 30%;"></div>
-    <div class="blob blob-1" style="width: 250px; height: 250px; background: #93c5fd; top: 60%; left: 10%; animation-delay: -5s;"></div>
-    <div class="blob blob-2" style="width: 320px; height: 320px; background: #fcd34d; top: 20%; right: 25%; opacity: 0.15; animation-delay: -3s;"></div>
-  </div>
-
-  <!-- Nav -->
-  <nav class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-between" style="background: rgba(253,244,255,0.7); backdrop-filter: blur(16px);">
-    <span class="font-heading text-xl text-ink">candy<span class="text-candy-lilac">.</span></span>
-    <div class="flex items-center gap-6">
-      <a href="#features" class="text-sm text-muted hover:text-ink transition-colors">Features</a>
-      <a href="#pricing" class="text-sm text-muted hover:text-ink transition-colors">Pricing</a>
-      <a href="#start" class="cta-shimmer px-5 py-2 text-sm font-bold rounded-full hover:opacity-90 transition-opacity">Get Started</a>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="#">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M4 4l16 16M20 4L4 20" opacity="0"/><rect x="7" y="7" width="10" height="10" rx="1" fill="white" stroke="none"/></svg>
+        </div>
+        MailForge
+      </a>
+      <nav class="nav">
+        <a href="#" class="nav-dropdown">Product</a>
+        <a href="#">Email Templates</a>
+        <a href="#" class="nav-dropdown">Resources</a>
+        <a href="#">Pricing</a>
+      </nav>
+      <div class="header-right">
+        <a class="header-link" href="#">Talk to Sales</a>
+        <a class="header-link" href="#">Login</a>
+        <a class="btn-signup" href="#">Sign Up</a>
+        <a class="btn-demo" href="#">Try Demo Editor</a>
+      </div>
     </div>
-  </nav>
+  </header>
 
   <!-- Hero -->
-  <section class="min-h-screen flex items-center justify-center px-6 pt-20 pb-16 relative z-10">
-    <div class="text-center max-w-2xl">
-      <p class="candy-reveal text-sm text-muted tracking-wide mb-6">Design tools that feel like play</p>
-      <h1 class="candy-reveal candy-delay-1 text-5xl md:text-7xl font-heading text-ink mb-8 leading-tight">
-        Make beautiful<br>things, beautifully.
-      </h1>
-      <p class="candy-reveal candy-delay-2 text-base text-muted max-w-md mx-auto leading-relaxed mb-10">
-        A creative workspace wrapped in frosted glass and soft gradients.
-        Because the tool you use should inspire, not bore.
-      </p>
-      <div class="candy-reveal candy-delay-3 flex gap-4 justify-center flex-wrap">
-        <a href="#start" class="cta-shimmer px-8 py-3 font-heading font-bold rounded-full text-sm hover:opacity-90 transition-opacity">
-          Try for free
-        </a>
-        <a href="#features" class="glass-card px-8 py-3 text-sm text-ink hover-lift">
-          <span>See features</span>
-        </a>
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-badge"><strong>65%</strong>&nbsp;of Fortune 100 use MailForge</div>
+      <h1>Drag-N-Drop HTML Email Template Builder</h1>
+
+      <div class="hero-cta-row">
+        <a class="btn-cta" href="#">Get Started Free</a>
       </div>
+      <p class="hero-note">No credit card required</p>
+
+      <div class="hero-ratings">
+        <div class="rating-item">
+          <div class="rating-stars">
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <div class="rating-info">
+            <span class="rating-score"><strong>4.8</strong> on G2</span><br>
+            <span class="rating-platform">161 reviews</span>
+          </div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-stars">
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <div class="rating-info">
+            <span class="rating-score"><strong>4.9</strong> on Capterra</span><br>
+            <span class="rating-platform">95 reviews</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor Preview -->
+    <div class="hero-right">
+      <div class="editor-frame">
+        <div class="editor-titlebar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <div class="url-bar">app.mailforge.io/editor</div>
+        </div>
+        <div class="editor-layout">
+          <div class="editor-panel">
+            <div class="panel-group">
+              <div class="panel-label">Content</div>
+              <div class="panel-row active">
+                <div class="panel-icon">T</div>
+                Text
+              </div>
+              <div class="panel-row">
+                <div class="panel-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+                Image
+              </div>
+              <div class="panel-row">
+                <div class="panel-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="8" rx="2"/></svg>
+                </div>
+                Button
+              </div>
+              <div class="panel-row">
+                <div class="panel-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+                </div>
+                Divider
+              </div>
+            </div>
+            <div class="panel-group">
+              <div class="panel-label">Layout</div>
+              <div class="panel-row">
+                <div class="panel-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+                </div>
+                2 Column
+              </div>
+              <div class="panel-row">
+                <div class="panel-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                </div>
+                3 Column
+              </div>
+            </div>
+          </div>
+          <div class="editor-canvas">
+            <div class="email-card">
+              <div class="email-card-header">MailForge</div>
+              <div class="email-card-body">
+                <div class="email-img">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+                <div class="skel skel-100"></div>
+                <div class="skel skel-80"></div>
+                <div class="skel skel-60"></div>
+                <div class="email-card-btn">Shop Now</div>
+              </div>
+            </div>
+            <div class="drag-dots">
+              <div class="drag-handle">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>
+              </div>
+              <div class="drag-stem"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logo Bar -->
+  <section class="logo-bar">
+    <p class="logo-bar-label"><strong>65% of Fortune 100</strong> use MailForge</p>
+    <div class="logos-row">
+      <div class="logo-mark"><span class="sym" style="color:#0067b8">&#9733;</span> MAERSK</div>
+      <div class="logo-mark"><span class="sym" style="color:#ff5a5f">&#9670;</span> airbnb</div>
+      <div class="logo-mark"><span class="sym" style="color:#cf0a2c">&#9679;</span> HUAWEI</div>
+      <div class="logo-mark"><span class="sym" style="color:#ff0000">&#9650;</span> Adobe</div>
+      <div class="logo-mark"><span class="sym" style="color:#00a4ef">&#9632;</span> Microsoft</div>
+      <div class="logo-mark"><span class="sym" style="color:#1db954">&#9679;</span> Spotify</div>
     </div>
   </section>
 
   <!-- Features -->
-  <section id="features" class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="candy-reveal text-sm text-muted tracking-wide mb-4">What's inside</p>
-        <h2 class="candy-reveal candy-delay-1 text-4xl md:text-5xl font-heading text-ink">Unwrap the features</h2>
+  <section class="features">
+    <div class="features-head">
+      <h2>Build emails faster</h2>
+      <p>Everything you need to create professional HTML emails without writing a single line of code.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Drag-and-drop editor</h3>
+        <p>Build responsive email templates visually. No coding skills required — just drag, drop, and customize.</p>
       </div>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="candy-reveal candy-delay-1 glass-card p-8 hover-lift">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-candy-pink to-candy-lilac flex items-center justify-center mb-5">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-heading text-xl text-ink mb-3">Visual Canvas</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Infinite canvas with snap-to-grid. Drag components like building blocks.
-            Real-time preview updates in under 200ms — no lag, no loading spinner.
-          </p>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
-        <div class="candy-reveal candy-delay-2 glass-card-mint p-8 hover-lift">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-candy-mint to-candy-sky flex items-center justify-center mb-5">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-          </div>
-          <h3 class="font-heading text-xl text-ink mb-3">Smart Palettes</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            AI-generated color harmony from a single seed color.
-            Export as CSS variables, Tailwind config, or Figma tokens.
-            Accessibility contrast checker built in.
-          </p>
+        <h3>1500+ email templates</h3>
+        <p>Start from a professionally designed template. Customize colors, fonts, and layouts to match your brand.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <div class="candy-reveal candy-delay-3 glass-card-mint p-8 hover-lift">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-candy-sky to-candy-lilac flex items-center justify-center mb-5">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </div>
-          <h3 class="font-heading text-xl text-ink mb-3">One-Click Export</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Export production-ready code. Not "code-like output" — actual clean HTML/CSS
-            that passes W3C validation. Your devs won't rewrite it.
-          </p>
+        <h3>Brand guidelines</h3>
+        <p>Lock brand colors, fonts, and logo. Every team member creates on-brand emails automatically.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
         </div>
-        <div class="candy-reveal candy-delay-4 glass-card p-8 hover-lift">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-candy-peach to-candy-pink flex items-center justify-center mb-5">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <h3 class="font-heading text-xl text-ink mb-3">Team Spaces</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Shared design tokens, component library, brand guidelines —
-            all in one workspace. Changes propagate to every project in the space.
-          </p>
+        <h3>HTML &amp; AMP email</h3>
+        <p>Export clean, compatible HTML. Support for AMP emails with interactive carousels and forms.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
+        <h3>Team collaboration</h3>
+        <p>Invite your team. Review, comment, and approve emails before they go live. Built-in roles and permissions.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>70+ integrations</h3>
+        <p>Push emails directly to Mailchimp, HubSpot, Salesforce, and 67 more ESPs with one click.</p>
       </div>
     </div>
   </section>
 
-  <!-- Product mockup -->
-  <section class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-4xl mx-auto">
-      <div class="candy-reveal glass-card p-3 hover-lift">
-        <div class="bg-white rounded-xl overflow-hidden" style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
-          <!-- Browser chrome -->
-          <div class="px-4 py-3 bg-gradient-to-r from-fuchsia-50 to-violet-50 flex items-center gap-2 border-b border-violet-100">
-            <div class="flex gap-1.5">
-              <div class="w-2.5 h-2.5 rounded-full bg-candy-pink opacity-60"></div>
-              <div class="w-2.5 h-2.5 rounded-full bg-candy-peach opacity-60"></div>
-              <div class="w-2.5 h-2.5 rounded-full bg-candy-mint opacity-60"></div>
-            </div>
-            <div class="flex-1 text-center">
-              <div class="inline-block bg-white px-4 py-1 rounded-full text-xs text-muted">candy.app/workspace</div>
-            </div>
-          </div>
-          <!-- Mock UI -->
-          <div class="p-6 md:p-10">
-            <div class="grid grid-cols-12 gap-4">
-              <div class="col-span-3 space-y-3">
-                <div class="h-3 bg-violet-50 rounded-full w-4/5"></div>
-                <div class="h-3 bg-fuchsia-50 rounded-full w-3/5"></div>
-                <div class="h-3 bg-violet-50 rounded-full w-full"></div>
-                <div class="h-3 bg-fuchsia-50 rounded-full w-2/3"></div>
-                <div class="h-px bg-violet-100 my-4"></div>
-                <div class="h-3 bg-violet-50 rounded-full w-4/5"></div>
-                <div class="h-3 bg-violet-50 rounded-full w-1/2"></div>
-              </div>
-              <div class="col-span-6">
-                <div class="aspect-video bg-gradient-to-br from-fuchsia-50 to-violet-50 rounded-2xl flex items-center justify-center mb-4">
-                  <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-candy-pink to-candy-lilac opacity-40"></div>
-                </div>
-                <div class="space-y-2">
-                  <div class="h-2 bg-violet-50 rounded-full w-full"></div>
-                  <div class="h-2 bg-violet-50 rounded-full w-3/4"></div>
-                </div>
-              </div>
-              <div class="col-span-3 space-y-3">
-                <div class="p-3 bg-gradient-to-br from-fuchsia-50 to-violet-50 rounded-2xl">
-                  <div class="h-2 bg-candy-pink rounded-full w-2/3 opacity-30 mb-2"></div>
-                  <div class="h-2 bg-candy-lilac rounded-full w-full opacity-30"></div>
-                </div>
-                <div class="p-3 bg-gradient-to-br from-emerald-50 to-sky-50 rounded-2xl">
-                  <div class="h-2 bg-candy-mint rounded-full w-3/4 opacity-30 mb-2"></div>
-                  <div class="h-2 bg-candy-sky rounded-full w-1/2 opacity-30"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div>
+        <h3>1.7M+</h3>
+        <p>Users worldwide</p>
       </div>
-    </div>
-  </section>
-
-  <!-- How it works -->
-  <section class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="candy-reveal text-sm text-muted tracking-wide mb-4">From idea to production</p>
-        <h2 class="candy-reveal candy-delay-1 text-4xl md:text-5xl font-heading text-ink">Three steps</h2>
+      <div>
+        <h3>1650+</h3>
+        <p>Email templates</p>
       </div>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="candy-reveal candy-delay-1 text-center">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-candy-pink to-candy-lilac flex items-center justify-center mx-auto mb-5">
-            <span class="text-white font-heading font-bold text-lg">1</span>
-          </div>
-          <h3 class="font-heading text-lg text-ink mb-3">Design visually</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Drag, drop, arrange. The canvas responds in real-time.
-            Every change previews instantly — what you see is exactly what ships.
-          </p>
-        </div>
-        <div class="candy-reveal candy-delay-2 text-center">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-candy-mint to-candy-sky flex items-center justify-center mx-auto mb-5">
-            <span class="text-white font-heading font-bold text-lg">2</span>
-          </div>
-          <h3 class="font-heading text-lg text-ink mb-3">Refine tokens</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Colors, spacing, typography — all managed as tokens.
-            Change your primary color once. Every component updates everywhere.
-          </p>
-        </div>
-        <div class="candy-reveal candy-delay-3 text-center">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-candy-peach to-candy-pink flex items-center justify-center mx-auto mb-5">
-            <span class="text-white font-heading font-bold text-lg">3</span>
-          </div>
-          <h3 class="font-heading text-lg text-ink mb-3">Export clean code</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            One click. Production-ready HTML/CSS.
-            No bloated markup, no inline styles, no !important hacks.
-            Your developers will thank you.
-          </p>
-        </div>
+      <div>
+        <h3>90+</h3>
+        <p>ESP integrations</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Testimonial -->
-  <section class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-3xl mx-auto text-center">
-      <p class="candy-reveal text-sm text-muted tracking-wide mb-12">What people actually say</p>
-      <div class="candy-reveal candy-delay-1 mb-16">
-        <h2 class="text-2xl md:text-3xl font-heading text-ink leading-relaxed mb-6 italic">
-          "Switched from Figma for small projects. The export quality shocked me —
-          I expected to rewrite everything but the CSS was cleaner than what I'd write manually.
-          That never happens."
-        </h2>
-        <p class="text-sm text-muted">
-          — front-end freelancer, portfolio has 23 sites built with it
-        </p>
-      </div>
-      <div class="candy-reveal candy-delay-2">
-        <h3 class="text-xl font-heading text-ink leading-relaxed mb-4 italic">
-          "The palette generator alone saved me 2 hours per project.
-          I used to agonize over color combinations. Now I pick a seed and let it harmonize."
-        </h3>
-        <p class="text-sm text-muted">
-          — brand designer, agency, 7 client projects completed
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing -->
-  <section id="pricing" class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="candy-reveal text-sm text-muted tracking-wide mb-4">Pick your flavor</p>
-        <h2 class="candy-reveal candy-delay-1 text-4xl md:text-5xl font-heading text-ink">Sweet and simple</h2>
-      </div>
-      <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-        <div class="candy-reveal candy-delay-1 glass-card p-8 hover-lift">
-          <p class="text-sm text-muted tracking-wide uppercase mb-2">Solo</p>
-          <p class="text-4xl font-heading text-ink mb-1">[your price]</p>
-          <p class="text-xs text-muted mb-6">per month</p>
-          <ul class="space-y-3 text-sm text-muted mb-8">
-            <li class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-candy-mint"></span>
-              Unlimited personal projects
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-candy-mint"></span>
-              All export formats
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-candy-mint"></span>
-              Community components
-            </li>
-          </ul>
-          <a href="#" class="block text-center border border-candy-lilac text-ink py-2.5 rounded-full text-sm hover:bg-candy-lilac hover:bg-opacity-20 transition-all">
-            Start free trial
-          </a>
-        </div>
-        <div class="candy-reveal candy-delay-2 glass-card-mint p-8 hover-lift" style="background: linear-gradient(135deg, rgba(196,181,253,0.2), rgba(249,168,212,0.2));">
-          <p class="text-sm text-muted tracking-wide uppercase mb-2">Team</p>
-          <p class="text-4xl font-heading text-ink mb-1">[your price]</p>
-          <p class="text-xs text-muted mb-6">per seat / month</p>
-          <ul class="space-y-3 text-sm text-muted mb-8">
-            <li class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-candy-pink"></span>
-              Shared design tokens
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-candy-pink"></span>
-              Team component library
-            </li>
-            <li class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-candy-pink"></span>
-              Priority support + API
-            </li>
-          </ul>
-          <a href="#" class="block text-center cta-shimmer py-2.5 rounded-full text-sm font-bold">
-            Start team trial
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-3xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="candy-reveal text-sm text-muted tracking-wide mb-4">Common questions</p>
-        <h2 class="candy-reveal candy-delay-1 text-4xl md:text-5xl font-heading text-ink">Quick answers</h2>
-      </div>
-      <div class="space-y-6 max-w-xl mx-auto">
-        <div class="candy-reveal candy-delay-1 glass-card p-6 hover-lift">
-          <h3 class="font-heading text-base text-ink mb-2">Can I use it with my existing design system?</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Yes. Import your Figma tokens, Tailwind config, or CSS custom properties.
-            Candy adapts to your system — it doesn't replace it.
-          </p>
-        </div>
-        <div class="candy-reveal candy-delay-2 glass-card-mint p-6 hover-lift">
-          <h3 class="font-heading text-base text-ink mb-2">Is the exported code responsive?</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Every export includes mobile, tablet, and desktop breakpoints.
-            We use modern CSS (container queries, clamp()) so it scales
-            smoothly instead of jumping between fixed sizes.
-          </p>
-        </div>
-        <div class="candy-reveal candy-delay-3 glass-card p-6 hover-lift">
-          <h3 class="font-heading text-base text-ink mb-2">What about accessibility?</h3>
-          <p class="text-sm text-muted leading-relaxed">
-            Built-in contrast checker warns you before you ship.
-            ARIA labels auto-generated for interactive elements.
-            We aim for WCAG AA minimum on every export.
-          </p>
-        </div>
+      <div>
+        <h3>65%</h3>
+        <p>Fortune 100 companies</p>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section id="start" class="px-6 py-24 md:py-32 relative z-10">
-    <div class="max-w-xl mx-auto text-center">
-      <div class="candy-reveal glass-card p-10 md:p-14">
-        <h2 class="text-3xl md:text-4xl font-heading text-ink mb-4">Start creating</h2>
-        <p class="text-sm text-muted leading-relaxed mb-8">
-          Free forever for personal use. No card required.
-          Your first project takes about 3 minutes to set up.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3 items-center justify-center">
-          <input type="email" placeholder="you@email.com" class="w-full sm:w-auto flex-1 px-5 py-3 rounded-full border border-candy-lilac bg-white bg-opacity-60 text-sm focus:outline-none focus:border-candy-pink transition-colors placeholder:text-muted" />
-          <a href="#" class="cta-shimmer px-8 py-3 rounded-full text-sm font-bold whitespace-nowrap hover:opacity-90 transition-opacity">
-            Get access
-          </a>
-        </div>
-      </div>
+  <section class="cta">
+    <h2>Join over 1,700,000 users</h2>
+    <p>Create professional emails in minutes, not hours. No coding required.</p>
+    <div class="cta-btns">
+      <a class="btn-cta" href="#">Get Started Free</a>
+      <a class="btn-outline" href="#">Book a Demo</a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="px-6 py-8 relative z-10">
-    <div class="max-w-4xl mx-auto flex justify-between items-center text-xs text-muted">
-      <span class="font-heading text-sm text-ink">candy<span class="text-candy-lilac">.</span></span>
-      <span>© 2026</span>
+  <footer class="footer">
+    <div class="footer-cols">
+      <div class="footer-brand">
+        <a class="logo" href="#">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="7" y="7" width="10" height="10" rx="1" fill="white" stroke="none"/></svg>
+          </div>
+          MailForge
+        </a>
+        <p>The email design platform trusted by teams at leading companies worldwide. Build, test, and export emails from one place.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Email Editor</a>
+        <a href="#">Email Templates</a>
+        <a href="#">AMP Emails</a>
+        <a href="#">Integrations</a>
+        <a href="#">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Blog</a>
+        <a href="#">Help Center</a>
+        <a href="#">API Docs</a>
+        <a href="#">Email Courses</a>
+        <a href="#">Webinars</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+        <a href="#">Security</a>
+        <a href="#">Legal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 MailForge Inc. All rights reserved.</p>
+      <div class="footer-badges">
+        <span class="badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          GDPR
+        </span>
+        <span class="badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          SOC 2
+        </span>
+        <span class="badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          ISO 27001
+        </span>
+      </div>
+      <div class="social-links">
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.83 1.08A4.48 4.48 0 0 0 12 4.53v1A10.66 10.66 0 0 1 3 3.62s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      </div>
     </div>
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          } else {
-            entry.target.classList.remove('visible');
-          }
-        });
-      }, { threshold: 0.12 });
-
-      document.querySelectorAll('.candy-reveal').forEach(el => observer.observe(el));
-    });
-  </script>
+  <!-- Cookie Consent -->
+  <div class="cookie-overlay"></div>
+  <div class="cookie-modal">
+    <h3>Your Privacy Choice</h3>
+    <p>To provide the best experience, we use technologies like cookies to store and/or access device information. See our <a href="#">privacy policy</a> for details.</p>
+    <div class="cookie-btns">
+      <button class="btn-custom">Customize</button>
+      <button class="btn-ok">Okay</button>
+    </div>
+  </div>
 
 </body>
 </html>

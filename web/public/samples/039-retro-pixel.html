@@ -3,283 +3,938 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>039 — Green Phosphor CRT v2</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>APIForge — Unify your APIs. Govern your AI.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            heading: ['"VT323"', 'monospace'],
-            body: ['"Space Mono"', 'monospace'],
-          },
-          colors: {
-            crt: '#0a0a0a',
-            phosphor: '#00ff41',
-            dim: '#00cc33',
-            amber: '#ffb000',
-            ghost: '#003b10',
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Space Mono', monospace;
-      background: #0a0a0a;
-      color: #00ff41;
-      overflow-x: hidden;
-      margin: 0;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #10b981;
+      --green-dark: #059669;
+      --green-light: #d1fae5;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gray-950: #030712;
     }
 
-    /* CRT curvature */
-    .crt-screen {
-      border-radius: 24px;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fff;
+      color: var(--gray-900);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Announcement Banner */
+    .announcement-bar {
+      background: var(--gray-950);
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .announcement-bar a {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      margin-left: 6px;
+      font-weight: 600;
+    }
+    .announcement-bar a:hover { color: var(--green-light); }
+
+    /* Navigation */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 100%;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gray-900);
+      text-decoration: none;
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo svg { width: 24px; height: 24px; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--gray-900); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+    .btn-outline:hover {
+      border-color: var(--gray-400);
+      background: var(--gray-50);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray-600);
+      padding: 8px 12px;
+    }
+    .btn-ghost:hover { color: var(--gray-900); }
+
+    /* Hero */
+    .hero {
+      padding: 80px 24px 60px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      min-height: calc(100vh - 120px);
+    }
+    .hero-content { max-width: 560px; }
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--gray-950);
+      margin-bottom: 24px;
+    }
+    .hero p {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--gray-500);
+      margin-bottom: 32px;
+      max-width: 440px;
+    }
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .hero-note {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 40px;
+    }
+    .hero-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .hero-link:hover { color: var(--gray-900); }
+    .hero-link svg { width: 16px; height: 16px; transition: transform 0.2s; }
+    .hero-link:hover svg { transform: translateX(3px); }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 20px 50px -12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transform: perspective(1200px) rotateY(-2deg);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dashboard-preview:hover {
+      transform: perspective(1200px) rotateY(0deg);
+    }
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .dash-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dash-breadcrumb {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .dash-breadcrumb span { color: var(--gray-400); }
+    .dash-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 20px;
+    }
+    .dash-tab {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-400);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .dash-tab.active {
+      color: var(--gray-900);
+      border-bottom-color: var(--green);
+    }
+    .dash-body {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      min-height: 300px;
+    }
+    .dash-sidebar {
+      border-right: 1px solid var(--gray-200);
+      padding: 12px 0;
+    }
+    .dash-sidebar-item {
+      padding: 8px 20px;
+      font-size: 12px;
+      color: var(--gray-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .dash-sidebar-item:hover { background: var(--gray-50); color: var(--gray-700); }
+    .dash-sidebar-item.active { background: var(--gray-100); color: var(--gray-900); font-weight: 600; }
+    .dash-sidebar-item .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .dash-main {
+      padding: 20px;
+    }
+    .dash-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .dash-stat-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .dash-stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .dash-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+    }
+    .dash-stat-change {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--green);
+      margin-top: 4px;
+    }
+    .dash-chart {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
+      border-radius: 8px;
+      padding: 16px;
       position: relative;
+      height: 120px;
       overflow: hidden;
     }
-    .crt-screen::before {
-      content: '';
+    .dash-chart-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 12px;
+    }
+    .chart-line {
       position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
-      pointer-events: none;
-      z-index: 10;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      height: 60px;
     }
 
-    /* Scanline overlay */
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 9998;
-      background: repeating-linear-gradient(
-        transparent 0px, transparent 2px,
-        rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px
-      );
+    /* Trusted By */
+    .trusted-section {
+      padding: 60px 24px 80px;
+      text-align: center;
     }
-
-    /* Phosphor glow on all text */
-    .glow { text-shadow: 0 0 8px #00ff41, 0 0 2px #00ff41; }
-    .glow-amber { text-shadow: 0 0 8px #ffb000, 0 0 2px #ffb000; color: #ffb000; }
-
-    /* Flicker effect */
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      3% { opacity: 0.92; }
-      6% { opacity: 1; }
-      9% { opacity: 0.95; }
-      12% { opacity: 1; }
-      47% { opacity: 0.97; }
-      50% { opacity: 0.9; }
-      53% { opacity: 1; }
-      87% { opacity: 0.96; }
-      90% { opacity: 1; }
+    .trusted-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 32px;
     }
-    .flicker { animation: flicker 4s infinite; }
-
-    /* Boot sequence */
-    .boot-screen {
-      position: fixed;
-      inset: 0;
-      background: #0a0a0a;
-      z-index: 10000;
+    .trusted-logos {
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.8s ease;
+      gap: 48px;
+      flex-wrap: wrap;
+      max-width: 900px;
+      margin: 0 auto;
+      opacity: 0.4;
     }
-    .boot-screen.done {
-      opacity: 0;
+    .trusted-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-500);
+      letter-spacing: -0.02em;
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 100px 24px;
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .features-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 64px;
+    }
+    .features-header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .features-header h2 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--gray-950);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    .features-header p {
+      font-size: 16px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 32px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px -8px rgba(0,0,0,0.08);
+      border-color: var(--gray-300);
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--green-light);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-icon svg { width: 20px; height: 20px; color: var(--green); }
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--gray-500);
+    }
+
+    /* Architecture Section */
+    .arch-section {
+      padding: 100px 24px;
+    }
+    .arch-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .arch-content h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--gray-950);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+    .arch-content p {
+      font-size: 15px;
+      color: var(--gray-500);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .arch-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .arch-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+    .arch-list li svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; margin-top: 2px; }
+    .arch-visual {
+      background: var(--gray-950);
+      border-radius: 12px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-visual::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 30% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
       pointer-events: none;
     }
-    @keyframes bootType {
-      from { width: 0; }
-      to { width: 100%; }
+    .arch-node {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
     }
-    .boot-line {
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 2px solid #00ff41;
-      animation: bootType 0.6s steps(30) forwards;
-      opacity: 0;
+    .arch-node:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(16, 185, 129, 0.3);
     }
-    .boot-line.show { opacity: 1; }
+    .arch-node-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .arch-node-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+    .arch-node-meta {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      margin-left: auto;
+    }
+    .arch-connector {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      margin: 0 auto;
+    }
+    .arch-center-node {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+    .arch-center-node span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+    }
 
-    /* Cursor blink */
-    @keyframes cursorBlink { 50% { border-color: transparent; } }
-    .boot-cursor { animation: cursorBlink 0.8s step-end infinite; }
-
-    /* Scroll reveal with glow-in */
-    .crt-reveal {
-      opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+    /* Metrics Section */
+    .metrics-section {
+      padding: 80px 24px;
+      background: var(--gray-950);
+      color: #fff;
     }
-    .crt-reveal.visible {
+    .metrics-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .metrics-container h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 48px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    .metric-item {
+      padding: 24px;
+    }
+    .metric-value {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+    .metric-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.4;
+    }
+
+    /* Testimonials */
+    .testimonials-section {
+      padding: 100px 24px;
+      background: #fff;
+    }
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .testimonials-header h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--gray-950);
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .testimonial-card {
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    .testimonial-card:hover {
+      border-color: var(--gray-300);
+      box-shadow: 0 8px 30px -8px rgba(0,0,0,0.06);
+    }
+    .testimonial-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--gray-600);
+      margin-bottom: 20px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonial-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-500);
+    }
+    .testimonial-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+    .testimonial-role {
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 100px 24px;
+      background: var(--gray-50);
+      text-align: center;
+      border-top: 1px solid var(--gray-200);
+    }
+    .cta-section h2 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      color: var(--gray-950);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--gray-500);
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    .cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .btn-lg {
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 64px 24px 32px;
+      background: var(--gray-950);
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+    .footer-brand {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.35);
+      max-width: 280px;
+    }
+    .footer-col-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      margin-bottom: 10px;
+      transition: color 0.15s;
+    }
+    .footer-col a:hover { color: rgba(255,255,255,0.8); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* Scroll Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-up.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .crt-delay-1 { transition-delay: 0.15s; }
-    .crt-delay-2 { transition-delay: 0.3s; }
-    .crt-delay-3 { transition-delay: 0.45s; }
+    .fade-up-d1 { transition-delay: 0.1s; }
+    .fade-up-d2 { transition-delay: 0.2s; }
+    .fade-up-d3 { transition-delay: 0.3s; }
+    .fade-up-d4 { transition-delay: 0.4s; }
+    .fade-up-d5 { transition-delay: 0.5s; }
 
-    /* Prompt cursor */
-    @keyframes promptBlink { 50% { opacity: 0; } }
-    .prompt-cursor {
-      display: inline-block;
-      width: 8px; height: 16px;
-      background: #00ff41;
-      animation: promptBlink 1s step-end infinite;
-      vertical-align: middle;
-      margin-left: 4px;
+    /* SVG Chart Animation */
+    @keyframes drawLine {
+      from { stroke-dashoffset: 400; }
+      to { stroke-dashoffset: 0; }
+    }
+    .chart-path {
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+    }
+    .visible .chart-path {
+      animation: drawLine 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    h1, h2, h3 { font-family: 'VT323', monospace; }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Cursor Trail */
-    .trail-dot { position:fixed; pointer-events:none; z-index:9997; width:6px; height:6px; border-radius:50%; transition:opacity 0.5s ease; }
-  
+    /* Pulse animation for status dots */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .pulse { animation: pulse 2s ease-in-out infinite; }
 
-    /* Marquee/Ticker Strip */
-    @keyframes marqueeScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .marquee-strip { overflow:hidden; white-space:nowrap; }
-    .marquee-inner { display:inline-flex; animation:marqueeScroll 20s linear infinite; }
-    .marquee-inner:hover { animation-play-state:paused; }
-  
+    /* Mobile hamburger */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .mobile-menu-btn svg { width: 24px; height: 24px; color: var(--gray-700); }
 
-    /* Elastic/Spring Animations */
-    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
-    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px 40px; min-height: auto; }
+      .hero h1 { font-size: 44px; }
+      .dashboard-preview { transform: none; max-width: 600px; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .arch-container { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; max-width: 500px; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .hero h1 { font-size: 36px; }
+      .hero p { font-size: 15px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .features-header h2 { font-size: 30px; }
+      .arch-content h2 { font-size: 28px; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .metric-value { font-size: 32px; }
+      .cta-section h2 { font-size: 32px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .dash-body { grid-template-columns: 1fr; }
+      .dash-sidebar { display: none; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Boot Sequence -->
-  <div class="boot-screen" id="bootScreen">
-    <div class="crt-screen w-full h-full flex flex-col justify-center px-8 md:px-24">
-      <div class="font-body text-sm glow space-y-1" id="bootLog"></div>
-    </div>
+  <!-- Announcement Banner -->
+  <div class="announcement-bar fade-up">
+    APIForge has been acquired by The Guild.
+    <a href="#">Read the announcement &rarr;</a>
   </div>
 
-  <!-- Nav -->
-  <nav class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-between border-b border-ghost" style="background: rgba(10,10,10,0.95);">
-    <span class="font-heading text-2xl glow flicker">CRT://OS</span>
-    <div class="flex items-center gap-6">
-      <a href="#system" class="text-xs glow hover:text-amber hover:glow-amber transition-colors">SYS.INFO</a>
-      <a href="#modules" class="text-xs glow hover:text-amber hover:glow-amber transition-colors">MODULES</a>
-      <a href="#terminal" class="text-xs bg-phosphor text-crt px-4 py-1.5 hover:bg-dim transition-colors font-bold rounded-sm">CONNECT</a>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="#" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        APIForge
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Solutions</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Extensions</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
     </div>
+    <div class="nav-right">
+      <a href="#" class="btn btn-ghost">Sign in</a>
+      <a href="#" class="btn btn-primary">Get started</a>
+    </div>
+    <button class="mobile-menu-btn" aria-label="Open menu">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
   </nav>
 
-  <!-- Section 1: Hero -->
-  <section class="min-h-screen flex items-center justify-center px-6 pt-20 pb-16">
-    <div class="crt-screen max-w-3xl w-full border border-ghost p-8 md:p-16" style="background: rgba(0,59,16,0.08);">
-      <div class="crt-reveal">
-        <p class="text-xs text-dim mb-6">user@crt:~$ cat welcome.txt</p>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="fade-up">Unify your APIs.<br>Govern your AI.</h1>
+      <p class="fade-up fade-up-d1">Enterprise-grade governance, control, and observability for your APIs and AI apps.</p>
+      <div class="hero-buttons fade-up fade-up-d2">
+        <a href="#" class="btn btn-primary">Try it for free</a>
+        <a href="#" class="btn btn-outline">Contact Sales</a>
       </div>
-      <h1 class="crt-reveal crt-delay-1 text-5xl md:text-7xl glow flicker mb-8 leading-tight">
-        SYSTEM<br>ONLINE_
-      </h1>
-      <p class="crt-reveal crt-delay-2 text-sm text-dim leading-relaxed max-w-md mb-10">
-        Terminal-native development environment.
-        Build, deploy, monitor — all from a single phosphor screen.
-        No GUI required. No distractions possible.
-      </p>
-      <div class="crt-reveal crt-delay-3 flex gap-4 flex-wrap">
-        <a href="#modules" class="border border-phosphor px-6 py-2 text-sm glow hover:bg-phosphor hover:text-crt transition-all duration-300 rounded-sm">
-          $ explore --modules
-        </a>
-        <a href="#status" class="border border-ghost px-6 py-2 text-sm text-dim hover:border-phosphor hover:text-phosphor transition-all duration-300 rounded-sm">
-          $ cat status.log
-        </a>
-      </div>
+      <p class="hero-note fade-up fade-up-d3">Try it free for 90 days, no credit card required.</p>
+      <a href="#features" class="hero-link fade-up fade-up-d4">
+        See how our platform works
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
     </div>
-  </section>
-
-  <!-- Section 2: System Status -->
-  <section id="system" class="px-6 py-24 md:py-32">
-    <div class="max-w-4xl mx-auto">
-      <div class="crt-reveal mb-12">
-        <p class="text-xs text-dim mb-2">user@crt:~$ uptime</p>
-        <h2 class="text-4xl md:text-5xl glow font-heading">SYSTEM STATUS</h2>
-      </div>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="crt-reveal crt-delay-1 border border-ghost p-6 crt-screen" style="background: rgba(0,59,16,0.05);">
-          <p class="text-xs text-dim mb-3">UPTIME</p>
-          <p class="text-3xl font-heading glow flicker">[your metric]</p>
-          <p class="text-xs text-dim mt-2">days continuous operation</p>
-        </div>
-        <div class="crt-reveal crt-delay-2 border border-ghost p-6 crt-screen" style="background: rgba(0,59,16,0.05);">
-          <p class="text-xs text-dim mb-3">ACTIVE SESSIONS</p>
-          <p class="text-3xl font-heading glow flicker">[your metric]</p>
-          <p class="text-xs text-dim mt-2">concurrent terminals open now</p>
-        </div>
-      </div>
-      <div class="crt-reveal crt-delay-3 mt-6 border border-ghost p-6 crt-screen" style="background: rgba(0,59,16,0.05);">
-        <p class="text-xs text-dim mb-3">SYSTEM LOG</p>
-        <div class="space-y-1 text-xs">
-          <p class="glow"><span class="text-dim">[03:14:07]</span> Build pipeline completed in 847ms</p>
-          <p class="glow"><span class="text-dim">[03:14:02]</span> Deploy to prod-east-2 ✓</p>
-          <p class="glow-amber"><span class="text-dim">[03:13:58]</span> ⚠ Memory threshold at 78% — scaling initiated</p>
-          <p class="glow"><span class="text-dim">[03:13:41]</span> 23 test suites passed, 0 failed</p>
-          <p class="glow"><span class="text-dim">[03:13:12]</span> git push origin main — 4 files changed</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 3: Modules -->
-  <section id="modules" class="px-6 py-24 md:py-32">
-    <div class="max-w-4xl mx-auto">
-      <div class="crt-reveal mb-12">
-        <p class="text-xs text-dim mb-2">user@crt:~$ ls /modules</p>
-        <h2 class="text-4xl md:text-5xl glow font-heading">MODULES</h2>
-      </div>
-      <div class="space-y-4">
-        <div class="crt-reveal crt-delay-1 border border-ghost p-6 crt-screen hover:border-phosphor transition-colors duration-300 group" style="background: rgba(0,59,16,0.05);">
-          <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-phosphor flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <div>
-              <h3 class="text-xl glow font-heading mb-2">EDITOR.SYS</h3>
-              <p class="text-xs text-dim leading-relaxed">
-                Keystroke-optimized code editor. Modal editing with vim bindings baked in.
-                Syntax highlighting for 47 languages. LSP integration runs locally — no cloud roundtrip.
-              </p>
+    <div class="fade-up fade-up-d2">
+      <div class="dashboard-preview">
+        <div class="dash-header">
+          <div class="dash-header-left">
+            <div class="dash-breadcrumb">
+              <span>Overview /</span> api/main
             </div>
           </div>
-        </div>
-        <div class="crt-reveal crt-delay-2 border border-ghost p-6 crt-screen hover:border-phosphor transition-colors duration-300 group" style="background: rgba(0,59,16,0.05);">
-          <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-phosphor flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <div>
-              <h3 class="text-xl glow font-heading mb-2">PIPELINE.SYS</h3>
-              <p class="text-xs text-dim leading-relaxed">
-                CI/CD from your terminal. Push triggers build, build triggers test, test triggers deploy.
-                Average pipeline: 1m 23s. Rollback: one command, 4 seconds.
-              </p>
-            </div>
+          <div style="display:flex;gap:8px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);opacity:0.7;" class="pulse"></div>
+            <span style="font-size:11px;color:var(--gray-400);">Live</span>
           </div>
         </div>
-        <div class="crt-reveal crt-delay-3 border border-ghost p-6 crt-screen hover:border-amber transition-colors duration-300 group" style="background: rgba(0,59,16,0.05);">
-          <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-amber flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5C2.57 17.333 3.532 19 5.072 19z"/></svg>
-            <div>
-              <h3 class="text-xl glow-amber font-heading mb-2">MONITOR.SYS</h3>
-              <p class="text-xs text-dim leading-relaxed">
-                Real-time error tracking in your terminal. Stack traces render inline.
-                Alerts via terminal bell — you hear it before your phone buzzes.
-                <span class="glow-amber text-xs">[ AMBER = WARNING LEVEL ]</span>
-              </p>
+        <div class="dash-tabs">
+          <div class="dash-tab active">Overview</div>
+          <div class="dash-tab">Schema</div>
+          <div class="dash-tab">Logs</div>
+          <div class="dash-tab">Settings</div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-sidebar">
+            <div class="dash-sidebar-item active">
+              <div class="dot" style="background:var(--green)"></div>
+              api/main
+            </div>
+            <div class="dash-sidebar-item">
+              <div class="dot" style="background:var(--green)"></div>
+              Requests 10K
+            </div>
+            <div class="dash-sidebar-item" style="font-size:11px;color:var(--gray-400);padding-top:16px;">SUBGRAPHS</div>
+            <div class="dash-sidebar-item">
+              <div class="dot" style="background:#3b82f6"></div>
+              users-api
+            </div>
+            <div class="dash-sidebar-item">
+              <div class="dot" style="background:#8b5cf6"></div>
+              products-api
+            </div>
+            <div class="dash-sidebar-item">
+              <div class="dot" style="background:#f59e0b"></div>
+              orders-api
+            </div>
+            <div class="dash-sidebar-item">
+              <div class="dot" style="background:#ef4444"></div>
+              payments-api
+            </div>
+          </div>
+          <div class="dash-main">
+            <div class="dash-stats">
+              <div class="dash-stat-card">
+                <div class="dash-stat-label">Requests</div>
+                <div class="dash-stat-value">12.4K</div>
+                <div class="dash-stat-change">+18% from last week</div>
+              </div>
+              <div class="dash-stat-card">
+                <div class="dash-stat-label">P95 Latency</div>
+                <div class="dash-stat-value">23ms</div>
+                <div class="dash-stat-change">-8% improvement</div>
+              </div>
+            </div>
+            <div class="dash-chart fade-up">
+              <div class="dash-chart-title">P95 Latency &middot; 23ms</div>
+              <svg width="100%" height="60" viewBox="0 0 300 60" preserveAspectRatio="none" style="position:absolute;bottom:12px;left:16px;right:16px;width:calc(100% - 32px);">
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--green)" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="var(--green)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,45 C20,42 40,38 60,35 C80,32 100,40 120,30 C140,20 160,25 180,18 C200,12 220,22 240,15 C260,10 280,14 300,8" fill="none" stroke="var(--green)" stroke-width="2" class="chart-path"/>
+                <path d="M0,45 C20,42 40,38 60,35 C80,32 100,40 120,30 C140,20 160,25 180,18 C200,12 220,22 240,15 C260,10 280,14 300,8 L300,60 L0,60 Z" fill="url(#chartGrad)" opacity="0.5"/>
+                <path d="M0,50 C30,48 60,46 90,44 C120,42 150,48 180,40 C210,35 240,38 270,32 C285,30 295,28 300,26" fill="none" stroke="var(--gray-300)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+              </svg>
             </div>
           </div>
         </div>
@@ -287,265 +942,305 @@
     </div>
   </section>
 
-  <!-- Section 4: Testimonial -->
-  <section class="px-6 py-24 md:py-32">
-    <div class="max-w-3xl mx-auto">
-      <div class="crt-reveal mb-12">
-        <p class="text-xs text-dim mb-2">user@crt:~$ cat /var/log/feedback.log</p>
-        <h2 class="text-4xl md:text-5xl glow font-heading">TRANSMISSIONS</h2>
+  <!-- Trusted By -->
+  <section class="trusted-section">
+    <p class="trusted-label fade-up">Trusted by engineering teams worldwide</p>
+    <div class="trusted-logos fade-up fade-up-d1">
+      <span class="trusted-logo">Vercel</span>
+      <span class="trusted-logo">Stripe</span>
+      <span class="trusted-logo">Linear</span>
+      <span class="trusted-logo">Supabase</span>
+      <span class="trusted-logo">Clerk</span>
+      <span class="trusted-logo">Resend</span>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features-section">
+    <div class="features-header">
+      <div class="badge fade-up">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        Platform
       </div>
-      <div class="crt-reveal crt-delay-1 crt-screen border border-ghost p-8" style="background: rgba(0,59,16,0.05);">
-        <p class="text-lg glow leading-relaxed font-heading mb-6">
-          "Went back to VS Code for a client project last week.
-          Kept instinctively hitting :wq to save.
-          Realized I'd been fully terminal-native for 5 months without noticing the switch."
-        </p>
-        <p class="text-xs text-dim">
-          — backend eng, contribution history shows 2,847 commits since onboarding
-        </p>
+      <h2 class="fade-up fade-up-d1">Everything you need to<br>manage APIs at scale</h2>
+      <p class="fade-up fade-up-d2">A unified platform for API governance, federation, observability, and AI integration.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Federated Gateway</h3>
+        <p>Compose multiple subgraphs into a single unified API. Automatic schema composition with conflict detection.</p>
       </div>
-      <div class="crt-reveal crt-delay-2 crt-screen border border-ghost p-8 mt-4" style="background: rgba(0,59,16,0.05);">
-        <p class="text-lg glow leading-relaxed font-heading mb-6">
-          "The deploy pipeline alone saved our team 11 hours/week.
-          We measured. It was embarrassing how much time we'd been wasting on dashboards."
-        </p>
-        <p class="text-xs text-dim">
-          — infra lead at an agency with 14 active projects
-        </p>
+      <div class="feature-card fade-up fade-up-d1">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </div>
+        <h3>AI Governance</h3>
+        <p>Control which AI models can access your APIs with fine-grained policies, rate limiting, and audit logging.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Real-time Analytics</h3>
+        <p>Monitor request volume, latency percentiles, error rates, and cache hit ratios across all your subgraphs.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Schema Registry</h3>
+        <p>Version and validate your GraphQL schemas with breaking change detection before they reach production.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d4">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Edge Caching</h3>
+        <p>Globally distributed cache with automatic invalidation. Sub-10ms responses at the edge for read-heavy workloads.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d5">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Extensions</h3>
+        <p>Extend your gateway with custom middleware, auth providers, and third-party integrations from our marketplace.</p>
       </div>
     </div>
   </section>
 
-  <!-- Section 5: Keybindings / Cheat Sheet -->
-  <section class="px-6 py-24 md:py-32">
-    <div class="max-w-4xl mx-auto">
-      <div class="crt-reveal mb-12">
-        <p class="text-xs text-dim mb-2">user@crt:~$ man crt-keys</p>
-        <h2 class="text-4xl md:text-5xl glow font-heading">KEYBINDINGS</h2>
+  <!-- Architecture Section -->
+  <section class="arch-section">
+    <div class="arch-container">
+      <div class="arch-content">
+        <h2 class="fade-up">One gateway to rule<br>all your subgraphs</h2>
+        <p class="fade-up fade-up-d1">APIForge federates your distributed APIs into a single, performant endpoint. No more stitching services together manually.</p>
+        <ul class="arch-list fade-up fade-up-d2">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Automatic schema composition across teams
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Breaking change detection in CI/CD
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Query-level analytics per subgraph
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Deploy to the edge in 47 regions
+          </li>
+        </ul>
       </div>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="crt-reveal crt-delay-1 border border-ghost p-6 crt-screen" style="background: rgba(0,59,16,0.05);">
-          <p class="text-xs text-dim mb-4 tracking-wider">NAVIGATION</p>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Switch workspace</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + W</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Open file</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + P</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Command palette</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + Shift + P</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Toggle terminal</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + `</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Split pane</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + \</span>
-            </div>
-          </div>
+      <div class="arch-visual fade-up fade-up-d1">
+        <div class="arch-node">
+          <div class="arch-node-dot" style="background:#3b82f6"></div>
+          <span class="arch-node-label">users-api</span>
+          <span class="arch-node-meta">Rust &middot; 4ms</span>
         </div>
-        <div class="crt-reveal crt-delay-2 border border-ghost p-6 crt-screen" style="background: rgba(0,59,16,0.05);">
-          <p class="text-xs text-dim mb-4 tracking-wider">PIPELINE</p>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Build</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + B</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Deploy</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + D</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">Run tests</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + T</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow-amber">Rollback</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + Z + Z</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-xs glow">View logs</span>
-              <span class="text-xs text-dim border border-ghost px-2 py-0.5 rounded-sm">Ctrl + L</span>
-            </div>
-          </div>
+        <div class="arch-node">
+          <div class="arch-node-dot" style="background:#8b5cf6"></div>
+          <span class="arch-node-label">products-api</span>
+          <span class="arch-node-meta">Go &middot; 7ms</span>
         </div>
-      </div>
-      <div class="crt-reveal crt-delay-3 mt-6 text-xs text-dim">
-        <p class="glow">All keybindings are remappable. Config lives in <code class="text-phosphor">~/.crt/keys.toml</code></p>
+        <div class="arch-connector"></div>
+        <div class="arch-center-node">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <span>APIForge Gateway</span>
+        </div>
+        <div class="arch-connector"></div>
+        <div class="arch-node">
+          <div class="arch-node-dot" style="background:#f59e0b"></div>
+          <span class="arch-node-label">orders-api</span>
+          <span class="arch-node-meta">Node &middot; 12ms</span>
+        </div>
+        <div class="arch-node">
+          <div class="arch-node-dot" style="background:#ef4444"></div>
+          <span class="arch-node-label">payments-api</span>
+          <span class="arch-node-meta">Java &middot; 9ms</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Section 6: Compatibility -->
-  <section class="px-6 py-24 md:py-32">
-    <div class="max-w-4xl mx-auto">
-      <div class="crt-reveal mb-12">
-        <p class="text-xs text-dim mb-2">user@crt:~$ crt --compatibility</p>
-        <h2 class="text-4xl md:text-5xl glow font-heading">COMPATIBILITY</h2>
+  <!-- Metrics Section -->
+  <section class="metrics-section">
+    <div class="metrics-container">
+      <h2 class="fade-up">Built for production scale</h2>
+      <div class="metrics-grid">
+        <div class="metric-item fade-up">
+          <div class="metric-value">99.99%</div>
+          <div class="metric-label">Uptime SLA guaranteed</div>
+        </div>
+        <div class="metric-item fade-up fade-up-d1">
+          <div class="metric-value">&lt;10ms</div>
+          <div class="metric-label">Edge response time globally</div>
+        </div>
+        <div class="metric-item fade-up fade-up-d2">
+          <div class="metric-value">47</div>
+          <div class="metric-label">Edge regions worldwide</div>
+        </div>
+        <div class="metric-item fade-up fade-up-d3">
+          <div class="metric-value">2B+</div>
+          <div class="metric-label">API calls processed monthly</div>
+        </div>
       </div>
-      <div class="crt-reveal crt-delay-1 border border-ghost p-8 crt-screen" style="background: rgba(0,59,16,0.05);">
-        <div class="grid md:grid-cols-3 gap-8">
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials-section">
+    <div class="testimonials-header">
+      <h2 class="fade-up">Loved by developers</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-up">
+        <p class="testimonial-text">"APIForge replaced our entire homegrown gateway layer. Migration took two days. Performance improved by 40% on day one."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">SK</div>
           <div>
-            <p class="text-xs glow-amber mb-3 tracking-wider">PLATFORMS</p>
-            <div class="space-y-2 text-xs">
-              <p class="glow">✓ macOS 12+</p>
-              <p class="glow">✓ Ubuntu 20.04+</p>
-              <p class="glow">✓ Fedora 36+</p>
-              <p class="glow">✓ Arch (btw)</p>
-              <p class="glow">✓ WSL2</p>
-              <p class="text-dim">✗ Windows native (use WSL)</p>
-            </div>
+            <div class="testimonial-name">Sarah Kim</div>
+            <div class="testimonial-role">Staff Engineer, Fintech</div>
           </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-up fade-up-d1">
+        <p class="testimonial-text">"The schema registry caught 3 breaking changes in our first week. Would have been incidents in production. Pays for itself."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MR</div>
           <div>
-            <p class="text-xs glow-amber mb-3 tracking-wider">TERMINALS</p>
-            <div class="space-y-2 text-xs">
-              <p class="glow">✓ iTerm2</p>
-              <p class="glow">✓ Alacritty</p>
-              <p class="glow">✓ Kitty</p>
-              <p class="glow">✓ WezTerm</p>
-              <p class="glow">✓ Ghostty</p>
-              <p class="text-dim">△ Terminal.app (limited)</p>
-            </div>
+            <div class="testimonial-name">Marcus Reyes</div>
+            <div class="testimonial-role">Platform Lead, E-commerce</div>
           </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-up fade-up-d2">
+        <p class="testimonial-text">"We needed AI governance yesterday. APIForge gave us fine-grained control over which models hit our APIs without rewriting anything."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JL</div>
           <div>
-            <p class="text-xs glow-amber mb-3 tracking-wider">INTEGRATIONS</p>
-            <div class="space-y-2 text-xs">
-              <p class="glow">✓ Git</p>
-              <p class="glow">✓ Docker</p>
-              <p class="glow">✓ Kubernetes</p>
-              <p class="glow">✓ AWS CLI</p>
-              <p class="glow">✓ GitHub Actions</p>
-              <p class="glow">✓ SSH tunneling</p>
-            </div>
+            <div class="testimonial-name">Julia Lang</div>
+            <div class="testimonial-role">CTO, AI Startup</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Section 7: Terminal / CTA -->
-  <section id="terminal" class="px-6 py-24 md:py-32">
-    <div class="max-w-3xl mx-auto">
-      <div class="crt-reveal crt-screen border border-phosphor p-8 md:p-12" style="background: rgba(0,59,16,0.1);">
-        <p class="text-xs text-dim mb-6">user@crt:~$ ./install.sh</p>
-        <h2 class="text-4xl md:text-5xl glow font-heading flicker mb-6">
-          INITIALIZE_
-        </h2>
-        <p class="text-sm text-dim leading-relaxed mb-8 max-w-md">
-          One command. Works on macOS, Linux, WSL2.
-          No Electron. No 400MB download. The binary is 12MB.
-        </p>
-        <div class="bg-crt border border-ghost p-4 mb-8 rounded-sm">
-          <code class="text-sm glow">$ curl -fsSL https://crt.dev/install | sh</code>
-          <span class="prompt-cursor"></span>
-        </div>
-        <div class="flex gap-4 flex-wrap">
-          <a href="#" class="bg-phosphor text-crt px-6 py-2.5 text-sm font-bold hover:bg-dim transition-colors rounded-sm">
-            DOWNLOAD v3.2.1
-          </a>
-          <a href="#" class="border border-ghost px-6 py-2.5 text-sm text-dim hover:border-phosphor hover:text-phosphor transition-colors rounded-sm">
-            VIEW SOURCE
-          </a>
-        </div>
-      </div>
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2 class="fade-up">Ready to unify<br>your APIs?</h2>
+    <p class="fade-up fade-up-d1">Start for free. No credit card required. Deploy your first federated gateway in under 5 minutes.</p>
+    <div class="cta-buttons fade-up fade-up-d2">
+      <a href="#" class="btn btn-primary btn-lg">Try it for free</a>
+      <a href="#" class="btn btn-outline btn-lg">Contact Sales</a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="px-6 py-8 border-t border-ghost">
-    <div class="max-w-4xl mx-auto flex justify-between text-xs text-dim">
-      <span class="glow">CRT://OS v3.2.1</span>
-      <span>© 2026 — All signals reserved</span>
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">APIForge</div>
+          <p class="footer-desc">Enterprise-grade API governance, federation, and observability platform.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="#">Gateway</a>
+          <a href="#">Analytics</a>
+          <a href="#">Schema Registry</a>
+          <a href="#">AI Governance</a>
+          <a href="#">Extensions</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Resources</div>
+          <a href="#">Documentation</a>
+          <a href="#">Blog</a>
+          <a href="#">Changelog</a>
+          <a href="#">Status</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Contact</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Security</a>
+          <a href="#">DPA</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 APIForge. All rights reserved.</span>
+        <div style="display:flex;gap:16px;">
+          <a href="#" style="color:rgba(255,255,255,0.3);text-decoration:none;">Twitter</a>
+          <a href="#" style="color:rgba(255,255,255,0.3);text-decoration:none;">GitHub</a>
+          <a href="#" style="color:rgba(255,255,255,0.3);text-decoration:none;">Discord</a>
+        </div>
+      </div>
     </div>
   </footer>
 
   <script>
-    // Boot sequence
-    const bootLines = [
-      'BIOS v2.41 ... OK',
-      'Memory test: 65536K ... OK',
-      'Detecting drives ... /dev/sda1 mounted',
-      'Loading kernel modules .......... OK',
-      'Starting network daemon ... connected',
-      'CRT://OS v3.2.1 initialized',
-      '',
-      'Welcome. System ready.',
-    ];
-    const bootLog = document.getElementById('bootLog');
-    const bootScreen = document.getElementById('bootScreen');
-    let lineIdx = 0;
-
-    function addBootLine() {
-      if (lineIdx >= bootLines.length) {
-        setTimeout(() => bootScreen.classList.add('done'), 600);
-        setTimeout(() => bootScreen.style.display = 'none', 1500);
-        return;
-      }
-      const p = document.createElement('p');
-      p.className = 'boot-line show glow';
-      p.textContent = '> ' + bootLines[lineIdx];
-      if (bootLines[lineIdx].includes('⚠') || bootLines[lineIdx].includes('Warning')) {
-        p.className += ' glow-amber';
-      }
-      p.style.animationDelay = '0s';
-      bootLog.appendChild(p);
-      lineIdx++;
-      setTimeout(addBootLine, 180 + Math.random() * 120);
-    }
-
+    // Scroll reveal with IntersectionObserver
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(addBootLine, 400);
-
-      // Scroll reveal with repeat
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-          } else {
-            entry.target.classList.remove('visible');
           }
         });
-      }, { threshold: 0.12 });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-      document.querySelectorAll('.crt-reveal').forEach(el => observer.observe(el));
+      document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+          const target = document.querySelector(anchor.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // Animate stat values on scroll
+      const statValues = document.querySelectorAll('.dash-stat-value');
+      const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const finalText = el.textContent;
+            const finalNum = parseFloat(finalText.replace(/[^0-9.]/g, ''));
+            if (isNaN(finalNum)) return;
+            const suffix = finalText.replace(/[0-9.]/g, '');
+            const duration = 800;
+            const start = performance.now();
+            function animate(now) {
+              const elapsed = now - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              const current = (finalNum * eased).toFixed(finalNum % 1 !== 0 ? 1 : 0);
+              el.textContent = current + suffix;
+              if (progress < 1) requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+            statsObserver.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+      statValues.forEach(el => statsObserver.observe(el));
     });
-  
-
-      // Cursor Trail
-      (function(){
-        var trailDots = [];
-        var numDots = 12;
-        for(var i=0;i<numDots;i++){
-          var dot = document.createElement('div');
-          dot.className = 'trail-dot';
-          dot.style.background = 'rgba(34,197,94,0.7)';
-          dot.style.opacity = String(1 - i/numDots);
-          dot.style.width = String(Math.max(2, 6 - i*0.4)) + 'px';
-          dot.style.height = String(Math.max(2, 6 - i*0.4)) + 'px';
-          document.body.appendChild(dot);
-          trailDots.push({el:dot, x:0, y:0});
-        }
-        var mouseX=0, mouseY=0;
-        document.addEventListener('mousemove', function(e){ mouseX=e.clientX; mouseY=e.clientY; });
-        function animateTrail(){
-          var prevX=mouseX, prevY=mouseY;
-          trailDots.forEach(function(dot,i){
-            var target = i===0 ? {x:mouseX,y:mouseY} : trailDots[i-1];
-            dot.x += (target.x - dot.x) * 0.35;
-            dot.y += (target.y - dot.y) * 0.35;
-            dot.el.style.left = dot.x + 'px';
-            dot.el.style.top = dot.y + 'px';
-          });
-          requestAnimationFrame(animateTrail);
-        }
-        animateTrail();
-      })();
-  
   </script>
 
 </body>

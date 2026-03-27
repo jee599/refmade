@@ -3,31 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Velox — Project Tracking Built for Speed</title>
+  <title>Velocity — The product development system for teams and agents</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg-primary: #0a0a0b;
-      --bg-secondary: #101012;
-      --bg-tertiary: #16161a;
-      --bg-card: #131316;
-      --border: rgba(255, 255, 255, 0.06);
-      --border-hover: rgba(255, 255, 255, 0.1);
-      --text-primary: #f2f2f2;
-      --text-secondary: #b4b4b4;
-      --text-tertiary: #787882;
-      --text-quaternary: #53535f;
-      --accent: #5e6ad2;
-      --accent-hover: #7078e4;
-      --accent-subtle: rgba(94, 106, 210, 0.12);
+      --bg: #000000;
+      --bg-elevated: #0a0a0a;
+      --bg-surface: #111111;
+      --bg-surface-2: #161616;
+      --bg-hover: #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --border-subtle: rgba(255,255,255,0.05);
+      --text-primary: #eeeeee;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #666666;
+      --text-faint: #444444;
+      --accent: #d4a843;
+      --accent-hover: #e0b84f;
+      --accent-dim: rgba(212,168,67,0.15);
+      --accent-soft: rgba(212,168,67,0.06);
+      --indigo: #5e6ad2;
+      --indigo-dim: rgba(94,106,210,0.15);
       --green: #2da44e;
-      --orange: #e09b3d;
+      --yellow: #e3b341;
+      --orange: #d29922;
       --red: #e5534b;
+      --cyan: #539bf5;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
     }
 
     html {
@@ -38,16 +45,16 @@
 
     body {
       font-family: var(--font);
-      background: var(--bg-primary);
+      background: var(--bg);
       color: var(--text-primary);
-      line-height: 1.5;
+      line-height: 1.6;
       overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
-    button { font-family: inherit; cursor: pointer; border: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-    /* ── Nav ── */
+    /* ── Navigation ── */
     .nav {
       position: fixed;
       top: 0;
@@ -57,8 +64,8 @@
       height: 56px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid var(--border);
-      background: rgba(10, 10, 11, 0.7);
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(0,0,0,0.8);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
     }
@@ -76,7 +83,7 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 28px;
     }
 
     .nav-logo {
@@ -85,7 +92,8 @@
       gap: 8px;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
     }
 
     .nav-logo svg {
@@ -96,1212 +104,1533 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 4px;
       list-style: none;
     }
 
     .nav-links a {
       font-size: 13px;
-      color: var(--text-tertiary);
-      transition: color 0.15s;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
     }
 
-    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.05);
+    }
 
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 8px;
     }
 
-    .nav-right .login {
+    .btn-login {
       font-size: 13px;
-      color: var(--text-tertiary);
-      transition: color 0.15s;
-      background: none;
-    }
-
-    .nav-right .login:hover { color: var(--text-primary); }
-
-    /* ── Buttons ── */
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--accent);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 16px;
-      border-radius: 8px;
-      transition: background 0.15s, box-shadow 0.15s;
-      box-shadow: 0 0 0 0 rgba(94, 106, 210, 0), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      box-shadow: 0 0 20px rgba(94, 106, 210, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    }
-
-    .btn-primary:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
       color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+
+    .btn-login:hover {
+      color: var(--text-primary);
+    }
+
+    .btn-signup {
       font-size: 13px;
       font-weight: 500;
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      color: #000;
+      background: var(--text-primary);
+      padding: 6px 16px;
+      border-radius: 6px;
+      transition: background 0.15s;
     }
 
-    .btn-ghost:hover {
-      color: var(--text-primary);
-      border-color: var(--border-hover);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .btn-ghost:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .btn-large {
-      padding: 10px 24px;
-      font-size: 14px;
-      border-radius: 8px;
+    .btn-signup:hover {
+      background: #ffffff;
     }
 
     /* ── Hero ── */
     .hero {
       position: relative;
-      padding: 160px 24px 80px;
+      padding: 150px 24px 80px;
       text-align: center;
       overflow: hidden;
     }
 
-    .hero-glow {
-      position: absolute;
-      top: -40%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 900px;
-      height: 700px;
-      background: radial-gradient(
-        ellipse 60% 50% at 50% 40%,
-        rgba(94, 106, 210, 0.15) 0%,
-        rgba(94, 106, 210, 0.06) 40%,
-        transparent 70%
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .hero-glow-secondary {
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(
-        ellipse 70% 60% at 50% 50%,
-        rgba(120, 80, 220, 0.08) 0%,
-        transparent 60%
-      );
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 14px;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-      background: var(--bg-secondary);
-      font-size: 12px;
-      color: var(--text-tertiary);
-      margin-bottom: 32px;
-      transition: border-color 0.2s;
-    }
-
-    .hero-badge:hover {
-      border-color: var(--border-hover);
-    }
-
-    .hero-badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px rgba(94, 106, 210, 0.5);
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 6vw, 72px);
-      font-weight: 500;
-      letter-spacing: -0.045em;
-      line-height: 1.05;
-      margin-bottom: 20px;
-      background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.45) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: 17px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      max-width: 480px;
-      margin: 0 auto 40px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    /* ── Product Screenshot ── */
-    .product-section {
-      position: relative;
-      padding: 60px 24px 0;
-    }
-
-    .product-glow {
-      position: absolute;
-      top: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      height: 300px;
-      background: radial-gradient(
-        ellipse 50% 80% at 50% 100%,
-        rgba(94, 106, 210, 0.08) 0%,
-        transparent 70%
-      );
-      pointer-events: none;
-    }
-
-    .product-frame {
-      position: relative;
-      z-index: 1;
-      max-width: 1000px;
-      margin: 0 auto;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      overflow: hidden;
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.03),
-        0 20px 60px -15px rgba(0, 0, 0, 0.5),
-        0 0 100px -20px rgba(94, 106, 210, 0.08);
-    }
-
-    .product-titlebar {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.015);
-    }
-
-    .product-dots {
-      display: flex;
-      gap: 6px;
-    }
-
-    .product-dots span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .product-tabs {
-      display: flex;
-      gap: 2px;
-    }
-
-    .product-tab {
-      font-size: 12px;
-      color: var(--text-quaternary);
-      padding: 4px 12px;
-      border-radius: 6px;
-      transition: color 0.15s, background 0.15s;
-      cursor: pointer;
-    }
-
-    .product-tab:hover {
-      color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .product-tab.active {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .product-sidebar {
-      width: 200px;
-      border-right: 1px solid var(--border);
-      padding: 12px 8px;
-      flex-shrink: 0;
-    }
-
-    .product-body {
-      display: flex;
-      min-height: 380px;
-    }
-
-    .sidebar-section {
-      margin-bottom: 16px;
-    }
-
-    .sidebar-section-title {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-quaternary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 4px 10px;
-      margin-bottom: 2px;
-    }
-
-    .sidebar-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 13px;
-      color: var(--text-tertiary);
-      cursor: pointer;
-      transition: background 0.1s, color 0.1s;
-    }
-
-    .sidebar-item:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-secondary);
-    }
-
-    .sidebar-item.active {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text-primary);
-    }
-
-    .sidebar-icon {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      flex-shrink: 0;
-    }
-
-    .product-main {
-      flex: 1;
-      padding: 12px 16px;
-    }
-
-    .product-main-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 4px;
-    }
-
-    .product-main-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    .product-main-count {
-      font-size: 12px;
-      color: var(--text-quaternary);
-    }
-
-    .issue-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 8px;
-      border-radius: 6px;
-      transition: background 0.1s;
-      cursor: pointer;
-    }
-
-    .issue-row:hover {
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .issue-status {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 1.5px solid;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .issue-status.todo { border-color: var(--text-quaternary); }
-    .issue-status.in-progress { border-color: var(--orange); }
-    .issue-status.in-progress::after {
-      content: '';
-      position: absolute;
-      top: 2px; left: 2px; right: 2px; bottom: 2px;
-      border-radius: 50%;
-      border: 1.5px solid var(--orange);
-      border-top-color: transparent;
-      border-right-color: transparent;
-    }
-    .issue-status.done {
-      border-color: var(--accent);
-      background: var(--accent);
-    }
-    .issue-status.done::after {
-      content: '✓';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 9px;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .issue-id {
-      font-size: 12px;
-      color: var(--text-quaternary);
-      font-variant-numeric: tabular-nums;
-      width: 52px;
-      flex-shrink: 0;
-    }
-
-    .issue-title {
-      font-size: 13px;
-      color: var(--text-primary);
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .issue-title.completed {
-      color: var(--text-quaternary);
-      text-decoration: line-through;
-    }
-
-    .issue-priority {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-
-    .priority-urgent {
-      background: rgba(229, 83, 75, 0.12);
-      color: var(--red);
-    }
-
-    .priority-high {
-      background: rgba(224, 155, 61, 0.12);
-      color: var(--orange);
-    }
-
-    .priority-medium {
-      background: var(--accent-subtle);
-      color: var(--accent);
-    }
-
-    .priority-low {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-quaternary);
-    }
-
-    .issue-assignee {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #5e6ad2, #8b5cf6);
-      flex-shrink: 0;
-      font-size: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 500;
-    }
-
-    .issue-assignee.alt { background: linear-gradient(135deg, #e09b3d, #e5534b); }
-    .issue-assignee.alt2 { background: linear-gradient(135deg, #2da44e, #3fb950); }
-
-    /* ── Divider ── */
-    .divider {
-      max-width: 1000px;
-      margin: 0 auto;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--border), transparent);
-    }
-
-    /* ── Section typography ── */
-    .section-label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 500;
-      letter-spacing: -0.035em;
-      line-height: 1.1;
-      margin-bottom: 16px;
-      background: linear-gradient(180deg, #ffffff 20%, rgba(255, 255, 255, 0.5) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .section-desc {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 560px;
-    }
-
-    /* ── Feature strip ── */
-    .feature-strip {
-      padding: 120px 24px;
-    }
-
-    .feature-strip-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .feature-strip-header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-
-    .feature-strip-header .section-desc {
-      margin: 0 auto;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .feature-cell {
-      background: var(--bg-primary);
-      padding: 40px 32px;
-      transition: background 0.25s;
-    }
-
-    .feature-cell:hover {
-      background: var(--bg-secondary);
-    }
-
-    .feature-cell-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--accent-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .feature-cell-icon svg {
-      width: 18px;
-      height: 18px;
-      color: var(--accent);
-    }
-
-    .feature-cell h3 {
-      font-size: 15px;
-      font-weight: 500;
-      letter-spacing: -0.01em;
-      margin-bottom: 8px;
-      color: var(--text-primary);
-    }
-
-    .feature-cell p {
-      font-size: 13px;
-      line-height: 1.55;
-      color: var(--text-tertiary);
-    }
-
-    /* ── Highlight section (workflow) ── */
-    .highlight-section {
-      padding: 120px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .highlight-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .highlight-text .section-desc {
-      margin-bottom: 32px;
-    }
-
-    .highlight-visual {
-      position: relative;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 24px;
-      overflow: hidden;
-    }
-
-    .highlight-visual::before {
+    .hero::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(94, 106, 210, 0.3), transparent);
-    }
-
-    .metric-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .metric-row:last-child { border-bottom: none; }
-
-    .metric-label {
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .metric-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      max-width: 200px;
-    }
-
-    .metric-bar {
-      flex: 1;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .metric-bar-fill {
-      height: 100%;
-      border-radius: 2px;
-      background: var(--accent);
-      transition: width 1s ease;
-    }
-
-    .metric-value {
-      font-size: 12px;
-      color: var(--text-quaternary);
-      font-variant-numeric: tabular-nums;
-      width: 32px;
-      text-align: right;
-    }
-
-    /* ── Integrations ── */
-    .integration-grid {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .integration-chip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg-secondary);
-      font-size: 13px;
-      color: var(--text-secondary);
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .integration-chip:hover {
-      border-color: var(--border-hover);
-      background: var(--bg-tertiary);
-    }
-
-    .integration-chip svg {
-      width: 16px;
-      height: 16px;
-      color: var(--text-tertiary);
-    }
-
-    /* ── CTA ── */
-    .cta-section {
-      padding: 120px 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(
-        ellipse 60% 50% at 50% 50%,
-        rgba(94, 106, 210, 0.08) 0%,
-        transparent 70%
-      );
+      bottom: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 24px 24px;
       pointer-events: none;
     }
 
-    .cta-content {
-      position: relative;
-      z-index: 1;
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(212,168,67,0.04) 0%, transparent 65%);
+      pointer-events: none;
     }
 
-    .cta-content .section-title {
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 56px);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .highlight {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .hero-pills {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 72px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      transition: border-color 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+
+    .pill:hover {
+      border-color: rgba(255,255,255,0.15);
+      color: var(--text-primary);
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .pill-arrow {
+      font-size: 11px;
+      opacity: 0.5;
+    }
+
+    /* ── App Mockup ── */
+    .mockup-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 40px 80px rgba(0,0,0,0.5);
+    }
+
+    .mockup-titlebar {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 16px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      gap: 8px;
+    }
+
+    .titlebar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-faint);
+      opacity: 0.5;
+    }
+
+    .titlebar-dot:nth-child(1) { background: #ff5f57; opacity: 0.7; }
+    .titlebar-dot:nth-child(2) { background: #febc2e; opacity: 0.7; }
+    .titlebar-dot:nth-child(3) { background: #28c840; opacity: 0.7; }
+
+    .mockup-body {
+      display: flex;
+      min-height: 480px;
+    }
+
+    /* Sidebar */
+    .mock-sidebar {
+      width: 220px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      padding: 16px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-workspace {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 16px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 8px;
+    }
+
+    .workspace-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--accent), #c49330);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .workspace-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .sidebar-section {
+      padding: 4px 8px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .sidebar-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-primary);
+    }
+
+    .sidebar-item.active {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-primary);
+    }
+
+    .sidebar-item svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    .sidebar-item.active svg {
+      opacity: 0.9;
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 16px 12px 6px;
+    }
+
+    .sidebar-team-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Main content area */
+    .mock-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .mock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .mock-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mock-breadcrumb {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .mock-breadcrumb span {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .mock-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mock-header-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid var(--border-subtle);
+      background: transparent;
+    }
+
+    .mock-header-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .mock-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .mock-tab {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      padding: 10px 12px;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .mock-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent);
+    }
+
+    .mock-tab:hover {
+      color: var(--text-secondary);
+    }
+
+    /* Issue list */
+    .mock-issues {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .mock-issue-group-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .mock-issue-group-header svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .group-count {
+      font-size: 11px;
+      color: var(--text-faint);
+      background: rgba(255,255,255,0.04);
+      padding: 0 6px;
+      border-radius: 3px;
+      margin-left: 4px;
+    }
+
+    .issue-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .issue-row:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .issue-priority {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .priority-bar {
+      display: flex;
+      gap: 1.5px;
+      align-items: flex-end;
+      height: 12px;
+    }
+
+    .priority-bar span {
+      width: 2.5px;
+      background: var(--text-tertiary);
+      border-radius: 1px;
+    }
+
+    .issue-id {
+      font-size: 12px;
+      color: var(--text-faint);
+      font-variant-numeric: tabular-nums;
+      font-family: var(--mono);
+      width: 56px;
+      flex-shrink: 0;
+    }
+
+    .issue-title {
+      flex: 1;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .issue-label {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .issue-label.feat { border-color: rgba(212,168,67,0.3); color: #d4a843; }
+    .issue-label.bug { border-color: rgba(229,83,75,0.3); color: #e5534b; }
+    .issue-label.imp { border-color: rgba(45,164,78,0.3); color: #56d364; }
+    .issue-label.perf { border-color: rgba(83,155,245,0.3); color: #539bf5; }
+
+    .issue-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg-surface-2);
+      flex-shrink: 0;
+    }
+
+    .issue-date {
+      font-size: 12px;
+      color: var(--text-faint);
+      white-space: nowrap;
+      width: 50px;
+      text-align: right;
+    }
+
+    .issue-status {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid;
+      flex-shrink: 0;
+    }
+
+    .status-todo { border-color: var(--text-faint); }
+    .status-progress { border-color: var(--yellow); background: rgba(227,179,65,0.15); }
+    .status-done { border-color: var(--green); background: rgba(45,164,78,0.3); }
+    .status-review { border-color: var(--indigo); background: var(--indigo-dim); }
+
+    /* Detail panel */
+    .mock-detail {
+      width: 340px;
+      border-left: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
+      padding: 20px;
+      flex-shrink: 0;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .detail-id {
+      font-size: 12px;
+      color: var(--text-faint);
+      font-family: var(--mono);
+      margin-bottom: 6px;
+    }
+
+    .detail-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .detail-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .detail-meta {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 10px 12px;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .detail-meta-label {
+      color: var(--text-tertiary);
+    }
+
+    .detail-meta-value {
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .detail-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 16px 0;
+    }
+
+    .detail-section-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
       margin-bottom: 12px;
     }
 
-    .cta-content .section-desc {
-      margin: 0 auto 40px;
-      max-width: 420px;
+    .activity-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .activity-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-surface-2);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .activity-content {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .activity-content strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .activity-time {
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-top: 2px;
+    }
+
+    /* ── Gradient Divider ── */
+    .gradient-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,67,0.2), transparent);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── Features Section ── */
+    .features {
+      padding: 120px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .features-header h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .features-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .feature-card {
+      background: var(--bg);
+      padding: 40px 32px;
+      transition: background 0.2s;
+    }
+
+    .feature-card:hover {
+      background: rgba(255,255,255,0.015);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--text-secondary);
+    }
+
+    .feature-card h3 {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+    }
+
+    .feature-kbd {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 16px;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-tertiary);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    /* ── Workflow Section ── */
+    .workflow {
+      padding: 80px 24px 120px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .workflow-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .workflow-header h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .workflow-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .workflow-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      background: var(--bg);
+      transition: border-color 0.2s;
+    }
+
+    .workflow-card:hover {
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .workflow-card h3 {
+      font-size: 17px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .workflow-card p {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .workflow-visual {
+      height: 160px;
+      border-radius: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cycle-dots {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .cycle-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      position: relative;
+    }
+
+    .cycle-dot.active {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .cycle-connector {
+      width: 32px;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .cycle-connector.active {
+      background: var(--accent);
+    }
+
+    .timeline-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 80%;
+    }
+
+    .timeline-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--bg-surface-2);
+    }
+
+    .timeline-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* ── CTA Section ── */
+    .cta {
+      text-align: center;
+      padding: 80px 24px 120px;
+      position: relative;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse at center bottom, rgba(212,168,67,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #000;
+      background: var(--text-primary);
+      padding: 10px 24px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: #ffffff;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.15);
+      color: var(--text-primary);
     }
 
     /* ── Footer ── */
     .footer {
-      border-top: 1px solid var(--border);
-      padding: 64px 24px 48px;
-    }
-
-    .footer-inner {
-      max-width: 1000px;
+      border-top: 1px solid var(--border-subtle);
+      padding: 48px 24px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     .footer-grid {
       display: grid;
-      grid-template-columns: 1.5fr repeat(4, 1fr);
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
       gap: 48px;
       margin-bottom: 48px;
     }
 
-    .footer-brand p {
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .footer-tagline {
       font-size: 13px;
-      color: var(--text-quaternary);
-      line-height: 1.6;
-      margin-top: 12px;
-      max-width: 200px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
     }
 
     .footer-col h4 {
       font-size: 12px;
       font-weight: 500;
-      color: var(--text-quaternary);
+      color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 16px;
     }
 
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
     .footer-col a {
+      display: block;
       font-size: 13px;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
+      padding: 4px 0;
       transition: color 0.15s;
     }
 
-    .footer-col a:hover { color: var(--text-primary); }
+    .footer-col a:hover {
+      color: var(--text-primary);
+    }
 
     .footer-bottom {
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-
-    .footer-bottom p {
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
       font-size: 12px;
-      color: var(--text-quaternary);
+      color: var(--text-faint);
     }
 
-    .footer-socials {
-      display: flex;
-      gap: 16px;
-    }
-
-    .footer-socials a {
-      color: var(--text-quaternary);
-      transition: color 0.15s;
-    }
-
-    .footer-socials a:hover { color: var(--text-secondary); }
-
-    /* ── Animations ── */
-    .reveal {
+    /* ── Scroll Animations ── */
+    .fade-in {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
-    .reveal.visible {
+    .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-
     /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-
-      .hero { padding: 120px 20px 60px; }
-      .hero p { font-size: 15px; }
-
-      .hero-buttons { flex-direction: column; align-items: center; gap: 8px; }
-      .hero-buttons .btn-primary,
-      .hero-buttons .btn-ghost { width: 100%; max-width: 280px; }
-
-      .product-sidebar { display: none; }
-
-      .feature-grid { grid-template-columns: 1fr; }
-
-      .highlight-inner { grid-template-columns: 1fr; gap: 40px; }
-
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
-      .footer-brand { grid-column: 1 / -1; }
-
-      .feature-strip, .highlight-section, .cta-section { padding: 80px 20px; }
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .workflow-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .mock-detail { display: none; }
+      .mock-sidebar { width: 180px; }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; }
+      .mock-sidebar { display: none; }
+      .hero-pills { flex-direction: column; }
+      .hero { padding: 120px 20px 60px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
-  <nav class="nav" role="navigation" aria-label="Main navigation">
+  <!-- Navigation -->
+  <nav class="nav">
     <div class="nav-inner">
       <div class="nav-left">
-        <a href="#" class="nav-logo" aria-label="Velox home">
-          <svg viewBox="0 0 20 20" fill="none">
-            <path d="M3 10L10 3L17 10L10 17L3 10Z" fill="#5e6ad2"/>
-            <path d="M7 10L10 7L13 10L10 13L7 10Z" fill="rgba(255,255,255,0.25)"/>
+        <a href="#" class="nav-logo">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M20 65L50 20L80 65" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M35 65L50 40L65 65" stroke="#d4a843" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Velox
+          Velocity
         </a>
         <ul class="nav-links">
-          <li><a href="#">Features</a></li>
-          <li><a href="#">Method</a></li>
-          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Product</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Customers</a></li>
           <li><a href="#">Pricing</a></li>
-          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
       </div>
       <div class="nav-right">
-        <button class="login">Log in</button>
-        <button class="btn-primary">Sign up</button>
+        <a href="#" class="btn-login">Log in</a>
+        <a href="#" class="btn-signup">Sign up</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-glow"></div>
-    <div class="hero-glow-secondary"></div>
     <div class="hero-content">
-      <a href="#" class="hero-badge reveal">
-        <span class="hero-badge-dot"></span>
-        Introducing Velox 2.0 &mdash; Now with AI
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="margin-left:2px;"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <h1 class="reveal reveal-delay-1">Build products<br>at the speed of thought</h1>
-      <p class="reveal reveal-delay-2">Velox is the project tracking tool that software teams actually enjoy using. Streamline issues, sprints, and product roadmaps.</p>
-      <div class="hero-buttons reveal reveal-delay-3">
-        <button class="btn-primary btn-large">Get started free</button>
-        <button class="btn-ghost btn-large">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="margin-right:6px;"><polygon points="6,3 13,8 6,13" fill="currentColor"/></svg>
-          Watch demo
-        </button>
+      <h1>The product development<br>system for teams and <span class="highlight">agents</span></h1>
+      <p class="hero-sub">Purpose-built for planning and building products. Designed for the AI era.</p>
+      <div class="hero-pills">
+        <a href="#" class="pill">
+          <span class="pill-dot"></span>
+          Issue tracking is dead
+          <span class="pill-arrow">&#8250;</span>
+        </a>
+        <a href="#" class="pill">
+          View approach
+          <span class="pill-arrow">&#8250;</span>
+        </a>
+      </div>
+
+      <!-- App Mockup -->
+      <div class="mockup-container">
+        <div class="mockup-titlebar">
+          <span class="titlebar-dot"></span>
+          <span class="titlebar-dot"></span>
+          <span class="titlebar-dot"></span>
+        </div>
+        <div class="mockup-body">
+          <!-- Sidebar -->
+          <div class="mock-sidebar">
+            <div class="sidebar-workspace">
+              <div class="workspace-avatar">V</div>
+              <span class="workspace-name">Velocity</span>
+            </div>
+            <div class="sidebar-section">
+              <div class="sidebar-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M2 6h12"/></svg>
+                My issues
+              </div>
+              <div class="sidebar-item active">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+                Active cycle
+              </div>
+              <div class="sidebar-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10M3 8h10M3 13h6"/></svg>
+                Backlog
+              </div>
+              <div class="sidebar-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13V5l4 3 4-5v11"/></svg>
+                Roadmap
+              </div>
+              <div class="sidebar-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13l4-4 3 3 5-6"/></svg>
+                Insights
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <div class="sidebar-label">Teams</div>
+              <div class="sidebar-item">
+                <span class="sidebar-team-dot" style="background:#d4a843"></span>
+                Engineering
+              </div>
+              <div class="sidebar-item">
+                <span class="sidebar-team-dot" style="background:#5e6ad2"></span>
+                Design
+              </div>
+              <div class="sidebar-item">
+                <span class="sidebar-team-dot" style="background:#2da44e"></span>
+                Infrastructure
+              </div>
+              <div class="sidebar-item">
+                <span class="sidebar-team-dot" style="background:#e5534b"></span>
+                Mobile
+              </div>
+            </div>
+          </div>
+
+          <!-- Main content -->
+          <div class="mock-main">
+            <div class="mock-header">
+              <div class="mock-header-left">
+                <span class="mock-breadcrumb">Engineering &rsaquo; <span>Faster app launch</span></span>
+              </div>
+              <div class="mock-header-actions">
+                <div class="mock-header-btn">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+                  Filter
+                </div>
+                <div class="mock-header-btn">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h10M3 8h10M3 11h10"/></svg>
+                  Group
+                </div>
+              </div>
+            </div>
+            <div class="mock-tabs">
+              <div class="mock-tab active">Issues</div>
+              <div class="mock-tab">Board</div>
+              <div class="mock-tab">Timeline</div>
+              <div class="mock-tab">Triage</div>
+            </div>
+            <div class="mock-issues">
+              <div class="mock-issue-group-header">
+                <svg viewBox="0 0 16 16" fill="none" stroke="#e3b341" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+                In Progress
+                <span class="group-count">3</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-progress"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-142</span>
+                <span class="issue-title">Reduce cold start latency below 200ms</span>
+                <span class="issue-label perf">Performance</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#d4a843,#c49330)"></div>
+                <span class="issue-date">2h ago</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-progress"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:10px"></span><span style="height:3px;opacity:0.3"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-139</span>
+                <span class="issue-title">Migrate to edge runtime for API routes</span>
+                <span class="issue-label imp">Improvement</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#5e6ad2,#7c83e0)"></div>
+                <span class="issue-date">5h ago</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-progress"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-137</span>
+                <span class="issue-title">Implement incremental static regeneration</span>
+                <span class="issue-label feat">Feature</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#2da44e,#22c55e)"></div>
+                <span class="issue-date">1d ago</span>
+              </div>
+
+              <div class="mock-issue-group-header">
+                <svg viewBox="0 0 16 16" fill="none" stroke="#5e6ad2" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 8h6"/></svg>
+                In Review
+                <span class="group-count">2</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-review"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-141</span>
+                <span class="issue-title">Optimize database connection pooling</span>
+                <span class="issue-label imp">Improvement</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#e5534b,#f06040)"></div>
+                <span class="issue-date">6h ago</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-review"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-140</span>
+                <span class="issue-title">Add rate limiting to public API endpoints</span>
+                <span class="issue-label feat">Feature</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#d4a843,#c49330)"></div>
+                <span class="issue-date">1d ago</span>
+              </div>
+
+              <div class="mock-issue-group-header">
+                <svg viewBox="0 0 16 16" fill="none" stroke="var(--text-faint)" stroke-width="1.5"><circle cx="8" cy="8" r="6"/></svg>
+                Todo
+                <span class="group-count">4</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-todo"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-136</span>
+                <span class="issue-title">Add WebSocket support for real-time sync</span>
+                <span class="issue-label feat">Feature</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#5e6ad2,#7c83e0)"></div>
+                <span class="issue-date">2d ago</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-todo"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:7px"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-134</span>
+                <span class="issue-title">Optimize bundle splitting for shared modules</span>
+                <span class="issue-label perf">Performance</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#2da44e,#22c55e)"></div>
+                <span class="issue-date">3d ago</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-todo"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-131</span>
+                <span class="issue-title">Fix race condition in parallel data fetching</span>
+                <span class="issue-label bug">Bug</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#d4a843,#c49330)"></div>
+                <span class="issue-date">4d ago</span>
+              </div>
+              <div class="issue-row">
+                <div class="issue-status status-todo"></div>
+                <div class="issue-priority">
+                  <div class="priority-bar">
+                    <span style="height:4px"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span><span style="height:3px;opacity:0.3"></span>
+                  </div>
+                </div>
+                <span class="issue-id">VEL-128</span>
+                <span class="issue-title">Deprecate legacy REST endpoints</span>
+                <span class="issue-label imp">Improvement</span>
+                <div class="issue-avatar" style="background:linear-gradient(135deg,#5e6ad2,#7c83e0)"></div>
+                <span class="issue-date">5d ago</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detail panel -->
+          <div class="mock-detail">
+            <div class="detail-id">VEL-142</div>
+            <div class="detail-title">Reduce cold start latency below 200ms</div>
+            <div class="detail-desc">Use runtime analysis to optimize module loading order and eliminate blocking imports. Target: sub-200ms cold start across all regions.</div>
+            <div class="detail-meta">
+              <span class="detail-meta-label">Status</span>
+              <span class="detail-meta-value"><span class="detail-status-dot" style="background:var(--yellow)"></span> In Progress</span>
+              <span class="detail-meta-label">Priority</span>
+              <span class="detail-meta-value">
+                <div class="priority-bar" style="transform:scale(0.9)"><span style="height:4px"></span><span style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span></div>
+                Urgent
+              </span>
+              <span class="detail-meta-label">Assignee</span>
+              <span class="detail-meta-value"><div class="issue-avatar" style="width:16px;height:16px;background:linear-gradient(135deg,#d4a843,#c49330)"></div> Alex Kim</span>
+              <span class="detail-meta-label">Label</span>
+              <span class="detail-meta-value"><span class="issue-label perf" style="font-size:10px;padding:1px 6px">Performance</span></span>
+              <span class="detail-meta-label">Project</span>
+              <span class="detail-meta-value">Faster app launch</span>
+              <span class="detail-meta-label">Due date</span>
+              <span class="detail-meta-value">Mar 31, 2026</span>
+            </div>
+            <div class="detail-divider"></div>
+            <div class="detail-section-title">Activity</div>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background:linear-gradient(135deg,#d4a843,#c49330)"></div>
+              <div>
+                <div class="activity-content"><strong>Alex Kim</strong> moved to In Progress</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background:linear-gradient(135deg,#5e6ad2,#7c83e0)"></div>
+              <div>
+                <div class="activity-content"><strong>Sarah Chen</strong> added label Performance</div>
+                <div class="activity-time">1 day ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-avatar" style="background:linear-gradient(135deg,#2da44e,#22c55e)"></div>
+              <div>
+                <div class="activity-content"><strong>James Park</strong> created this issue</div>
+                <div class="activity-time">3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Product Screenshot -->
-  <section class="product-section reveal">
-    <div class="product-glow"></div>
-    <div class="product-frame">
-      <div class="product-titlebar">
-        <div class="product-dots">
-          <span></span><span></span><span></span>
+  <div class="gradient-divider"></div>
+
+  <!-- Features -->
+  <section class="features fade-in">
+    <div class="features-header">
+      <h2>Built for speed and precision</h2>
+      <p>Every interaction is designed to be fast. Keyboard-first, real-time, and always responsive.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
-        <div class="product-tabs">
-          <div class="product-tab active">My Issues</div>
-          <div class="product-tab">Active Sprint</div>
-          <div class="product-tab">Backlog</div>
-          <div class="product-tab">Roadmap</div>
+        <h3>Sub-50ms interactions</h3>
+        <p>Optimistic updates and local-first architecture. Every action feels instant.</p>
+        <div class="feature-kbd"><span class="kbd">C</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </div>
+        <h3>Command palette</h3>
+        <p>Navigate anywhere, trigger any action, search everything. All from one input.</p>
+        <div class="feature-kbd"><span class="kbd">&#8984;</span><span class="kbd">K</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <h3>Cycles and milestones</h3>
+        <p>Time-boxed development cycles with automatic carry-over and progress tracking.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M4 4l17 17"/></svg>
+        </div>
+        <h3>Git integration</h3>
+        <p>Auto-close issues from PRs and branches. Link commits to issues seamlessly.</p>
+        <div class="feature-kbd"><span class="kbd">G</span> <span class="kbd">I</span></div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>AI-powered triage</h3>
+        <p>Agents classify, prioritize, and route issues automatically. Focus on building.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <h3>Custom views</h3>
+        <p>Filter, group, and save any perspective. Share views across your team.</p>
+        <div class="feature-kbd"><span class="kbd">&#8984;</span><span class="kbd">&#8679;</span><span class="kbd">D</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gradient-divider"></div>
+
+  <!-- Workflow -->
+  <section class="workflow fade-in">
+    <div class="workflow-header">
+      <h2>Designed for how you work</h2>
+      <p>From planning to shipping, every workflow is optimized to remove friction and keep momentum.</p>
+    </div>
+    <div class="workflow-grid">
+      <div class="workflow-card">
+        <h3>Continuous cycles</h3>
+        <p>Automate sprint planning with rolling cycles. Unfinished work carries forward automatically.</p>
+        <div class="workflow-visual">
+          <div class="cycle-dots">
+            <div class="cycle-dot" style="border-color:var(--text-faint)">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--text-faint)" stroke-width="1.5"><path d="M4 8h8M8 4v8"/></svg>
+            </div>
+            <div class="cycle-connector active"></div>
+            <div class="cycle-dot active">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.5"><circle cx="8" cy="8" r="3"/></svg>
+            </div>
+            <div class="cycle-connector"></div>
+            <div class="cycle-dot">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--text-faint)" stroke-width="1.5"><path d="M5 8h6"/></svg>
+            </div>
+            <div class="cycle-connector"></div>
+            <div class="cycle-dot">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--text-faint)" stroke-width="1.5"><path d="M5 8h6"/></svg>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="product-body">
-        <div class="product-sidebar">
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Workspace</div>
-            <div class="sidebar-item active">
-              <div class="sidebar-icon" style="background:var(--accent-subtle);color:var(--accent);">◆</div>
-              My Issues
-            </div>
-            <div class="sidebar-item">
-              <div class="sidebar-icon" style="background:rgba(255,255,255,0.05);color:var(--text-quaternary);">⊙</div>
-              Inbox
-            </div>
-            <div class="sidebar-item">
-              <div class="sidebar-icon" style="background:rgba(255,255,255,0.05);color:var(--text-quaternary);">◫</div>
-              Views
-            </div>
+      <div class="workflow-card">
+        <h3>Project timelines</h3>
+        <p>Visualize progress across teams with real-time Gantt-style timelines and dependency tracking.</p>
+        <div class="workflow-visual">
+          <div class="timeline-bars">
+            <div class="timeline-bar" style="width:100%"><div class="timeline-bar-fill" style="width:75%;background:var(--accent)"></div></div>
+            <div class="timeline-bar" style="width:85%"><div class="timeline-bar-fill" style="width:60%;background:var(--indigo)"></div></div>
+            <div class="timeline-bar" style="width:70%"><div class="timeline-bar-fill" style="width:90%;background:var(--green)"></div></div>
+            <div class="timeline-bar" style="width:90%"><div class="timeline-bar-fill" style="width:40%;background:var(--red)"></div></div>
+            <div class="timeline-bar" style="width:60%"><div class="timeline-bar-fill" style="width:20%;background:var(--orange)"></div></div>
           </div>
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Teams</div>
-            <div class="sidebar-item">
-              <div class="sidebar-icon" style="background:rgba(94,106,210,0.15);color:var(--accent);">E</div>
-              Engineering
+        </div>
+      </div>
+      <div class="workflow-card">
+        <h3>Automated workflows</h3>
+        <p>Trigger actions based on state changes. Auto-assign, label, notify, and transition without manual work.</p>
+        <div class="workflow-visual">
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);">
+              <span class="kbd" style="background:var(--accent-dim);border-color:rgba(212,168,67,0.3);color:var(--accent)">When</span>
+              status changes to Done
             </div>
-            <div class="sidebar-item">
-              <div class="sidebar-icon" style="background:rgba(45,164,78,0.15);color:var(--green);">D</div>
-              Design
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--text-faint)" stroke-width="1.5"><path d="M8 3v10M5 10l3 3 3-3"/></svg>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);">
+              <span class="kbd" style="background:rgba(45,164,78,0.15);border-color:rgba(45,164,78,0.3);color:var(--green)">Then</span>
+              notify channel &amp; close PR
             </div>
           </div>
         </div>
-        <div class="product-main">
-          <div class="product-main-header">
-            <div class="product-main-title">My Issues</div>
-            <div class="product-main-count">6 issues</div>
-          </div>
-          <div class="issue-row">
-            <div class="issue-status in-progress"></div>
-            <div class="issue-id">VEL-247</div>
-            <div class="issue-title">Implement real-time sync engine for multiplayer</div>
-            <div class="issue-priority priority-urgent">Urgent</div>
-            <div class="issue-assignee">JD</div>
-          </div>
-          <div class="issue-row">
-            <div class="issue-status in-progress"></div>
-            <div class="issue-id">VEL-243</div>
-            <div class="issue-title">Add keyboard shortcut overlay panel</div>
-            <div class="issue-priority priority-high">High</div>
-            <div class="issue-assignee alt">KL</div>
-          </div>
-          <div class="issue-row">
-            <div class="issue-status todo"></div>
-            <div class="issue-id">VEL-251</div>
-            <div class="issue-title">Design mobile navigation flow</div>
-            <div class="issue-priority priority-medium">Medium</div>
-            <div class="issue-assignee">JD</div>
-          </div>
-          <div class="issue-row">
-            <div class="issue-status todo"></div>
-            <div class="issue-id">VEL-255</div>
-            <div class="issue-title">Integrate GitHub PR auto-linking</div>
-            <div class="issue-priority priority-medium">Medium</div>
-            <div class="issue-assignee alt2">AM</div>
-          </div>
-          <div class="issue-row">
-            <div class="issue-status done"></div>
-            <div class="issue-id">VEL-239</div>
-            <div class="issue-title completed">Optimize list rendering performance</div>
-            <div class="issue-priority priority-low">Done</div>
-            <div class="issue-assignee">JD</div>
-          </div>
-          <div class="issue-row">
-            <div class="issue-status done"></div>
-            <div class="issue-id">VEL-236</div>
-            <div class="issue-title completed">Set up CI pipeline for preview deploys</div>
-            <div class="issue-priority priority-low">Done</div>
-            <div class="issue-assignee alt">KL</div>
+      </div>
+      <div class="workflow-card">
+        <h3>Agent-assisted development</h3>
+        <p>AI agents handle triage, write specs, suggest fixes, and create sub-issues from feedback.</p>
+        <div class="workflow-visual">
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;width:80%;">
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-surface-2);border-radius:6px;color:var(--text-secondary);">
+              <span style="color:var(--accent);">&#9679;</span>
+              Analyzing 12 new issues...
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-surface-2);border-radius:6px;color:var(--text-secondary);">
+              <span style="color:var(--green);">&#10003;</span>
+              3 duplicates merged
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-surface-2);border-radius:6px;color:var(--text-secondary);">
+              <span style="color:var(--yellow);">&#9679;</span>
+              2 issues need clarification
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <div style="height:120px;"></div>
-  <div class="divider"></div>
-
-  <!-- Features Grid -->
-  <section class="feature-strip reveal">
-    <div class="feature-strip-inner">
-      <div class="feature-strip-header">
-        <div class="section-label">Built for speed</div>
-        <h2 class="section-title">Issue tracking you'll<br>actually enjoy</h2>
-        <p class="section-desc">Powerful yet simple. Fast by default. Every interaction is optimized for keyboard-first workflows that keep you in flow.</p>
-      </div>
-      <div class="feature-grid">
-        <div class="feature-cell">
-          <div class="feature-cell-icon">
-            <svg viewBox="0 0 16 16" fill="none"><path d="M13 8A5 5 0 103 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8 3v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Lightning fast</h3>
-          <p>Every interaction responds in under 50ms. Built on a real-time architecture with zero loading states.</p>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-cell-icon">
-            <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 8h1M8 8h1M11 8h1M5 6h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Keyboard first</h3>
-          <p>Every action has a shortcut. Navigate, create, assign, and close without ever touching the mouse.</p>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-cell-icon">
-            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Cycles</h3>
-          <p>Time-boxed sprints with automated burndown tracking and scope-creep detection built in.</p>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-cell-icon">
-            <svg viewBox="0 0 16 16" fill="none"><path d="M2 12h12M2 8h8M2 4h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Roadmaps</h3>
-          <p>Visualize your product direction on a timeline. Drag to adjust scope and share with stakeholders.</p>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-cell-icon">
-            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4h8v8H4zM1 1h4v4H1zM11 11h4v4h-4z" stroke="currentColor" stroke-width="1.2"/><path d="M5 6l3 3M8 7l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Integrations</h3>
-          <p>GitHub, GitLab, Slack, Figma, and Sentry. Your entire dev workflow unified in one place.</p>
-        </div>
-        <div class="feature-cell">
-          <div class="feature-cell-icon">
-            <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l2 4 4.5.7-3.25 3.2.77 4.5L8 12.2 3.98 14.4l.77-4.5L1.5 6.7 6 6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>AI powered</h3>
-          <p>Auto-triage incoming issues, suggest priorities, and generate sub-tasks from a single description.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- Highlight: Performance -->
-  <section class="highlight-section">
-    <div class="highlight-inner">
-      <div class="highlight-text reveal">
-        <div class="section-label">Performance</div>
-        <h2 class="section-title">Feels instant,<br>stays instant</h2>
-        <p class="section-desc">Built on a real-time data layer with optimistic updates. Every interaction is immediate, even on slow connections.</p>
-        <div class="integration-grid" style="margin-top:24px;">
-          <span class="integration-chip">
-            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="var(--green)"/></svg>
-            99.99% uptime
-          </span>
-          <span class="integration-chip">
-            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="var(--accent)"/></svg>
-            P50 &lt; 12ms
-          </span>
-        </div>
-      </div>
-      <div class="highlight-visual reveal reveal-delay-1">
-        <div class="metric-row">
-          <div class="metric-label">API Response</div>
-          <div class="metric-bar-wrap">
-            <div class="metric-bar"><div class="metric-bar-fill" style="width:18%;background:var(--green);"></div></div>
-            <div class="metric-value">12ms</div>
-          </div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label">List Render</div>
-          <div class="metric-bar-wrap">
-            <div class="metric-bar"><div class="metric-bar-fill" style="width:8%;background:var(--green);"></div></div>
-            <div class="metric-value">4ms</div>
-          </div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label">Sync Latency</div>
-          <div class="metric-bar-wrap">
-            <div class="metric-bar"><div class="metric-bar-fill" style="width:30%;background:var(--accent);"></div></div>
-            <div class="metric-value">28ms</div>
-          </div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label">Cold Start</div>
-          <div class="metric-bar-wrap">
-            <div class="metric-bar"><div class="metric-bar-fill" style="width:55%;background:var(--orange);"></div></div>
-            <div class="metric-value">92ms</div>
-          </div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label">Search Index</div>
-          <div class="metric-bar-wrap">
-            <div class="metric-bar"><div class="metric-bar-fill" style="width:12%;background:var(--green);"></div></div>
-            <div class="metric-value">8ms</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
 
   <!-- CTA -->
-  <section class="cta-section">
-    <div class="cta-glow"></div>
-    <div class="cta-content reveal">
-      <div class="section-label">Get started</div>
-      <h2 class="section-title">Move fast,<br>stay focused</h2>
-      <p class="section-desc">Join thousands of teams shipping better software with Velox. Free for teams up to 10.</p>
-      <div style="display:flex;justify-content:center;gap:12px;">
-        <button class="btn-primary btn-large">Get started free</button>
-        <button class="btn-ghost btn-large">Talk to sales</button>
-      </div>
+  <section class="cta fade-in">
+    <h2>Build products at the<br>speed of thought</h2>
+    <p>Join thousands of teams using Velocity to plan, track, and ship software faster.</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn-primary">
+        Get started
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+      <a href="#" class="btn-ghost">Talk to sales</a>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-grid">
+    <div class="footer-grid">
+      <div>
         <div class="footer-brand">
-          <a href="#" class="nav-logo" style="margin-bottom:4px;">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M3 10L10 3L17 10L10 17L3 10Z" fill="#5e6ad2"/>
-              <path d="M7 10L10 7L13 10L10 13L7 10Z" fill="rgba(255,255,255,0.25)"/>
-            </svg>
-            Velox
-          </a>
-          <p>Project tracking built for modern software teams.</p>
+          <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
+            <path d="M20 65L50 20L80 65" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M35 65L50 40L65 65" stroke="#d4a843" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Velocity
         </div>
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">Integrations</a></li>
-            <li><a href="#">Pricing</a></li>
-            <li><a href="#">Changelog</a></li>
-            <li><a href="#">Download</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Customers</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">Community</a></li>
-            <li><a href="#">API</a></li>
-            <li><a href="#">Status</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Terms</a></li>
-            <li><a href="#">Security</a></li>
-            <li><a href="#">DPA</a></li>
-          </ul>
-        </div>
+        <p class="footer-tagline">The product development system<br>for teams and agents.</p>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 Velox, Inc. All rights reserved.</p>
-        <div class="footer-socials">
-          <a href="#" aria-label="Twitter">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12.6 1h2.2L9.7 7.1 16 15h-4.6l-3.7-4.8L3.5 15H1.3l5.5-6.3L1 1h4.7l3.3 4.4L12.6 1zM11.8 13.6h1.2L5.2 2.3H3.9l7.9 11.3z" fill="currentColor"/></svg>
-          </a>
-          <a href="#" aria-label="GitHub">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1C4.13 1 1 4.13 1 8c0 3.1 2 5.7 4.8 6.6.35.07.48-.15.48-.34v-1.2c-1.96.43-2.37-.94-2.37-.94-.32-.81-.78-1.03-.78-1.03-.64-.44.05-.43.05-.43.7.05 1.08.72 1.08.72.63 1.08 1.65.77 2.05.59.06-.46.24-.77.44-.94-1.56-.18-3.2-.78-3.2-3.48 0-.77.28-1.4.72-1.89-.07-.18-.31-.9.07-1.87 0 0 .59-.19 1.93.72a6.7 6.7 0 013.5 0c1.34-.91 1.93-.72 1.93-.72.38.97.14 1.69.07 1.87.45.49.72 1.12.72 1.89 0 2.71-1.65 3.3-3.22 3.47.25.22.48.65.48 1.31v1.94c0 .19.13.41.49.34A7 7 0 0015 8c0-3.87-3.13-7-7-7z" fill="currentColor"/></svg>
-          </a>
-          <a href="#" aria-label="Discord">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 3.2A12.3 12.3 0 0010.4 2c-.14.25-.3.58-.4.84a11.5 11.5 0 00-3.98 0c-.12-.26-.28-.6-.42-.84A12.2 12.2 0 002.5 3.2C.66 6.04.17 8.8.42 11.53A12.4 12.4 0 004.2 14c.3-.4.56-.83.79-1.28a7.9 7.9 0 01-1.24-.6l.3-.24a8.8 8.8 0 007.5 0l.3.24c-.4.24-.8.44-1.24.6.23.45.49.88.79 1.28a12.3 12.3 0 003.78-2.47c.29-3.13-.5-5.86-2.08-8.33zM5.68 10.1c-.7 0-1.28-.65-1.28-1.45s.56-1.45 1.28-1.45c.72 0 1.3.65 1.28 1.45.01.8-.56 1.45-1.28 1.45zm4.64 0c-.7 0-1.28-.65-1.28-1.45s.56-1.45 1.28-1.45c.72 0 1.3.65 1.28 1.45.01.8-.56 1.45-1.28 1.45z" fill="currentColor"/></svg>
-          </a>
-        </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Features</a>
+        <a href="#">Integrations</a>
+        <a href="#">Pricing</a>
+        <a href="#">Changelog</a>
+        <a href="#">Roadmap</a>
       </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Customers</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Docs</a>
+        <a href="#">API</a>
+        <a href="#">Community</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Velocity, Inc.</span>
+      <span>Built for builders.</span>
     </div>
   </footer>
 
   <script>
-    // Scroll-triggered reveal animations
+    // Scroll-triggered fade-in
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
+
 </body>
 </html>

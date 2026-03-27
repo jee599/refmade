@@ -3,669 +3,371 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prism Labs — Spatial Design Studio</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>SUTERA — Reality, By Design.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:       #0a0a0a;
-      --text:     #ffffff;
-      --muted:    #888888;
-      --border:   #1a1a1a;
-      --blue:     #BCD4FD;
-      --tan:      #E3C0A9;
-      --lavender: #C9C1FF;
-      --coral:    #E88150;
-      --mint:     #59E7CA;
-      --sage:     #91B394;
-      --salmon:   #FFA796;
-      --pink:     #F9CCDD;
-      --brown:    #996B4A;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #ffffff;
+      color: #0a0a0a;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    .font-mono {
-      font-family: 'DM Mono', monospace;
-    }
-
-    /* ── LOADER ─────────────────────────────────────────────── */
-    #loader {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.6s ease;
-    }
-    #loader.done { opacity: 0; pointer-events: none; }
-
-    .loader-grid {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .loader-grid span {
-      aspect-ratio: 1/1;
-      min-width: 7.5%;
-      flex: 1;
-      background: #fff;
-      opacity: 0;
-      animation: block-fade 2.2s ease-in-out infinite;
-    }
-    .loader-grid span:nth-child(odd)  { animation-delay: 0s; }
-    .loader-grid span:nth-child(even) { animation-delay: 0.12s; }
-    .loader-grid span:nth-child(3n)   { animation-delay: 0.24s; }
-    .loader-grid span:nth-child(5n)   { animation-delay: 0.36s; }
-    .loader-grid span:nth-child(7n)   { animation-delay: 0.48s; }
-
-    @keyframes block-fade {
-      0%   { opacity: 0; transform: scale(0.9); }
-      25%  { opacity: 0.85; transform: scale(1); }
-      75%  { opacity: 0.85; transform: scale(1); }
-      100% { opacity: 0; transform: scale(0.9); }
-    }
-
-    .loader-text {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      mix-blend-mode: difference;
-    }
-    .loader-pct {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(28px, 5vw, 56px);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      color: #fff;
-    }
-    .loader-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #fff;
-      opacity: 0.4;
-      margin-top: 8px;
-    }
-
-    /* ── MAIN CONTENT ───────────────────────────────────────── */
-    #main-content {
-      opacity: 0;
-      transition: opacity 0.8s ease 0.1s;
-    }
-    #main-content.visible { opacity: 1; }
-
-    /* ── HERO ────────────────────────────────────────────────── */
-    .hero-headline {
-      font-size: clamp(3rem, 10vw, 8rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 0.95;
-    }
-    .hero-word {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .hero-word:nth-child(1) { animation-delay: 1.8s; }
-    .hero-word:nth-child(2) { animation-delay: 1.95s; }
-    .hero-word:nth-child(3) { animation-delay: 2.1s; }
-    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
-
-    .hero-sub {
-      opacity: 0;
-      animation: fade-up 0.7s ease 2.4s forwards;
-    }
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── PROJECT GRID ───────────────────────────────────────── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
-    @media (max-width: 1023px) {
-      .projects-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 639px) {
-      .projects-grid { grid-template-columns: 1fr; }
-    }
-
-    .project-card {
-      position: relative;
       overflow: hidden;
-      cursor: pointer;
-      aspect-ratio: 4/3;
-    }
-    .project-card.tall {
-      aspect-ratio: 3/4;
-    }
-    @media (min-width: 1024px) {
-      .project-card.wide {
-        grid-column: span 2;
-        aspect-ratio: 8/3;
-      }
+      width: 1440px;
+      height: 900px;
+      position: relative;
     }
 
-    /* Each card has its accent color as background */
-    .project-card .card-bg {
-      position: absolute;
-      inset: 0;
-      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .project-card:hover .card-bg {
-      transform: scale(1.03);
-    }
+    .mono { font-family: 'Space Mono', monospace; }
 
-    /* Dark overlay that appears on hover */
-    .project-card .card-overlay {
+    /* ── SVG LINES ── */
+    .lines-svg {
       position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0);
-      transition: background 0.4s ease;
-      z-index: 1;
-    }
-    .project-card:hover .card-overlay {
-      background: rgba(0,0,0,0.15);
-    }
-
-    /* Decorative visual element inside each card */
-    .card-visual-element {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 0; left: 0;
+      width: 1440px;
+      height: 900px;
+      pointer-events: none;
       z-index: 0;
     }
-    .card-visual-element img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+
+    .lines-svg line {
+      stroke: #1a1a1a;
+      stroke-width: 0.75;
     }
 
-    /* Card info — bottom left */
-    .card-info {
+    .lines-svg .line-light {
+      stroke: #ccc;
+      stroke-width: 0.5;
+    }
+
+    .lines-svg circle {
+      fill: #1a1a1a;
+    }
+
+    .lines-svg .dot-light {
+      fill: #bbb;
+    }
+
+    /* ── HEADLINE ── */
+    .headline {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 20px 24px;
-      z-index: 2;
+      top: 48px;
+      left: 56px;
+    }
+
+    .headline span { display: block; }
+
+    /* ── NODES ── */
+    .node {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .node-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    .node-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      margin-bottom: 3px;
+    }
+
+    .node-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      color: #999;
+      line-height: 1.7;
+      max-width: 150px;
+    }
+
+    /* ── BRAND BOX ── */
+    .brand-box {
+      background: #0a0a0a;
+      color: #fff;
+      padding: 16px 20px;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .brand-box .brand-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .brand-box .brand-detail {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      color: #777;
+      line-height: 2;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      border: 1px solid #c0c0c0;
+      padding: 16px 18px;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .info-box .info-heading {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .info-box .info-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      color: #888;
+      line-height: 1.8;
+    }
+
+    /* ── BOTTOM SECTION ── */
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    .work-list {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      line-height: 1.3;
-      color: var(--bg);
+
+    .work-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .card-subtitle {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.05em;
+
+    .work-swatch {
+      width: 18px;
+      height: 11px;
+      flex-shrink: 0;
+    }
+
+    .work-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .work-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      color: #aaa;
+      margin-left: 4px;
+    }
+
+    /* ── FOOTER ── */
+    .footer-links {
+      position: absolute;
+      bottom: 40px;
+      right: 56px;
+      display: flex;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--bg);
-      opacity: 0.6;
+      color: #aaa;
+      text-decoration: none;
     }
 
-    /* Cards with dark accent need white text */
-    .project-card.dark-accent .card-title,
-    .project-card.dark-accent .card-subtitle {
-      color: #fff;
-    }
-    .project-card.dark-accent .card-subtitle {
-      opacity: 0.5;
-    }
-
-    /* ── THREAD PILLS ───────────────────────────────────────── */
-    .thread-pill {
-      font-size: 13px;
-      padding: 8px 18px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      color: var(--muted);
-      transition: border-color 0.25s, color 0.25s;
-      cursor: default;
-    }
-    .thread-pill:hover {
-      border-color: #444;
-      color: var(--text);
-    }
-
-    /* ── SCROLL REVEAL ──────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── MONO LABEL ─────────────────────────────────────────── */
-    .mono-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
+    .sys-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 7px;
+      color: #bbb;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* ── EASTER EGG ─────────────────────────────────────────── */
-    #egg-message {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 200;
-      background: #111;
-      border: 1px solid var(--mint);
-      color: var(--mint);
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      padding: 10px 16px;
-      border-radius: 4px;
-      animation: egg-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      pointer-events: none;
-    }
-    @keyframes egg-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <!-- ──────── LOADER ──────── -->
-  <div id="loader" aria-hidden="true">
-    <div class="loader-grid">
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <div class="loader-text">
-      <div class="loader-pct" id="loader-pct">Loading 0%</div>
+  <!-- SVG Lines connecting nodes -->
+  <svg class="lines-svg" viewBox="0 0 1440 900">
+    <!-- Main vertical drop from headline area -->
+    <line x1="178" y1="190" x2="178" y2="395" />
+    <circle cx="178" cy="395" r="2" />
+
+    <!-- Horizontal from headline drop to "FORM EVER FOLLOWS" -->
+    <line x1="178" y1="395" x2="310" y2="395" />
+    <circle cx="310" cy="395" r="2" />
+
+    <!-- From FORM EVER FOLLOWS right to junction -->
+    <line x1="470" y1="395" x2="590" y2="395" />
+    <circle cx="590" cy="395" r="2" />
+
+    <!-- Junction up to REF label / BRIEF area -->
+    <line x1="590" y1="395" x2="590" y2="290" />
+    <circle cx="590" cy="290" r="2" />
+
+    <!-- From junction right to BRIEF node -->
+    <line x1="590" y1="290" x2="700" y2="290" />
+    <circle cx="700" cy="290" r="2" />
+
+    <!-- From BRIEF up to description area -->
+    <line x1="700" y1="290" x2="700" y2="130" />
+    <circle cx="700" cy="130" r="2" />
+
+    <!-- From description right to brand box connection -->
+    <line x1="860" y1="130" x2="1020" y2="130" />
+    <circle cx="1020" cy="130" r="2" />
+
+    <!-- Vertical to brand box -->
+    <line x1="1020" y1="130" x2="1020" y2="82" />
+
+    <!-- From brand box area down to info box -->
+    <line x1="1100" y1="190" x2="1100" y2="380" />
+    <circle cx="1100" cy="380" r="2" />
+
+    <!-- Bottom section: vertical from work list up -->
+    <line x1="128" y1="710" x2="128" y2="640" />
+    <circle cx="128" cy="640" r="2" />
+
+    <!-- Horizontal to TRANSMISSION node -->
+    <line x1="128" y1="640" x2="316" y2="640" />
+    <circle cx="316" cy="640" r="2" />
+
+    <!-- From TRANSMISSION right -->
+    <line x1="470" y1="640" x2="630" y2="640" />
+    <circle cx="630" cy="640" r="2" />
+
+    <!-- Light diagonal accent lines -->
+    <line class="line-light" x1="440" y1="80" x2="440" y2="200" />
+    <line class="line-light" x1="440" y1="200" x2="540" y2="200" />
+    <circle class="dot-light" cx="540" cy="200" r="1.5" />
+  </svg>
+
+  <!-- HEADLINE -->
+  <div class="headline">
+    <span>REALITY,</span>
+    <span>BY DESIGN.</span>
+  </div>
+
+  <!-- Light accent node near headline -->
+  <div class="node" style="top: 192px; left: 550px;">
+    <div class="node-label" style="color: #ccc;">SYS.07</div>
+  </div>
+
+  <!-- Node: Form Ever Follows -->
+  <div class="node" style="top: 376px; left: 316px;">
+    <div class="node-title">FORM EVER FOLLOWS</div>
+    <div class="node-desc">function. this is the law.<br>-- louis sullivan, 1896</div>
+  </div>
+
+  <!-- Node: Ref label at junction -->
+  <div class="node" style="top: 278px; left: 600px;">
+    <div class="node-label">REF -- 001</div>
+  </div>
+
+  <!-- Node: Brief description -->
+  <div class="node" style="top: 92px; left: 708px;">
+    <div class="node-label">BRIEF -- DESCRIPTION</div>
+    <div class="node-desc" style="margin-top: 5px;">a multidisciplinary<br>studio focused on<br>architecture &amp; digital<br>spatial experiences</div>
+  </div>
+
+  <!-- Brand Box: SUTERA -->
+  <div class="brand-box" style="top: 56px; right: 56px; width: 218px;">
+    <div class="brand-name">SUTERA</div>
+    <div class="brand-detail">
+      01 -- COMMISSIONS<br>
+      02 -- ARTIFACTS<br>
+      03 -- EXPERIMENTS TO SCOPE
     </div>
   </div>
 
-  <!-- ──────── EASTER EGG ──────── -->
-  <div id="egg-message" role="status"></div>
-
-  <!-- ──────── MAIN CONTENT ──────── -->
-  <div id="main-content">
-
-    <!-- ──────── HERO ──────── -->
-    <section style="padding: 140px 0 100px; position: relative;">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
-
-        <!-- Local time badge -->
-        <div class="hero-sub" style="animation-delay: 1.6s;">
-          <div class="mono-label" style="margin-bottom: 40px; display: flex; align-items: center; gap: 12px;">
-            <span id="local-time">00:00</span>
-            <span style="color: var(--border);">/</span>
-            <span>ZUR</span>
-          </div>
-        </div>
-
-        <h1 class="hero-headline" style="margin-bottom: 48px;">
-          <span class="hero-word">Reality,</span><br>
-          <span class="hero-word">By&nbsp;</span><span class="hero-word">Design.</span>
-        </h1>
-
-        <div class="hero-sub" style="max-width: 520px;">
-          <p style="font-size: 16px; color: var(--muted); line-height: 1.7;">
-            I'm Kira Selene and I lead spatial design at Prism Labs. On the side I give talks, run workshops, and write about design and technology.
-          </p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ──────── CORE THREADS ──────── -->
-    <section style="padding: 0 0 80px;">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
-        <div class="reveal">
-          <div class="mono-label" style="margin-bottom: 24px;">Core threads of my work</div>
-          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <span class="thread-pill">Perceptual Interfaces</span>
-            <span class="thread-pill">Spatial Computing</span>
-            <span class="thread-pill">Embodiment</span>
-            <span class="thread-pill">Design Systems & Tools</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ──────── PROJECT GRID ──────── -->
-    <section id="work" style="padding: 0 0 2px;">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
-        <div class="mono-label reveal" style="margin-bottom: 24px;">Some Project Examples</div>
-      </div>
-
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
-        <div class="projects-grid">
-
-          <!-- Card 01 — blue — wide -->
-          <article class="project-card wide reveal"
-                   onclick="showEgg('Depth perception is just confidence in distance.')">
-            <div class="card-bg" style="background: var(--blue);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=300&q=80&fit=crop" alt="VR headset in dark environment" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Depth OS — Layered Interface SDK</div>
-              <div class="card-subtitle">Software for spatial devs</div>
-            </div>
-          </article>
-
-          <!-- Card 02 — tan -->
-          <article class="project-card reveal" style="transition-delay: 0.05s;">
-            <div class="card-bg" style="background: var(--tan);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&q=80&fit=crop" alt="Abstract 3D render with geometric shapes" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Cascade — Operating System</div>
-              <div class="card-subtitle">Identity & brand system</div>
-            </div>
-          </article>
-
-          <!-- Card 03 — lavender -->
-          <article class="project-card reveal" style="transition-delay: 0.1s;">
-            <div class="card-bg" style="background: var(--lavender);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=450&q=80&fit=crop" alt="Abstract technology visualization" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Orbit — Research Labs</div>
-              <div class="card-subtitle">Data & visualization</div>
-            </div>
-          </article>
-
-          <!-- Card 04 — coral -->
-          <article class="project-card reveal" style="transition-delay: 0.05s;">
-            <div class="card-bg" style="background: var(--coral);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&q=80&fit=crop" alt="Holographic light patterns" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Pulse — Gestural Research</div>
-              <div class="card-subtitle">Hands & input</div>
-            </div>
-          </article>
-
-          <!-- Card 05 — salmon -->
-          <article class="project-card reveal" style="transition-delay: 0.1s;">
-            <div class="card-bg" style="background: var(--salmon);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&h=400&q=80&fit=crop" alt="Abstract gradient composition" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Nexus — MR Cloud Platform</div>
-              <div class="card-subtitle">Mixed reality & cloud</div>
-            </div>
-          </article>
-
-          <!-- Card 06 — pink -->
-          <article class="project-card reveal" style="transition-delay: 0.15s;">
-            <div class="card-bg" style="background: var(--pink);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=450&q=80&fit=crop" alt="Abstract art with flowing colors" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Extend — Accessible Interfaces</div>
-              <div class="card-subtitle">Extending abilities</div>
-            </div>
-          </article>
-
-          <!-- Card 07 — sage -->
-          <article class="project-card reveal" style="transition-delay: 0.05s;">
-            <div class="card-bg" style="background: var(--sage);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=600&h=400&q=80&fit=crop" alt="3D geometric shapes" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Verdant — Assistive Platform</div>
-              <div class="card-subtitle">Restoring abilities</div>
-            </div>
-          </article>
-
-          <!-- Card 08 — mint -->
-          <article class="project-card reveal" style="transition-delay: 0.1s;">
-            <div class="card-bg" style="background: var(--mint);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=600&h=450&q=80&fit=crop" alt="Abstract minimal composition" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Dali — Generative Design Tool</div>
-              <div class="card-subtitle">Creative tooling</div>
-            </div>
-          </article>
-
-          <!-- Card 09 — brown — dark accent -->
-          <article class="project-card dark-accent reveal" style="transition-delay: 0.15s;"
-                   onclick="showEgg('Some colors are quieter. That is their power.')">
-            <div class="card-bg" style="background: var(--brown);"></div>
-            <div class="card-visual-element">
-              <img src="https://images.unsplash.com/photo-1561998338-13ad7883b20f?w=600&h=400&q=80&fit=crop" alt="Robot hand reaching out" loading="lazy" />
-            </div>
-            <div class="card-overlay"></div>
-            <div class="card-info">
-              <div class="card-title">Stolus — Luxury Commerce</div>
-              <div class="card-subtitle">Retail platform</div>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ──────── LECTURES & WRITING ──────── -->
-    <section style="padding: 80px 0;">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
-
-        <div class="reveal">
-          <div class="mono-label" style="margin-bottom: 24px;">Lectures, Talks & Writing</div>
-        </div>
-
-        <div class="reveal" style="transition-delay: 0.05s;">
-          <p style="font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 600px; margin-bottom: 32px;">
-            Guest speaking at ETH Zurich, ZHdK, and design conferences. Writing about perceptual interfaces and spatial computing.
-          </p>
-
-          <div style="display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: flex; align-items: baseline; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border);">
-              <span class="mono-label" style="flex-shrink: 0; width: 48px;">2026</span>
-              <div>
-                <div style="font-size: 15px; font-weight: 500;">Spatial Interfaces & Human Perception</div>
-                <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">ETH Zurich — Guest Lecture</div>
-              </div>
-            </div>
-            <div style="display: flex; align-items: baseline; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border);">
-              <span class="mono-label" style="flex-shrink: 0; width: 48px;">2025</span>
-              <div>
-                <div style="font-size: 15px; font-weight: 500;">Designing for Embodiment</div>
-                <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">ZHdK — Workshop Series</div>
-              </div>
-            </div>
-            <div style="display: flex; align-items: baseline; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border);">
-              <span class="mono-label" style="flex-shrink: 0; width: 48px;">2025</span>
-              <div>
-                <div style="font-size: 15px; font-weight: 500;">Beyond Screens: The Interface Continuum</div>
-                <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">Published on Medium</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ──────── FOOTER ──────── -->
-    <footer style="padding: 48px 0 32px; border-top: 1px solid var(--border);">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
-
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 32px; margin-bottom: 48px;">
-          <div>
-            <div style="font-weight: 600; font-size: 14px; margin-bottom: 8px;">Prism Labs</div>
-            <div style="font-size: 13px; color: var(--muted); line-height: 1.6;">
-              Currently in Zurich, Switzerland
-            </div>
-            <a href="mailto:hello@prismlabs.xyz"
-               style="font-size: 13px; color: var(--muted); text-decoration: none; display: inline-block; margin-top: 4px; transition: color 0.2s;"
-               onmouseover="this.style.color='var(--text)'"
-               onmouseout="this.style.color='var(--muted)'">
-              Reach out to me &rarr;
-            </a>
-          </div>
-
-          <div style="display: flex; gap: 24px;">
-            <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;"
-               onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
-            <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;"
-               onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Instagram</a>
-            <a href="#" style="font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s;"
-               onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Medium</a>
-          </div>
-        </div>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border);">
-          <span style="font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace;">Prism Labs 2026</span>
-          <button
-            style="font-size: 10px; color: #333; font-family: 'DM Mono', monospace; background: none; border: none; cursor: pointer; transition: color 0.2s; letter-spacing: 0.08em;"
-            onmouseover="this.style.color='var(--sage)'"
-            onmouseout="this.style.color='#333'"
-            onclick="showEgg('REF_066 // Reality Interface // All accents are real.')"
-          >ref_066</button>
-          <span style="font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace;">made by Okey Studio</span>
-        </div>
-
-      </div>
-    </footer>
-
+  <!-- Info box: right side -->
+  <div class="info-box" style="top: 390px; right: 56px; width: 270px;">
+    <div class="info-heading">RE: A WORKING LAYOUT</div>
+    <div class="info-text">
+      A Modular Grid for Reality. Every form and<br>
+      surface is a considered decision. Nothing<br>
+      decorative. The grid speaks. Connections<br>
+      between nodes represent intent -- how one<br>
+      element informs the next. Process visible.<br>
+      Structure as meaning.
+    </div>
   </div>
 
-  <script>
-    // ── LOADER ─────────────────────────────────────────────
-    (function() {
-      const el = document.getElementById('loader-pct');
-      let pct = 0;
-      const tick = setInterval(() => {
-        pct += Math.floor(Math.random() * 10) + 3;
-        if (pct >= 100) {
-          pct = 100;
-          clearInterval(tick);
-          el.textContent = 'Loading 100%';
-          setTimeout(() => {
-            document.getElementById('loader').classList.add('done');
-            setTimeout(() => {
-              document.getElementById('loader').style.display = 'none';
-              document.getElementById('main-content').classList.add('visible');
-              checkReveal();
-            }, 600);
-          }, 400);
-        } else {
-          el.textContent = 'Loading ' + pct + '%';
-        }
-      }, 120);
-    })();
+  <!-- Bottom left: Work section -->
+  <div class="node" style="bottom: 86px; left: 56px;">
+    <div class="section-label" style="margin-bottom: 10px;">&#8627; CORE THREADS OF MY WORK &amp;</div>
+    <div class="work-list">
+      <div class="work-item">
+        <div class="work-swatch" style="background: #d4d4d4; border: 1px solid #bbb;"></div>
+        <span class="work-name">Studio</span>
+        <span class="work-type">spatial</span>
+      </div>
+      <div class="work-item">
+        <div class="work-swatch" style="background: #fff; border: 1px solid #ccc;"></div>
+        <span class="work-name">Lab</span>
+        <span class="work-type">research</span>
+      </div>
+      <div class="work-item">
+        <div class="work-swatch" style="background: #a8a8a8; border: 1px solid #999;"></div>
+        <span class="work-name">Archive</span>
+        <span class="work-type">artifacts</span>
+      </div>
+    </div>
+    <div class="sys-label" style="margin-top: 14px;">SYSTEM SEVEN</div>
+  </div>
 
-    // ── SCROLL REVEAL ──────────────────────────────────────
-    function checkReveal() {
-      document.querySelectorAll('.reveal').forEach(el => {
-        if (el.getBoundingClientRect().top < window.innerHeight - 60) {
-          el.classList.add('visible');
-        }
-      });
-    }
-    window.addEventListener('scroll', checkReveal, { passive: true });
-    window.addEventListener('resize', checkReveal, { passive: true });
+  <!-- Node: Transmission -->
+  <div class="node" style="top: 620px; left: 324px;">
+    <div class="node-title">TRANSMISSION</div>
+    <div class="node-desc">writing, thinking,<br>and open discourse</div>
+  </div>
 
-    // ── LOCAL TIME ─────────────────────────────────────────
-    function updateTime() {
-      const t = new Date().toLocaleTimeString('en-GB', {
-        timeZone: 'Europe/Zurich',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      document.getElementById('local-time').textContent = t;
-    }
-    updateTime();
-    setInterval(updateTime, 30000);
+  <!-- Node: Index at end of bottom line -->
+  <div class="node" style="top: 622px; left: 642px;">
+    <div class="node-label">INDEX -- 04.B</div>
+    <div class="node-desc" style="margin-top: 4px;">physical and digital<br>construction methods</div>
+  </div>
 
-    // ── EASTER EGG ─────────────────────────────────────────
-    function showEgg(msg) {
-      const el = document.getElementById('egg-message');
-      el.textContent = '// ' + msg;
-      el.style.display = 'block';
-      el.style.opacity = '1';
-      clearTimeout(window._eggTimer);
-      window._eggTimer = setTimeout(() => {
-        el.style.opacity = '0';
-        el.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-          el.style.display = 'none';
-          el.style.opacity = '';
-          el.style.transition = '';
-        }, 500);
-      }, 3000);
-    }
-  </script>
+  <!-- Footer links -->
+  <div class="footer-links">
+    <a href="#">INDEXED</a>
+    <a href="#">NOTES</a>
+    <a href="#">EDITIONS</a>
+  </div>
+
 </body>
 </html>

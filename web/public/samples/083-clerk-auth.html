@@ -4,494 +4,1127 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AuthKit — Authentication for Modern Apps</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
     :root {
-      --bg: #09090b;
-      --surface: #18181b;
-      --elevated: #1f1f23;
-      --border: #27272a;
-      --border-hover: #3f3f46;
-      --text: #fafafa;
-      --muted: #71717a;
-      --purple: #7c3aed;
-      --purple-light: #a78bfa;
-      --purple-dim: rgba(124,58,237,0.12);
-      --cyan: #06b6d4;
-      --cyan-dim: rgba(6,182,212,0.12);
+      --bg: #ffffff;
+      --bg-subtle: #fafbfc;
+      --bg-muted: #f4f5f7;
+      --surface: #ffffff;
+      --border: #e8eaed;
+      --border-hover: #d0d3d9;
+      --text: #111827;
+      --text-secondary: #4b5563;
+      --muted: #9ca3af;
+      --purple-50: #f5f3ff;
+      --purple-100: #ede9fe;
+      --purple-200: #ddd6fe;
+      --purple-400: #a78bfa;
+      --purple: #6c47ff;
+      --purple-hover: #5835e6;
+      --purple-dark: #4c2bc7;
+      --purple-bg: rgba(108,71,255,0.05);
+      --purple-border: rgba(108,71,255,0.12);
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04);
+      --shadow-card: 0 0 0 1px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.03), 0 12px 40px rgba(0,0,0,0.06);
+      --radius: 8px;
+      --radius-lg: 16px;
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
-    }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
-
-    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* Hero gradient */
-    .hero-gradient {
-      background: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(124,58,237,0.12) 0%, transparent 65%);
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
-    /* Meteor animation */
-    .meteor {
-      position: absolute;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--purple), transparent);
-      opacity: 0;
-      animation: meteor-fall 4s linear infinite;
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes meteor-fall {
-      0% { transform: translateY(-80px) translateX(0) rotate(15deg); opacity: 0; height: 0; }
-      5% { opacity: 0.5; height: 50px; }
-      80% { opacity: 0.3; }
-      100% { transform: translateY(500px) translateX(80px) rotate(15deg); opacity: 0; height: 50px; }
+    .fade-in { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+    .fade-in-d1 { animation-delay: 0.08s; }
+    .fade-in-d2 { animation-delay: 0.16s; }
+    .fade-in-d3 { animation-delay: 0.24s; }
+    .fade-in-d4 { animation-delay: 0.32s; }
+
+    /* ─── Nav ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-logo-icon {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--purple) 0%, #8b5cf6 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--bg-muted); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    /* Grid lines background */
-    .grid-bg {
-      background-image:
-        linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
-      background-size: 64px 64px;
-    }
-
-    /* Buttons */
-    .btn-purple {
+    /* ─── Buttons ─── */
+    .btn-primary {
       background: var(--purple);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-weight: 500;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      padding: 10px 20px;
+      box-shadow: 0 1px 2px rgba(108,71,255,0.2), 0 0 0 1px rgba(108,71,255,0.1);
     }
-    .btn-purple:hover { opacity: 0.9; }
+    .btn-primary:hover {
+      background: var(--purple-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(108,71,255,0.25), 0 0 0 1px rgba(108,71,255,0.15);
+    }
+
+    .btn-outline {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      padding: 10px 20px;
+    }
+    .btn-outline:hover { background: var(--bg-subtle); border-color: var(--border-hover); }
 
     .btn-ghost {
       background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      color: var(--text-secondary);
+      border: none;
+      border-radius: 6px;
       font-weight: 500;
+      font-size: 14px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      padding: 6px 12px;
+      text-decoration: none;
+      transition: color 0.15s ease, background 0.15s ease;
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.03); border-color: var(--border-hover); }
+    .btn-ghost:hover { color: var(--text); background: var(--bg-muted); }
 
-    /* Auth card */
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      padding: 72px 0 48px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,71,255,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 25% 0%, rgba(139,92,246,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 75% 0%, rgba(108,71,255,0.04) 0%, transparent 50%);
+    }
+    /* Subtle grid pattern */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image:
+        linear-gradient(rgba(108,71,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,71,255,0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, black 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, black 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px 5px 6px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--purple);
+      background: var(--purple-bg);
+      border: 1px solid var(--purple-border);
+      margin-bottom: 28px;
+    }
+    .hero-badge-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero h1 {
+      font-size: 60px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--text);
+      margin-bottom: 20px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--purple) 0%, #a855f7 50%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 32px;
+      font-weight: 400;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 56px;
+    }
+    .hero-actions .btn-primary { padding: 12px 28px; font-size: 15px; }
+    .hero-actions .btn-outline { padding: 12px 28px; font-size: 15px; }
+
+    /* ─── Auth Showcase ─── */
+    .auth-showcase {
+      position: relative;
+      max-width: 920px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 32px;
+      padding: 0 24px;
+    }
+
     .auth-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      width: 380px;
+      flex-shrink: 0;
     }
-
-    /* Code block */
-    .code-block {
-      background: #0c0c0f;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-family: 'JetBrains Mono', monospace;
+    .auth-card-header {
+      padding: 28px 28px 0;
+      text-align: center;
+    }
+    .auth-card-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--purple) 0%, #8b5cf6 100%);
+      border-radius: 9px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-card-header h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .auth-card-header p {
       font-size: 13px;
-      line-height: 1.65;
+      color: var(--muted);
+    }
+    .auth-card-body { padding: 20px 28px 28px; }
+
+    .social-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: var(--radius);
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .social-btn:hover { background: var(--bg-subtle); border-color: var(--border-hover); }
+
+    .auth-input {
+      width: 100%;
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      font-size: 13px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+    .auth-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(108,71,255,0.08); }
+    .auth-input::placeholder { color: var(--muted); }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .auth-continue-btn {
+      width: 100%;
+      padding: 9px;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      font-family: inherit;
+    }
+    .auth-continue-btn:hover { background: var(--purple-hover); }
+
+    /* Auth feature list */
+    .auth-features {
+      flex: 1;
+      min-width: 0;
+      padding-top: 8px;
+    }
+    .auth-feature-item {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .auth-feature-item:first-child { padding-top: 0; }
+    .auth-feature-item:last-child { border-bottom: none; }
+    .auth-feature-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--purple-50);
+    }
+    .auth-feature-item h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .auth-feature-item p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.45;
     }
 
-    /* Feature card */
+    /* ─── Trusted by ─── */
+    .trusted-section {
+      padding: 56px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .trusted-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 28px;
+    }
+    .trusted-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .trusted-logo {
+      font-size: 17px;
+      font-weight: 700;
+      color: #c5c9d2;
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── Framework pills ─── */
+    .frameworks-section {
+      padding: 72px 0;
+      text-align: center;
+    }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background: var(--purple-50);
+      color: var(--purple);
+      border: 1px solid var(--purple-border);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-heading {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto 36px;
+    }
+    .fw-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .fw-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      cursor: default;
+    }
+    .fw-pill:hover {
+      border-color: var(--purple-200);
+      background: var(--purple-50);
+      color: var(--purple);
+    }
+    .fw-pill svg { width: 18px; height: 18px; }
+
+    /* ─── Features grid ─── */
+    .features-section {
+      padding: 80px 0;
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
     .feature-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 28px;
-      transition: all 0.2s ease;
+      padding: 24px;
+      transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
     }
-    .feature-card:hover { transform: translateY(-2px); border-color: var(--border-hover); }
-
-    /* Icon box */
-    .icon-box {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-hover);
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      background: var(--purple-50);
+    }
+    .feature-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
     }
 
-    /* Section label */
-    .section-label {
+    /* ─── Code section ─── */
+    .code-section {
+      padding: 80px 0;
+    }
+    .code-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .code-text h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.1;
+    }
+    .code-text p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+    .code-block {
+      background: #1a1a2e;
+      border-radius: 12px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--purple-light);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
     }
-
-    /* Social button */
-    .social-btn {
-      width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      border-radius: 8px;
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text);
-      cursor: pointer;
-      transition: all 0.15s ease;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
     }
-    .social-btn:hover { background: rgba(255,255,255,0.03); }
+    .code-dots { display: flex; align-items: center; gap: 6px; }
+    .code-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .code-filename { font-size: 12px; color: rgba(255,255,255,0.35); font-family: 'JetBrains Mono', monospace; }
+    .code-body { padding: 20px; overflow-x: auto; }
+    .code-body pre { margin: 0; }
 
-    /* Input */
-    .auth-input {
-      width: 100%;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 13px;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s ease;
-    }
-    .auth-input:focus { border-color: var(--purple); box-shadow: 0 0 0 2px rgba(124,58,237,0.15); }
-    .auth-input::placeholder { color: var(--muted); }
+    /* Syntax colors */
+    .syn-keyword { color: #c792ea; }
+    .syn-string { color: #c3e88d; }
+    .syn-func { color: #82aaff; }
+    .syn-comment { color: #546e7a; font-style: italic; }
+    .syn-tag { color: #f07178; }
+    .syn-attr { color: #ffcb6b; }
+    .syn-component { color: #c3e88d; }
+    .syn-bracket { color: #babed8; }
+    .syn-plain { color: #babed8; }
+    .syn-prop { color: #82aaff; }
 
-    /* Divider */
-    .or-divider {
-      display: flex; align-items: center; gap: 12px;
+    /* ─── Testimonials ─── */
+    .testimonials-section {
+      padding: 80px 0;
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
-    .or-divider::before, .or-divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
     }
-
-    /* Testimonial card */
-    .testimonial-card {
-      background: var(--bg);
+    .test-card {
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px;
-      transition: all 0.2s ease;
     }
-    .testimonial-card:hover { transform: translateY(-2px); }
-    .testimonial-card.featured { border: 2px solid var(--purple); }
-
-    /* Avatar */
-    .avatar {
-      width: 32px; height: 32px;
+    .test-stars {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 12px;
+    }
+    .test-card blockquote {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 18px;
+      font-style: normal;
+    }
+    .test-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .test-avatar {
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple);
+    }
+    .test-avatar--1 { background: #f5f3ff; }
+    .test-avatar--2 { background: #eff6ff; color: #3b82f6; }
+    .test-avatar--3 { background: #f0fdf4; color: #16a34a; }
+    .test-author-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .test-author-role {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      padding: 88px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(108,71,255,0.05) 0%, transparent 60%);
+    }
+    .cta-section h2 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 36px; }
+      .hero-actions { flex-direction: column; }
+      .auth-showcase { flex-direction: column; align-items: center; }
+      .auth-card { width: 100%; max-width: 380px; }
+      .auth-features { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .code-layout { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .section-heading { font-size: 28px; }
+      .trusted-logos { gap: 24px; }
     }
   </style>
 </head>
 <body>
-  <!-- Nav -->
-  <nav class="fixed top-0 w-full z-50" style="background: rgba(9,9,11,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);">
-    <div class="max-w-[1080px] mx-auto px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-8">
-        <div class="flex items-center gap-2">
-          <div class="w-[26px] h-[26px] rounded-lg flex items-center justify-center" style="background: var(--purple);">
-            <svg class="w-[14px] h-[14px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          </div>
-          <span class="font-bold text-[15px]">AuthKit</span>
+
+  <!-- ─── Navigation ─── -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
         </div>
-        <div class="hidden md:flex items-center gap-5 text-[13px] text-[#71717a]">
-          <a href="#" class="hover:text-white transition-colors">Products</a>
-          <a href="#" class="hover:text-white transition-colors">Docs</a>
-          <a href="#" class="hover:text-white transition-colors">Pricing</a>
-          <a href="#" class="hover:text-white transition-colors">Blog</a>
-          <a href="#" class="hover:text-white transition-colors">Changelog</a>
-        </div>
+        AuthKit
+      </a>
+      <div class="nav-links">
+        <a href="#">Product</a>
+        <a href="#">Docs</a>
+        <a href="#">Pricing</a>
+        <a href="#">Blog</a>
+        <a href="#">Changelog</a>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="#" class="text-[13px] text-[#71717a] hover:text-white transition-colors">Sign in</a>
-        <a href="#" class="btn-purple text-[13px] px-4 py-[7px]">Get Started</a>
+      <div class="nav-actions">
+        <a href="#" class="btn-ghost">Sign in</a>
+        <a href="#" class="btn-primary" style="padding: 7px 16px; font-size: 13px;">Start building</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="relative pt-[140px] pb-[100px] md:pt-[180px] md:pb-[120px] text-center px-6 hero-gradient overflow-hidden">
-    <!-- Meteors -->
-    <div class="meteor" style="top: -60px; left: 15%; animation-delay: 0s; height: 50px;"></div>
-    <div class="meteor" style="top: -60px; left: 45%; animation-delay: 1.2s; height: 40px;"></div>
-    <div class="meteor" style="top: -60px; left: 70%; animation-delay: 2.5s; height: 60px;"></div>
-    <div class="meteor" style="top: -60px; left: 85%; animation-delay: 3.8s; height: 35px;"></div>
-
-    <div class="max-w-[780px] mx-auto relative z-10">
-      <div class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[12px] font-medium mb-8" style="background: var(--purple-dim); color: var(--purple-light); border: 1px solid rgba(124,58,237,0.2);">
-        <span class="w-1.5 h-1.5 rounded-full" style="background: var(--purple-light);"></span>
-        Trusted by 50,000+ applications
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+      <div class="fade-in">
+        <div class="hero-badge">
+          <span class="hero-badge-dot">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </span>
+          Now with passkey support
+        </div>
       </div>
-      <h1 class="font-bold text-[44px] md:text-[60px] leading-[1.08] mb-6" style="letter-spacing: -0.035em;">
-        Authentication &amp; user management for <span style="color: var(--purple-light);">modern apps</span>
-      </h1>
-      <p class="text-[17px] max-w-[560px] mx-auto mb-10 leading-[1.6] text-[#71717a]">
-        Drop-in UI components, flexible APIs, and admin dashboards to authenticate and manage your users. Works with any framework.
+      <h1 class="fade-in fade-in-d1">Start building,<br>stop configuring <span class="gradient-text">auth</span></h1>
+      <p class="hero-sub fade-in fade-in-d2">
+        Drop-in authentication UI, session management,
+        and multi-factor auth for your app — in minutes, not months.
       </p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#" class="btn-purple text-[14px] px-6 py-[11px]">Start Building</a>
-        <a href="#" class="btn-ghost text-[14px] px-6 py-[11px]">Read the Docs</a>
+      <div class="hero-actions fade-in fade-in-d3">
+        <a href="#" class="btn-primary">
+          Start building for free
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#" class="btn-outline">Read the docs</a>
       </div>
-    </div>
-  </section>
 
-  <!-- Company Logos -->
-  <section class="py-10" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-    <div class="max-w-[1080px] mx-auto px-6 fade-in">
-      <p class="text-center text-[11px] uppercase tracking-[0.12em] mb-8 text-[#71717a]">Powering authentication for</p>
-      <div class="flex flex-wrap items-center justify-center gap-10 md:gap-14 opacity-35">
-        <span class="font-semibold text-[14px]">Vercel</span>
-        <span class="font-semibold text-[14px]">Supabase</span>
-        <span class="font-semibold text-[14px]">Notion</span>
-        <span class="font-semibold text-[14px]">Stripe</span>
-        <span class="font-semibold text-[14px]">Linear</span>
-        <span class="font-semibold text-[14px]">Loom</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Auth Component Showcase -->
-  <section class="py-24 px-6">
-    <div class="max-w-[1080px] mx-auto fade-in">
-      <div class="text-center mb-16">
-        <div class="section-label mb-3">Components</div>
-        <h2 class="font-semibold text-[32px] sm:text-[40px]" style="letter-spacing: -0.025em;">Beautiful auth, out of the box</h2>
-      </div>
-      <div class="grid md:grid-cols-2 gap-8 items-start">
-        <!-- Sign In Preview -->
-        <div class="auth-card p-8">
-          <div class="max-w-[280px] mx-auto">
-            <div class="text-center mb-6">
-              <div class="w-10 h-10 rounded-lg mx-auto mb-4 flex items-center justify-center" style="background: var(--purple);">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-              </div>
-              <h3 class="font-semibold text-[17px]">Sign in to AuthKit</h3>
-              <p class="text-[13px] mt-1 text-[#71717a]">Welcome back! Please sign in to continue</p>
+      <!-- Auth showcase -->
+      <div class="auth-showcase fade-in fade-in-d4">
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <div class="auth-card-logo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
             </div>
-            <!-- Social logins -->
-            <div class="space-y-2.5 mb-4">
+            <h3>Sign in to Acme Inc</h3>
+            <p>Welcome back! Please sign in to continue</p>
+          </div>
+          <div class="auth-card-body">
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
               <button class="social-btn">
-                <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Continue with Google
               </button>
               <button class="social-btn">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#111827"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                 Continue with GitHub
               </button>
             </div>
-            <!-- Divider -->
-            <div class="or-divider my-5">
-              <span class="text-[11px] text-[#71717a]">or</span>
+            <div class="or-divider" style="margin-bottom: 14px;">or</div>
+            <div style="margin-bottom: 10px;">
+              <label style="display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 5px;">Email address</label>
+              <input type="email" class="auth-input" placeholder="you@example.com" />
             </div>
-            <!-- Email -->
-            <div class="space-y-3">
-              <div>
-                <label class="block text-[11px] font-medium mb-1.5 text-[#71717a]">Email address</label>
-                <input type="email" placeholder="you@example.com" class="auth-input" />
-              </div>
-              <button class="btn-purple w-full text-[13px] py-[10px]">Continue</button>
-            </div>
-            <p class="text-[11px] text-[#71717a] text-center mt-4">
-              Don't have an account? <a href="#" class="text-[var(--purple-light)] hover:underline">Sign up</a>
+            <button class="auth-continue-btn">Continue</button>
+            <p style="text-align: center; font-size: 12px; color: var(--muted); margin-top: 14px;">
+              Don't have an account? <a href="#" style="color: var(--purple); text-decoration: none; font-weight: 500;">Sign up</a>
             </p>
           </div>
         </div>
 
-        <!-- Code Preview -->
-        <div>
-          <div class="font-mono text-[11px] text-[#71717a] mb-3">// Add auth in 5 minutes</div>
-          <div class="code-block p-5 mb-4">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-1.5">
-                <div class="w-2.5 h-2.5 rounded-full" style="background: #ff5f57;"></div>
-                <div class="w-2.5 h-2.5 rounded-full" style="background: #febc2e;"></div>
-                <div class="w-2.5 h-2.5 rounded-full" style="background: #28c840;"></div>
-              </div>
-              <span class="font-mono text-[11px] text-[#71717a]">app/layout.tsx</span>
+        <div class="auth-features">
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
-            <pre class="font-mono" style="color: #71717a; overflow-x: auto;"><span style="color: #c084fc;">import</span> <span style="color: #fafafa;">{ AuthProvider }</span> <span style="color: #c084fc;">from</span> <span style="color: #6ee7b7;">'@authkit/nextjs'</span>
-
-<span style="color: #c084fc;">export default function</span> <span style="color: #60a5fa;">RootLayout</span>({
-  <span style="color: #fafafa;">children</span>,
-}: {
-  <span style="color: #fafafa;">children</span>: <span style="color: #fbbf24;">React.ReactNode</span>
-}) {
-  <span style="color: #c084fc;">return</span> (
-    <span style="color: #71717a;">&lt;</span><span style="color: #60a5fa;">AuthProvider</span><span style="color: #71717a;">&gt;</span>
-      {<span style="color: #fafafa;">children</span>}
-    <span style="color: #71717a;">&lt;/</span><span style="color: #60a5fa;">AuthProvider</span><span style="color: #71717a;">&gt;</span>
-  )
-}</pre>
-          </div>
-          <div class="code-block p-5">
-            <div class="flex items-center justify-between mb-4">
-              <span class="font-mono text-[11px]" style="color: var(--purple-light);">middleware.ts</span>
+            <div>
+              <h4>Secure by default</h4>
+              <p>Session tokens, CSRF protection, and rate limiting built in from day one.</p>
             </div>
-            <pre class="font-mono" style="color: #71717a; overflow-x: auto;"><span style="color: #c084fc;">import</span> <span style="color: #fafafa;">{ authMiddleware }</span> <span style="color: #c084fc;">from</span> <span style="color: #6ee7b7;">'@authkit/nextjs/server'</span>
-
-<span style="color: #c084fc;">export default</span> <span style="color: #60a5fa;">authMiddleware</span>()
-
-<span style="color: #c084fc;">export const</span> <span style="color: #fafafa;">config</span> = {
-  <span style="color: #fafafa;">matcher</span>: [<span style="color: #6ee7b7;">'/((?!.*\\..*|_next).*)'</span>, <span style="color: #6ee7b7;">'/'</span>],
-}</pre>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Framework Support -->
-  <section class="py-14 px-6" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-    <div class="max-w-[780px] mx-auto text-center fade-in">
-      <p class="text-[13px] font-medium mb-8 text-[#71717a]">Works with every framework</p>
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <span class="font-mono text-[12px] px-4 py-2 rounded-lg transition-all hover:bg-white/[0.03]" style="border: 1px solid var(--border);">Next.js</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-lg transition-all hover:bg-white/[0.03]" style="border: 1px solid var(--border);">React</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-lg transition-all hover:bg-white/[0.03]" style="border: 1px solid var(--border);">Remix</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-lg transition-all hover:bg-white/[0.03]" style="border: 1px solid var(--border);">Astro</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-lg transition-all hover:bg-white/[0.03]" style="border: 1px solid var(--border);">Express</span>
-        <span class="font-mono text-[12px] px-4 py-2 rounded-lg transition-all hover:bg-white/[0.03]" style="border: 1px solid var(--border);">Ruby on Rails</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Grid -->
-  <section class="py-24 px-6">
-    <div class="max-w-[1080px] mx-auto fade-in">
-      <div class="text-center mb-16">
-        <div class="section-label mb-3">Features</div>
-        <h2 class="font-semibold text-[32px] sm:text-[40px]" style="letter-spacing: -0.025em;">Everything for modern auth</h2>
-      </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="sm:col-span-2 feature-card">
-          <div class="icon-box mb-4" style="background: var(--purple-dim);">
-            <svg class="w-5 h-5" fill="none" stroke="#a78bfa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[17px] mb-2">User Management</h3>
-          <p class="text-[14px] leading-[1.6] text-[#71717a]">Complete user profiles, metadata, sessions, and multi-factor authentication. Built-in admin dashboard to manage all your users.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-box mb-4" style="background: var(--cyan-dim);">
-            <svg class="w-5 h-5" fill="none" stroke="#06b6d4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          </div>
-          <h3 class="font-semibold text-[17px] mb-2">Organizations</h3>
-          <p class="text-[14px] leading-[1.6] text-[#71717a]">Multi-tenant support with roles, permissions, and invitations out of the box.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-box mb-4" style="background: var(--purple-dim);">
-            <svg class="w-5 h-5" fill="none" stroke="#a78bfa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[17px] mb-2">Security</h3>
-          <p class="text-[14px] leading-[1.6] text-[#71717a]">Bot detection, brute-force protection, and device fingerprinting built in.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-box mb-4" style="background: var(--cyan-dim);">
-            <svg class="w-5 h-5" fill="none" stroke="#06b6d4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-          </div>
-          <h3 class="font-semibold text-[17px] mb-2">Webhooks</h3>
-          <p class="text-[14px] leading-[1.6] text-[#71717a]">React to auth events in real time with webhooks and event subscriptions.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-box mb-4" style="background: var(--purple-dim);">
-            <svg class="w-5 h-5" fill="none" stroke="#a78bfa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3 class="font-semibold text-[17px] mb-2">Billing</h3>
-          <p class="text-[14px] leading-[1.6] text-[#71717a]">Stripe-powered billing, subscription management, and usage-based pricing.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="py-20 px-6" style="background: var(--surface); border-top: 1px solid var(--border);">
-    <div class="max-w-[1080px] mx-auto fade-in">
-      <div class="text-center mb-12">
-        <h2 class="font-semibold text-[28px] sm:text-[36px]" style="letter-spacing: -0.025em;">Developers love AuthKit</h2>
-      </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="testimonial-card">
-          <p class="text-[14px] leading-[1.6] mb-5 text-[#71717a]">"Implemented auth in our Next.js app in under an hour. The DX is unmatched."</p>
-          <div class="flex items-center gap-3">
-            <div class="avatar" style="background: var(--purple-dim); color: var(--purple-light);">DL</div>
-            <div><div class="text-[13px] font-medium">Daniel Lee</div><div class="text-[11px] text-[#71717a]">Full-Stack Developer</div></div>
-          </div>
-        </div>
-        <div class="testimonial-card featured">
-          <p class="text-[14px] leading-[1.6] mb-5 text-[#71717a]">"We moved from a custom auth solution to AuthKit and reduced auth-related bugs by 95%."</p>
-          <div class="flex items-center gap-3">
-            <div class="avatar" style="background: var(--cyan-dim); color: var(--cyan);">RP</div>
-            <div><div class="text-[13px] font-medium">Rachel Park</div><div class="text-[11px] text-[#71717a]">Engineering Lead</div></div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <p class="text-[14px] leading-[1.6] mb-5 text-[#71717a]">"The organizations feature saved us months of development. B2B auth is hard -- AuthKit makes it easy."</p>
-          <div class="flex items-center gap-3">
-            <div class="avatar" style="background: var(--purple-dim); color: var(--purple-light);">TN</div>
-            <div><div class="text-[13px] font-medium">Tom Nguyen</div><div class="text-[11px] text-[#71717a]">CTO, SaaSCo</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="py-28 px-6 relative overflow-hidden grid-bg" style="background: linear-gradient(135deg, var(--purple) 0%, #4c1d95 100%);">
-    <div class="max-w-[640px] mx-auto text-center text-white relative z-10 fade-in">
-      <h2 class="font-bold text-[32px] sm:text-[48px] mb-6" style="letter-spacing: -0.035em;">Ship auth today,<br>not next quarter</h2>
-      <p class="text-[17px] mb-10 opacity-60">Free for up to 10,000 monthly active users. No credit card required.</p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#" class="rounded-[8px] px-6 py-[11px] text-[14px] font-medium text-[#4c1d95] bg-white hover:bg-gray-100 transition-colors cursor-pointer">Start Building Free</a>
-        <a href="#" class="rounded-[8px] px-6 py-[11px] text-[14px] font-medium text-white hover:bg-white/10 transition-colors cursor-pointer" style="border: 1px solid rgba(255,255,255,0.25);">Talk to Sales</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="py-16 px-6" style="background: var(--bg); color: #71717a; border-top: 1px solid var(--border);">
-    <div class="max-w-[1080px] mx-auto">
-      <div class="grid sm:grid-cols-4 gap-8 mb-12">
-        <div>
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-5 h-5 rounded flex items-center justify-center" style="background: var(--purple);">
-              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
             </div>
-            <span class="font-bold text-white text-[13px]">AuthKit</span>
+            <div>
+              <h4>Beautiful, prebuilt UI</h4>
+              <p>Drop-in components that match your brand. Customize colors, layout, and copy.</p>
+            </div>
           </div>
-          <p class="text-[12px]">Auth for modern apps.</p>
-        </div>
-        <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.06em]">Product</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">Authentication</a></li><li><a href="#" class="hover:text-white transition-colors">User Management</a></li><li><a href="#" class="hover:text-white transition-colors">Organizations</a></li></ul>
-        </div>
-        <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.06em]">Developers</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">Documentation</a></li><li><a href="#" class="hover:text-white transition-colors">API Reference</a></li><li><a href="#" class="hover:text-white transition-colors">SDKs</a></li></ul>
-        </div>
-        <div>
-          <h4 class="text-[11px] font-medium text-white mb-3 uppercase tracking-[0.06em]">Company</h4>
-          <ul class="space-y-2 text-[13px]"><li><a href="#" class="hover:text-white transition-colors">About</a></li><li><a href="#" class="hover:text-white transition-colors">Blog</a></li><li><a href="#" class="hover:text-white transition-colors">Changelog</a></li></ul>
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <h4>User management</h4>
+              <p>Profiles, organizations, roles, and permissions — all managed through one dashboard.</p>
+            </div>
+          </div>
+          <div class="auth-feature-item">
+            <div class="auth-feature-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <h4>5 lines of code</h4>
+              <p>Add complete authentication to your app with minimal integration effort.</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="border-t pt-8 text-[11px] text-center" style="border-color: var(--border);">&copy; 2026 AuthKit Inc. All rights reserved.</div>
+    </div>
+  </section>
+
+  <!-- ─── Trusted by ─── -->
+  <section class="trusted-section">
+    <div class="container">
+      <div class="trusted-label">Trusted by fast-growing teams</div>
+      <div class="trusted-logos">
+        <span class="trusted-logo">Notion</span>
+        <span class="trusted-logo">Vercel</span>
+        <span class="trusted-logo">Linear</span>
+        <span class="trusted-logo">Supabase</span>
+        <span class="trusted-logo">Resend</span>
+        <span class="trusted-logo">Cal.com</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Frameworks ─── -->
+  <section class="frameworks-section">
+    <div class="container">
+      <div class="section-badge">INTEGRATIONS</div>
+      <h2 class="section-heading">Works with your stack</h2>
+      <p class="section-desc">First-class SDKs for the frameworks and platforms you already use. Get started in under five minutes.</p>
+      <div class="fw-grid">
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 17.5l8-13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/></svg>
+          Next.js
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.5" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" stroke-width="1.3"/><ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" stroke-width="1.3" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" stroke-width="1.3" transform="rotate(120 12 12)"/></svg>
+          React
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93h3c0 2.61 1.67 4.83 4 5.66v2.27z" fill="currentColor"/></svg>
+          Remix
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v8m-4-4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Expo
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l9 4.5V17.5L12 22l-9-4.5V6.5L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 22V12" stroke="currentColor" stroke-width="1.5"/><path d="M3 6.5L12 12l9-5.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          Astro
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16.4l-6.4 4.8 2.4-7.2-6-4.8h7.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Node.js
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 15l4-8 4 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M17 7v10m-4-4c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Go
+        </div>
+        <div class="fw-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Ruby
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Features ─── -->
+  <section class="features-section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 44px;">
+        <div class="section-badge">FEATURES</div>
+        <h2 class="section-heading">Everything you need for auth</h2>
+        <p class="section-desc">Production-ready authentication with enterprise-grade security. No security expertise required.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          </div>
+          <h3>Social Sign-On</h3>
+          <p>Google, GitHub, Apple, and 20+ OAuth providers with zero configuration headaches.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Multi-factor Auth</h3>
+          <p>TOTP, SMS, and email codes. Add a second factor in one line of code.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Organizations</h3>
+          <p>Multi-tenant org management with roles, invitations, and team switching.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <h3>Session Management</h3>
+          <p>Short-lived JWTs with automatic refresh. Revoke sessions globally or per-device.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Bot Protection</h3>
+          <p>Built-in CAPTCHA, rate limiting, and disposable email detection -- automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c47ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Webhooks & API</h3>
+          <p>Real-time webhooks for user events. Full REST API for custom workflows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Code ─── -->
+  <section class="code-section">
+    <div class="container">
+      <div class="code-layout">
+        <div class="code-text">
+          <div class="section-badge">DEVELOPER EXPERIENCE</div>
+          <h2>Ship auth in<br>5 lines of code</h2>
+          <p>Import the component, wrap your app, and you're done. AuthKit handles the UI, state management, and API calls -- so you can focus on your product.</p>
+          <a href="#" class="btn-primary" style="width: fit-content;">
+            Explore the docs
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots">
+              <span style="background: #ff5f57;"></span>
+              <span style="background: #febc2e;"></span>
+              <span style="background: #28c840;"></span>
+            </div>
+            <span class="code-filename">app/layout.tsx</span>
+          </div>
+          <div class="code-body">
+<pre><span class="syn-keyword">import</span> <span class="syn-bracket">{</span> <span class="syn-component">AuthKitProvider</span> <span class="syn-bracket">}</span> <span class="syn-keyword">from</span> <span class="syn-string">'@authkit/nextjs'</span>
+
+<span class="syn-keyword">export default function</span> <span class="syn-func">RootLayout</span><span class="syn-bracket">({</span>
+  <span class="syn-prop">children</span><span class="syn-plain">,</span>
+<span class="syn-bracket">}</span><span class="syn-plain">: {</span>
+  <span class="syn-prop">children</span><span class="syn-plain">: React.ReactNode</span>
+<span class="syn-bracket">})</span> <span class="syn-bracket">{</span>
+  <span class="syn-keyword">return</span> <span class="syn-bracket">(</span>
+    <span class="syn-tag">&lt;html</span> <span class="syn-attr">lang</span><span class="syn-plain">=</span><span class="syn-string">"en"</span><span class="syn-tag">&gt;</span>
+      <span class="syn-tag">&lt;body&gt;</span>
+        <span class="syn-tag">&lt;</span><span class="syn-component">AuthKitProvider</span><span class="syn-tag">&gt;</span>
+          <span class="syn-bracket">{</span><span class="syn-prop">children</span><span class="syn-bracket">}</span>
+        <span class="syn-tag">&lt;/</span><span class="syn-component">AuthKitProvider</span><span class="syn-tag">&gt;</span>
+      <span class="syn-tag">&lt;/body&gt;</span>
+    <span class="syn-tag">&lt;/html&gt;</span>
+  <span class="syn-bracket">)</span>
+<span class="syn-bracket">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Testimonials ─── -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 44px;">
+        <div class="section-badge">TESTIMONIALS</div>
+        <h2 class="section-heading">Loved by developers</h2>
+        <p class="section-desc">Teams of all sizes trust AuthKit to handle their authentication.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="test-card">
+          <div class="test-stars">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <blockquote>"Switched from building our own auth to AuthKit in a weekend. We should have done it from the start."</blockquote>
+          <div class="test-author">
+            <div class="test-avatar test-avatar--1">SK</div>
+            <div>
+              <div class="test-author-name">Sarah Kim</div>
+              <div class="test-author-role">CTO at Streamline</div>
+            </div>
+          </div>
+        </div>
+        <div class="test-card">
+          <div class="test-stars">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <blockquote>"The prebuilt components saved us weeks of design and engineering time. MFA worked on the first try."</blockquote>
+          <div class="test-author">
+            <div class="test-avatar test-avatar--2">MR</div>
+            <div>
+              <div class="test-author-name">Marcus Reyes</div>
+              <div class="test-author-role">Lead Engineer at Beacon</div>
+            </div>
+          </div>
+        </div>
+        <div class="test-card">
+          <div class="test-stars">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c47ff" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <blockquote>"We needed org-level permissions for our B2B product. AuthKit had it out of the box -- no custom code needed."</blockquote>
+          <div class="test-author">
+            <div class="test-avatar test-avatar--3">JC</div>
+            <div>
+              <div class="test-author-name">Jun Chen</div>
+              <div class="test-author-role">Founder of Layerform</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="cta-section">
+    <div class="cta-bg"></div>
+    <div class="container" style="position: relative; z-index: 1;">
+      <h2>Ready to ship auth?</h2>
+      <p>Free for up to 10,000 monthly active users. No credit card required.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn-primary" style="padding: 13px 32px; font-size: 15px;">
+          Start building for free
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#" class="btn-outline" style="padding: 13px 32px; font-size: 15px;">Talk to sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-copy">&copy; 2026 AuthKit, Inc. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Status</a>
+          <a href="#">Security</a>
+        </div>
+      </div>
     </div>
   </footer>
 
-  <script>
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-  </script>
 </body>
 </html>

@@ -3,667 +3,769 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TaskFlow — AI-Powered Project Management</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Planform — Product Development System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #ffffff;
-      --text: #111111;
-      --subtle-bg: #f5f5f5;
-      --border: #e5e5e5;
-      --muted: #737373;
-      --accent: #000000;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
     }
-    .dot-pattern {
-      background-image: radial-gradient(circle, #d4d4d4 1px, transparent 1px);
-      background-size: 24px 24px;
-    }
-    .font-heading { font-family: 'Space Grotesk', sans-serif; }
-    .font-body { font-family: 'IBM Plex Sans', sans-serif; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* Scroll-triggered fade-in — repeats */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Section label styling */
-    .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .section-label::before {
-      content: '';
-      display: inline-block;
-      width: 24px;
-      height: 1px;
-      background-color: var(--accent);
-      vertical-align: middle;
-      margin-right: 12px;
+    :root {
+      --bg: #08090a;
+      --bg-elevated: #0c0d0e;
+      --bg-surface: #111214;
+      --bg-surface-2: #191a1c;
+      --bg-surface-3: #1e1f22;
+      --border: #222326;
+      --border-subtle: #1a1b1e;
+      --text: #f0f0f0;
+      --text-secondary: #8b8d93;
+      --text-tertiary: #5c5e64;
+      --accent: #f1c232;
+      --accent-purple: #8b5cf6;
+      --accent-blue: #5e6ad2;
+      --accent-green: #4cc38a;
+      --accent-orange: #f2994a;
+      --accent-red: #eb5757;
     }
 
-    /* Gradient text */
-    .gradient-word {
-      background: linear-gradient(135deg, #111111 0%, #525252 40%, #111111 100%);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer-text 4s ease-in-out infinite;
+    html {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     }
-    @keyframes shimmer-text {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
-    /* Animated line divider */
-    .animated-divider {
-      position: relative;
-      height: 1px;
-      background: var(--border);
-      overflow: hidden;
-    }
-    .animated-divider::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      animation: slide-line 4s ease-in-out infinite;
-    }
-    @keyframes slide-line {
-      0% { left: -60%; }
-      100% { left: 100%; }
-    }
-
-    /* Number ticker */
-    .ticker-value {
-      display: inline-block;
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Card hover reveal */
-    .card-detail {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
-      margin-top: 0;
-    }
-    .card-hoverable:hover .card-detail {
-      max-height: 80px;
-      opacity: 1;
-      margin-top: 12px;
-    }
-
-    /* Focus-visible for all interactive */
+    a { color: inherit; text-decoration: none; }
     a:focus-visible, button:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
-  
-    /* === 2025-2026 Trend Effects === */
-    /* Marquee/Ticker Strip */
-    @keyframes marqueeScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .marquee-strip { overflow:hidden; white-space:nowrap; }
-    .marquee-inner { display:inline-flex; animation:marqueeScroll 20s linear infinite; }
-    .marquee-inner:hover { animation-play-state:paused; }
-  
 
-    /* Staggered Grid Reveal */
-    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
-    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
-  
+    /* ── Navigation ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(8,9,10,0.82);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-center a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 0.15s ease;
+      padding: 6px 10px;
+      border-radius: 5px;
+    }
+    .nav-center a:hover { color: var(--text); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-login {
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 0.15s ease;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 6px 10px;
+    }
+    .btn-login:hover { color: var(--text); }
+    .btn-signup {
+      font-size: 13px;
+      font-weight: 500;
+      color: #000;
+      background: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 16px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease;
+      letter-spacing: -0.01em;
+    }
+    .btn-signup:hover { background: #e8e8e8; }
 
-    /* Smooth Number Counters */
-    .smooth-counter { font-variant-numeric:tabular-nums; transition:all 0.1s ease; }
-  
+    /* ── Hero ── */
+    .hero {
+      padding-top: 152px;
+      padding-bottom: 0;
+      text-align: center;
+      position: relative;
+    }
+    .hero-content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .hero-heading {
+      font-size: clamp(38px, 5.2vw, 64px);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.06;
+      color: var(--text);
+    }
+    .hero-heading .accent {
+      color: var(--accent);
+    }
+    .hero-sub {
+      margin-top: 18px;
+      font-size: 16px;
+      color: var(--text-tertiary);
+      line-height: 1.55;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      letter-spacing: -0.005em;
+    }
+
+    /* Pills / CTAs below hero text */
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 32px;
+    }
+    .hero-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 0.15s ease;
+      cursor: pointer;
+    }
+    .hero-link:hover { color: var(--text); }
+    .hero-link .arrow {
+      font-size: 12px;
+      transition: transform 0.15s ease;
+    }
+    .hero-link:hover .arrow { transform: translateX(2px); }
+    .hero-link-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+    }
+    .hero-link .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      display: inline-block;
+    }
+
+    /* ── App Mockup ── */
+    .mockup-section {
+      max-width: 1100px;
+      margin: 56px auto 0;
+      padding: 0 24px;
+      position: relative;
+    }
+    .mockup-glow {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      height: 50%;
+      background: radial-gradient(ellipse, rgba(94,106,210,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .mockup {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 200px 1fr 1fr;
+      height: 500px;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02),
+        0 24px 68px rgba(0,0,0,0.55),
+        0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    /* ── Sidebar ── */
+    .mock-sidebar {
+      background: var(--bg-elevated);
+      border-right: 1px solid var(--border-subtle);
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .sidebar-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      margin-bottom: 12px;
+    }
+    .sidebar-team-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #5e6ad2, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .sidebar-team-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: background 0.1s ease;
+      cursor: pointer;
+    }
+    .sidebar-item:hover { background: rgba(255,255,255,0.04); }
+    .sidebar-item.active {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+    .sidebar-item svg {
+      width: 15px;
+      height: 15px;
+      opacity: 0.45;
+      flex-shrink: 0;
+    }
+    .sidebar-item.active svg { opacity: 0.75; }
+    .sidebar-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 14px 8px 4px;
+    }
+
+    /* ── Issue List Panel ── */
+    .mock-list {
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .list-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .list-header-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .list-header-badge {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      background: var(--bg-surface-3);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .issue-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+    .issue-row:hover { background: rgba(255,255,255,0.025); }
+    .issue-row.active { background: rgba(255,255,255,0.04); }
+    .issue-status {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-tertiary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .issue-status.done {
+      border-color: var(--accent-green);
+      background: var(--accent-green);
+    }
+    .issue-status.in-progress {
+      border-color: var(--accent);
+      background: transparent;
+      position: relative;
+    }
+    .issue-status.in-progress::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px; right: 2px; bottom: 2px;
+      border-radius: 50%;
+      border: 1.5px solid transparent;
+      border-top-color: var(--accent);
+      border-right-color: var(--accent);
+    }
+    .issue-content { flex: 1; min-width: 0; }
+    .issue-id {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 1px;
+      font-feature-settings: 'tnum';
+    }
+    .issue-title {
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.35;
+    }
+    .issue-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 3px;
+    }
+    .issue-label {
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .label-bug { background: rgba(235,87,87,0.14); color: #f07171; }
+    .label-feat { background: rgba(94,106,210,0.14); color: #8b93e0; }
+    .label-improve { background: rgba(78,158,222,0.14); color: #6db3e8; }
+    .label-perf { background: rgba(242,153,74,0.14); color: #f2994a; }
+
+    /* ── Detail Panel ── */
+    .mock-detail {
+      padding: 18px 22px;
+      overflow: hidden;
+    }
+    .detail-breadcrumb {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+    }
+    .detail-title {
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+    .detail-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .detail-desc code {
+      font-size: 12px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text);
+    }
+    .detail-props {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 7px 12px;
+      font-size: 12px;
+      margin-bottom: 22px;
+    }
+    .detail-prop-label { color: var(--text-tertiary); }
+    .detail-prop-value {
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .detail-section-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 10px;
+    }
+    .activity-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .activity-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .activity-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .activity-text strong { color: var(--text); font-weight: 500; }
+    .activity-time {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .anim-1 {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .anim-2 {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+    }
+    .anim-3 {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.16s forwards;
+    }
+    .anim-mockup {
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+
+    /* ── Bottom fade ── */
+    .mockup-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .mockup {
+        grid-template-columns: 1fr;
+        height: auto;
+        max-height: 420px;
+      }
+      .mock-sidebar { display: none; }
+      .mock-detail { display: none; }
+      .mock-list { border-right: none; }
+      .nav-center { display: none; }
+    }
+    @media (max-width: 640px) {
+      .hero { padding-top: 120px; }
+      .hero-content { padding: 0 18px; }
+      .hero-actions { flex-direction: column; gap: 10px; }
+      .hero-link-sep { display: none; }
+    }
   </style>
 </head>
-<body class="font-body" style="background-color: var(--bg); color: var(--text);">
+<body>
 
-  <!-- Nav -->
-  <nav class="sticky top-0 z-50 backdrop-blur-md" style="background-color: rgba(255,255,255,0.85);">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
-        <a href="/" class="font-heading text-xl font-semibold" style="color: var(--text); letter-spacing: -0.02em;">TaskFlow</a>
-        <div class="hidden items-center gap-8 md:flex">
-          <a href="#features" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Features</a>
-          <a href="#how-it-works" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">How It Works</a>
-          <a href="#pricing" class="text-sm font-normal transition-colors duration-150 hover:opacity-70" style="color: var(--muted);">Pricing</a>
-          <a href="#signup" class="rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 hover:opacity-90" style="background-color: var(--accent); color: var(--bg);">Get Started</a>
-        </div>
-        <button class="rounded-lg p-2 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu-a').classList.toggle('hidden')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
-        </button>
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Planform home">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M3.5 3h4.5v4.5H3.5V3z" fill="#5e6ad2"/>
+          <path d="M10 3h4.5v4.5H10V3z" fill="#5e6ad2" opacity="0.65"/>
+          <path d="M3.5 10h4.5v4.5H3.5V10z" fill="#5e6ad2" opacity="0.65"/>
+          <path d="M10 10h4.5v4.5H10V10z" fill="#5e6ad2" opacity="0.35"/>
+        </svg>
+        Planform
+      </a>
+      <div class="nav-center">
+        <a href="#product">Product</a>
+        <a href="#resources">Resources</a>
+        <a href="#customers">Customers</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
       </div>
-      <div class="animated-divider" aria-hidden="true"></div>
-    </div>
-    <div id="mobile-menu-a" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <a href="#features" class="block px-3 py-2 text-sm" style="color: var(--muted);">Features</a>
-        <a href="#how-it-works" class="block px-3 py-2 text-sm" style="color: var(--muted);">How It Works</a>
-        <a href="#pricing" class="block px-3 py-2 text-sm" style="color: var(--muted);">Pricing</a>
-        <a href="#signup" class="mt-2 block rounded-full px-3 py-2 text-center text-sm font-medium" style="background-color: var(--accent); color: var(--bg);">Get Started</a>
+      <div class="nav-right">
+        <button class="btn-login">Log in</button>
+        <button class="btn-signup">Sign up</button>
       </div>
     </div>
   </nav>
 
   <main>
-    <!-- Hero -->
-    <section class="relative py-28 md:py-36 dot-pattern" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-3xl text-center">
-          <span class="font-mono mb-6 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">Now with AI Automation</span>
-          <h1 class="font-heading text-5xl md:text-7xl" style="font-weight: 500; letter-spacing: -0.03em; line-height: 1.05;">
-            Project management<br>that <span class="gradient-word">thinks</span> ahead
-          </h1>
-          <p class="mx-auto mt-8 max-w-xl text-lg" style="color: var(--muted); line-height: 1.7;">
-            TaskFlow learns your team's workflow and automates repetitive tasks — routing, status updates, handoffs. Less busywork, more shipping.
-          </p>
-          <div class="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href="#signup" class="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-medium transition-all duration-200 hover:opacity-90" style="background-color: var(--accent); color: var(--bg);">
-              Start Free
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-            </a>
-            <a href="#how-it-works" class="inline-flex items-center gap-2 rounded-full border px-7 py-3.5 text-base font-medium transition-all duration-200 hover:opacity-70" style="border-color: var(--border); color: var(--text);">
-              See How It Works
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Social Proof -->
-    <section class="py-14" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p class="section-label text-center">[N]+ teams use TaskFlow to ship faster</p>
-      </div>
-    </section>
-
-    <!-- Marquee Strip -->
-    <div class="marquee-strip py-3" style="background-color:var(--subtle-bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-      <div class="marquee-inner gap-12">
-        <span class="font-mono text-xs" style="color:var(--muted);">AI-POWERED ROUTING</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">WORKFLOW AUTOMATION</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">PREDICTIVE ANALYTICS</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">CUSTOM VIEWS</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">TIME INTELLIGENCE</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">AI-POWERED ROUTING</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">WORKFLOW AUTOMATION</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">PREDICTIVE ANALYTICS</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">CUSTOM VIEWS</span>
-        <span style="color:var(--border);">&bull;</span>
-        <span class="font-mono text-xs" style="color:var(--muted);">TIME INTELLIGENCE</span>
-        <span style="color:var(--border);">&bull;</span>
-      </div>
-    </div>
-
-    <!-- Animated Divider -->
-    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
-
-    <!-- Features Bento Grid -->
-    <section id="features" class="py-24" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="section-label mb-4 inline-block">Features</span>
-          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">Everything your team needs</h2>
-          <p class="mt-4 text-base" style="color: var(--muted);">AI-powered features that adapt to how your team actually works.</p>
-        </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <!-- Card 1: Large -->
-          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-8 transition-all duration-200 hover:border-black sm:col-span-2" style="border-color: var(--border);">
-            <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16l7-3 7 3V4a2 2 0 00-2-2z"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Smart Task Routing</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">TaskFlow learns who handles what and automatically assigns tasks to the right person. No more manual triaging or bottleneck meetings.</p>
-            <div class="card-detail">
-              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">Avg. assignment time: &lt;2s</span>
-            </div>
-          </article>
-          <!-- Card 2 -->
-          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
-            <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.49 8.49l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.49-8.49l2.83-2.83"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Workflow Automation</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Repetitive sequences get detected and automated. Status updates, notifications, handoffs — all on autopilot.</p>
-            <div class="card-detail">
-              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">[N] automations triggered/week</span>
-            </div>
-          </article>
-          <!-- Card 3 -->
-          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
-            <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="3" y="13" width="7" height="7" rx="1"/><rect x="13" y="3" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Custom Views</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Board, list, timeline, calendar. Every team member sees their work the way they prefer.</p>
-            <div class="card-detail">
-              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">4 view modes + custom filters</span>
-            </div>
-          </article>
-          <!-- Card 4 -->
-          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
-            <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 5-9"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Predictive Analytics</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Know before deadlines slip. AI flags at-risk tasks and suggests rebalancing before problems surface.</p>
-            <div class="card-detail">
-              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">Risk scoring updated every [N]min</span>
-            </div>
-          </article>
-          <!-- Card 5 -->
-          <article class="fade-in card-hoverable stagger-item group rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border);">
-            <div class="mb-5 inline-flex rounded-lg p-2.5" style="background-color: var(--subtle-bg);">
-              <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/></svg>
-            </div>
-            <h3 class="font-heading mb-2 text-xl font-semibold" style="letter-spacing: -0.01em;">Time Intelligence</h3>
-            <p class="text-base leading-relaxed" style="color: var(--muted);">Automatic time estimates based on historical data. No more guessing — plan with real numbers.</p>
-            <div class="card-detail">
-              <span class="font-mono inline-block rounded-full border px-3 py-1 text-xs" style="border-color: var(--border); color: var(--muted);">Estimate accuracy: [N]%</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Animated Divider -->
-    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
-
-    <!-- Dot separator -->
-    <div class="flex items-center justify-center py-2" style="background-color: var(--subtle-bg);" aria-hidden="true">
-      <span style="width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent); opacity: 0.25;"></span>
-      <span style="width: 32px; height: 1px; background-color: var(--border); margin: 0 12px;"></span>
-      <span style="width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent); opacity: 0.25;"></span>
-      <span style="width: 32px; height: 1px; background-color: var(--border); margin: 0 12px;"></span>
-      <span style="width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent); opacity: 0.25;"></span>
-    </div>
-
-    <!-- How It Works -->
-    <section id="how-it-works" class="py-20" style="background-color: var(--subtle-bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="section-label mb-4 inline-block">Process</span>
-          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">Three steps to smarter projects</h2>
-          <p class="mt-4 text-base" style="color: var(--muted);">Set up in minutes. See results in days.</p>
-        </div>
-        <div class="relative grid gap-8 sm:grid-cols-3">
-          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background-color: var(--border);" aria-hidden="true"></div>
-          <!-- Step 1 -->
-          <div class="fade-in relative text-center">
-            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 1px solid var(--border);">01</div>
-            <h3 class="font-heading mb-3 text-lg font-semibold" style="letter-spacing: -0.01em;">Import your projects</h3>
-            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Connect Jira, Asana, Trello, or start fresh. Your data migrates in one click.</p>
-          </div>
-          <!-- Step 2 -->
-          <div class="fade-in relative text-center">
-            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 1px solid var(--border);">02</div>
-            <h3 class="font-heading mb-3 text-lg font-semibold" style="letter-spacing: -0.01em;">Let AI observe</h3>
-            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">TaskFlow watches your team's patterns for 48 hours and maps your real workflow.</p>
-          </div>
-          <!-- Step 3 -->
-          <div class="fade-in relative text-center">
-            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-xl font-medium" style="background-color: var(--bg); color: var(--accent); border: 1px solid var(--border);">03</div>
-            <h3 class="font-heading mb-3 text-lg font-semibold" style="letter-spacing: -0.01em;">Automate everything</h3>
-            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Approve the suggested automations and watch hours of manual work disappear.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Animated Divider -->
-    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
-
-    <!-- Metrics with Number Tickers -->
-    <section class="py-20" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="fade-in grid gap-8 sm:grid-cols-3 text-center">
-          <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
-            <span class="font-heading text-5xl md:text-6xl font-medium block smooth-counter" data-target="94" data-suffix="%" style="letter-spacing: -0.03em;">0%</span>
-            <span class="mt-2 block text-sm" style="color: var(--muted);">On-time delivery rate</span>
-          </div>
-          <div class="border-r-0 sm:border-r" style="border-color: var(--border);">
-            <span class="font-heading text-5xl md:text-6xl font-medium block smooth-counter" data-target="12" data-suffix="h" style="letter-spacing: -0.03em;">0h</span>
-            <span class="mt-2 block text-sm" style="color: var(--muted);">Saved per team per week</span>
-          </div>
-          <div>
-            <span class="font-heading text-5xl md:text-6xl font-medium block smooth-counter" data-target="847" data-suffix="" style="letter-spacing: -0.03em;">0</span>
-            <span class="mt-2 block text-sm" style="color: var(--muted);">Teams using TaskFlow</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Animated Divider -->
-    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
-
-    <!-- Testimonials -->
-    <section class="py-20" style="background-color: var(--subtle-bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="section-label mb-4 inline-block">Testimonials</span>
-          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">What teams are saying</h2>
-        </div>
-        <div class="grid gap-6 sm:grid-cols-3">
-          <!-- Testimonial 1 -->
-          <blockquote class="fade-in rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border); background-color: var(--bg);">
-            <svg width="20" height="20" class="mb-4 opacity-20" fill="currentColor"><path d="M3 13h4l-2 6h4l2-6V3H3v10zm10 0h4l-2 6h4l2-6V3H13v10z"/></svg>
-            <p class="mb-6 text-base leading-relaxed">"We killed our Monday planning meeting. TaskFlow routes everything now. Took about a week to trust it — the first 2 days felt weird not assigning manually."</p>
-            <footer class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full font-mono text-xs font-medium" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">@</div>
-              <div>
-                <cite class="font-heading block text-sm font-semibold not-italic">@jnkwrk</cite>
-                <span class="text-xs" style="color: var(--muted);">via ProductHunt review</span>
-              </div>
-            </footer>
-          </blockquote>
-          <!-- Testimonial 2 (highlighted) -->
-          <blockquote class="fade-in rounded-lg border-2 p-6 transition-all duration-200 sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
-            <svg width="20" height="20" class="mb-4 opacity-20" fill="currentColor"><path d="M3 13h4l-2 6h4l2-6V3H3v10zm10 0h4l-2 6h4l2-6V3H13v10z"/></svg>
-            <p class="mb-6 text-base leading-relaxed">"Predictive deadlines are the main thing. On-time went from [N]% to [N]% in Q1. Onboarding was clunky though — docs could be better."</p>
-            <footer class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full font-mono text-xs font-medium" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">@</div>
-              <div>
-                <cite class="font-heading block text-sm font-semibold not-italic">@ana_ops</cite>
-                <span class="text-xs" style="color: var(--muted);">via X (Twitter)</span>
-              </div>
-            </footer>
-          </blockquote>
-          <!-- Testimonial 3 -->
-          <blockquote class="fade-in rounded-lg border p-6 transition-all duration-200 hover:border-black" style="border-color: var(--border); background-color: var(--bg);">
-            <svg width="20" height="20" class="mb-4 opacity-20" fill="currentColor"><path d="M3 13h4l-2 6h4l2-6V3H3v10zm10 0h4l-2 6h4l2-6V3H13v10z"/></svg>
-            <p class="mb-6 text-base leading-relaxed">"Clean, fast, no bloat. It does task routing and automation well. Wish the calendar view had drag-and-drop but apparently that's coming."</p>
-            <footer class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full font-mono text-xs font-medium" style="background-color: var(--subtle-bg); color: var(--muted); border: 1px solid var(--border);">@</div>
-              <div>
-                <cite class="font-heading block text-sm font-semibold not-italic">@d_walsh_dev</cite>
-                <span class="text-xs" style="color: var(--muted);">via G2 review</span>
-              </div>
-            </footer>
-          </blockquote>
-        </div>
-      </div>
-    </section>
-
-    <!-- Animated Divider -->
-    <div class="animated-divider mx-auto max-w-6xl" aria-hidden="true"></div>
-
-    <!-- Pricing -->
-    <section id="pricing" class="py-24" style="background-color: var(--bg);">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto mb-16 max-w-2xl text-center fade-in">
-          <span class="section-label mb-4 inline-block">Pricing</span>
-          <h2 class="font-heading text-3xl font-medium sm:text-4xl" style="letter-spacing: -0.02em;">Simple pricing</h2>
-          <p class="mt-4 text-base" style="color: var(--muted);">No hidden fees. No per-seat surprises. Cancel anytime.</p>
-        </div>
-        <div class="grid items-start gap-6 sm:grid-cols-3">
-          <!-- Starter -->
-          <article class="fade-in rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border); background-color: var(--bg);">
-            <h3 class="font-heading text-lg font-semibold" style="letter-spacing: -0.01em;">Free</h3>
-            <p class="mt-1 text-sm" style="color: var(--muted);">For small teams getting started.</p>
-            <div class="mt-6 flex items-baseline gap-1">
-              <span class="font-heading text-4xl font-medium" style="letter-spacing: -0.02em;">$0</span>
-              <span class="text-sm" style="color: var(--muted);">/month</span>
-            </div>
-            <ul class="mt-8 space-y-3" role="list">
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Up to 5 team members</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>3 active projects</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Basic AI suggestions</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Community support</li>
-            </ul>
-            <a href="#signup" class="mt-8 block rounded-full border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:opacity-80" style="border-color: var(--border); color: var(--text);">Get Started</a>
-          </article>
-          <!-- Pro (highlighted) -->
-          <article class="fade-in rounded-lg border-2 p-8 sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
-            <span class="font-mono mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent); color: var(--bg);">Popular</span>
-            <h3 class="font-heading text-lg font-semibold" style="letter-spacing: -0.01em;">Pro</h3>
-            <p class="mt-1 text-sm" style="color: var(--muted);">For teams shipping real products.</p>
-            <div class="mt-6 flex items-baseline gap-1">
-              <span class="font-heading text-4xl font-medium" style="letter-spacing: -0.02em;">$18</span>
-              <span class="text-sm" style="color: var(--muted);">/user/month</span>
-            </div>
-            <ul class="mt-8 space-y-3" role="list">
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Unlimited members</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Unlimited projects</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Full AI automation</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Predictive analytics</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Priority support</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Custom integrations</li>
-            </ul>
-            <a href="#signup" class="mt-8 block rounded-full px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:opacity-90" style="background-color: var(--accent); color: var(--bg);">Start Free Trial</a>
-          </article>
-          <!-- Enterprise -->
-          <article class="fade-in rounded-lg border p-8 transition-all duration-200 hover:border-black" style="border-color: var(--border); background-color: var(--bg);">
-            <h3 class="font-heading text-lg font-semibold" style="letter-spacing: -0.01em;">Enterprise</h3>
-            <p class="mt-1 text-sm" style="color: var(--muted);">For organizations at scale.</p>
-            <div class="mt-6 flex items-baseline gap-1">
-              <span class="font-heading text-4xl font-medium" style="letter-spacing: -0.02em;">Custom</span>
-            </div>
-            <ul class="mt-8 space-y-3" role="list">
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Everything in Pro</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>SSO & SAML</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>SLA guarantee</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Dedicated account manager</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Audit logs</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>Custom contracts</li>
-              <li class="flex items-start gap-2 text-sm"><svg width="16" height="16" class="mt-0.5 shrink-0" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>On-premise option</li>
-            </ul>
-            <a href="#contact" class="mt-8 block rounded-full border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:opacity-80" style="border-color: var(--border); color: var(--text);">Contact Sales</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="py-24" style="background-color: #111111; color: #ffffff;">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center fade-in">
-          <h2 class="font-heading text-3xl font-medium sm:text-5xl" style="color: #ffffff; letter-spacing: -0.03em; line-height: 1.1;">Stop managing tasks.<br>Start shipping products.</h2>
-          <p class="mt-6 text-base" style="color: rgba(255,255,255,0.5);">Free for teams up to 5. No credit card required.</p>
-          <a href="#signup" class="mt-10 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-medium transition-all duration-200 hover:opacity-90" style="background-color: #ffffff; color: #111111;">
-            Get Started Free
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-heading anim-1">
+          The product development<br>system for teams <span class="accent">and agents</span>
+        </h1>
+        <p class="hero-sub anim-2">
+          Purpose-built for planning and building products. Designed for this AI era.
+        </p>
+        <div class="hero-actions anim-3">
+          <a href="#" class="hero-link">
+            <span class="dot"></span>
+            Issue tracking is dead
+            <span class="arrow">&#8250;</span>
           </a>
+          <div class="hero-link-sep" aria-hidden="true"></div>
+          <a href="#" class="hero-link">
+            Meet agents
+            <span class="arrow">&#8250;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- App Mockup -->
+      <div class="mockup-section anim-mockup">
+        <div class="mockup-glow" aria-hidden="true"></div>
+        <div class="mockup">
+          <!-- Sidebar -->
+          <aside class="mock-sidebar" aria-label="Sidebar">
+            <div class="sidebar-team">
+              <div class="sidebar-team-icon">P</div>
+              <span class="sidebar-team-name">Planform</span>
+            </div>
+            <div class="sidebar-item active">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="2" width="11" height="11" rx="2"/><path d="M5 7.5l2 2 3-4"/></svg>
+              My Issues
+            </div>
+            <div class="sidebar-item">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="7.5" cy="7.5" r="5.5"/></svg>
+              Inbox
+            </div>
+            <div class="sidebar-item">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 4h11M2 7.5h11M2 11h11"/></svg>
+              Views
+            </div>
+            <div class="sidebar-section-label">Your Teams</div>
+            <div class="sidebar-item">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M7.5 2L13 5.5v4L7.5 13 2 9.5v-4z"/></svg>
+              Engineering
+            </div>
+            <div class="sidebar-item">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="7.5" cy="5" r="3"/><path d="M2 13c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>
+              Design
+            </div>
+            <div class="sidebar-item">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l9 4.5-9 4.5V3z"/></svg>
+              Growth
+            </div>
+            <div class="sidebar-section-label">Initiatives</div>
+            <div class="sidebar-item">
+              <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 11l4-4 3 3 4-6"/></svg>
+              Roadmap
+            </div>
+          </aside>
+
+          <!-- Issue List -->
+          <div class="mock-list">
+            <div class="list-header">
+              <span class="list-header-title">Faster app launch</span>
+              <span class="list-header-badge">12</span>
+            </div>
+            <div class="issue-row active">
+              <div class="issue-status in-progress"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-142</div>
+                <div class="issue-title">Faster app launch</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-perf">Perf</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-141</div>
+                <div class="issue-title">Add keyboard shortcuts for views</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-feat">Feature</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status done"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-140</div>
+                <div class="issue-title">Fix sidebar collapse on narrow viewports</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-bug">Bug</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-139</div>
+                <div class="issue-title">Implement workspace preferences panel</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-improve">Improve</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status in-progress"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-138</div>
+                <div class="issue-title">Reduce production bundle by tree-shaking unused deps</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-perf">Perf</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-137</div>
+                <div class="issue-title">Redesign notification feed</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-feat">Feature</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status done"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-136</div>
+                <div class="issue-title">Rewrite onboarding flow copy</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-improve">Improve</span>
+                </div>
+              </div>
+            </div>
+            <div class="issue-row">
+              <div class="issue-status"></div>
+              <div class="issue-content">
+                <div class="issue-id">PF-135</div>
+                <div class="issue-title">CSV export for cycle reports</div>
+                <div class="issue-meta">
+                  <span class="issue-label label-feat">Feature</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detail Panel -->
+          <div class="mock-detail">
+            <div class="detail-breadcrumb">Engineering &#8250; PF-142</div>
+            <h2 class="detail-title">Faster app launch</h2>
+            <p class="detail-desc">
+              Reduce <code>timeline_startup_begin</code>, <code>cold_start</code>, and <code>when.firstInput</code> required state is present,
+              instead of blocking on full network during GTL startup.
+            </p>
+
+            <div class="detail-props">
+              <span class="detail-prop-label">Status</span>
+              <span class="detail-prop-value">
+                <span class="status-dot" style="background: var(--accent);"></span>
+                In Progress
+              </span>
+              <span class="detail-prop-label">Priority</span>
+              <span class="detail-prop-value">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <rect y="8" width="3" height="4" rx="0.5" fill="var(--accent-orange)"/>
+                  <rect x="4.5" y="5" width="3" height="7" rx="0.5" fill="var(--accent-orange)"/>
+                  <rect x="9" y="2" width="3" height="10" rx="0.5" fill="var(--accent-orange)"/>
+                </svg>
+                High
+              </span>
+              <span class="detail-prop-label">Assignee</span>
+              <span class="detail-prop-value">
+                <span class="activity-avatar" style="background: #5e6ad2; width: 16px; height: 16px; font-size: 8px;">JK</span>
+                Jake Kim
+              </span>
+              <span class="detail-prop-label">Cycle</span>
+              <span class="detail-prop-value">Sprint 24</span>
+            </div>
+
+            <div class="detail-section-title">Activity</div>
+            <div class="activity-item">
+              <span class="activity-avatar" style="background: #5e6ad2;">SK</span>
+              <div>
+                <div class="activity-text"><strong>Sarah K.</strong> moved this to In Progress</div>
+                <div class="activity-time">2h ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-avatar" style="background: var(--accent-green);">MR</span>
+              <div>
+                <div class="activity-text"><strong>Mike R.</strong> commented: "Let's benchmark the cold start first."</div>
+                <div class="activity-time">5h ago</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
-
-  <!-- Footer -->
-  <footer class="py-16" style="background-color: #0a0a0a; color: #ffffff; border-top: 1px solid rgba(255,255,255,0.08);">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
-        <div class="lg:col-span-1">
-          <span class="font-heading text-lg font-semibold" style="letter-spacing: -0.02em;">TaskFlow</span>
-          <p class="mt-3 text-sm" style="color: rgba(255,255,255,0.4);">AI-powered project management for modern teams.</p>
-        </div>
-        <nav aria-label="Product">
-          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Product</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#features" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Features</a></li>
-            <li><a href="#pricing" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Pricing</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Changelog</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Integrations</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Company">
-          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Company</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">About</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Blog</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Careers</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Contact</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Resources">
-          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Resources</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Documentation</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">API Reference</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Help Center</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Community</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Legal">
-          <h4 class="font-mono mb-4 text-xs font-medium uppercase" style="color: rgba(255,255,255,0.5); letter-spacing: 0.1em;">Legal</h4>
-          <ul class="space-y-2" role="list">
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Privacy</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Terms</a></li>
-            <li><a href="#" class="text-sm transition-opacity duration-150 hover:opacity-100" style="color: rgba(255,255,255,0.35);">Security</a></li>
-          </ul>
-        </nav>
-      </div>
-      <div class="mt-12 border-t pt-8" style="border-color: rgba(255,255,255,0.08);">
-        <p class="text-center text-sm" style="color: rgba(255,255,255,0.25);">&copy; 2026 TaskFlow. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scroll-triggered animations (repeat on scroll) + Number tickers -->
-  <script>
-    (function() {
-      // Repeating scroll animations
-      var fadeEls = document.querySelectorAll('.fade-in');
-      if (!window.IntersectionObserver) {
-        fadeEls.forEach(function(el) { el.classList.add('visible'); });
-        return;
-      }
-      var fadeObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          } else {
-            entry.target.classList.remove('visible');
-          }
-        });
-      }, { threshold: 0.15 });
-      fadeEls.forEach(function(el) { fadeObserver.observe(el); });
-
-      // Number tickers
-      var tickers = document.querySelectorAll('.ticker-value');
-      var tickerObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            animateTicker(entry.target);
-          } else {
-            // Reset when out of view so it replays
-            var suffix = entry.target.getAttribute('data-suffix') || '';
-            entry.target.textContent = '0' + suffix;
-          }
-        });
-      }, { threshold: 0.3 });
-      tickers.forEach(function(el) { tickerObserver.observe(el); });
-
-      function animateTicker(el) {
-        var target = parseInt(el.getAttribute('data-target'), 10);
-        var suffix = el.getAttribute('data-suffix') || '';
-        var duration = 1500;
-        var startTime = null;
-        function step(timestamp) {
-          if (!startTime) startTime = timestamp;
-          var progress = Math.min((timestamp - startTime) / duration, 1);
-          var eased = 1 - Math.pow(1 - progress, 3);
-          var current = Math.floor(eased * target);
-          el.textContent = current + suffix;
-          if (progress < 1) {
-            requestAnimationFrame(step);
-          } else {
-            el.textContent = target + suffix;
-          }
-        }
-        requestAnimationFrame(step);
-      }
-    })();
-  
-
-      // Staggered Grid Reveal
-      (function(){
-        var staggerEls = document.querySelectorAll('.stagger-item');
-        if(!staggerEls.length) return;
-        var staggerObs = new IntersectionObserver(function(entries){
-          entries.forEach(function(entry){
-            if(entry.isIntersecting){
-              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
-              items.forEach(function(item, i){
-                var row = Math.floor(i / 3);
-                var col = i % 3;
-                var delay = (row + col) * 100;
-                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
-              });
-            } else {
-              entry.target.classList.remove('stagger-visible');
-            }
-          });
-        }, {threshold:0.1});
-        staggerEls.forEach(function(el){ staggerObs.observe(el); });
-      })();
-  
-
-      // Smooth Number Counters (smooth interpolation)
-      (function(){
-        var counters = document.querySelectorAll('.smooth-counter');
-        if(!counters.length) return;
-        var counterObs = new IntersectionObserver(function(entries){
-          entries.forEach(function(entry){
-            if(entry.isIntersecting){
-              var el = entry.target;
-              var target = parseFloat(el.getAttribute('data-target'));
-              var suffix = el.getAttribute('data-suffix') || '';
-              var decimals = parseInt(el.getAttribute('data-decimals') || '0');
-              var duration = 2000;
-              var startTime = null;
-              var startVal = 0;
-              function step(ts){
-                if(!startTime) startTime = ts;
-                var progress = Math.min((ts - startTime) / duration, 1);
-                var eased = 1 - Math.pow(1 - progress, 4);
-                var current = startVal + (target - startVal) * eased;
-                el.textContent = current.toFixed(decimals) + suffix;
-                if(progress < 1) requestAnimationFrame(step);
-              }
-              requestAnimationFrame(step);
-            } else {
-              var suffix = entry.target.getAttribute('data-suffix') || '';
-              entry.target.textContent = '0' + suffix;
-            }
-          });
-        }, {threshold:0.3});
-        counters.forEach(function(el){ counterObs.observe(el); });
-      })();
-  
-  </script>
 
 </body>
 </html>

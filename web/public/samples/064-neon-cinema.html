@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PRISM — Live Cinema</title>
+  <title>NEON — Live Cinema</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -382,32 +382,11 @@
        bokeh-like circles and stage atmosphere
        ======================================== */
 
-    /* Slide 1: Main concert - warm golden spotlight with performer silhouette */
+    /* Slide 1: Main concert - real photograph */
     .slide-1 .slide-bg {
-      background:
-        /* Primary warm spotlight cone from above-center */
-        radial-gradient(ellipse 45% 100% at 50% 0%, rgba(255, 190, 70, 0.6) 0%, transparent 65%),
-        /* Hot white core of spotlight */
-        radial-gradient(circle at 50% 15%, rgba(255, 250, 220, 0.5) 0%, rgba(255, 220, 140, 0.2) 15%, transparent 35%),
-        /* Secondary amber wash from stage left */
-        radial-gradient(ellipse 40% 70% at 20% 45%, rgba(220, 120, 30, 0.45) 0%, transparent 55%),
-        /* Fill light from stage right */
-        radial-gradient(ellipse 35% 60% at 80% 50%, rgba(200, 90, 20, 0.3) 0%, transparent 50%),
-        /* Warm orange footlights glow from below */
-        radial-gradient(ellipse 120% 30% at 50% 100%, rgba(230, 100, 20, 0.55) 0%, transparent 60%),
-        /* Large soft bokeh orbs */
-        radial-gradient(circle at 18% 22%, rgba(255, 200, 80, 0.35) 0%, rgba(255, 180, 60, 0.1) 6%, transparent 12%),
-        radial-gradient(circle at 76% 18%, rgba(255, 170, 50, 0.3) 0%, rgba(255, 150, 30, 0.08) 7%, transparent 14%),
-        radial-gradient(circle at 85% 42%, rgba(255, 190, 70, 0.25) 0%, rgba(255, 160, 40, 0.06) 5%, transparent 10%),
-        radial-gradient(circle at 12% 58%, rgba(220, 110, 30, 0.22) 0%, rgba(200, 80, 20, 0.05) 6%, transparent 11%),
-        radial-gradient(circle at 65% 68%, rgba(255, 150, 50, 0.2) 0%, transparent 8%),
-        radial-gradient(circle at 30% 75%, rgba(240, 100, 20, 0.18) 0%, transparent 9%),
-        radial-gradient(circle at 50% 35%, rgba(255, 220, 120, 0.15) 0%, transparent 7%),
-        radial-gradient(circle at 42% 55%, rgba(255, 180, 80, 0.12) 0%, transparent 6%),
-        /* Haze / atmospheric glow */
-        radial-gradient(ellipse 100% 50% at 50% 40%, rgba(180, 80, 20, 0.2) 0%, transparent 70%),
-        /* Deep venue base with warm undertone */
-        linear-gradient(180deg, #1a0800 0%, #2a1205 20%, #3d1a08 40%, #2a1005 60%, #1a0a02 80%, #0a0400 100%);
+      background-image: url('images/064-concert.jpg');
+      background-size: cover;
+      background-position: center;
     }
 
     /* Slide 2: Cool blue concert */
@@ -743,11 +722,11 @@
   <!-- Top Red Nav Bar -->
   <header class="top-bar" role="banner">
     <div class="top-bar-inner">
-      <a href="#" class="brand" aria-label="PRISM Home" data-cursor="hover">
+      <a href="#" class="brand" aria-label="NEON Home" data-cursor="hover">
         <span class="brand-icon">
           <svg viewBox="0 0 24 24"><polygon points="6,3 18,12 6,21"/></svg>
         </span>
-        PRISM
+        NEON
       </a>
 
       <nav aria-label="Main navigation">
@@ -787,47 +766,13 @@
   <!-- Hero Carousel -->
   <main class="hero" role="region" aria-label="Featured films carousel" aria-roledescription="carousel">
     <div class="slides-container">
-      <!-- Slide 1: Concert - warm amber -->
+      <!-- Slide 1: Concert - real photograph -->
       <div class="slide slide-1 active" role="group" aria-roledescription="slide" aria-label="Slide 1 of 7">
         <div class="slide-bg" aria-hidden="true"></div>
-        <div class="light-beams" aria-hidden="true">
-          <div class="light-beam" style="left:30%;transform:rotate(-12deg);background:linear-gradient(180deg,rgba(255,200,80,0.2) 0%,transparent 80%);width:80px;animation-delay:0s;filter:blur(20px);"></div>
-          <div class="light-beam" style="left:50%;transform:rotate(0deg);background:linear-gradient(180deg,rgba(255,240,180,0.25) 0%,transparent 70%);width:100px;animation-delay:1s;filter:blur(25px);"></div>
-          <div class="light-beam" style="left:70%;transform:rotate(10deg);background:linear-gradient(180deg,rgba(255,180,60,0.18) 0%,transparent 75%);width:70px;animation-delay:2s;filter:blur(18px);"></div>
-        </div>
-        <div class="slide-bokeh" aria-hidden="true">
-          <div class="bokeh-orb" style="top:12%;left:16%;width:50px;height:50px;background:radial-gradient(circle,rgba(255,200,80,0.35) 0%,rgba(255,180,60,0.1) 50%,transparent 70%);animation-delay:0s;filter:blur(2px);"></div>
-          <div class="bokeh-orb" style="top:22%;left:72%;width:38px;height:38px;background:radial-gradient(circle,rgba(255,210,100,0.3) 0%,rgba(255,190,70,0.08) 50%,transparent 70%);animation-delay:1.2s;filter:blur(3px);"></div>
-          <div class="bokeh-orb" style="top:40%;left:88%;width:28px;height:28px;background:radial-gradient(circle,rgba(255,170,50,0.28) 0%,transparent 60%);animation-delay:2.5s;filter:blur(2px);"></div>
-          <div class="bokeh-orb" style="top:55%;left:8%;width:42px;height:42px;background:radial-gradient(circle,rgba(230,130,40,0.25) 0%,rgba(200,100,20,0.06) 50%,transparent 70%);animation-delay:3.8s;filter:blur(3px);"></div>
-          <div class="bokeh-orb" style="top:30%;left:52%;width:32px;height:32px;background:radial-gradient(circle,rgba(255,220,120,0.25) 0%,transparent 60%);animation-delay:0.8s;filter:blur(2px);"></div>
-          <div class="bokeh-orb" style="top:65%;left:58%;width:22px;height:22px;background:radial-gradient(circle,rgba(210,110,30,0.2) 0%,transparent 60%);animation-delay:5s;filter:blur(1px);"></div>
-          <div class="bokeh-orb" style="top:18%;left:38%;width:44px;height:44px;background:radial-gradient(circle,rgba(255,230,140,0.22) 0%,transparent 60%);animation-delay:1.8s;filter:blur(4px);"></div>
-          <div class="bokeh-orb" style="top:48%;left:32%;width:18px;height:18px;background:radial-gradient(circle,rgba(255,200,100,0.3) 0%,transparent 60%);animation-delay:4.2s;filter:blur(1px);"></div>
-          <div class="bokeh-orb" style="top:8%;left:60%;width:26px;height:26px;background:radial-gradient(circle,rgba(255,240,160,0.2) 0%,transparent 60%);animation-delay:2.8s;filter:blur(2px);"></div>
-        </div>
-        <div class="lens-flare" style="top:8%;left:42%;background:radial-gradient(circle,rgba(255,230,150,0.35) 0%,rgba(255,200,80,0.12) 35%,rgba(255,160,40,0.04) 55%,transparent 70%);" aria-hidden="true"></div>
-        <div class="lens-streak" style="top:15%;left:20%;width:200px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,200,100,0.4),transparent);filter:blur(1px);" aria-hidden="true"></div>
-        <div class="performer-silhouette" style="left:38%;bottom:8%;width:180px;" aria-hidden="true">
-          <svg viewBox="0 0 180 320" fill="none" style="width:100%;height:auto;">
-            <path d="M90 0 C100 0 108 8 108 20 C108 32 100 42 90 42 C80 42 72 32 72 20 C72 8 80 0 90 0Z M70 45 L110 45 L118 100 L130 180 L140 178 L145 190 L125 195 L115 120 L105 200 L110 310 L95 312 L88 210 L80 312 L65 310 L72 200 L62 120 L52 195 L32 190 L38 178 L48 180 L58 100Z" fill="rgba(0,0,0,0.85)" />
-          </svg>
-        </div>
-        <div class="slide-stage" aria-hidden="true"></div>
-        <div class="crowd-hands" aria-hidden="true">
-          <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
-            <path d="M120,100 L120,75 L125,60 L130,75 M280,100 L280,68 L285,55 L290,68 M440,100 L440,72 L445,58 L450,72 M580,100 L580,65 L584,50 L588,65 M700,100 L695,70 L700,52 L705,70 M860,100 L860,74 L865,60 L870,74 M980,100 L980,66 L984,48 L988,66 M1120,100 L1120,72 L1125,58 L1130,72 M1280,100 L1280,70 L1285,56 L1290,70" stroke="rgba(0,0,0,0.7)" stroke-width="5" fill="none" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="slide-crowd" aria-hidden="true">
-          <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-            <path d="M0,80 L0,45 Q30,28 60,42 Q90,18 120,35 Q150,22 180,38 Q210,15 240,30 Q270,20 300,40 Q330,25 360,34 Q390,18 420,32 Q450,24 480,38 Q510,15 540,28 Q570,22 600,36 Q630,18 660,30 Q690,26 720,40 Q750,20 780,32 Q810,16 840,28 Q870,22 900,38 Q930,18 960,30 Q990,24 1020,36 Q1050,16 1080,32 Q1110,22 1140,38 Q1170,18 1200,28 Q1230,26 1260,36 Q1290,20 1320,30 Q1350,24 1380,38 Q1410,28 1440,35 L1440,80 Z" fill="rgba(0,0,0,0.92)"/>
-          </svg>
-        </div>
         <div class="slide-overlay" aria-hidden="true"></div>
         <div class="slide-content">
           <span class="in-theaters-badge">In Theaters</span>
-          <h1 class="film-title">Epic: The Concert Experience</h1>
+          <h1 class="film-title">Epic: Elvis Presley in Concert</h1>
         </div>
       </div>
 
@@ -1022,7 +967,7 @@
     <div class="progress-bar" aria-hidden="true"></div>
 
     <!-- Corner Logo -->
-    <div class="corner-logo" aria-hidden="true">P</div>
+    <div class="corner-logo" aria-hidden="true">N</div>
   </main>
 
   <script>

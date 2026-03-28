@@ -163,300 +163,30 @@
     /* ── PERSON AREA ── */
     .person-area {
       position: absolute;
-      right: 80px;
-      top: 30px;
-      width: 560px;
-      height: 870px;
+      right: 0;
+      top: 0;
+      width: 700px;
+      height: 900px;
       z-index: 15;
       overflow: hidden;
     }
 
-    /* Photographic silhouette using CSS shapes and gradients */
-    .figure {
+    .person-img {
       position: absolute;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-45%);
-      width: 400px;
-      height: 760px;
-    }
-
-    /* Head - realistic oval with natural skin tones */
-    .fig-head {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 136px;
-      height: 168px;
-      background: linear-gradient(170deg, #f0d4b0 0%, #e4be92 40%, #dcb084 80%, #d6a678 100%);
-      border-radius: 68px 68px 60px 60px;
-      z-index: 6;
-    }
-
-    /* Hair - flowing auburn, natural shape */
-    .fig-hair-crown {
-      position: absolute;
-      top: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 180px;
-      height: 108px;
-      background: linear-gradient(165deg, #c65e30 0%, #b54d22 40%, #a34218 100%);
-      border-radius: 90px 90px 42px 52px;
-      z-index: 7;
-    }
-    .fig-hair-left {
-      position: absolute;
-      top: 38px;
-      left: 50%;
-      margin-left: -96px;
-      width: 46px;
-      height: 195px;
-      background: linear-gradient(190deg, #b85428 0%, #9a3c18 60%, #8a3214 100%);
-      border-radius: 32px 5px 8px 44px;
-      z-index: 5;
-    }
-    .fig-hair-right {
-      position: absolute;
-      top: 30px;
-      left: 50%;
-      margin-left: 50px;
-      width: 62px;
-      height: 225px;
-      background: linear-gradient(185deg, #c65e30 0%, #a84820 40%, #943c18 100%);
-      border-radius: 5px 48px 65px 12px;
-      z-index: 5;
-      transform: rotate(-3deg);
-    }
-    /* Hair highlight strand */
-    .fig-hair-highlight {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      margin-left: -32px;
-      width: 70px;
-      height: 55px;
-      background: linear-gradient(150deg, rgba(218,120,62,0.5) 0%, transparent 100%);
-      border-radius: 50px;
-      z-index: 8;
-      filter: blur(4px);
-    }
-
-    /* Subtle face features - minimalist approach */
-    .fig-face {
-      position: absolute;
-      top: 66px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 94px;
-      height: 74px;
-      z-index: 9;
-    }
-    .fig-eye {
-      position: absolute;
-      width: 8px;
-      height: 9px;
-      background: #3d2a1a;
-      border-radius: 50%;
-      top: 14px;
-    }
-    .fig-eye-l { left: 18px; }
-    .fig-eye-r { right: 18px; }
-    .fig-brow {
-      position: absolute;
-      width: 18px;
-      height: 2.5px;
-      background: #8a5030;
-      border-radius: 2px;
-      top: 4px;
-    }
-    .fig-brow-l { left: 14px; transform: rotate(-5deg); }
-    .fig-brow-r { right: 14px; transform: rotate(5deg); }
-    .fig-nose {
-      position: absolute;
-      top: 28px;
-      left: 50%;
-      transform: translateX(-2px);
-      width: 10px;
-      height: 16px;
-      border-right: 2px solid rgba(180,130,90,0.25);
-      border-radius: 0 0 8px 0;
-    }
-    .fig-mouth {
-      position: absolute;
-      top: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 22px;
-      height: 5px;
-      border-bottom: 2px solid #c48570;
-      border-radius: 0 0 12px 12px;
-    }
-    /* Earring */
-    .fig-earring {
-      position: absolute;
-      top: 124px;
-      left: 50%;
-      margin-left: 62px;
-      width: 6px;
-      height: 6px;
-      background: #f0d890;
-      border-radius: 50%;
-      z-index: 10;
-      box-shadow: 0 0 8px rgba(240,216,144,0.6);
-    }
-
-    /* Neck */
-    .fig-neck {
-      position: absolute;
-      top: 158px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 56px;
-      height: 36px;
-      background: linear-gradient(180deg, #dcb084, #e0ba90);
-      z-index: 4;
-    }
-
-    /* Torso - blazer with natural draping */
-    .fig-torso {
-      position: absolute;
-      top: 186px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 320px;
-      height: 574px;
-      background: linear-gradient(174deg, #ddd6cc 0%, #d2c8ba 20%, #c8bca8 45%, #bfb09a 70%, #b8a890 100%);
-      border-radius: 65px 65px 0 0;
-      z-index: 3;
-      overflow: hidden;
-    }
-
-    /* Neckline / V-neck skin */
-    .fig-torso::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 64px;
-      height: 90px;
-      background: linear-gradient(180deg, #e0ba90 0%, #d8cfc5 85%);
-      clip-path: polygon(0 0, 100% 0, 68% 100%, 32% 100%);
-    }
-
-    /* Blazer structure lines */
-    .fig-lapel-left {
-      position: absolute;
-      top: 0;
-      left: 86px;
-      width: 50px;
-      height: 220px;
-      border-right: 1px solid rgba(0,0,0,0.05);
-      transform: rotate(7deg);
-      transform-origin: top center;
-    }
-    .fig-lapel-right {
-      position: absolute;
-      top: 0;
-      right: 86px;
-      width: 50px;
-      height: 220px;
-      border-left: 1px solid rgba(0,0,0,0.05);
-      transform: rotate(-7deg);
-      transform-origin: top center;
-    }
-    /* Pocket flap */
-    .fig-pocket {
-      position: absolute;
-      top: 170px;
-      right: 52px;
-      width: 58px;
-      height: 8px;
-      background: rgba(0,0,0,0.035);
-      border-radius: 3px;
-    }
-    /* Button */
-    .fig-button {
-      position: absolute;
-      top: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 7px;
-      height: 7px;
-      background: rgba(0,0,0,0.06);
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.03);
-    }
-
-    /* Shoulder extensions */
-    .fig-shoulder-l {
-      position: absolute;
-      top: 0;
-      left: -40px;
-      width: 100px;
-      height: 180px;
-      background: linear-gradient(172deg, #ddd6cc, #cec3b0);
-      border-radius: 80px 0 0 0;
-    }
-    .fig-shoulder-r {
-      position: absolute;
-      top: 0;
-      right: -40px;
-      width: 100px;
-      height: 180px;
-      background: linear-gradient(172deg, #d5cbbf, #c2b5a0);
-      border-radius: 0 80px 0 0;
-    }
-
-    /* Subtle fabric texture overlay */
-    .fig-torso::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          transparent,
-          transparent 3px,
-          rgba(255,255,255,0.015) 3px,
-          rgba(255,255,255,0.015) 4px
-        );
-      border-radius: inherit;
-    }
-
-    /* Warm ambient light on figure */
-    .fig-light {
-      position: absolute;
-      top: 60px;
-      left: 50%;
-      transform: translateX(-55%);
-      width: 300px;
-      height: 400px;
-      background: radial-gradient(ellipse at 40% 30%, rgba(255,220,180,0.12) 0%, transparent 70%);
-      z-index: 20;
-      pointer-events: none;
-    }
-
-    /* Shadow underneath figure */
-    .fig-shadow {
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      transform: translateX(-45%);
-      width: 340px;
-      height: 40px;
-      background: radial-gradient(ellipse, rgba(60,80,110,0.1) 0%, transparent 70%);
-      filter: blur(8px);
+      right: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
     }
 
     /* ── FLOATING CARD ── */
     .app-card {
       position: absolute;
-      top: 320px;
+      top: 420px;
       left: 50%;
-      margin-left: -180px;
+      margin-left: -140px;
       background: #fff;
       border-radius: 20px;
       padding: 22px 40px 18px;
@@ -586,43 +316,7 @@
 
   <!-- Person Visual -->
   <div class="person-area">
-    <div class="figure">
-      <div class="fig-shadow"></div>
-      <div class="fig-light"></div>
-
-      <!-- Hair -->
-      <div class="fig-hair-crown"></div>
-      <div class="fig-hair-left"></div>
-      <div class="fig-hair-right"></div>
-      <div class="fig-hair-highlight"></div>
-
-      <!-- Head -->
-      <div class="fig-head"></div>
-      <div class="fig-earring"></div>
-
-      <!-- Face -->
-      <div class="fig-face">
-        <div class="fig-brow fig-brow-l"></div>
-        <div class="fig-brow fig-brow-r"></div>
-        <div class="fig-eye fig-eye-l"></div>
-        <div class="fig-eye fig-eye-r"></div>
-        <div class="fig-nose"></div>
-        <div class="fig-mouth"></div>
-      </div>
-
-      <!-- Neck -->
-      <div class="fig-neck"></div>
-
-      <!-- Torso -->
-      <div class="fig-torso">
-        <div class="fig-shoulder-l"></div>
-        <div class="fig-shoulder-r"></div>
-        <div class="fig-lapel-left"></div>
-        <div class="fig-lapel-right"></div>
-        <div class="fig-pocket"></div>
-        <div class="fig-button"></div>
-      </div>
-    </div>
+    <img src="images/056-hero.jpg" alt="Woman in cream blazer against blue sky" class="person-img" width="700" height="900">
 
     <!-- Floating Card -->
     <div class="app-card">

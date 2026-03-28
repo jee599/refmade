@@ -137,6 +137,7 @@
       align-items: center;
       justify-content: center;
       padding: 120px 48px 0;
+      padding-bottom: 0;
       overflow: hidden;
     }
 
@@ -163,366 +164,50 @@
       text-transform: uppercase;
     }
 
-    /* ── Abstract Face Composition ─────────────────── */
-    .face-composition {
+    /* ── Hero Image ─────────────────────────────────── */
+    .hero-image-wrapper {
       position: relative;
-      width: 440px;
-      height: 520px;
+      width: 100%;
+      max-width: 720px;
       margin: 0 auto;
       z-index: 2;
     }
 
-    /* Main face oval — soft skin-toned gradient */
-    .face-oval {
-      position: absolute;
-      width: 280px;
-      height: 360px;
-      left: 50%;
-      top: 50px;
-      transform: translateX(-50%);
-      border-radius: 50% 50% 44% 44% / 40% 40% 58% 58%;
-      background: linear-gradient(175deg,
-        #f2e4de 0%,
-        #edd5cc 20%,
-        #e4c4b8 45%,
-        #d9b0a4 65%,
-        #ceA090 85%,
-        #c49488 100%
-      );
-      overflow: hidden;
+    .hero-image-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
     }
 
-    /* Pastel color overlay washes across the face */
-    .face-oval::before {
-      content: '';
+    /* Holographic overlay on the image */
+    .hero-image-holo {
       position: absolute;
       inset: 0;
+      pointer-events: none;
+      z-index: 3;
       background:
-        radial-gradient(ellipse at 30% 40%, rgba(197, 217, 255, 0.35) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 45%, rgba(251, 217, 245, 0.3) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 70%, rgba(199, 166, 180, 0.25) 0%, transparent 45%);
-      mix-blend-mode: soft-light;
+        radial-gradient(ellipse at 35% 45%, rgba(197, 217, 255, 0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 65% 50%, rgba(251, 217, 245, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 65%, rgba(199, 166, 180, 0.12) 0%, transparent 40%);
+      mix-blend-mode: screen;
+      animation: holoShift 8s ease-in-out infinite;
     }
 
-    /* Subtle highlight on forehead */
-    .face-oval::after {
-      content: '';
-      position: absolute;
-      width: 160px;
-      height: 120px;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(ellipse, rgba(255, 245, 240, 0.6) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-
-    /* Neck & shoulders — grounds the figure */
-    .neck-area {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 110px;
-      height: 70px;
-      background: linear-gradient(180deg, #d4a99e 0%, #e0c0b8 60%, rgba(224, 192, 184, 0) 100%);
-      border-radius: 0 0 35% 35%;
-      z-index: 0;
-    }
-
-    .shoulders-area {
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 420px;
-      height: 55px;
-      background: linear-gradient(180deg, rgba(240, 236, 232, 0.7) 0%, transparent 100%);
-      border-radius: 50% 50% 0 0;
-      z-index: 0;
-    }
-
-    /* Closed eyes — simple curved lines */
-    .eye-line {
-      position: absolute;
-      width: 44px;
-      height: 14px;
-      top: 195px;
-      border-bottom: 1.8px solid rgba(70, 55, 60, 0.35);
-      border-radius: 0 0 50% 50%;
-      z-index: 4;
-    }
-
-    .eye-line-left {
-      left: 135px;
-    }
-
-    .eye-line-right {
-      right: 135px;
-    }
-
-    /* Eyelash accent — tiny shadow below the curve */
-    .eye-line::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 38px;
-      height: 3px;
-      background: radial-gradient(ellipse, rgba(70, 55, 60, 0.12) 0%, transparent 80%);
-      border-radius: 50%;
-    }
-
-    /* Subtle brow shadows */
-    .brow-shadow {
-      position: absolute;
-      top: 175px;
-      width: 50px;
-      height: 8px;
-      border-radius: 50%;
-      z-index: 3;
-    }
-
-    .brow-shadow-left {
-      left: 132px;
-      background: radial-gradient(ellipse, rgba(60, 45, 50, 0.1) 0%, transparent 80%);
-    }
-
-    .brow-shadow-right {
-      right: 132px;
-      background: radial-gradient(ellipse, rgba(60, 45, 50, 0.1) 0%, transparent 80%);
-    }
-
-    /* Nose — very subtle shadow hint */
-    .nose-shadow {
-      position: absolute;
-      width: 24px;
-      height: 45px;
-      top: 220px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-    }
-
-    .nose-shadow::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 26px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(180, 135, 125, 0.12);
-    }
-
-    /* Lips — soft gradient shape */
-    .lips-shape {
-      position: absolute;
-      top: 285px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 4;
-    }
-
-    .lip-upper {
-      width: 40px;
-      height: 8px;
-      background: rgba(180, 105, 105, 0.35);
-      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-    }
-
-    .lip-lower {
-      width: 42px;
-      height: 11px;
-      background: rgba(185, 110, 108, 0.32);
-      border-radius: 0 0 50% 50% / 0 0 100% 100%;
-      margin: -1px auto 0;
-    }
-
-    /* ── Holographic Gradient Overlays — the beauty tech effect ── */
-    .holo-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    /* Sweeping gradient band across face */
-    .gradient-band {
-      position: absolute;
-      width: 350px;
-      height: 120px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-5deg);
-      border-radius: 50%;
-      opacity: 0;
-      animation: bandSweep 8s ease-in-out infinite;
-    }
-
-    .gradient-band-1 {
-      top: 130px;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(197, 217, 255, 0.3) 20%,
-        rgba(251, 217, 245, 0.35) 50%,
-        rgba(199, 166, 180, 0.25) 80%,
-        transparent 100%
-      );
-      animation-delay: 0s;
-    }
-
-    .gradient-band-2 {
-      top: 220px;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(241, 224, 221, 0.35) 25%,
-        rgba(197, 217, 255, 0.3) 55%,
-        rgba(251, 217, 245, 0.2) 80%,
-        transparent 100%
-      );
-      animation-delay: 2.5s;
-    }
-
-    .gradient-band-3 {
-      top: 290px;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(251, 217, 245, 0.25) 30%,
-        rgba(199, 166, 180, 0.3) 60%,
-        rgba(197, 217, 255, 0.2) 85%,
-        transparent 100%
-      );
-      animation-delay: 5s;
-    }
-
-    @keyframes bandSweep {
-      0%, 100% { opacity: 0; transform: translateX(-50%) rotate(-5deg) translateY(0); }
-      15% { opacity: 0.7; }
-      50% { opacity: 0.9; transform: translateX(-50%) rotate(-5deg) translateY(-8px); }
-      85% { opacity: 0.6; }
-    }
-
-    /* Floating soft-glow orbs */
-    .glow-orb {
-      position: absolute;
-      border-radius: 50%;
-      z-index: 6;
-      pointer-events: none;
-      filter: blur(8px);
-    }
-
-    .glow-orb-1 {
-      width: 90px; height: 90px;
-      top: 110px; left: 50px;
-      background: radial-gradient(circle, rgba(197, 217, 255, 0.35) 0%, transparent 70%);
-      animation: orbFloat 7s ease-in-out infinite;
-    }
-
-    .glow-orb-2 {
-      width: 70px; height: 70px;
-      top: 200px; right: 50px;
-      background: radial-gradient(circle, rgba(251, 217, 245, 0.3) 0%, transparent 70%);
-      animation: orbFloat 7s ease-in-out infinite 1.5s;
-    }
-
-    .glow-orb-3 {
-      width: 60px; height: 60px;
-      top: 300px; left: 70px;
-      background: radial-gradient(circle, rgba(199, 166, 180, 0.28) 0%, transparent 70%);
-      animation: orbFloat 7s ease-in-out infinite 3s;
-    }
-
-    .glow-orb-4 {
-      width: 80px; height: 80px;
-      top: 160px; left: 50%;
-      transform: translateX(-50%);
-      background: radial-gradient(circle, rgba(241, 224, 221, 0.3) 0%, transparent 70%);
-      animation: orbFloat 7s ease-in-out infinite 4.5s;
-    }
-
-    @keyframes orbFloat {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.12); }
-    }
-
-    .glow-orb-4 {
-      animation-name: orbFloat2;
-    }
-
-    @keyframes orbFloat2 {
-      0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
-      50% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
-    }
-
-    /* Tech data points floating beside face */
-    .data-point {
-      position: absolute;
-      z-index: 7;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      pointer-events: none;
-    }
-
-    .data-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--sky);
-      box-shadow: 0 0 8px rgba(197, 217, 255, 0.5);
-      animation: dotPulse 3s ease-in-out infinite;
-    }
-
-    .data-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      color: var(--text-30);
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .data-point-1 { top: 165px; right: 10px; }
-    .data-point-2 { top: 250px; left: 10px; }
-    .data-point-3 { top: 310px; right: 5px; }
-
-    @keyframes dotPulse {
-      0%, 100% { opacity: 0.4; }
+    @keyframes holoShift {
+      0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
     }
 
-    /* Thin connecting lines from data points to face */
-    .data-line {
+    /* Fade edges of image into white background */
+    .hero-image-fade {
       position: absolute;
-      z-index: 6;
+      inset: 0;
       pointer-events: none;
-    }
-
-    .data-line-1 {
-      top: 168px;
-      right: 55px;
-      width: 45px;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(197, 217, 255, 0.25), rgba(197, 217, 255, 0.05));
-    }
-
-    .data-line-2 {
-      top: 253px;
-      left: 60px;
-      width: 50px;
-      height: 1px;
-      background: linear-gradient(270deg, rgba(197, 217, 255, 0.25), rgba(197, 217, 255, 0.05));
-    }
-
-    .data-line-3 {
-      top: 313px;
-      right: 50px;
-      width: 50px;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(251, 217, 245, 0.25), rgba(251, 217, 245, 0.05));
+      z-index: 4;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0) 60%, rgba(255,255,255,1) 100%),
+        linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 15%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%);
     }
 
     /* ── Glassmorphic Feature Cards ───────────────── */
@@ -834,13 +519,8 @@
         grid-template-columns: 1fr;
         max-width: 480px;
       }
-      .face-composition {
-        width: 320px;
-        height: 400px;
-      }
-      .face-oval {
-        width: 220px;
-        height: 280px;
+      .hero-image-wrapper {
+        max-width: 100%;
       }
     }
   </style>
@@ -870,61 +550,10 @@
       <p class="hero-subtitle">Subscribe for updates</p>
     </div>
 
-    <div class="face-composition">
-      <!-- Shoulders & neck -->
-      <div class="shoulders-area"></div>
-      <div class="neck-area"></div>
-
-      <!-- Main face oval -->
-      <div class="face-oval"></div>
-
-      <!-- Brow shadows -->
-      <div class="brow-shadow brow-shadow-left"></div>
-      <div class="brow-shadow brow-shadow-right"></div>
-
-      <!-- Eyes (closed, minimal curves) -->
-      <div class="eye-line eye-line-left"></div>
-      <div class="eye-line eye-line-right"></div>
-
-      <!-- Nose -->
-      <div class="nose-shadow"></div>
-
-      <!-- Lips -->
-      <div class="lips-shape">
-        <div class="lip-upper"></div>
-        <div class="lip-lower"></div>
-      </div>
-
-      <!-- Holographic gradient overlay effects -->
-      <div class="holo-overlay">
-        <div class="gradient-band gradient-band-1"></div>
-        <div class="gradient-band gradient-band-2"></div>
-        <div class="gradient-band gradient-band-3"></div>
-      </div>
-
-      <!-- Floating glow orbs -->
-      <div class="glow-orb glow-orb-1"></div>
-      <div class="glow-orb glow-orb-2"></div>
-      <div class="glow-orb glow-orb-3"></div>
-      <div class="glow-orb glow-orb-4"></div>
-
-      <!-- Tech data points -->
-      <div class="data-line data-line-1"></div>
-      <div class="data-line data-line-2"></div>
-      <div class="data-line data-line-3"></div>
-
-      <div class="data-point data-point-1">
-        <div class="data-dot"></div>
-        <span class="data-label">Skin Analysis</span>
-      </div>
-      <div class="data-point data-point-2">
-        <span class="data-label">Hydration</span>
-        <div class="data-dot"></div>
-      </div>
-      <div class="data-point data-point-3">
-        <div class="data-dot"></div>
-        <span class="data-label">Texture Map</span>
-      </div>
+    <div class="hero-image-wrapper">
+      <img src="images/070-beauty.jpg" alt="Close-up portrait with holographic beauty overlay" />
+      <div class="hero-image-holo"></div>
+      <div class="hero-image-fade"></div>
     </div>
   </section>
 

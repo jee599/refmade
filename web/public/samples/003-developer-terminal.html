@@ -1,847 +1,1011 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DevBase — Build in a weekend. Scale to millions.</title>
+  <title>003 — Developer Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --bg-primary: #171717;
-      --bg-darker: #111111;
-      --bg-surface: #1c1c1c;
-      --bg-surface-light: #232323;
-      --bg-card: #1a1a1a;
-      --border: #2a2a2a;
-      --border-light: #333;
-      --text-primary: #ededed;
-      --text-secondary: #8c8c8c;
-      --text-muted: #666;
-      --green: #3ECF8E;
-      --green-dark: #2ea872;
-      --green-glow: rgba(62, 207, 142, 0.12);
+      --bg: #09090b;
+      --text: #fafafa;
+      --subtle-bg: #18181b;
+      --border: #27272a;
+      --muted: #a1a1aa;
+      --accent: #10b981;
+      --accent-dim: rgba(16, 185, 129, 0.08);
+      --accent-glow: rgba(16, 185, 129, 0.15);
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      background-color: var(--bg);
+      color: var(--text);
     }
 
-    a { color: inherit; text-decoration: none; }
-    button { cursor: pointer; border: none; font-family: inherit; }
-
-    /* ── NAV ── */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(23, 23, 23, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 1280px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 24px; height: 52px;
-    }
-    .nav-left {
-      display: flex; align-items: center; gap: 32px;
-    }
-    .nav-logo {
-      display: flex; align-items: center; gap: 8px;
-      font-weight: 600; font-size: 16px; color: var(--text-primary);
-    }
-    .nav-logo svg { width: 20px; height: 20px; }
-    .nav-links {
-      display: flex; align-items: center; gap: 4px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 13px; color: var(--text-secondary);
-      padding: 6px 12px;
-      border-radius: 4px;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--text-primary); }
-    .nav-actions { display: flex; align-items: center; gap: 8px; }
-    .github-stars {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 13px; color: var(--text-secondary);
-      padding: 6px 10px;
-      border-radius: 4px;
-      transition: color 0.2s;
-    }
-    .github-stars:hover { color: var(--text-primary); }
-    .github-stars svg { width: 16px; height: 16px; fill: var(--text-secondary); }
-    .btn-ghost {
-      background: none; color: var(--text-secondary);
-      font-size: 13px; padding: 6px 12px; border-radius: 4px;
-      transition: color 0.2s;
-    }
-    .btn-ghost:hover { color: var(--text-primary); }
-    .btn-green {
-      background: var(--green); color: #000;
-      font-size: 13px; font-weight: 500;
-      padding: 6px 14px; border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .btn-green:hover { background: var(--green-dark); }
-
-    /* ── HERO ── */
-    .hero {
-      position: relative;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      padding: 180px 24px 80px;
-      overflow: hidden;
-    }
-    .hero h1 {
-      font-size: clamp(40px, 5.5vw, 68px);
-      font-weight: 600;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      margin-bottom: 0;
-      position: relative;
-    }
-    .hero h1 .green { color: var(--green); }
-    .hero-sub {
-      font-size: clamp(14px, 1.2vw, 16px);
-      color: var(--text-secondary);
-      line-height: 1.7;
-      max-width: 580px;
-      margin: 20px auto 0;
-      position: relative;
-    }
-    .hero-cta {
-      display: flex; align-items: center; gap: 12px;
-      margin-top: 36px; position: relative;
-    }
-    .btn-hero-green {
-      background: var(--green); color: #000;
-      font-size: 14px; font-weight: 500;
-      padding: 10px 20px; border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .btn-hero-green:hover { background: var(--green-dark); }
-    .btn-hero-outline {
-      background: none; color: var(--text-primary);
-      font-size: 14px; font-weight: 400;
-      padding: 10px 20px; border-radius: 4px;
-      border: 1px solid var(--border-light);
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .btn-hero-outline:hover { border-color: #555; background: rgba(255,255,255,0.03); }
-
-    /* ── AUTH ICONS ── */
-    .auth-row {
-      display: flex; align-items: center; gap: 12px;
-      margin-top: 48px; position: relative;
-    }
-    .auth-item {
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-    }
-    .auth-icon {
-      width: 52px; height: 52px;
-      border-radius: 8px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .auth-icon:hover {
-      border-color: #444;
-      background: var(--bg-surface-light);
-    }
-    .auth-icon svg { width: 20px; height: 20px; fill: var(--text-secondary); }
-    .auth-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      letter-spacing: 0.01em;
-    }
-    .auth-divider {
-      width: 1px; height: 52px;
-      background: var(--border);
-      margin: 0 4px;
-      align-self: flex-start;
+    .grid-pattern {
+      background-image:
+        linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
     }
 
-    /* ── LOGO BAR ── */
-    .logo-bar {
-      padding: 64px 24px 48px;
-      text-align: center;
+    .term-dot-red { background-color: #FF5F57; }
+    .term-dot-yellow { background-color: #FEBC2E; }
+    .term-dot-green { background-color: #28C840; }
+
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #10b981; }
+    .code-comment { color: #52525b; }
+    .code-fn { color: #60a5fa; }
+    .code-const { color: #e879f9; }
+    .code-type { color: #2dd4bf; }
+    .code-punct { color: #71717a; }
+    .code-num { color: #f472b6; }
+    .code-key { color: #93c5fd; }
+    .code-bool { color: #fbbf24; }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
-    .logo-bar-label {
-      font-size: 13px; color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-    .logo-bar-logos {
-      display: flex; align-items: center; justify-content: center;
-      flex-wrap: wrap; gap: 32px 48px;
-      max-width: 860px; margin: 0 auto;
-      opacity: 0.35;
-    }
-    .logo-bar-logos span {
-      font-size: 16px; font-weight: 600;
-      color: var(--text-primary);
-      letter-spacing: 0.02em;
+    .pulse-dot {
+      animation: pulse-glow 2s ease-in-out infinite;
     }
 
-    /* ── FEATURES ROW ── */
-    .features-row {
-      padding: 40px 24px 100px;
-      max-width: 1280px; margin: 0 auto;
+    @keyframes grid-scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
     }
-    .features-row-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .feat-item {
-      background: var(--bg-primary);
-      padding: 28px 24px;
-      transition: background 0.2s;
-    }
-    .feat-item:hover {
-      background: var(--bg-surface);
-    }
-    .feat-item-header {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 10px;
-    }
-    .feat-item-icon {
-      width: 32px; height: 32px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .feat-item-icon svg {
-      width: 20px; height: 20px;
-      stroke: var(--green);
-      fill: none;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .feat-item h3 {
-      font-size: 14px; font-weight: 500;
-      color: var(--text-primary);
-    }
-    .feat-item p {
-      font-size: 13px; color: var(--text-secondary);
-      line-height: 1.5;
-      margin-left: 42px;
+    .grid-scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.03) 50%, transparent 100%);
+      animation: grid-scan 8s linear infinite;
+      pointer-events: none;
     }
 
-    /* ── CODE SECTION ── */
-    .code-section {
-      padding: 80px 24px;
-      max-width: 1280px; margin: 0 auto;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
-    .code-section-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
+    .cursor-blink {
+      animation: blink 1.2s step-end infinite;
     }
-    .code-text h2 {
-      font-size: clamp(28px, 3.5vw, 40px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 16px;
-    }
-    .code-text p {
-      color: var(--text-secondary);
-      font-size: 15px;
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .code-block {
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .code-block-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-    }
-    .code-tab {
-      padding: 10px 20px;
-      font-size: 13px;
-      color: var(--text-muted);
-      border-bottom: 2px solid transparent;
-      background: none;
-      transition: color 0.2s;
-    }
-    .code-tab.active {
-      color: var(--text-primary);
-      border-bottom-color: var(--green);
-    }
-    .code-block pre {
-      padding: 24px;
-      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-      font-size: 13px;
-      line-height: 1.7;
-      overflow-x: auto;
-      color: var(--text-secondary);
-    }
-    .code-block .kw { color: #c084fc; }
-    .code-block .fn { color: #60a5fa; }
-    .code-block .str { color: var(--green); }
-    .code-block .cm { color: #555; }
-    .code-block .op { color: #888; }
-    .code-block .num { color: #f472b6; }
 
-    /* ── DASHBOARD PREVIEW ── */
-    .dashboard-section {
-      padding: 60px 24px 100px;
-      max-width: 1100px; margin: 0 auto;
-      text-align: center;
-    }
-    .section-header {
-      margin-bottom: 40px;
-    }
-    .section-header .badge {
-      display: inline-block;
-      font-size: 13px; color: var(--green);
-      border: 1px solid rgba(62, 207, 142, 0.3);
-      padding: 4px 14px; border-radius: 100px;
-      margin-bottom: 20px;
-    }
-    .section-header h2 {
-      font-size: clamp(28px, 3.5vw, 44px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-    }
-    .section-header p {
-      color: var(--text-secondary);
-      font-size: 16px;
-      margin-top: 16px;
-      max-width: 520px;
-      margin-left: auto; margin-right: auto;
-    }
-    .dashboard-preview {
-      margin-top: 40px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--bg-card);
-    }
-    .dashboard-topbar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 16px;
-      background: #141414;
-      border-bottom: 1px solid var(--border);
-    }
-    .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dash-dot.r { background: #FF5F57; }
-    .dash-dot.y { background: #FEBC2E; }
-    .dash-dot.g { background: #28C840; }
-    .dashboard-body {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      min-height: 340px;
-    }
-    .dash-sidebar {
-      border-right: 1px solid var(--border);
-      padding: 16px 0;
-      background: #141414;
-    }
-    .dash-sidebar-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 20px;
-      font-size: 13px;
-      color: var(--text-muted);
-      transition: color 0.15s, background 0.15s;
-    }
-    .dash-sidebar-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
-    .dash-sidebar-item.active {
-      color: var(--text-primary);
-      background: rgba(62, 207, 142, 0.06);
-      border-right: 2px solid var(--green);
-    }
-    .dash-sidebar-item svg {
-      width: 16px; height: 16px;
-      stroke: currentColor; fill: none;
-      stroke-width: 1.5;
-    }
-    .dash-main { padding: 24px; }
-    .dash-main-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .dash-main-header h3 { font-size: 16px; font-weight: 600; }
-    .dash-table {
+    /* Matrix rain */
+    .matrix-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    .dash-table th {
-      text-align: left;
-      padding: 8px 12px;
-      color: var(--text-muted);
-      font-weight: 500;
-      border-bottom: 1px solid var(--border);
-    }
-    .dash-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-    }
-    .dash-table .tag {
-      display: inline-block;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      background: rgba(62, 207, 142, 0.1);
-      color: var(--green);
-    }
-    .dash-table .tag-blue {
-      background: rgba(96, 165, 250, 0.1);
-      color: #60a5fa;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.06;
     }
 
-    /* ── CTA ── */
-    .cta-section {
-      padding: 100px 24px;
-      text-align: center;
-      position: relative;
-    }
-    .cta-section h2 {
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      position: relative;
-    }
-    .cta-section p {
-      color: var(--text-secondary);
-      font-size: 16px;
-      margin-top: 16px;
-      position: relative;
-    }
-    .cta-section .hero-cta {
-      justify-content: center;
-      margin-top: 32px;
-      position: relative;
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 48px 24px;
-      max-width: 1280px; margin: 0 auto;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr repeat(4, 1fr);
-      gap: 48px;
-    }
-    .footer-brand p {
-      font-size: 13px; color: var(--text-muted);
-      line-height: 1.6; margin-top: 12px;
-    }
-    .footer-col h4 {
-      font-size: 13px; font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-primary);
-      margin-bottom: 16px;
-    }
-    .footer-col a {
-      display: block;
-      font-size: 13px; color: var(--text-muted);
-      padding: 4px 0;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: var(--text-primary); }
-    .footer-bottom {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 13px; color: var(--text-muted);
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-up {
+    /* Typing animation */
+    .typing-line {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--accent);
+      width: 0;
       opacity: 0;
-      animation: fadeUp 0.6s ease forwards;
     }
-    .fade-up-d1 { animation-delay: 0.08s; }
-    .fade-up-d2 { animation-delay: 0.16s; }
-    .fade-up-d3 { animation-delay: 0.24s; }
-    .fade-up-d4 { animation-delay: 0.32s; }
-
-    .reveal {
+    .typing-line.typing {
+      opacity: 1;
+      animation: typing-expand 1.5s steps(40) forwards, blink-caret 0.8s step-end infinite;
+    }
+    @keyframes typing-expand {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
+    }
+    .typing-result {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateY(4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    .reveal.visible {
+    .typing-result.show {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .nav-links { display: none; }
-      .features-row-grid { grid-template-columns: repeat(2, 1fr); }
-      .code-section-inner { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: repeat(2, 1fr); }
-      .dashboard-body { grid-template-columns: 1fr; }
-      .dash-sidebar { display: none; }
+    /* Network activity */
+    @keyframes network-packet {
+      0% { transform: translateX(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateX(400%); opacity: 0; }
     }
-    @media (max-width: 600px) {
-      .features-row-grid { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr; }
-      .hero-cta { flex-direction: column; }
-      .auth-row { flex-wrap: wrap; justify-content: center; }
-      .logo-bar-logos { gap: 20px 28px; }
+    .network-packet {
+      animation: network-packet 2s ease-in-out infinite;
     }
+    .network-packet:nth-child(2) { animation-delay: 0.4s; }
+    .network-packet:nth-child(3) { animation-delay: 0.8s; }
+    .network-packet:nth-child(4) { animation-delay: 1.2s; }
+
+    /* Live metric bar animation */
+    @keyframes metric-fill {
+      0% { width: 0%; }
+      100% { width: var(--fill-width); }
+    }
+    .metric-bar-fill {
+      animation: metric-fill 1.5s ease-out forwards;
+      width: 0%;
+    }
+    .metric-bar-fill.reset {
+      width: 0%;
+      animation: none;
+    }
+
+    /* Ticker animation for live metrics */
+    .live-ticker {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .fade-up { opacity: 1; transform: none; }
+    }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Cursor Trail */
+    .trail-dot { position:fixed; pointer-events:none; z-index:9997; width:6px; height:6px; border-radius:50%; transition:opacity 0.5s ease; }
+  
+
+    /* Marquee/Ticker Strip */
+    @keyframes marqueeScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .marquee-strip { overflow:hidden; white-space:nowrap; }
+    .marquee-inner { display:inline-flex; animation:marqueeScroll 20s linear infinite; }
+    .marquee-inner:hover { animation-play-state:paused; }
+  
+
+    /* Staggered Grid Reveal */
+    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
+  
   </style>
 </head>
-<body>
+<body class="font-sans antialiased">
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-inner">
-    <div class="nav-left">
-      <a href="#" class="nav-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--green)" fill="rgba(62,207,142,0.15)"/>
-        </svg>
-        DevBase
-      </a>
-      <ul class="nav-links">
-        <li><a href="#">Product</a></li>
-        <li><a href="#">Developers</a></li>
-        <li><a href="#">Solutions</a></li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Docs</a></li>
-        <li><a href="#">Blog</a></li>
-      </ul>
-    </div>
-    <div class="nav-actions">
-      <a href="#" class="github-stars">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        99.7K
-      </a>
-      <button class="btn-ghost">Sign in</button>
-      <button class="btn-green">Start your project</button>
-    </div>
-  </div>
-</nav>
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 border-b" style="background-color: rgba(9,9,11,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-color: var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 font-heading text-lg font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--text);">
+          <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg" style="background-color: var(--accent);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#09090b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </span>
+          [Your CLI Tool]
+        </a>
 
-<!-- HERO -->
-<section class="hero">
-  <h1 class="fade-up">
-    Build in a weekend<br><span class="green">Scale to millions</span>
-  </h1>
-  <p class="hero-sub fade-up fade-up-d1">
-    DevBase is the Postgres development platform.<br>
-    Start your project with a Postgres database, Authentication, Instant APIs, Edge<br>
-    Functions, Realtime subscriptions, Storage, and Vector embeddings.
-  </p>
-
-  <div class="hero-cta fade-up fade-up-d2">
-    <button class="btn-hero-green">Start your project</button>
-    <button class="btn-hero-outline">Request a demo</button>
-  </div>
-
-  <!-- Auth provider icons with labels -->
-  <div class="auth-row fade-up fade-up-d3">
-    <div class="auth-item">
-      <div class="auth-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      </div>
-      <span class="auth-label">GitHub</span>
-    </div>
-    <div class="auth-item">
-      <div class="auth-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-      </div>
-      <span class="auth-label">sso/saml</span>
-    </div>
-    <div class="auth-divider"></div>
-    <div class="auth-item">
-      <div class="auth-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      </div>
-      <span class="auth-label">GitHub</span>
-    </div>
-    <div class="auth-item">
-      <div class="auth-icon">
-        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
-      </div>
-      <span class="auth-label">Password</span>
-    </div>
-  </div>
-</section>
-
-<!-- LOGO BAR -->
-<section class="logo-bar reveal">
-  <p class="logo-bar-label">Trusted by fast-growing companies worldwide</p>
-  <div class="logo-bar-logos">
-    <span>mozilla</span>
-    <span>1password</span>
-    <span>PWC</span>
-    <span>Humata</span>
-    <span>Krea</span>
-    <span>Udio</span>
-    <span>Quivr</span>
-    <span>Resend</span>
-  </div>
-</section>
-
-<!-- FEATURES ROW -->
-<section class="features-row reveal">
-  <div class="features-row-grid">
-    <div class="feat-item">
-      <div class="feat-item-header">
-        <div class="feat-item-icon">
-          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#features" class="text-sm font-normal transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Features</a>
+          <a href="#docs" class="text-sm font-normal transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Docs</a>
+          <a href="#pricing" class="text-sm font-normal transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Pricing</a>
+          <a href="#" class="text-sm font-normal transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Changelog</a>
+          <a href="#cta" class="rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #09090b;">
+            Get Started
+          </a>
         </div>
-        <h3>Postgres Database</h3>
+
+        <button class="rounded-lg p-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 md:hidden" style="color: var(--text);" aria-label="Open menu" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </div>
-      <p>Every project is a full Postgres database with realtime functionality, database backups, and extensions.</p>
+
+      <div id="mobile-menu" class="hidden border-t pb-4 pt-2 md:hidden" style="border-color: var(--border);">
+        <a href="#features" class="block rounded-lg px-3 py-2 text-sm transition-colors duration-200 hover:bg-zinc-800" style="color: var(--muted);">Features</a>
+        <a href="#docs" class="block rounded-lg px-3 py-2 text-sm transition-colors duration-200 hover:bg-zinc-800" style="color: var(--muted);">Docs</a>
+        <a href="#pricing" class="block rounded-lg px-3 py-2 text-sm transition-colors duration-200 hover:bg-zinc-800" style="color: var(--muted);">Pricing</a>
+        <a href="#cta" class="mt-2 block rounded-lg px-3 py-2 text-center text-sm font-medium" style="background-color: var(--accent); color: #09090b;">Get Started</a>
+      </div>
     </div>
-    <div class="feat-item">
-      <div class="feat-item-header">
-        <div class="feat-item-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  </nav>
+
+  <main>
+    <!-- Hero: Split — text left, terminal right -->
+    <section class="grid-pattern relative overflow-hidden py-20 sm:py-28" style="background-color: var(--bg);">
+      <div class="grid-scan-line" aria-hidden="true"></div>
+      <!-- Matrix rain canvas -->
+      <canvas id="matrix-canvas" class="matrix-canvas" aria-hidden="true"></canvas>
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid items-center gap-12 lg:grid-cols-2">
+          <div class="fade-up">
+            <span class="mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs font-medium" style="border-color: var(--border); color: var(--accent); background-color: var(--accent-dim);">
+              <span class="h-1.5 w-1.5 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+              [your version badge]
+            </span>
+
+            <h1 class="font-heading text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl" style="color: var(--text);">
+              [Your headline]<br>
+              that <span style="color: var(--accent);">[verb]</span> for you
+            </h1>
+
+            <p class="mt-6 max-w-lg text-lg leading-relaxed" style="color: var(--muted);">
+              [One-sentence product pitch. What it does, for whom, and why it matters. Keep it under 25 words.]
+            </p>
+
+            <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+              <a href="#cta" class="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #09090b;">
+                [Primary CTA]
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+              <a href="#docs" class="inline-flex items-center justify-center gap-2 rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+                View Docs
+              </a>
+            </div>
+
+            <!-- Install command -->
+            <div class="mt-8 inline-flex items-center gap-3 rounded-lg border px-4 py-2.5 font-mono text-sm" style="border-color: var(--border); background-color: var(--subtle-bg);">
+              <span style="color: var(--accent);">$</span>
+              <span style="color: var(--text);">[your install command]</span>
+              <button class="ml-2 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);" aria-label="Copy command">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Terminal mockup with typing animation -->
+          <div class="fade-up overflow-hidden rounded-lg border" id="hero-terminal" style="border-color: var(--border); background-color: #0c0c0e; box-shadow: 0 0 80px rgba(16, 185, 129, 0.06);">
+            <div class="flex items-center gap-2 border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
+              <span class="h-3 w-3 rounded-full term-dot-red"></span>
+              <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+              <span class="h-3 w-3 rounded-full term-dot-green"></span>
+              <span class="ml-3 font-mono text-xs" style="color: var(--muted);">zsh — ~/src/billing-service</span>
+            </div>
+            <div class="p-5 font-mono text-sm leading-loose" id="typing-container">
+              <div><span style="color: var(--accent);">~/src/billing-service</span> <span style="color: var(--muted);">on</span> <span style="color: #c084fc;">feat/stripe-webhooks</span></div>
+              <div class="typing-line" data-delay="300"><span style="color: var(--accent);">&#x276F;</span> <span style="color: var(--text);">pnpm dlx [your-cli] init --preset stripe</span></div>
+              <div class="typing-result" data-delay="2000" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Detected tsconfig.json (strict mode)
+              </div>
+              <div class="typing-result" data-delay="2400" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Linked webhook endpoint /api/webhooks/stripe
+              </div>
+              <div class="typing-result" data-delay="2800" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Generated 4 event handlers
+              </div>
+              <div class="typing-result" data-delay="3200" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Type-checked against stripe@14.21.0 — 0 errors
+              </div>
+              <div class="typing-result" data-delay="3600" style="color: var(--muted);">
+                <span style="color: var(--accent);">&#10003;</span> Dev server → <span style="color: var(--accent);">http://localhost:3847</span>
+              </div>
+              <div class="typing-result" data-delay="4200">
+                <span style="color: var(--accent);">~/src/billing-service</span> <span style="color: var(--muted);">on</span> <span style="color: #c084fc;">feat/stripe-webhooks</span>
+              </div>
+              <div class="typing-result" data-delay="4400"><span style="color: var(--accent);">&#x276F;</span> <span class="cursor-blink" style="color: var(--text);">&#9608;</span></div>
+            </div>
+          </div>
         </div>
-        <h3>Authentication</h3>
       </div>
-      <p>Add user sign ups and logins, securing your data with Row Level Security policies.</p>
-    </div>
-    <div class="feat-item">
-      <div class="feat-item-header">
-        <div class="feat-item-icon">
-          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    </section>
+
+    <!-- Social Proof: single-line dev feedback -->
+    <section class="py-10" style="background-color: var(--subtle-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 font-mono text-xs font-medium shrink-0" style="color: var(--accent);">@handle_1</span>
+            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"API latency p99 [N]ms. No cache layer."</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 font-mono text-xs font-medium shrink-0" style="color: var(--accent);">@handle_2</span>
+            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"SDK type inference is clean. No ReturnType needed."</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 font-mono text-xs font-medium shrink-0" style="color: var(--accent);">@handle_3</span>
+            <p class="font-mono text-xs leading-relaxed" style="color: var(--muted);">"Ran [your-cli] check in CI — caught [N] dead imports."</p>
+          </div>
         </div>
-        <h3>Edge Functions</h3>
       </div>
-      <p>Write custom code without deploying or scaling servers. Globally distributed for minimal latency.</p>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- CODE SECTION -->
-<section class="code-section">
-  <div class="code-section-inner">
-    <div class="code-text reveal">
-      <h2>Start building in<br>seconds, not days</h2>
-      <p>
-        Use our client libraries to get started with your favorite framework.
-        DevBase handles the infrastructure so you can focus on building your product.
-      </p>
-      <button class="btn-hero-green">View documentation</button>
-    </div>
-    <div class="code-block reveal">
-      <div class="code-block-tabs">
-        <button class="code-tab active">JavaScript</button>
-        <button class="code-tab">Python</button>
-        <button class="code-tab">Dart</button>
+    <!-- Marquee Code Strip -->
+    <div class="marquee-strip py-2" style="background-color:var(--subtle-bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+      <div class="marquee-inner gap-8">
+        <span class="font-mono text-xs" style="color:var(--accent);">$ git push origin main</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">tests: 847 passed</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--accent);">deploy: 1.2s</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">coverage: 94%</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--accent);">p99: 23ms</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--accent);">$ git push origin main</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">tests: 847 passed</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--accent);">deploy: 1.2s</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--muted);">coverage: 94%</span>
+        <span style="color:var(--border);">|</span>
+        <span class="font-mono text-xs" style="color:var(--accent);">p99: 23ms</span>
+        <span style="color:var(--border);">|</span>
       </div>
-      <pre><code><span class="cm">// Initialize the client</span>
-<span class="kw">import</span> { <span class="fn">createClient</span> } <span class="kw">from</span> <span class="str">'@devbase/devbase-js'</span>
-
-<span class="kw">const</span> devbase <span class="op">=</span> <span class="fn">createClient</span>(
-  <span class="str">'https://xyzcompany.devbase.co'</span>,
-  <span class="str">'public-anon-key'</span>
-)
-
-<span class="cm">// Fetch data with realtime</span>
-<span class="kw">const</span> { data, error } <span class="op">=</span> <span class="kw">await</span> devbase
-  .<span class="fn">from</span>(<span class="str">'countries'</span>)
-  .<span class="fn">select</span>(<span class="str">'*'</span>)
-  .<span class="fn">order</span>(<span class="str">'name'</span>, { ascending: <span class="num">true</span> })
-  .<span class="fn">limit</span>(<span class="num">10</span>)
-</code></pre>
     </div>
-  </div>
-</section>
 
-<!-- DASHBOARD PREVIEW -->
-<section class="dashboard-section reveal">
-  <div class="section-header">
-    <span class="badge">Dashboard</span>
-    <h2>Manage everything from<br>one powerful dashboard</h2>
-  </div>
-  <div class="dashboard-preview">
-    <div class="dashboard-topbar">
-      <span class="dash-dot r"></span>
-      <span class="dash-dot y"></span>
-      <span class="dash-dot g"></span>
-    </div>
-    <div class="dashboard-body">
-      <div class="dash-sidebar">
-        <a class="dash-sidebar-item active">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Overview
-        </a>
-        <a class="dash-sidebar-item">
-          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>
-          Database
-        </a>
-        <a class="dash-sidebar-item">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          Authentication
-        </a>
-        <a class="dash-sidebar-item">
-          <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-          Storage
-        </a>
-        <a class="dash-sidebar-item">
-          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          Functions
-        </a>
-        <a class="dash-sidebar-item">
-          <svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-          Reports
-        </a>
-      </div>
-      <div class="dash-main">
-        <div class="dash-main-header">
-          <h3>Table: users</h3>
-          <button class="btn-green" style="font-size:12px;padding:6px 14px;">+ Insert row</button>
+    <!-- Live Metrics Dashboard -->
+    <section class="py-16" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="fade-up rounded-lg border p-6" id="live-metrics" style="border-color: var(--border); background-color: var(--subtle-bg);">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+              <span class="font-mono text-xs font-medium" style="color: var(--accent);">LIVE METRICS</span>
+            </div>
+            <span class="font-mono text-xs" style="color: var(--muted);">Last 24h</span>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Metric 1 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">API Requests</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="2847" style="color: var(--text);">0</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 78%; background-color: var(--accent);"></div>
+              </div>
+              <!-- Network activity visualization -->
+              <div class="mt-2 h-3 overflow-hidden relative rounded" style="background-color: var(--bg);">
+                <div class="network-packet absolute top-0.5 h-2 w-4 rounded-full" style="background-color: var(--accent); opacity: 0.6;"></div>
+                <div class="network-packet absolute top-0.5 h-2 w-3 rounded-full" style="background-color: var(--accent); opacity: 0.4;"></div>
+                <div class="network-packet absolute top-0.5 h-2 w-5 rounded-full" style="background-color: var(--accent); opacity: 0.3;"></div>
+                <div class="network-packet absolute top-0.5 h-2 w-2 rounded-full" style="background-color: var(--accent); opacity: 0.5;"></div>
+              </div>
+            </div>
+            <!-- Metric 2 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">p99 Latency</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="23" data-suffix="ms" style="color: var(--accent);">0ms</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 23%; background-color: var(--accent);"></div>
+              </div>
+            </div>
+            <!-- Metric 3 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">Success Rate</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="99" data-suffix="." data-decimal="97" style="color: var(--accent);">0%</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 99%; background-color: var(--accent);"></div>
+              </div>
+            </div>
+            <!-- Metric 4 -->
+            <div>
+              <p class="font-mono text-xs mb-1" style="color: var(--muted);">Active Connections</p>
+              <p class="font-heading text-2xl font-bold live-ticker" data-target="142" style="color: var(--text);">0</p>
+              <div class="mt-2 h-1 w-full rounded-full" style="background-color: var(--border);">
+                <div class="h-1 rounded-full metric-bar-fill" style="--fill-width: 56%; background-color: var(--accent);"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <table class="dash-table">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>email</th>
-              <th>role</th>
-              <th>created_at</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="font-family:monospace;font-size:12px;color:#555;">1</td>
-              <td>alice@example.com</td>
-              <td><span class="tag">admin</span></td>
-              <td style="color:#555;">2024-01-15 09:23</td>
-            </tr>
-            <tr>
-              <td style="font-family:monospace;font-size:12px;color:#555;">2</td>
-              <td>bob@acme.co</td>
-              <td><span class="tag tag-blue">user</span></td>
-              <td style="color:#555;">2024-01-16 14:07</td>
-            </tr>
-            <tr>
-              <td style="font-family:monospace;font-size:12px;color:#555;">3</td>
-              <td>carol@startup.io</td>
-              <td><span class="tag tag-blue">user</span></td>
-              <td style="color:#555;">2024-01-17 11:45</td>
-            </tr>
-            <tr>
-              <td style="font-family:monospace;font-size:12px;color:#555;">4</td>
-              <td>dave@corp.dev</td>
-              <td><span class="tag">admin</span></td>
-              <td style="color:#555;">2024-01-18 08:12</td>
-            </tr>
-          </tbody>
-        </table>
+      </div>
+    </section>
+
+    <!-- Features: Bento Grid -->
+    <section id="features" class="py-20 sm:py-24" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Built for how developers actually work</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Every feature designed around your CLI, your IDE, and your Git workflow.</p>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Card 1: Large span -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 sm:col-span-2 fade-up stagger-item" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">[Core Feature Name]</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">[Describe the primary capability. Focus on the workflow change, not the tech. What did users do before, and what changes now?]</p>
+            <div class="mt-4 rounded-lg border p-3 font-mono text-xs" style="border-color: var(--border); background-color: var(--bg);">
+              <span style="color: var(--accent);">&#x276F;</span> <span style="color: var(--muted);">[sample one-liner CLI output showing the feature in action]</span>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up stagger-item" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">Git-Native Sync</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Tasks update when PRs merge, branches fork, or commits reference issues. Zero context switching between tools.</p>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up stagger-item" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">API-First Design</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Full REST and GraphQL APIs with OpenAPI spec. Build custom integrations, dashboards, or CLI extensions.</p>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up stagger-item" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">SOC 2 Compliant</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">SSO, RBAC, audit logs, E2E encryption. Your data stays in your region.</p>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="group rounded-lg border p-6 transition-all duration-200 hover:border-emerald-500/50 fade-up stagger-item" style="border-color: var(--border); background-color: var(--subtle-bg);">
+            <div class="mb-4 inline-flex rounded-lg p-2" style="background-color: var(--accent-dim);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3 class="mb-2 font-heading text-lg font-semibold" style="color: var(--text);">Observability Built In</h3>
+            <p class="text-base leading-relaxed" style="color: var(--muted);">Cycle time, throughput, bottleneck detection. Know where your sprint is stuck before standup.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Example: API Call + Response -->
+    <section id="docs" class="py-20 sm:py-24" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Ship in minutes, not meetings</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Wire up a Stripe webhook handler with type-safe event routing in under 20 lines.</p>
+        </div>
+
+        <div class="grid items-start gap-6 lg:grid-cols-2 fade-up">
+          <!-- Request code block -->
+          <div>
+            <div class="overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: var(--bg);">
+              <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
+                <div class="flex items-center gap-2">
+                  <span class="h-3 w-3 rounded-full term-dot-red"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-green"></span>
+                  <span class="ml-3 font-mono text-xs" style="color: var(--muted);">webhooks/stripe.ts</span>
+                </div>
+                <span class="inline-flex items-center rounded-full px-2 py-0.5 font-mono text-xs" style="color: var(--accent); background-color: var(--accent-dim);">TypeScript</span>
+              </div>
+              <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed"><code><span class="code-keyword">import</span> <span class="code-punct">{</span> <span class="code-type">Stripe</span> <span class="code-punct">}</span> <span class="code-keyword">from</span> <span class="code-string">'stripe'</span>
+<span class="code-keyword">import</span> <span class="code-punct">{</span> <span class="code-fn">verifySignature</span><span class="code-punct">,</span> <span class="code-fn">routeEvent</span> <span class="code-punct">}</span> <span class="code-keyword">from</span> <span class="code-string">'./lib/webhooks'</span>
+
+<span class="code-keyword">const</span> <span class="code-const">stripe</span> <span class="code-punct">=</span> <span class="code-keyword">new</span> <span class="code-fn">Stripe</span><span class="code-punct">(</span>process<span class="code-punct">.</span>env<span class="code-punct">.</span><span class="code-const">STRIPE_SECRET_KEY</span><span class="code-punct">!)</span>
+
+<span class="code-keyword">export async function</span> <span class="code-fn">POST</span><span class="code-punct">(</span><span class="code-key">req</span><span class="code-punct">:</span> <span class="code-type">Request</span><span class="code-punct">) {</span>
+  <span class="code-keyword">const</span> <span class="code-const">sig</span> <span class="code-punct">=</span> req<span class="code-punct">.</span>headers<span class="code-punct">.</span><span class="code-fn">get</span><span class="code-punct">(</span><span class="code-string">'stripe-signature'</span><span class="code-punct">)!</span>
+  <span class="code-keyword">const</span> <span class="code-const">event</span> <span class="code-punct">=</span> <span class="code-fn">verifySignature</span><span class="code-punct">(</span>
+    <span class="code-keyword">await</span> req<span class="code-punct">.</span><span class="code-fn">text</span><span class="code-punct">(),</span> sig
+  <span class="code-punct">)</span>
+
+  <span class="code-keyword">await</span> <span class="code-fn">routeEvent</span><span class="code-punct">(</span>event<span class="code-punct">, {</span>
+    <span class="code-string">'invoice.paid'</span><span class="code-punct">:</span>      <span class="code-fn">activateSub</span><span class="code-punct">,</span>
+    <span class="code-string">'charge.refunded'</span><span class="code-punct">:</span>  <span class="code-fn">issueCredit</span><span class="code-punct">,</span>
+    <span class="code-string">'customer.deleted'</span><span class="code-punct">:</span> <span class="code-fn">cleanupUser</span><span class="code-punct">,</span>
+  <span class="code-punct">})</span>
+
+  <span class="code-keyword">return</span> <span class="code-type">Response</span><span class="code-punct">.</span><span class="code-fn">json</span><span class="code-punct">({</span> <span class="code-key">ok</span><span class="code-punct">:</span> <span class="code-bool">true</span> <span class="code-punct">})</span>
+<span class="code-punct">}</span></code></pre>
+            </div>
+          </div>
+
+          <!-- Response block -->
+          <div>
+            <div class="overflow-hidden rounded-lg border" style="border-color: var(--border); background-color: var(--bg);">
+              <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: var(--border); background-color: #141416;">
+                <div class="flex items-center gap-2">
+                  <span class="h-3 w-3 rounded-full term-dot-red"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-yellow"></span>
+                  <span class="h-3 w-3 rounded-full term-dot-green"></span>
+                  <span class="ml-3 font-mono text-xs" style="color: var(--muted);">terminal output</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-xs" style="color: var(--accent); background-color: var(--accent-dim);">
+                  <span class="h-1.5 w-1.5 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+                  PASS
+                </span>
+              </div>
+              <pre class="overflow-x-auto p-5 font-mono text-sm leading-relaxed"><code><span style="color: var(--muted);">$ [your-cli] test webhooks/stripe.ts</span>
+
+<span style="color: var(--accent);">&#10003;</span> <span style="color: var(--muted);">Signature verification</span>        <span class="code-num">3ms</span>
+<span style="color: var(--accent);">&#10003;</span> <span style="color: var(--muted);">invoice.paid → activateSub</span>     <span class="code-num">11ms</span>
+<span style="color: var(--accent);">&#10003;</span> <span style="color: var(--muted);">charge.refunded → issueCredit</span>  <span class="code-num">8ms</span>
+<span style="color: var(--accent);">&#10003;</span> <span style="color: var(--muted);">customer.deleted → cleanupUser</span> <span class="code-num">6ms</span>
+<span style="color: var(--accent);">&#10003;</span> <span style="color: var(--muted);">Unknown event → noop</span>          <span class="code-num">1ms</span>
+
+<span style="color: var(--accent);">5 passed</span> <span style="color: var(--muted);">| 0 failed |</span> <span class="code-num">29ms</span>
+<span style="color: var(--muted);">Coverage: handlers 100% | branches 4/4</span></code></pre>
+            </div>
+
+            <!-- Latency stat -->
+            <div class="mt-4 rounded-lg border p-4" style="border-color: var(--border); background-color: var(--bg);">
+              <div class="flex items-center gap-2 font-mono text-xs" style="color: var(--muted);">
+                <span class="h-2 w-2 rounded-full pulse-dot" style="background-color: var(--accent);"></span>
+                p99 response time
+              </div>
+              <p class="mt-1 font-mono text-2xl font-bold" style="color: var(--accent);">[N]ms <span class="text-sm font-normal" style="color: var(--muted);">p99 latency</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-20 sm:py-24" style="background-color: var(--bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">From zero to production in 3 steps</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">No lengthy onboarding. Connect, configure, ship.</p>
+        </div>
+
+        <div class="relative grid gap-8 sm:grid-cols-3 fade-up">
+          <div class="absolute left-0 right-0 top-10 hidden h-px sm:block" style="background: linear-gradient(90deg, transparent, var(--accent), transparent);" aria-hidden="true"></div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--accent); border: 2px solid var(--accent);">01</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Install the SDK</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">One package install. One env variable. Connected in under 60 seconds.</p>
+          </div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--accent); border: 2px solid var(--border);">02</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Define triggers</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Map events to handlers — PR merges, deploy hooks, cron schedules. Code or visual builder.</p>
+          </div>
+
+          <div class="relative text-center">
+            <div class="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full font-mono text-2xl font-bold" style="background-color: var(--subtle-bg); color: var(--accent); border: 2px solid var(--border);">03</div>
+            <h3 class="mb-3 font-heading text-lg font-semibold" style="color: var(--text);">Ship & observe</h3>
+            <p class="mx-auto max-w-xs text-base leading-relaxed" style="color: var(--muted);">Deploy to edge. Watch logs in real-time. Trace every request from ingress to response.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-20 sm:py-24" style="background-color: var(--subtle-bg);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto mb-16 max-w-2xl text-center fade-up">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: var(--text);">Predictable pricing. No per-seat tax.</h2>
+          <p class="mt-4 text-base" style="color: var(--muted);">Start free. Scale when ready. No credit card required.</p>
+        </div>
+
+        <div class="grid items-start gap-6 sm:grid-cols-3 fade-up">
+          <!-- Starter -->
+          <article class="group rounded-lg border p-8 transition-all duration-200 hover:border-zinc-600" style="border-color: var(--border); background-color: var(--bg);">
+            <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">Starter</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For side projects and prototypes.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">$0</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                [N] projects
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                [N] team members
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                [N] API calls/mo
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Community support
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+              Get Started Free
+            </a>
+          </article>
+
+          <!-- Pro (highlighted) -->
+          <article class="group rounded-lg border-2 p-8 transition-all duration-200 sm:scale-105" style="border-color: var(--accent); background-color: var(--bg);">
+            <div class="flex items-center justify-between">
+              <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--accent);">Pro</h3>
+              <span class="rounded-full px-2.5 py-0.5 font-mono text-xs font-medium" style="background-color: var(--accent); color: #09090b;">Popular</span>
+            </div>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For teams shipping production software.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">$[N]</span>
+              <span class="text-sm" style="color: var(--muted);">/month</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited projects
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited members
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                [N] API calls/mo
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Advanced observability
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Priority support
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="background-color: var(--accent); color: #09090b;">
+              Start Free Trial
+            </a>
+          </article>
+
+          <!-- Enterprise -->
+          <article class="group rounded-lg border p-8 transition-all duration-200 hover:border-zinc-600" style="border-color: var(--border); background-color: var(--bg);">
+            <h3 class="font-mono text-sm font-medium uppercase tracking-wider" style="color: var(--muted);">Enterprise</h3>
+            <p class="mt-1 text-sm" style="color: var(--muted);">For orgs with compliance needs.</p>
+            <div class="mt-6 flex items-baseline gap-1">
+              <span class="font-heading text-4xl font-bold" style="color: var(--text);">Custom</span>
+            </div>
+            <ul class="mt-8 space-y-3" role="list">
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Everything in Pro
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Unlimited API calls
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                SSO &amp; SAML
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                SLA &amp; audit logs
+              </li>
+              <li class="flex items-start gap-2 text-sm" style="color: var(--muted);">
+                <svg class="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Dedicated support
+              </li>
+            </ul>
+            <a href="#" class="mt-8 block rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950" style="border-color: var(--border); color: var(--text);">
+              Contact Sales
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="py-20 sm:py-24" style="background-color: var(--accent);">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="font-heading text-3xl font-bold tracking-tight sm:text-4xl" style="color: #09090b;">
+            Stop configuring. Start shipping.
+          </h2>
+          <p class="mt-4 text-base" style="color: #09090b; opacity: 0.7;">
+            [Your CTA subtext — one sentence about the value proposition.]
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#" class="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" style="background-color: #09090b; color: #fafafa;">
+              Get Started Free
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="#" class="inline-flex items-center gap-2 rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-900" style="border-color: rgba(9,9,11,0.3); color: #09090b;">
+              Star on GitHub
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-16" style="background-color: #09090b; border-top: 1px solid var(--border);">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="lg:col-span-1">
+          <span class="flex items-center gap-2 font-heading text-lg font-bold" style="color: var(--text);">
+            <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background-color: var(--accent);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#09090b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            </span>
+            [Your CLI Tool]
+          </span>
+          <p class="mt-3 text-sm" style="color: var(--muted);">[One-line product tagline.]</p>
+        </div>
+
+        <nav aria-label="Product">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Product</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Features</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Pricing</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Changelog</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Roadmap</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Developers">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Developers</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Documentation</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">API Reference</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">SDKs</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Status</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Company">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Company</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">About</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Blog</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Careers</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Legal">
+          <h3 class="mb-4 font-mono text-xs font-semibold uppercase tracking-wider" style="color: var(--muted);">Legal</h3>
+          <ul class="space-y-2" role="list">
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Privacy</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Terms</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg" style="color: var(--muted);">Security</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="mt-12 border-t pt-8" style="border-color: var(--border);">
+        <p class="text-center text-sm" style="color: var(--muted); opacity: 0.5;">&copy; 2026 [Your Company]. All rights reserved.</p>
       </div>
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- CTA -->
-<section class="cta-section">
-  <h2 class="reveal">Build faster. Ship sooner.</h2>
-  <p class="reveal">Start your next project with DevBase and deploy in minutes.</p>
-  <div class="hero-cta reveal">
-    <button class="btn-hero-green">Start your project</button>
-    <button class="btn-hero-outline">Contact sales</button>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="#" class="nav-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--green)" fill="rgba(62,207,142,0.15)"/>
-        </svg>
-        DevBase
-      </a>
-      <p>The open source development platform.<br>Build, deploy, and scale with confidence.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Product</h4>
-      <a href="#">Database</a>
-      <a href="#">Authentication</a>
-      <a href="#">Edge Functions</a>
-      <a href="#">Realtime</a>
-      <a href="#">Storage</a>
-      <a href="#">Vectors</a>
-    </div>
-    <div class="footer-col">
-      <h4>Developers</h4>
-      <a href="#">Documentation</a>
-      <a href="#">API Reference</a>
-      <a href="#">CLI</a>
-      <a href="#">Status</a>
-      <a href="#">Open Source</a>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <a href="#">Blog</a>
-      <a href="#">Customers</a>
-      <a href="#">Careers</a>
-      <a href="#">Brand Assets</a>
-      <a href="#">Contact</a>
-    </div>
-    <div class="footer-col">
-      <h4>Resources</h4>
-      <a href="#">Pricing</a>
-      <a href="#">Support</a>
-      <a href="#">Partner Program</a>
-      <a href="#">Terms</a>
-      <a href="#">Privacy</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>&copy; 2024 DevBase Inc.</span>
-    <div style="display:flex;gap:16px;">
-      <a href="#">Twitter</a>
-      <a href="#">GitHub</a>
-      <a href="#">Discord</a>
-      <a href="#">YouTube</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
+  <script>
+    (function() {
+      // === Repeating scroll animations ===
+      var fadeEls = document.querySelectorAll('.fade-up');
+      if (!window.IntersectionObserver) {
+        fadeEls.forEach(function(el) { el.classList.add('visible'); });
+        return;
       }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            entry.target.classList.remove('visible');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      fadeEls.forEach(function(el) { observer.observe(el); });
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
+      // === Matrix rain background ===
+      var canvas = document.getElementById('matrix-canvas');
+      if (canvas) {
+        var ctx = canvas.getContext('2d');
+        var resizeCanvas = function() {
+          canvas.width = canvas.parentElement.offsetWidth;
+          canvas.height = canvas.parentElement.offsetHeight;
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        var chars = '01アイウエオカキクケコ{}[]<>/=+-*&%$#@!';
+        var fontSize = 14;
+        var columns = Math.floor(canvas.width / fontSize);
+        var drops = new Array(columns).fill(1);
+
+        function drawMatrix() {
+          ctx.fillStyle = 'rgba(9, 9, 11, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#10b981';
+          ctx.font = fontSize + 'px JetBrains Mono, monospace';
+
+          for (var i = 0; i < drops.length; i++) {
+            var char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+        setInterval(drawMatrix, 80);
+      }
+
+      // === Terminal typing animation (repeats on scroll) ===
+      var heroTerminal = document.getElementById('hero-terminal');
+      if (heroTerminal) {
+        var typingLine = heroTerminal.querySelector('.typing-line');
+        var typingResults = heroTerminal.querySelectorAll('.typing-result');
+        var typingTimers = [];
+
+        function startTyping() {
+          // Reset
+          typingTimers.forEach(clearTimeout);
+          typingTimers = [];
+          if (typingLine) {
+            typingLine.classList.remove('typing');
+            typingLine.style.width = '0';
+          }
+          typingResults.forEach(function(r) { r.classList.remove('show'); });
+
+          // Start typing line
+          requestAnimationFrame(function() {
+            if (typingLine) {
+              typingLine.classList.add('typing');
+            }
+            // Show results sequentially
+            typingResults.forEach(function(r) {
+              var delay = parseInt(r.getAttribute('data-delay') || '1000', 10);
+              var timer = setTimeout(function() { r.classList.add('show'); }, delay);
+              typingTimers.push(timer);
+            });
+          });
+        }
+
+        function stopTyping() {
+          typingTimers.forEach(clearTimeout);
+          typingTimers = [];
+          if (typingLine) {
+            typingLine.classList.remove('typing');
+            typingLine.style.width = '0';
+          }
+          typingResults.forEach(function(r) { r.classList.remove('show'); });
+        }
+
+        var termObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              startTyping();
+            } else {
+              stopTyping();
+            }
+          });
+        }, { threshold: 0.3 });
+        termObserver.observe(heroTerminal);
+      }
+
+      // === Live metrics ticker (repeats on scroll) ===
+      var metricsSection = document.getElementById('live-metrics');
+      if (metricsSection) {
+        var tickers = metricsSection.querySelectorAll('.live-ticker');
+        var bars = metricsSection.querySelectorAll('.metric-bar-fill');
+
+        var metricsObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              // Animate tickers
+              tickers.forEach(function(el) {
+                var target = parseInt(el.getAttribute('data-target'), 10);
+                var suffix = el.getAttribute('data-suffix') || '';
+                var decimal = el.getAttribute('data-decimal') || '';
+                var duration = 1500;
+                var startTime = null;
+                function step(timestamp) {
+                  if (!startTime) startTime = timestamp;
+                  var progress = Math.min((timestamp - startTime) / duration, 1);
+                  var eased = 1 - Math.pow(1 - progress, 3);
+                  var current = Math.floor(eased * target);
+                  if (decimal) {
+                    el.textContent = current + suffix + (progress >= 1 ? decimal + '%' : '%');
+                  } else {
+                    el.textContent = current + suffix;
+                  }
+                  if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+              });
+              // Animate bars
+              bars.forEach(function(bar) {
+                bar.classList.remove('reset');
+                bar.style.animation = 'none';
+                bar.offsetHeight; // force reflow
+                bar.style.animation = '';
+              });
+            } else {
+              // Reset
+              tickers.forEach(function(el) {
+                var suffix = el.getAttribute('data-suffix') || '';
+                var decimal = el.getAttribute('data-decimal');
+                el.textContent = '0' + (decimal ? '%' : suffix);
+              });
+              bars.forEach(function(bar) {
+                bar.classList.add('reset');
+              });
+            }
+          });
+        }, { threshold: 0.3 });
+        metricsObserver.observe(metricsSection);
+      }
+    })();
+  
+
+      // Cursor Trail
+      (function(){
+        var trailDots = [];
+        var numDots = 12;
+        for(var i=0;i<numDots;i++){
+          var dot = document.createElement('div');
+          dot.className = 'trail-dot';
+          dot.style.background = 'rgba(16,185,129,0.5)';
+          dot.style.opacity = String(1 - i/numDots);
+          dot.style.width = String(Math.max(2, 6 - i*0.4)) + 'px';
+          dot.style.height = String(Math.max(2, 6 - i*0.4)) + 'px';
+          document.body.appendChild(dot);
+          trailDots.push({el:dot, x:0, y:0});
+        }
+        var mouseX=0, mouseY=0;
+        document.addEventListener('mousemove', function(e){ mouseX=e.clientX; mouseY=e.clientY; });
+        function animateTrail(){
+          var prevX=mouseX, prevY=mouseY;
+          trailDots.forEach(function(dot,i){
+            var target = i===0 ? {x:mouseX,y:mouseY} : trailDots[i-1];
+            dot.x += (target.x - dot.x) * 0.35;
+            dot.y += (target.y - dot.y) * 0.35;
+            dot.el.style.left = dot.x + 'px';
+            dot.el.style.top = dot.y + 'px';
+          });
+          requestAnimationFrame(animateTrail);
+        }
+        animateTrail();
+      })();
+  
+
+      // Staggered Grid Reveal
+      (function(){
+        var staggerEls = document.querySelectorAll('.stagger-item');
+        if(!staggerEls.length) return;
+        var staggerObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
+              items.forEach(function(item, i){
+                var row = Math.floor(i / 3);
+                var col = i % 3;
+                var delay = (row + col) * 100;
+                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
+              });
+            } else {
+              entry.target.classList.remove('stagger-visible');
+            }
+          });
+        }, {threshold:0.1});
+        staggerEls.forEach(function(el){ staggerObs.observe(el); });
+      })();
+  
+  </script>
 
 </body>
 </html>

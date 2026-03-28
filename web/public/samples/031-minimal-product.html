@@ -4,780 +4,695 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>031 — Minimal Product</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', sans-serif;
       background: #ffffff;
-      color: #1a1a1a;
+      color: #111827;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
     }
+    h1, h2, h3, h4 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
 
     /* Scroll reveal */
     .reveal {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .reveal-d1 { transition-delay: 0.1s; }
-    .reveal-d2 { transition-delay: 0.2s; }
-    .reveal-d3 { transition-delay: 0.3s; }
-    .reveal-d4 { transition-delay: 0.4s; }
-    .reveal-d5 { transition-delay: 0.5s; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* Nav */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-    }
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: #1a1a1a;
-    }
-    .nav-logo svg { width: 28px; height: 28px; }
-    .nav-logo span {
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: -0.02em;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #666;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #1a1a1a; }
-    .nav-cta {
-      background: #1a1a1a;
-      color: #fff !important;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .nav-cta:hover {
-      background: #333;
-      transform: translateY(-1px);
-    }
-
-    /* Hero */
-    .hero {
-      padding: 160px 32px 80px;
-      text-align: center;
-      position: relative;
-    }
-    .hero h1 {
-      font-size: clamp(40px, 6vw, 72px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      color: #1a1a1a;
-      margin-bottom: 24px;
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .hero p {
-      font-size: 18px;
-      color: #888;
-      line-height: 1.6;
-      max-width: 520px;
-      margin: 0 auto 36px;
-    }
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #4338ca;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 600;
-      padding: 14px 28px;
-      border-radius: 10px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 1px 3px rgba(67, 56, 202, 0.3);
-    }
-    .btn-primary:hover {
-      background: #3730a3;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3);
-    }
-    .btn-primary svg { width: 16px; height: 16px; }
-    .hero-sub {
-      font-size: 13px;
-      color: #aaa;
-      margin-top: 0;
-    }
-
-    /* Form preview card */
-    .form-preview-wrap {
-      max-width: 900px;
-      margin: 72px auto 0;
-      position: relative;
-    }
-    .form-card {
-      background: #fff;
-      border: 1px solid #e8e8e8;
-      border-radius: 16px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    /* Browser frame for product mockup */
+    .browser-frame {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
       overflow: hidden;
-      max-width: 560px;
-      margin: 0 auto;
-      text-align: left;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      position: relative;
     }
-    .form-card-inner {
-      padding: 48px 40px 40px;
-    }
-    .form-card h2 {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
-    }
-    .form-card .form-desc {
-      font-size: 14px;
-      color: #999;
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-    .form-card .form-steps {
+    .browser-frame-header {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.75rem 1rem;
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 28px;
-      font-size: 13px;
-      color: #bbb;
+      gap: 0.5rem;
     }
-    .form-card .form-steps .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
+    .browser-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .step-active {
-      background: #1a1a1a;
-      color: #fff;
-    }
-    .step-inactive {
-      background: #f0f0f0;
-      color: #aaa;
-    }
-    .form-steps .step-line {
-      width: 20px;
-      height: 2px;
-      background: #e8e8e8;
-      border-radius: 1px;
-    }
-    .form-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #1a1a1a;
-      display: block;
-      margin-bottom: 6px;
-    }
-    .form-sublabel {
-      font-size: 12px;
-      color: #bbb;
-      display: block;
-      margin-bottom: 6px;
-    }
-    .form-input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
-      color: #1a1a1a;
-      background: #fff;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      margin-bottom: 20px;
-    }
-    .form-input:focus {
-      border-color: #4338ca;
-      box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.08);
-    }
-    .form-input::placeholder { color: #ccc; }
-    .form-input-underline {
-      width: 100%;
-      padding: 10px 0;
-      border: none;
-      border-bottom: 2px solid #e0e0e0;
-      font-size: 14px;
-      font-family: inherit;
-      color: #1a1a1a;
-      background: transparent;
-      transition: border-color 0.2s;
-      outline: none;
-      margin-bottom: 20px;
-    }
-    .form-input-underline:focus {
-      border-color: #1a1a1a;
-    }
-    .form-input-underline::placeholder { color: #ccc; }
-    .form-link {
-      color: #4338ca;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-      font-size: 14px;
-    }
-    .form-link:hover { color: #3730a3; }
-    .form-submit-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #1a1a1a;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 12px 32px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      margin-top: 4px;
-    }
-    .form-submit-btn:hover {
-      background: #333;
-      transform: translateY(-1px);
-    }
-    .form-footer {
-      padding: 12px 40px;
-      border-top: 1px solid #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #ccc;
-    }
-    .form-footer a {
-      color: #bbb;
-      text-decoration: none;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
 
-    /* Hand-drawn doodles */
-    .doodle {
-      position: absolute;
-      pointer-events: none;
+    /* Animated indigo glow pulse for browser frame */
+    @keyframes border-glow {
+      0%, 100% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 0 rgba(99, 102, 241, 0); }
+      50% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 0 20px 2px rgba(99, 102, 241, 0.12); }
     }
-    .doodle-check-1 {
-      top: 20%;
-      left: 6%;
-      width: 80px;
-      animation: doodle-float 4s ease-in-out infinite;
-    }
-    .doodle-check-2 {
-      bottom: 10%;
-      left: 4%;
-      width: 60px;
-      animation: doodle-float 5s ease-in-out 0.5s infinite;
-    }
-    .doodle-yes {
-      top: 18%;
-      right: 6%;
-      width: 90px;
-      animation: doodle-float 4.5s ease-in-out 0.3s infinite;
-    }
-    .doodle-arrow {
-      bottom: 15%;
-      right: 5%;
-      width: 70px;
-      animation: doodle-float 5s ease-in-out 0.8s infinite;
-    }
-    .doodle-circle {
-      top: 45%;
-      right: 12%;
-      width: 50px;
-      animation: doodle-float 3.5s ease-in-out 0.2s infinite;
-    }
-    .doodle-star {
-      bottom: 25%;
-      left: 10%;
-      width: 45px;
-      animation: doodle-float 4s ease-in-out 1s infinite;
+    .browser-frame-glow {
+      animation: border-glow 3s ease-in-out infinite;
     }
 
-    @keyframes doodle-float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
+    /* Subtle hover lift */
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
-    /* Trusted by */
-    .trusted-section {
-      padding: 80px 32px 60px;
-      text-align: center;
-    }
-    .trusted-section p {
-      font-size: 13px;
-      color: #bbb;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 500;
-      margin-bottom: 32px;
-    }
-    .trusted-logos {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-      opacity: 0.35;
-    }
-    .trusted-logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-      letter-spacing: -0.02em;
-    }
-
-    /* Features section */
-    .features-section {
-      padding: 80px 32px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .features-section .section-header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-    .features-section h2 {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #1a1a1a;
-      margin-bottom: 16px;
-    }
-    .features-section .section-header p {
-      font-size: 16px;
-      color: #888;
-      max-width: 460px;
-      margin: 0 auto;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-    }
-    .feature-card {
-      padding: 32px;
-      border-radius: 16px;
-      border: 1px solid #f0f0f0;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-      background: #fff;
-    }
-    .feature-card:hover {
-      border-color: #e0e0e0;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+    .hover-lift:hover {
       transform: translateY(-2px);
-    }
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .feature-icon svg { width: 22px; height: 22px; }
-    .feature-card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-    .feature-card p {
-      font-size: 14px;
-      color: #888;
-      line-height: 1.6;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
-    /* CTA section */
-    .cta-section {
-      padding: 100px 32px;
-      text-align: center;
-      background: #fafafa;
-    }
-    .cta-section h2 {
-      font-size: 40px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #1a1a1a;
-      margin-bottom: 16px;
-    }
-    .cta-section p {
-      font-size: 16px;
-      color: #888;
-      margin-bottom: 32px;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Footer */
-    footer {
-      padding: 48px 32px;
-      border-top: 1px solid #f0f0f0;
-    }
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: #1a1a1a;
-    }
-    .footer-logo svg { width: 22px; height: 22px; }
-    .footer-logo span {
-      font-weight: 700;
-      font-size: 15px;
-    }
-    .footer-links {
-      display: flex;
-      gap: 28px;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: #999;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: #1a1a1a; }
-    .footer-copy {
-      font-size: 12px;
-      color: #ccc;
-    }
-
-    /* Focus ring */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid #4338ca;
+    /* Focus ring for interactive */
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid #6366f1;
       outline-offset: 2px;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hero { padding: 120px 20px 60px; }
-      .hero h1 { font-size: 36px; }
-      .form-card-inner { padding: 32px 24px 28px; }
-      .form-footer { padding: 12px 24px; }
-      .features-grid { grid-template-columns: 1fr; gap: 20px; }
-      .doodle { display: none; }
-      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
-      .footer-links { flex-wrap: wrap; justify-content: center; }
-      .trusted-logos { gap: 28px; }
+    /* Gradient CTA button */
+    .gradient-cta {
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .gradient-cta:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
     }
 
-    @media (max-width: 480px) {
-      .hero h1 { font-size: 30px; }
-      .hero p { font-size: 15px; }
+    /* Glass nav */
+    nav {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
+
+    /* Badge pill */
+    .badge-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.025em;
+    }
+
+    /* Progress bar fill animation */
+    @keyframes progress-fill {
+      0% { width: 0; }
+      100% { width: 72%; }
+    }
+    .progress-animate {
+      animation: progress-fill 1.5s ease-out forwards;
+    }
+    .reveal:not(.visible) .progress-animate {
+      animation: none;
+      width: 0;
+    }
+
+    /* Notification count pop-in */
+    @keyframes pop-in {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .notif-animate {
+      animation: pop-in 0.4s ease-out 0.8s both;
+    }
+    .reveal:not(.visible) .notif-animate {
+      animation: none;
+      opacity: 0;
+      transform: scale(0);
+    }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Staggered Grid Reveal */
+    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
+  
+
+    /* Smooth Number Counters */
+    .smooth-counter { font-variant-numeric:tabular-nums; transition:all 0.1s ease; }
+  
+
+    /* Noise/Grain Overlay */
+    .grain-overlay { position:relative; }
+    .grain-overlay::after {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.035;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat:repeat; background-size:128px 128px;
+    }
+  
   </style>
 </head>
-<body>
+<body class="grain-overlay">
 
-  <!-- Nav -->
-  <nav>
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        <svg viewBox="0 0 28 28" fill="none">
-          <rect width="28" height="28" rx="6" fill="#1a1a1a"/>
-          <path d="M8 9h12M8 14h8M8 19h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-        </svg>
-        <span>FormFlow</span>
-      </a>
-      <div class="nav-links">
-        <a href="#features">Pricing</a>
-        <a href="#">Log in</a>
-        <a href="#cta" class="nav-cta">Create a form</a>
+  <!-- Nav — glass effect, constraint #16: has CTA button -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-100">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-indigo-500 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/>
+          </svg>
+        </div>
+        <span class="font-medium text-gray-900">[Product]</span>
       </div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-gray-500">
+        <a href="#features" class="hover:text-indigo-500 transition-colors duration-200">Features</a>
+        <a href="#product" class="hover:text-indigo-500 transition-colors duration-200">Product</a>
+        <a href="#pricing" class="hover:text-indigo-500 transition-colors duration-200">Pricing</a>
+      </div>
+      <a href="#pricing" class="gradient-cta text-white text-sm font-medium px-5 py-2 rounded-lg">
+        Get Started
+      </a>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="reveal">
-      <h1>The simplest way to create forms</h1>
-    </div>
-    <div class="reveal reveal-d1">
-      <p>Say goodbye to boring forms. Meet FormFlow — the free, intuitive form builder you've been looking for.</p>
-    </div>
-    <div class="reveal reveal-d2">
-      <div class="hero-actions">
-        <a href="#cta" class="btn-primary">
-          Create a free form
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-          </svg>
-        </a>
-        <span class="hero-sub">No signup required</span>
+  <!-- Hero — left-aligned text + right product mockup — constraint #4: h1 >= 40px -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+      <div>
+        <div class="reveal">
+          <!-- Badge pill above heading -->
+          <div class="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1 mb-5">
+            <span class="badge-pill text-indigo-600">New: [Feature Name]</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-medium text-gray-900 leading-tight mb-6">
+            [The simplest way to<br>do your thing]
+          </h1>
+          <p class="text-gray-500 text-lg leading-relaxed mb-8 max-w-md">
+            [One clear sentence about what your product does. No buzzwords. Just the value — what changes for the user after they start using it.]
+          </p>
+          <div class="flex items-center gap-4">
+            <a href="#pricing" class="gradient-cta text-white text-sm font-medium px-6 py-3 rounded-lg">
+              Start Free
+            </a>
+            <a href="#product" class="text-gray-500 text-sm font-medium hover:text-indigo-500 transition-colors duration-200 flex items-center gap-1.5">
+              See how it works
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product UI mockup in browser frame with glow -->
+      <div class="reveal reveal-delay-1">
+        <div class="browser-frame browser-frame-glow">
+          <div class="browser-frame-header">
+            <div class="browser-dot bg-red-300"></div>
+            <div class="browser-dot bg-yellow-300"></div>
+            <div class="browser-dot bg-green-300"></div>
+            <span class="text-xs text-gray-400 ml-2">[product].app</span>
+          </div>
+          <div class="bg-gray-50 p-6">
+            <!-- Mock form builder / tool UI with micro-animations -->
+            <div class="space-y-4">
+              <div class="bg-white rounded-lg border border-gray-200 p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-medium text-gray-900">[Form Title]</span>
+                  <div class="flex items-center gap-2">
+                    <!-- Notification count micro-animation -->
+                    <span class="notif-animate inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full">3</span>
+                    <span class="text-xs text-indigo-500 font-medium">Published</span>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded"></div>
+                    <div class="h-3 bg-gray-200 rounded w-32"></div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded"></div>
+                    <div class="h-3 bg-gray-200 rounded w-40"></div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 border-2 border-indigo-500 rounded bg-indigo-500"></div>
+                    <div class="h-3 bg-indigo-100 rounded w-28"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Progress bar micro-animation -->
+              <div class="bg-white rounded-lg border border-gray-200 p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="h-3 bg-gray-200 rounded w-24"></div>
+                  <span class="mono text-[10px] text-gray-400">72%</span>
+                </div>
+                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div class="progress-animate h-full bg-indigo-500 rounded-full"></div>
+                </div>
+              </div>
+              <div class="bg-indigo-500 text-white text-xs font-medium text-center py-2 rounded-lg w-20">
+                Submit
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Form preview with hand-drawn doodles -->
-    <div class="form-preview-wrap reveal reveal-d3">
+  <!-- Features — bento grid: 1 large + 2 small — constraint #15: SVG icons, #2: varied cards, #3: different padding -->
+  <section id="features" class="py-24 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Everything you need. Nothing you don't.</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">Built for speed. No bloat, no setup wizards, no onboarding calls.</p>
+      </div>
 
-      <!-- Doodle: checkmark top-left -->
-      <svg class="doodle doodle-check-1" viewBox="0 0 80 80" fill="none">
-        <path d="M20 42 L34 56 L62 24" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" style="stroke-dasharray: 80; stroke-dashoffset: 0;"/>
-        <circle cx="40" cy="40" r="30" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.15"/>
-      </svg>
-
-      <!-- Doodle: another checkmark bottom-left -->
-      <svg class="doodle doodle-check-2" viewBox="0 0 60 60" fill="none">
-        <path d="M15 32 L25 42 L47 18" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
-
-      <!-- Doodle: "Yes!" text top-right -->
-      <svg class="doodle doodle-yes" viewBox="0 0 100 50" fill="none">
-        <text x="10" y="32" font-family="'Inter', sans-serif" font-weight="800" font-size="28" fill="#1a1a1a" style="font-style: italic;">Yes!</text>
-        <path d="M75 8 L82 4 L78 12" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/>
-        <path d="M80 15 L86 18" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M85 8 L88 5" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-
-      <!-- Doodle: curly arrow bottom-right -->
-      <svg class="doodle doodle-arrow" viewBox="0 0 70 70" fill="none">
-        <path d="M15 50 C25 20, 50 15, 55 35 C60 50, 45 55, 40 45" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <path d="M38 40 L40 47 L46 43" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
-
-      <!-- Doodle: circle scribble right side -->
-      <svg class="doodle doodle-circle" viewBox="0 0 50 50" fill="none">
-        <ellipse cx="25" cy="25" rx="18" ry="16" stroke="#1a1a1a" stroke-width="2" fill="none" transform="rotate(-8 25 25)"/>
-        <ellipse cx="25" cy="25" rx="20" ry="14" stroke="#1a1a1a" stroke-width="1.5" fill="none" opacity="0.3" transform="rotate(5 25 25)"/>
-      </svg>
-
-      <!-- Doodle: small star bottom-left -->
-      <svg class="doodle doodle-star" viewBox="0 0 45 45" fill="none">
-        <path d="M22 5 L25 17 L37 17 L27 24 L31 36 L22 28 L13 36 L17 24 L7 17 L19 17 Z" stroke="#1a1a1a" stroke-width="1.8" fill="none"/>
-      </svg>
-
-      <!-- The form card itself -->
-      <div class="form-card">
-        <div class="form-card-inner">
-          <h2>Register now</h2>
-          <div class="form-steps">
-            <span class="form-desc" style="margin-bottom: 0;">
-              <span style="display: inline-flex; align-items: center; gap: 6px;">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#ccc" stroke-width="1.2"/><path d="M4 7h6" stroke="#ccc" stroke-width="1.2" stroke-linecap="round"/><path d="M7 4v6" stroke="#ccc" stroke-width="1.2" stroke-linecap="round"/></svg>
-                Open your eyes! An email to <a href="#" class="form-link">code.conference</a> on <a href="#" class="form-link" style="font-weight: 600;">October 17th, 2025</a>. Get ready to be inspired by the industry's greatest speakers and set the course for what's to come.
-              </span>
-            </span>
+      <!-- Bento grid: 1 large spanning 2 rows + 2 small stacked -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Large feature card — spans 2 rows -->
+        <div class="reveal hover-lift md:row-span-2 bg-white rounded-lg p-10 border border-gray-100">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
           </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">[Feature 1 — e.g., Instant Setup]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed mb-6">[One sentence. What it does and why it matters. Keep it under 20 words.]</p>
+          <!-- Mini visual detail -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div>
+                <div class="h-2.5 bg-gray-200 rounded w-24 mb-1"></div>
+                <div class="h-2 bg-gray-100 rounded w-16"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div>
+                <div class="h-2.5 bg-gray-200 rounded w-20 mb-1"></div>
+                <div class="h-2 bg-gray-100 rounded w-28"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <label class="form-label">Your name</label>
-          <input type="text" class="form-input" placeholder="Jane Doe">
+        <!-- Small card top right -->
+        <div class="reveal reveal-delay-1 hover-lift bg-white rounded-lg p-8 border border-gray-100">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Feature 2 — e.g., Flexible Layouts]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Describe a capability that differentiates this from alternatives.]</p>
+        </div>
 
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" placeholder="jane@company.com">
+        <!-- Small card bottom right -->
+        <div class="reveal reveal-delay-2 hover-lift bg-white rounded-lg p-8 border border-gray-100">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-5">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Feature 3 — e.g., Built-in Security]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Keep it concrete. Avoid words like 'powerful' or 'seamless'.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <button class="form-submit-btn">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 6px;"><path d="M13.3 4L6 11.3 2.7 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Submit
+  <!-- Product Showcase — detailed browser frame UI with glow -->
+  <section id="product" class="py-20 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">See the product</h2>
+        <p class="text-gray-500 max-w-md mx-auto">A closer look at the interface. Clean, fast, focused.</p>
+      </div>
+
+      <div class="reveal">
+        <div class="browser-frame browser-frame-glow max-w-4xl mx-auto">
+          <div class="browser-frame-header">
+            <div class="browser-dot bg-red-300"></div>
+            <div class="browser-dot bg-yellow-300"></div>
+            <div class="browser-dot bg-green-300"></div>
+            <span class="text-xs text-gray-400 ml-2">[product].app/dashboard</span>
+          </div>
+          <div class="bg-white p-6">
+            <!-- Mock dashboard UI with micro-animations -->
+            <div class="grid grid-cols-4 gap-4">
+              <!-- Sidebar -->
+              <div class="col-span-1 space-y-3">
+                <div class="flex items-center gap-2 px-3 py-2 bg-indigo-50 rounded-lg">
+                  <div class="w-3.5 h-3.5 bg-indigo-500 rounded"></div>
+                  <div class="h-2.5 bg-indigo-200 rounded w-16"></div>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-14"></div>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-20"></div>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-12"></div>
+                </div>
+                <hr class="border-gray-100 my-2">
+                <div class="flex items-center gap-2 px-3 py-2">
+                  <div class="w-3.5 h-3.5 bg-gray-300 rounded"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-16"></div>
+                </div>
+              </div>
+              <!-- Main content area -->
+              <div class="col-span-3 space-y-4">
+                <div class="flex items-center justify-between">
+                  <div class="h-3 bg-gray-900 rounded w-28"></div>
+                  <div class="flex items-center gap-2">
+                    <!-- Notification count -->
+                    <span class="notif-animate inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full">7</span>
+                    <div class="h-7 bg-indigo-500 rounded-lg w-24"></div>
+                  </div>
+                </div>
+                <!-- Progress bar in dashboard -->
+                <div class="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] text-gray-500 font-medium">Completion</span>
+                    <span class="mono text-[10px] text-gray-400">72%</span>
+                  </div>
+                  <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="progress-animate h-full bg-indigo-500 rounded-full"></div>
+                  </div>
+                </div>
+                <!-- Table-like structure -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                  <div class="grid grid-cols-4 gap-4 px-4 py-2.5 bg-gray-50 border-b border-gray-200">
+                    <div class="h-2 bg-gray-400 rounded w-12"></div>
+                    <div class="h-2 bg-gray-400 rounded w-10"></div>
+                    <div class="h-2 bg-gray-400 rounded w-14"></div>
+                    <div class="h-2 bg-gray-400 rounded w-8"></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-4 px-4 py-3 border-b border-gray-100">
+                    <div class="h-2 bg-gray-200 rounded w-20"></div>
+                    <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    <div class="h-5 bg-green-100 text-green-700 text-[10px] rounded-full w-14 flex items-center justify-center font-medium">Active</div>
+                    <div class="h-2 bg-gray-200 rounded w-10"></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-4 px-4 py-3 border-b border-gray-100">
+                    <div class="h-2 bg-gray-200 rounded w-24"></div>
+                    <div class="h-2 bg-gray-200 rounded w-12"></div>
+                    <div class="h-5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full w-14 flex items-center justify-center font-medium">Draft</div>
+                    <div class="h-2 bg-gray-200 rounded w-8"></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-4 px-4 py-3">
+                    <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    <div class="h-2 bg-gray-200 rounded w-20"></div>
+                    <div class="h-5 bg-green-100 text-green-700 text-[10px] rounded-full w-14 flex items-center justify-center font-medium">Active</div>
+                    <div class="h-2 bg-gray-200 rounded w-12"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works — simple steps -->
+  <section class="py-20 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">How it works</h2>
+        <p class="text-gray-500 max-w-md mx-auto">Three steps to go from zero to live.</p>
+      </div>
+
+      <div class="reveal grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span class="text-indigo-500 font-medium text-sm">1</span>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">Create</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Describe the first step — what the user does to get started. Keep it concrete.]</p>
+        </div>
+        <div class="text-center">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span class="text-indigo-500 font-medium text-sm">2</span>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">Customize</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Second step — what configuration or personalization happens. Be specific.]</p>
+        </div>
+        <div class="text-center">
+          <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span class="text-indigo-500 font-medium text-sm">3</span>
+          </div>
+          <h3 class="text-base font-medium text-gray-900 mb-2">Share</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Final step — how the user publishes or shares their work. Mention the outcome.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration strip — constraint #22: no real corp names -->
+  <section class="py-16 px-6 border-y border-gray-100">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <p class="text-xs text-gray-400 uppercase tracking-widest mb-8">Works with</p>
+        <div class="flex flex-wrap justify-center gap-10 items-center">
+          <span class="text-gray-300 text-sm font-medium">[Integration 1]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 2]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 3]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 4]</span>
+          <span class="text-gray-300 text-sm font-medium">[Integration 5]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial — single, large, minimal — constraint #22, #23 -->
+  <section class="py-24 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal max-w-2xl mx-auto text-center">
+        <svg class="w-8 h-8 text-indigo-200 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H0z"/>
+        </svg>
+        <p class="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8">
+          "[Your best testimonial here — something specific, not 'great product'. A quote that mentions the exact problem solved and the before/after. Make it sound like a real person texting a friend, not writing a LinkedIn recommendation.]"
+        </p>
+        <div>
+          <p class="text-sm font-medium text-gray-900">[Name]</p>
+          <p class="text-sm text-gray-500">[Role], [Company]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing — 2 columns (Free vs Pro), simple — constraint #24: practical content -->
+  <section id="pricing" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Pricing</h2>
+        <p class="text-gray-500">Free to start. No credit card required.</p>
+      </div>
+
+      <div class="reveal grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <!-- Free tier -->
+        <div class="hover-lift bg-white rounded-lg p-8 border border-gray-200">
+          <h3 class="font-medium text-gray-900 mb-1">Free</h3>
+          <p class="text-3xl font-medium text-gray-900 mb-1">$0</p>
+          <p class="text-sm text-gray-500 mb-6">For individuals and small projects</p>
+          <ul class="space-y-3 text-sm text-gray-600 mb-8">
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [N] [units] per month
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Core feature included]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Community support
+            </li>
+          </ul>
+          <button class="w-full py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-indigo-300 hover:text-indigo-500 transition-all duration-200">
+            Get Started
           </button>
         </div>
-        <div class="form-footer">
-          <a href="#">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect width="14" height="14" rx="3" fill="#e0e0e0"/><path d="M4 5h6M4 7h4M4 9h6" stroke="#999" stroke-width="1" stroke-linecap="round"/></svg>
-            Made with FormFlow
-          </a>
-          <a href="#">Report abuse</a>
+
+        <!-- Pro tier — constraint #9: CTA stands out -->
+        <div class="hover-lift bg-white rounded-lg p-8 border-2 border-indigo-500 relative">
+          <span class="absolute -top-3 left-6 bg-indigo-500 text-white text-xs font-medium px-3 py-0.5 rounded-full">Popular</span>
+          <h3 class="font-medium text-gray-900 mb-1">Pro</h3>
+          <p class="text-3xl font-medium text-gray-900 mb-1">$[N]<span class="text-base text-gray-400 font-normal">/mo</span></p>
+          <p class="text-sm text-gray-500 mb-6">For teams and growing businesses</p>
+          <ul class="space-y-3 text-sm text-gray-600 mb-8">
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Unlimited [units]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Pro feature — specific]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              [Pro feature — specific]
+            </li>
+            <li class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Priority email support
+            </li>
+          </ul>
+          <button class="w-full py-2.5 gradient-cta text-white text-sm font-medium rounded-lg">
+            Upgrade to Pro
+          </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trusted by -->
-  <section class="trusted-section reveal">
-    <p>Trusted by teams everywhere</p>
-    <div class="trusted-logos">
-      <span class="trusted-logo">Notion</span>
-      <span class="trusted-logo">Linear</span>
-      <span class="trusted-logo">Vercel</span>
-      <span class="trusted-logo">Figma</span>
-      <span class="trusted-logo">GitLab</span>
-      <span class="trusted-logo">Framer</span>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section id="features" class="features-section">
-    <div class="section-header reveal">
-      <h2>Forms that work for you</h2>
-      <p>No code, no limits. Build any form in minutes with a dead-simple interface.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card reveal">
-        <div class="feature-icon" style="background: #eef2ff;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </svg>
-        </div>
-        <h3>Build in seconds</h3>
-        <p>Just start typing. FormFlow works like a document, so creating forms feels natural and fast.</p>
-      </div>
-      <div class="feature-card reveal reveal-d1">
-        <div class="feature-icon" style="background: #fef3c7;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <path d="M3 9h18M9 21V9"/>
-          </svg>
-        </div>
-        <h3>Unlimited forms</h3>
-        <p>Create as many forms as you need. No limits on responses, fields, or submissions.</p>
-      </div>
-      <div class="feature-card reveal reveal-d2">
-        <div class="feature-icon" style="background: #dcfce7;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </div>
-        <h3>Privacy first</h3>
-        <p>Your data stays yours. GDPR compliant, no tracking, and fully encrypted at rest.</p>
-      </div>
-      <div class="feature-card reveal reveal-d1">
-        <div class="feature-icon" style="background: #fce7f3;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
-          </svg>
-        </div>
-        <h3>Email notifications</h3>
-        <p>Get notified instantly when someone fills out your form. Never miss a response.</p>
-      </div>
-      <div class="feature-card reveal reveal-d2">
-        <div class="feature-icon" style="background: #e0f2fe;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"/>
-            <polyline points="8 6 2 12 8 18"/>
-          </svg>
-        </div>
-        <h3>Embed anywhere</h3>
-        <p>Drop your form into any website with a single line of code. It just works.</p>
-      </div>
-      <div class="feature-card reveal reveal-d3">
-        <div class="feature-icon" style="background: #f3e8ff;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-        </div>
-        <h3>Integrations</h3>
-        <p>Connect with Notion, Slack, Google Sheets, Airtable, and 100+ other tools.</p>
+  <!-- CTA — simple, clean -->
+  <section class="py-28 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="reveal">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Ready to start?</h2>
+        <p class="text-gray-500 max-w-md mx-auto mb-8">Create your first [thing] in under a minute. No setup required.</p>
+        <a href="#" class="inline-block gradient-cta text-white text-sm font-medium px-8 py-3 rounded-lg">
+          Get Started — Free
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section id="cta" class="cta-section">
-    <div class="reveal">
-      <h2>Ready to build?</h2>
-      <p>Start creating beautiful forms in seconds. Free forever for individuals.</p>
-      <a href="#" class="btn-primary">
-        Create a free form
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-        </svg>
-      </a>
+  <!-- FAQ — minimal accordion style -->
+  <section class="py-20 px-6">
+    <div class="max-w-2xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl font-medium text-gray-900 mb-4">Questions</h2>
+      </div>
+
+      <div class="reveal space-y-4">
+        <div class="border-b border-gray-100 pb-4">
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Common question about getting started?]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Clear, direct answer. No marketing fluff. Under 30 words.]</p>
+        </div>
+        <div class="border-b border-gray-100 pb-4">
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Question about data/privacy/security?]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Specific answer mentioning actual practices — encryption, data location, compliance.]</p>
+        </div>
+        <div class="border-b border-gray-100 pb-4">
+          <h3 class="text-base font-medium text-gray-900 mb-2">[Question about pricing/limits?]</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">[Honest answer about what's included and what costs extra.]</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer>
-    <div class="footer-inner">
-      <a href="#" class="footer-logo">
-        <svg viewBox="0 0 28 28" fill="none">
-          <rect width="28" height="28" rx="6" fill="#1a1a1a"/>
-          <path d="M8 9h12M8 14h8M8 19h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-        </svg>
-        <span>FormFlow</span>
-      </a>
-      <div class="footer-links">
-        <a href="#">Pricing</a>
-        <a href="#">Blog</a>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Twitter</a>
+  <footer class="py-12 px-6 border-t border-gray-100">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-indigo-500 rounded-md flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/>
+          </svg>
+        </div>
+        <span class="text-sm font-medium text-gray-900">[Product]</span>
       </div>
-      <span class="footer-copy">&copy; 2025 FormFlow</span>
+      <div class="flex gap-6 text-sm text-gray-400">
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Privacy</a>
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Terms</a>
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Docs</a>
+        <a href="#" class="hover:text-indigo-500 transition-colors duration-200">Twitter</a>
+      </div>
     </div>
   </footer>
 
-  <!-- Scroll reveal script -->
+  <!-- Scroll Reveal Script — repeats on scroll -->
   <script>
-    const observer = new IntersectionObserver((entries) => {
+    const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => {
+      revealObserver.observe(el);
+    });
+  
+
+      // Staggered Grid Reveal
+      (function(){
+        var staggerEls = document.querySelectorAll('.stagger-item');
+        if(!staggerEls.length) return;
+        var staggerObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
+              items.forEach(function(item, i){
+                var row = Math.floor(i / 3);
+                var col = i % 3;
+                var delay = (row + col) * 100;
+                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
+              });
+            } else {
+              entry.target.classList.remove('stagger-visible');
+            }
+          });
+        }, {threshold:0.1});
+        staggerEls.forEach(function(el){ staggerObs.observe(el); });
+      })();
+  
+
+      // Smooth Number Counters (smooth interpolation)
+      (function(){
+        var counters = document.querySelectorAll('.smooth-counter');
+        if(!counters.length) return;
+        var counterObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var el = entry.target;
+              var target = parseFloat(el.getAttribute('data-target'));
+              var suffix = el.getAttribute('data-suffix') || '';
+              var decimals = parseInt(el.getAttribute('data-decimals') || '0');
+              var duration = 2000;
+              var startTime = null;
+              var startVal = 0;
+              function step(ts){
+                if(!startTime) startTime = ts;
+                var progress = Math.min((ts - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 4);
+                var current = startVal + (target - startVal) * eased;
+                el.textContent = current.toFixed(decimals) + suffix;
+                if(progress < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            } else {
+              var suffix = entry.target.getAttribute('data-suffix') || '';
+              entry.target.textContent = '0' + suffix;
+            }
+          });
+        }, {threshold:0.3});
+        counters.forEach(function(el){ counterObs.observe(el); });
+      })();
+  
   </script>
 
 </body>

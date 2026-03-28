@@ -1,19 +1,128 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { Reference } from "@/app/data/references";
 
-function ThumbnailPreview({ sampleFile, title }: { sampleFile: string; title: string }) {
-  const thumbSrc = `/thumbnails/${sampleFile.replace('.html', '.png')}`;
+function IframePreview({ src, title }: { src: string; title: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const rafRef = useRef<number>(0);
+  const [scale, setScale] = useState(0.25);
+  const [hovered, setHovered] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const scrollYRef = useRef(0);
+  const [inView, setInView] = useState(false);
+  const canScroll = useRef(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => setScale(el.offsetWidth / 1440);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleLoad = useCallback(() => {
+    setLoaded(true);
+    try {
+      const doc = iframeRef.current?.contentDocument;
+      canScroll.current = !!(doc && doc.documentElement);
+    } catch {
+      canScroll.current = false;
+    }
+  }, []);
+
+  // 호버 시 전체 스크롤
+  useEffect(() => {
+    if (!hovered) {
+      cancelAnimationFrame(rafRef.current);
+      if (canScroll.current) {
+        try {
+          iframeRef.current?.contentWindow?.scrollTo({ top: 0, behavior: "smooth" });
+        } catch { /* ignore */ }
+      }
+      scrollYRef.current = 0;
+      return;
+    }
+
+    if (!loaded) return;
+    const iframe = iframeRef.current;
+    if (!iframe || !canScroll.current) return;
+
+    const speed = 225;
+    let lastTs: number | null = null;
+
+    const animate = (ts: number) => {
+      if (!lastTs) lastTs = ts;
+      const dt = (ts - lastTs) / 1000;
+      lastTs = ts;
+      scrollYRef.current += speed * dt;
+
+      try {
+        const doc = iframe.contentDocument;
+        if (doc) {
+          const maxScroll = doc.documentElement.scrollHeight - doc.documentElement.clientHeight;
+          if (scrollYRef.current >= maxScroll) {
+            scrollYRef.current = maxScroll;
+            iframe.contentWindow?.scrollTo(0, maxScroll);
+            return;
+          }
+          iframe.contentWindow?.scrollTo(0, scrollYRef.current);
+        }
+      } catch { /* ignore */ }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    const timeout = setTimeout(() => {
+      rafRef.current = requestAnimationFrame(animate);
+    }, 150);
+
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [hovered, loaded]);
 
   return (
-    <div className="relative h-52 w-full overflow-hidden border-b border-zinc-800 bg-zinc-900">
-      <img
-        src={thumbSrc}
-        alt={title}
-        className="h-full w-full object-cover object-top"
+    <div
+      ref={containerRef}
+      className="relative h-52 w-full overflow-hidden border-b border-zinc-800 bg-zinc-900"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <iframe
+        ref={iframeRef}
+        src={src}
+        className="pointer-events-none absolute left-0 top-0 border-0"
+        style={{
+          width: "1440px",
+          height: "6000px",
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+        title={title}
         loading="lazy"
+        sandbox="allow-scripts allow-same-origin"
+        onLoad={handleLoad}
+      />
+      <div
+        className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-zinc-900/60 to-transparent transition-opacity duration-300"
+        style={{ opacity: hovered ? 0 : 0.8 }}
       />
     </div>
   );
@@ -56,7 +165,7 @@ function ReferenceCard({ reference: r }: { reference: Reference }) {
       <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-accent-50 group-hover:shadow-lg group-hover:shadow-accent-5">
         {/* Preview section */}
         {r.sampleFile ? (
-          <ThumbnailPreview sampleFile={r.sampleFile} title={r.name} />
+          <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
         ) : (
           <div className="flex h-52 w-full items-center justify-center border-b border-zinc-800 bg-zinc-900">
             <div className="text-center">

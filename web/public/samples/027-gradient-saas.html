@@ -4,1086 +4,705 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>027 — Gradient SaaS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg-deep: #0c0a1a;
-      --bg-mid: #14112a;
-      --bg-card: #1a1730;
-      --bg-card-hover: #211e3a;
-      --red: #e84040;
-      --red-hover: #f04848;
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255,255,255,0.65);
-      --text-muted: rgba(255,255,255,0.4);
-      --border: rgba(255,255,255,0.08);
-    }
-
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-deep);
-      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #1a1a2e;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { font-family: 'DM Sans', sans-serif; font-weight: 700; }
+
+    /* Subtle bg gradient */
+    .bg-gradient-subtle {
+      background: linear-gradient(180deg, #ffffff 0%, #fff5f7 40%, #ffffff 70%, #fff8f0 90%, #ffffff 100%);
     }
 
-    /* Page background gradient */
-    .page-bg {
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(80, 40, 120, 0.4) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 30% 10%, rgba(60, 20, 100, 0.3) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 40% at 70% 10%, rgba(40, 20, 80, 0.25) 0%, transparent 50%),
-        linear-gradient(180deg, var(--bg-deep) 0%, #0e0b20 50%, var(--bg-deep) 100%);
-    }
-
-    /* Navigation */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 0 2rem;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background 0.3s ease, backdrop-filter 0.3s ease;
-    }
-    nav.scrolled {
-      background: rgba(12, 10, 26, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-primary);
-      text-decoration: none;
-    }
-    .nav-logo-icon {
-      width: 28px;
-      height: 28px;
-      background: var(--red);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .nav-logo-icon svg {
-      width: 16px;
-      height: 16px;
-      fill: white;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      list-style: none;
-    }
-    .nav-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 400;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--text-primary); }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-    .nav-signin {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 400;
-      transition: color 0.2s;
-    }
-    .nav-signin:hover { color: var(--text-primary); }
-
-    .btn-signup {
-      background: var(--red);
-      color: white;
-      border: none;
-      padding: 0.5rem 1.125rem;
-      border-radius: 8px;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .btn-signup:hover {
-      background: var(--red-hover);
-      transform: translateY(-1px);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding-top: 160px;
-      padding-bottom: 60px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.75rem, 6vw, 4.5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.5rem;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero h1 .gradient-text {
-      background: linear-gradient(135deg, #e84040 0%, #f06030 50%, #e84040 100%);
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #ec4899, #f97316);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .hero-subtitle {
-      font-size: 1.0625rem;
-      line-height: 1.65;
-      color: var(--text-secondary);
-      max-width: 520px;
-      margin: 0 auto 2.5rem;
-      font-weight: 400;
-    }
-
-    .btn-cta {
-      display: inline-block;
-      background: var(--red);
+    /* Gradient button */
+    .btn-gradient {
+      background: linear-gradient(135deg, #ec4899, #f97316);
       color: white;
-      border: none;
       padding: 0.875rem 2rem;
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: 0.75rem;
       font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s, box-shadow 0.3s;
-      text-decoration: none;
-      box-shadow: 0 4px 24px rgba(232, 64, 64, 0.3);
-    }
-    .btn-cta:hover {
-      background: var(--red-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(232, 64, 64, 0.4);
-    }
-
-    /* App Preview */
-    .app-preview-wrapper {
-      max-width: 1100px;
-      margin: 60px auto 0;
-      padding: 0 2rem;
-      position: relative;
-    }
-
-    .app-preview {
-      position: relative;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow:
-        0 40px 80px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(255,255,255,0.05);
-      display: flex;
-      min-height: 420px;
-    }
-
-    /* Sidebar */
-    .app-sidebar {
-      width: 220px;
-      background: rgba(0,0,0,0.3);
-      border-right: 1px solid var(--border);
-      padding: 1rem 0;
-      flex-shrink: 0;
-    }
-
-    .sidebar-icons {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem 1rem;
-    }
-    .sidebar-icon-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .sidebar-icon-btn:hover { background: rgba(255,255,255,0.1); }
-
-    .sidebar-nav { list-style: none; }
-    .sidebar-nav li {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-      border-radius: 0;
-    }
-    .sidebar-nav li:hover {
-      background: rgba(255,255,255,0.04);
-      color: var(--text-primary);
-    }
-    .sidebar-nav li .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .dot-red { background: var(--red); }
-    .dot-orange { background: #f59e0b; }
-    .dot-blue { background: #3b82f6; }
-    .dot-green { background: #10b981; }
-
-    .sidebar-section-label {
-      font-size: 0.6875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      padding: 1.25rem 1rem 0.375rem;
-      font-weight: 600;
-    }
-
-    .sidebar-project {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .sidebar-project:hover { background: rgba(255,255,255,0.04); }
-    .sidebar-project-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.625rem;
-    }
-
-    /* Main Content Area */
-    .app-main {
-      flex: 1;
-      padding: 1.5rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .app-breadcrumb {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 1.25rem;
-    }
-    .app-breadcrumb span {
-      color: var(--text-secondary);
-    }
-
-    .app-main-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: var(--text-primary);
-    }
-
-    .meeting-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-    .meeting-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #10b981, #059669);
-    }
-    .meeting-meta {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-    .meeting-label {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    .section-heading {
       font-size: 0.9375rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 1rem;
-      margin-top: 0.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.25);
+    }
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.35);
     }
 
-    .task-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 0;
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-    }
-    .task-checkbox {
-      width: 18px;
-      height: 18px;
-      border: 1.5px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* Floating image card */
-    .floating-image {
-      position: absolute;
-      right: -20px;
-      top: -20px;
-      width: 280px;
-      height: 320px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      border: 1px solid var(--border);
-      transform: rotate(2deg);
-    }
-    .floating-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    /* Use a CSS gradient to simulate concert/performance photo */
-    .floating-image-bg {
-      width: 100%;
-      height: 100%;
-      background:
-        radial-gradient(circle at 40% 60%, rgba(59,130,246,0.6) 0%, transparent 50%),
-        radial-gradient(circle at 70% 30%, rgba(99,102,241,0.5) 0%, transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(139,92,246,0.4) 0%, transparent 50%),
-        linear-gradient(180deg, #1a103a 0%, #0f0a2a 100%);
-    }
-    .floating-image-silhouette {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 200px;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
-      border-radius: 60px 60px 0 0;
-    }
-
-    /* Tag pills in app */
-    .tag-pill {
-      display: inline-block;
-      padding: 0.25rem 0.625rem;
-      border-radius: 4px;
-      font-size: 0.6875rem;
+    /* Secondary button */
+    .btn-secondary {
+      border: 1.5px solid #e5e7eb;
+      color: #374151;
+      padding: 0.875rem 2rem;
+      border-radius: 0.75rem;
       font-weight: 500;
+      font-size: 0.9375rem;
+      transition: border-color 0.3s ease, background 0.3s ease;
     }
-    .tag-office {
-      background: rgba(59,130,246,0.15);
-      color: #60a5fa;
+    .btn-secondary:hover {
+      border-color: #ec4899;
+      background: #fff5f7;
     }
 
-    /* Reveal animations */
+    /* Feature card */
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid #f3f4f6;
+      border-radius: 1rem;
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+    }
+    .card-border-pink { border-top: 3px solid #ec4899; }
+    .card-border-orange { border-top: 3px solid #f97316; }
+    .card-border-rose { border-top: 3px solid #f43f5e; }
+
+    /* Floating UI mockup cards */
+    .mockup-card {
+      background: #ffffff;
+      border: 1px solid #f3f4f6;
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Reveal animation */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
 
-    /* Features Section */
-    .features {
-      padding: 120px 2rem 80px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .features-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-    .features-header h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-    .features-header p {
-      font-size: 1.0625rem;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.6;
+    /* Nav */
+    .nav-saas {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid #f3f4f6;
     }
 
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+    /* Pill badge */
+    .pill-badge {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(249, 115, 22, 0.1));
+      color: #ec4899;
+      font-size: 0.75rem;
+      padding: 0.375rem 1rem;
+      border-radius: 9999px;
+      font-weight: 500;
     }
 
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      transition: transform 0.4s ease, border-color 0.4s ease;
-    }
-    .feature-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.15);
-    }
-
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
+    /* Integration logos placeholder */
+    .logo-placeholder {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      background: #f9fafb;
+      border: 1px solid #f3f4f6;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1.25rem;
-      font-size: 1.25rem;
+      color: #9ca3af;
+      font-size: 0.625rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .feature-icon-red { background: rgba(232,64,64,0.15); color: var(--red); }
-    .feature-icon-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
-    .feature-icon-purple { background: rgba(139,92,246,0.15); color: #8b5cf6; }
-    .feature-icon-green { background: rgba(16,185,129,0.15); color: #10b981; }
-    .feature-icon-orange { background: rgba(245,158,11,0.15); color: #f59e0b; }
-    .feature-icon-indigo { background: rgba(99,102,241,0.15); color: #6366f1; }
-
-    .feature-card h3 {
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin-bottom: 0.625rem;
-      color: var(--text-primary);
-    }
-    .feature-card p {
-      font-size: 0.875rem;
-      line-height: 1.6;
-      color: var(--text-secondary);
+    .logo-placeholder:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
-    /* Workflow Section */
-    .workflow {
-      padding: 80px 2rem 120px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .workflow-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-    .workflow-header h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-    .workflow-header p {
-      font-size: 1.0625rem;
-      color: var(--text-secondary);
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .workflow-cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .workflow-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+    /* Bento card */
+    .bento-card {
+      background: #ffffff;
+      border: 1px solid #f0f0f0;
+      border-radius: 1rem;
       overflow: hidden;
-      transition: transform 0.4s ease, border-color 0.4s ease;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
-    .workflow-card:hover {
+    .bento-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.07);
     }
-
-    .workflow-card-visual {
-      height: 200px;
+    .bento-visual {
+      background: #fafafa;
+      padding: 1.25rem;
+      min-height: 10rem;
       position: relative;
       overflow: hidden;
     }
-    .wv-gradient-1 {
-      background:
-        radial-gradient(circle at 30% 50%, rgba(232,64,64,0.25) 0%, transparent 60%),
-        radial-gradient(circle at 70% 50%, rgba(139,92,246,0.2) 0%, transparent 60%),
-        var(--bg-mid);
-    }
-    .wv-gradient-2 {
-      background:
-        radial-gradient(circle at 60% 40%, rgba(59,130,246,0.25) 0%, transparent 60%),
-        radial-gradient(circle at 30% 60%, rgba(16,185,129,0.2) 0%, transparent 60%),
-        var(--bg-mid);
-    }
-    .wv-gradient-3 {
-      background:
-        radial-gradient(circle at 50% 50%, rgba(245,158,11,0.25) 0%, transparent 60%),
-        radial-gradient(circle at 70% 30%, rgba(232,64,64,0.2) 0%, transparent 60%),
-        var(--bg-mid);
-    }
-    .wv-gradient-4 {
-      background:
-        radial-gradient(circle at 40% 60%, rgba(99,102,241,0.25) 0%, transparent 60%),
-        radial-gradient(circle at 60% 30%, rgba(236,72,153,0.2) 0%, transparent 60%),
-        var(--bg-mid);
-    }
+    .bento-card.span-2 .bento-visual { min-height: 11rem; }
+    .bento-meta { padding: 1rem 1.25rem; }
 
-    /* Mini UI elements inside workflow visuals */
-    .mini-task-list {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
+    /* Task list mockup hover */
+    .bento-card:hover .task-progress {
+      width: 100% !important;
+      transition: width 1s ease;
     }
-    .mini-task {
+    /* Chat typing dots */
+    @keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+    .typing-dot { width:5px; height:5px; border-radius:50%; background:#ec4899; display:inline-block; }
+    .bento-card:hover .typing-dot:nth-child(1) { animation: blink 1.4s infinite 0s; }
+    .bento-card:hover .typing-dot:nth-child(2) { animation: blink 1.4s infinite 0.2s; }
+    .bento-card:hover .typing-dot:nth-child(3) { animation: blink 1.4s infinite 0.4s; }
+    /* Chart bar grow */
+    .chart-bar { transition: height 0.6s ease 0.1s; }
+    .bento-card:hover .chart-bar { height: var(--hover-h) !important; }
+    /* Kanban card slide */
+    .kanban-card-animate { transition: transform 0.5s ease; }
+    .bento-card:hover .kanban-card-animate { transform: translateX(4px); }
+    /* Integration icon pulse */
+    .int-icon { transition: transform 0.3s ease; }
+    .bento-card:hover .int-icon:nth-child(odd) { transform: scale(1.1); }
+    .bento-card:hover .int-icon:nth-child(even) { transform: scale(0.95); }
+
+    /* Floating animation */
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .float-1 { animation: floatUp 4s ease-in-out infinite; }
+    .float-2 { animation: floatUp 4s ease-in-out infinite 1s; }
+    .float-3 { animation: floatUp 4s ease-in-out infinite 2s; }
+
+    /* Check icon */
+    .check-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ec4899, #f97316);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem;
-      background: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      margin-bottom: 0.375rem;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-    .mini-check {
-      width: 14px;
-      height: 14px;
-      border: 1.5px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
+      justify-content: center;
       flex-shrink: 0;
     }
-    .mini-check.done {
-      background: var(--red);
-      border-color: var(--red);
-    }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Animated Gradient Mesh */
+    @keyframes meshShift1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.15)} 66%{transform:translate(-30px,30px) scale(0.9)} }
+    @keyframes meshShift2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-60px,50px) scale(0.95)} }
+    @keyframes meshShift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(40px,40px)} 66%{transform:translate(-40px,-20px)} }
+    .mesh-blob { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
+    .mesh-blob-1 { animation:meshShift1 15s ease-in-out infinite; }
+    .mesh-blob-2 { animation:meshShift2 18s ease-in-out infinite; }
+    .mesh-blob-3 { animation:meshShift3 20s ease-in-out infinite; }
+  
 
-    .workflow-card-content {
-      padding: 1.5rem 2rem 2rem;
+    /* Text Mask/Clip Effect */
+    .text-gradient-mask {
+      background:linear-gradient(135deg, currentColor 0%, currentColor 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
     }
-    .workflow-card-content h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .workflow-card-content p {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
+  
 
-    /* CTA Section */
-    .cta-section {
-      padding: 80px 2rem 120px;
-      text-align: center;
-    }
-    .cta-section h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-    .cta-section p {
-      font-size: 1.0625rem;
-      color: var(--text-secondary);
-      max-width: 440px;
-      margin: 0 auto 2rem;
-      line-height: 1.6;
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr repeat(3, 1fr);
-      gap: 2rem;
-    }
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 0.75rem;
-    }
-    .footer-brand-icon {
-      width: 24px;
-      height: 24px;
-      background: var(--red);
-      border-radius: 5px;
-    }
-    .footer-tagline {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    .footer-col h4 {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-    .footer-col ul {
-      list-style: none;
-    }
-    .footer-col li {
-      margin-bottom: 0.5rem;
-    }
-    .footer-col a {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: var(--text-primary); }
-
-    .footer-bottom {
-      margin-top: 2.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav { padding: 0 1rem; }
-      .nav-links { display: none; }
-      .hero { padding-top: 120px; }
-      .features-grid { grid-template-columns: 1fr; }
-      .workflow-cards { grid-template-columns: 1fr; }
-      .app-preview { flex-direction: column; min-height: auto; }
-      .app-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
-      .floating-image { display: none; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* Subtle glow behind hero */
-    .hero-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse, rgba(80,40,140,0.2) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    /* Dropdown indicator */
-    .has-dropdown::after {
-      content: '';
-      display: inline-block;
-      width: 0;
-      height: 0;
-      border-left: 3.5px solid transparent;
-      border-right: 3.5px solid transparent;
-      border-top: 4px solid currentColor;
-      margin-left: 4px;
-      vertical-align: middle;
-      opacity: 0.6;
-    }
+    /* Elastic/Spring Animations */
+    .elastic-in { transition:transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease; }
+    .elastic-hover:hover { transform:scale(1.04); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  
   </style>
-</head>
-<body>
-  <div class="page-bg">
-
-    <!-- Navigation -->
-    <nav id="mainNav">
-      <a href="#" class="nav-logo">
-        <div class="nav-logo-icon">
-          <svg viewBox="0 0 16 16"><rect x="3" y="3" width="4" height="4" rx="1"/><rect x="9" y="3" width="4" height="4" rx="1"/><rect x="3" y="9" width="4" height="4" rx="1"/><rect x="9" y="9" width="4" height="4" rx="1"/></svg>
-        </div>
-        TaskHub
-      </a>
-
-      <ul class="nav-links">
-        <li><a href="#features" class="has-dropdown">Features</a></li>
-        <li><a href="#" class="has-dropdown">Use Cases</a></li>
-        <li><a href="#">Updates</a></li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#" class="has-dropdown">Download</a></li>
-      </ul>
-
-      <div class="nav-right">
-        <a href="#" class="nav-signin">Sign in</a>
-        <button class="btn-signup">Sign Up</button>
-      </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-glow"></div>
-      <h1 class="reveal">
-        Tasks, notes, and plans.<br>
-        <span class="gradient-text">Finally in one app.</span>
-      </h1>
-      <p class="hero-subtitle reveal reveal-delay-1">
-        The to-do list app for tasks, priorities, and notes &mdash; all in one fast, beautiful workspace you'll actually enjoy using.
-      </p>
-      <div class="reveal reveal-delay-2">
-        <a href="#" class="btn-cta">Sign up for free</a>
-      </div>
-
-      <!-- App Preview -->
-      <div class="app-preview-wrapper reveal reveal-delay-3">
-        <div class="app-preview">
-
-          <!-- Sidebar -->
-          <div class="app-sidebar">
-            <div class="sidebar-icons">
-              <div class="sidebar-icon-btn">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
-              </div>
-              <div class="sidebar-icon-btn">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-              </div>
-              <div class="sidebar-icon-btn">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </div>
-
-            <ul class="sidebar-nav">
-              <li><span class="dot dot-red"></span> Inbox</li>
-              <li><span class="dot dot-orange"></span> Today</li>
-              <li><span class="dot dot-red"></span> Updates</li>
-              <li><span class="dot dot-blue"></span> Tasks</li>
-            </ul>
-
-            <div class="sidebar-section-label">Projects</div>
-            <div class="sidebar-project">
-              <div class="sidebar-project-icon" style="background: rgba(232,64,64,0.2); color: #e84040;">&#9632;</div>
-              Offsite Planning
-            </div>
-            <div class="sidebar-project">
-              <div class="sidebar-project-icon" style="background: rgba(59,130,246,0.2); color: #3b82f6;">&#9650;</div>
-              Product Launch
-            </div>
-            <div class="sidebar-project">
-              <div class="sidebar-project-icon" style="background: rgba(16,185,129,0.2); color: #10b981;">&#9679;</div>
-              Q3 Marketing
-            </div>
-          </div>
-
-          <!-- Main Content -->
-          <div class="app-main">
-            <div class="app-breadcrumb">
-              Production Planning &rsaquo; <span>Production Planning</span>
-              <span class="tag-pill tag-office" style="margin-left: 1rem;">Office</span>
-            </div>
-
-            <h2 class="app-main-title">Production planning - June</h2>
-
-            <div class="meeting-info">
-              <div class="meeting-avatar"></div>
-              <div>
-                <div class="meeting-label">Meeting transcript</div>
-                <div class="meeting-meta">Mon, Jun 10 &middot; 9:41 AM &middot; 52 minutes</div>
-              </div>
-            </div>
-
-            <h3 class="section-heading">Action Items</h3>
-
-            <div class="task-item">
-              <div class="task-checkbox"></div>
-              Spicy Ramen &middot; Shoot Schedule
-            </div>
-            <div class="task-item">
-              <div class="task-checkbox"></div>
-              Finalize location permits
-            </div>
-            <div class="task-item">
-              <div class="task-checkbox"></div>
-              Send gear list to production team
-            </div>
-            <div class="task-item">
-              <div class="task-checkbox"></div>
-              Book post-production studio
-            </div>
-
-            <!-- Floating image overlay -->
-            <div class="floating-image">
-              <div class="floating-image-bg">
-                <div class="floating-image-silhouette"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-      <div class="features-header reveal">
-        <h2>Everything you need,<br>nothing you don't</h2>
-        <p>Powerful features designed for teams and individuals who want to get things done faster.</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card reveal">
-          <div class="feature-icon feature-icon-red">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg>
-          </div>
-          <h3>Smart Tasks</h3>
-          <p>Create, organize, and track tasks with priorities, labels, and deadlines. Smart sorting keeps what matters on top.</p>
-        </div>
-
-        <div class="feature-card reveal reveal-delay-1">
-          <div class="feature-icon feature-icon-blue">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </div>
-          <h3>Rich Notes</h3>
-          <p>Write meeting notes, project docs, or quick ideas with a beautiful editor. Embed images, code, and checklists.</p>
-        </div>
-
-        <div class="feature-card reveal reveal-delay-2">
-          <div class="feature-icon feature-icon-purple">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
-          </div>
-          <h3>Team Boards</h3>
-          <p>Plan projects with customizable boards. Drag tasks between columns and visualize progress at a glance.</p>
-        </div>
-
-        <div class="feature-card reveal">
-          <div class="feature-icon feature-icon-green">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </div>
-          <h3>Instant Sync</h3>
-          <p>Changes appear everywhere in real-time. Work across devices without ever worrying about saving or syncing.</p>
-        </div>
-
-        <div class="feature-card reveal reveal-delay-1">
-          <div class="feature-icon feature-icon-orange">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3>Smart Reminders</h3>
-          <p>Never miss a deadline. Contextual reminders surface the right tasks at the right time based on your patterns.</p>
-        </div>
-
-        <div class="feature-card reveal reveal-delay-2">
-          <div class="feature-icon feature-icon-indigo">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <h3>Team Spaces</h3>
-          <p>Shared workspaces for your team. Assign tasks, leave comments, and keep everyone aligned on goals.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Workflow Section -->
-    <section class="workflow">
-      <div class="workflow-header reveal">
-        <h2>Built for how<br>you actually work</h2>
-        <p>From solo projects to team sprints, adapt the workspace to your workflow.</p>
-      </div>
-
-      <div class="workflow-cards">
-        <div class="workflow-card reveal">
-          <div class="workflow-card-visual wv-gradient-1">
-            <div class="mini-task-list">
-              <div class="mini-task"><div class="mini-check done"></div> Design review for homepage</div>
-              <div class="mini-task"><div class="mini-check done"></div> Update brand guidelines</div>
-              <div class="mini-task"><div class="mini-check"></div> Create social media assets</div>
-              <div class="mini-task"><div class="mini-check"></div> Ship Q3 campaign page</div>
-            </div>
-          </div>
-          <div class="workflow-card-content">
-            <h3>Personal Productivity</h3>
-            <p>Keep your tasks, notes, and plans in one place. Focus on what matters with smart prioritization.</p>
-          </div>
-        </div>
-
-        <div class="workflow-card reveal reveal-delay-1">
-          <div class="workflow-card-visual wv-gradient-2">
-            <div class="mini-task-list">
-              <div class="mini-task"><div class="mini-check done"></div> Sprint planning complete</div>
-              <div class="mini-task"><div class="mini-check"></div> Code review: auth module</div>
-              <div class="mini-task"><div class="mini-check"></div> Deploy staging build</div>
-              <div class="mini-task"><div class="mini-check"></div> QA sign-off on release</div>
-            </div>
-          </div>
-          <div class="workflow-card-content">
-            <h3>Engineering Teams</h3>
-            <p>Track sprints, manage backlogs, and ship faster with integrated task management and documentation.</p>
-          </div>
-        </div>
-
-        <div class="workflow-card reveal">
-          <div class="workflow-card-visual wv-gradient-3">
-            <div class="mini-task-list">
-              <div class="mini-task"><div class="mini-check done"></div> Campaign brief approved</div>
-              <div class="mini-task"><div class="mini-check done"></div> Draft blog posts</div>
-              <div class="mini-task"><div class="mini-check"></div> Schedule social content</div>
-              <div class="mini-task"><div class="mini-check"></div> Review analytics report</div>
-            </div>
-          </div>
-          <div class="workflow-card-content">
-            <h3>Marketing Teams</h3>
-            <p>Plan campaigns, manage content calendars, and collaborate on creative briefs all in one workspace.</p>
-          </div>
-        </div>
-
-        <div class="workflow-card reveal reveal-delay-1">
-          <div class="workflow-card-visual wv-gradient-4">
-            <div class="mini-task-list">
-              <div class="mini-task"><div class="mini-check done"></div> User research synthesis</div>
-              <div class="mini-task"><div class="mini-check"></div> Wireframe checkout flow</div>
-              <div class="mini-task"><div class="mini-check"></div> Design system updates</div>
-              <div class="mini-task"><div class="mini-check"></div> Prototype handoff to dev</div>
-            </div>
-          </div>
-          <div class="workflow-card-content">
-            <h3>Design Teams</h3>
-            <p>From research to handoff, keep your design process organized with tasks tied to every stage.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="reveal">
-        <h2>Ready to get more done?</h2>
-        <p>Join thousands of teams and individuals who switched to a better way to manage work.</p>
-        <a href="#" class="btn-cta">Sign up for free</a>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-      <div class="footer-grid">
-        <div>
-          <div class="footer-brand">
-            <div class="footer-brand-icon"></div>
-            TaskHub
-          </div>
-          <p class="footer-tagline">Tasks, notes, and plans.<br>Finally in one app.</p>
-        </div>
-
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">Pricing</a></li>
-            <li><a href="#">Updates</a></li>
-            <li><a href="#">Download</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Help Center</a></li>
-            <li><a href="#">Community</a></li>
-            <li><a href="#">API Docs</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Terms</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <span>&copy; 2026 TaskHub. All rights reserved.</span>
-        <span>Made with care for productive people.</span>
-      </div>
-    </footer>
-
-  </div>
-
   <script>
-    // Scroll reveal
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saas: {
+              pink: '#ec4899',
+              orange: '#f97316',
+              rose: '#f43f5e',
+              dark: '#1a1a2e',
+              muted: '#6b7280',
+              light: '#f9fafb',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gradient-subtle">
+
+  <!-- Navigation -->
+  <nav class="nav-saas fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+        <a href="#" class="text-xl font-bold text-saas-dark" style="font-family:'DM Sans',sans-serif;">
+          <span class="gradient-text">super</span>flow
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Features</a>
+          <a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Pricing</a>
+          <a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Docs</a>
+          <a href="#" class="btn-gradient text-sm" style="padding:0.5rem 1.25rem;">Get Started</a>
+        </div>
+        <button class="md:hidden text-saas-muted" aria-label="Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 md:pt-44 md:pb-32 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="reveal mb-6">
+        <span class="pill-badge inline-block">Now in beta — join [N] teams</span>
+      </div>
+      <h1 class="reveal text-5xl md:text-6xl lg:text-7xl text-saas-dark mb-6 leading-tight" style="letter-spacing:-0.03em;">
+        Work moves <span class="gradient-text">faster</span><br>when tools talk
+      </h1>
+      <p class="reveal text-lg text-saas-muted max-w-xl mx-auto mb-10 leading-relaxed">
+        One workspace that connects your tasks, docs, and conversations. Stop switching between [N] different apps just to get one thing done.
+      </p>
+      <div class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#" class="btn-gradient">Start for Free</a>
+        <a href="#" class="btn-secondary">See How It Works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Mockup — floating UI cards -->
+  <section class="pb-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal relative">
+        <!-- Main mockup -->
+        <div class="mockup-card p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+            <span class="text-xs text-gray-400 ml-2">superflow — workspace</span>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-1 bg-saas-light rounded-lg p-4">
+              <p class="text-xs font-semibold text-saas-dark mb-3">Projects</p>
+              <div class="space-y-2">
+                <div class="bg-white rounded-md p-2 text-xs text-gray-600">Q1 Launch</div>
+                <div class="bg-white rounded-md p-2 text-xs text-saas-pink font-medium border border-saas-pink/20">Design Sprint</div>
+                <div class="bg-white rounded-md p-2 text-xs text-gray-600">API v2</div>
+              </div>
+            </div>
+            <div class="col-span-2 bg-saas-light rounded-lg p-4">
+              <p class="text-xs font-semibold text-saas-dark mb-3">Design Sprint — Tasks</p>
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 bg-white rounded-md p-2">
+                  <div class="check-icon"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+                  <span class="text-xs text-gray-500 line-through">User research synthesis</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white rounded-md p-2">
+                  <div class="w-5 h-5 rounded-full border-2 border-gray-200"></div>
+                  <span class="text-xs text-saas-dark">Wireframe review with eng</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white rounded-md p-2">
+                  <div class="w-5 h-5 rounded-full border-2 border-gray-200"></div>
+                  <span class="text-xs text-saas-dark">Prototype handoff</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Floating cards -->
+        <div class="absolute -right-4 top-8 float-1 hidden lg:block">
+          <div class="mockup-card p-3 w-48">
+            <p class="text-xs text-gray-400 mb-1">Notification</p>
+            <p class="text-xs text-saas-dark font-medium">3 comments on Wireframe</p>
+          </div>
+        </div>
+        <div class="absolute -left-4 bottom-12 float-2 hidden lg:block">
+          <div class="mockup-card p-3 w-44">
+            <p class="text-xs text-gray-400 mb-1">Status</p>
+            <p class="text-xs font-medium" style="color:#ec4899;">Sprint: Day 3 of 5</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Cards — Bento Visual Grid -->
+  <section class="py-24 px-6" style="background:#fafafa;">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="reveal text-4xl md:text-5xl text-saas-dark mb-4" style="letter-spacing:-0.02em;">
+          Everything <span class="gradient-text">connects</span>
+        </h2>
+        <p class="reveal text-base text-saas-muted max-w-lg mx-auto">
+          Tasks, docs, and conversations in one place. No more copy-pasting links between apps.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- Card 1: Unified Tasks (col-span-2) — mini task list UI -->
+        <div class="reveal bento-card span-2 md:col-span-2">
+          <div class="bento-visual">
+            <!-- Mini task list mockup -->
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 bg-white rounded-lg px-3 py-2.5 shadow-sm">
+                <svg class="w-4 h-4 text-gray-300 flex-shrink-0 cursor-grab" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></svg>
+                <div class="check-icon" style="width:18px;height:18px;"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+                <span class="text-xs text-gray-400 line-through flex-1">User research synthesis</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-600 font-medium">Done</span>
+              </div>
+              <div class="flex items-center gap-3 bg-white rounded-lg px-3 py-2.5 shadow-sm border border-pink-100">
+                <svg class="w-4 h-4 text-gray-300 flex-shrink-0 cursor-grab" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></svg>
+                <div class="w-4.5 h-4.5 rounded-full border-2 border-saas-pink flex-shrink-0" style="width:18px;height:18px;"></div>
+                <span class="text-xs text-saas-dark font-medium flex-1">Wireframe review with eng</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 font-medium">In progress</span>
+              </div>
+              <div class="flex items-center gap-3 bg-white rounded-lg px-3 py-2.5 shadow-sm">
+                <svg class="w-4 h-4 text-gray-300 flex-shrink-0 cursor-grab" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></svg>
+                <div class="w-4.5 h-4.5 rounded-full border-2 border-gray-200 flex-shrink-0" style="width:18px;height:18px;"></div>
+                <span class="text-xs text-saas-dark flex-1">Prototype handoff</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 font-medium">To do</span>
+              </div>
+              <div class="flex items-center gap-3 bg-white rounded-lg px-3 py-2.5 shadow-sm">
+                <svg class="w-4 h-4 text-gray-300 flex-shrink-0 cursor-grab" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></svg>
+                <div class="w-4.5 h-4.5 rounded-full border-2 border-gray-200 flex-shrink-0" style="width:18px;height:18px;"></div>
+                <span class="text-xs text-saas-dark flex-1">Final QA pass</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 font-medium">To do</span>
+              </div>
+            </div>
+            <!-- Progress bar that animates on hover -->
+            <div class="mt-4 flex items-center gap-2">
+              <div class="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div class="task-progress h-full rounded-full" style="width:35%;background:linear-gradient(135deg,#ec4899,#f97316);transition:width 1s ease;"></div>
+              </div>
+              <span class="text-xs text-gray-400">1/4</span>
+            </div>
+          </div>
+          <div class="bento-meta">
+            <p class="text-sm font-semibold text-saas-dark">Unified Tasks</p>
+            <p class="text-xs text-saas-muted mt-0.5">Drag, assign, and track from one list</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Smart Threads — chat mockup -->
+        <div class="reveal reveal-delay-1 bento-card md:col-span-1">
+          <div class="bento-visual" style="min-height:11rem;">
+            <div class="space-y-3">
+              <!-- Message 1 -->
+              <div class="flex items-start gap-2">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-300 to-orange-300 flex-shrink-0 mt-0.5"></div>
+                <div class="bg-white rounded-lg rounded-tl-none px-3 py-2 shadow-sm max-w-[85%]">
+                  <p class="text-xs text-saas-dark">Updated the hero section. Can you review?</p>
+                  <p class="text-xs text-gray-300 mt-1">2m ago</p>
+                </div>
+              </div>
+              <!-- Message 2 -->
+              <div class="flex items-start gap-2 justify-end">
+                <div class="bg-gradient-to-br from-pink-50 to-orange-50 rounded-lg rounded-tr-none px-3 py-2 shadow-sm max-w-[85%]">
+                  <p class="text-xs text-saas-dark">Looks good! Ship it.</p>
+                  <p class="text-xs text-gray-300 mt-1">1m ago</p>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-300 to-indigo-300 flex-shrink-0 mt-0.5"></div>
+              </div>
+              <!-- Typing indicator -->
+              <div class="flex items-start gap-2">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-300 to-teal-300 flex-shrink-0 mt-0.5"></div>
+                <div class="bg-white rounded-lg rounded-tl-none px-3 py-2.5 shadow-sm">
+                  <div class="flex gap-1 items-center">
+                    <span class="typing-dot" style="opacity:0.3;"></span>
+                    <span class="typing-dot" style="opacity:0.3;"></span>
+                    <span class="typing-dot" style="opacity:0.3;"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bento-meta">
+            <p class="text-sm font-semibold text-saas-dark">Smart Threads</p>
+            <p class="text-xs text-saas-muted mt-0.5">Context-linked conversations</p>
+          </div>
+        </div>
+
+        <!-- Card 3: Analytics — mini chart -->
+        <div class="reveal bento-card md:col-span-1">
+          <div class="bento-visual flex flex-col justify-end" style="min-height:11rem;">
+            <p class="text-xs text-gray-400 mb-1">Weekly active users</p>
+            <p class="text-2xl font-bold text-saas-dark" style="font-family:'DM Sans',sans-serif;">↑ 23%</p>
+            <div class="flex items-end gap-1.5 mt-4 h-16">
+              <div class="chart-bar flex-1 rounded-sm" style="height:30%;--hover-h:40%;background:#fce7f3;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:45%;--hover-h:50%;background:#fce7f3;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:35%;--hover-h:55%;background:#fce7f3;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:55%;--hover-h:65%;background:#fbcfe8;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:50%;--hover-h:70%;background:#fbcfe8;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:65%;--hover-h:80%;background:#f9a8d4;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:60%;--hover-h:75%;background:#f9a8d4;"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:80%;--hover-h:90%;background:linear-gradient(to top,#ec4899,#f97316);"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:75%;--hover-h:85%;background:linear-gradient(to top,#ec4899,#f97316);"></div>
+              <div class="chart-bar flex-1 rounded-sm" style="height:95%;--hover-h:100%;background:linear-gradient(to top,#ec4899,#f97316);"></div>
+            </div>
+          </div>
+          <div class="bento-meta">
+            <p class="text-sm font-semibold text-saas-dark">Live Analytics</p>
+            <p class="text-xs text-saas-muted mt-0.5">Real-time metrics at a glance</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Timeline/Kanban (col-span-2) -->
+        <div class="reveal reveal-delay-1 bento-card span-2 md:col-span-2">
+          <div class="bento-visual">
+            <div class="grid grid-cols-3 gap-3 h-full">
+              <!-- Column: To Do -->
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5">To Do</p>
+                <div class="space-y-2">
+                  <div class="kanban-card-animate bg-white rounded-lg p-2.5 shadow-sm">
+                    <p class="text-xs text-saas-dark font-medium">API endpoint design</p>
+                    <div class="flex items-center gap-1.5 mt-2">
+                      <div class="w-4 h-4 rounded-full bg-gradient-to-br from-blue-200 to-blue-300"></div>
+                      <span class="text-xs text-gray-400">3d</span>
+                    </div>
+                  </div>
+                  <div class="kanban-card-animate bg-white rounded-lg p-2.5 shadow-sm">
+                    <p class="text-xs text-saas-dark font-medium">Write test cases</p>
+                    <div class="flex items-center gap-1.5 mt-2">
+                      <div class="w-4 h-4 rounded-full bg-gradient-to-br from-green-200 to-green-300"></div>
+                      <span class="text-xs text-gray-400">1d</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Column: In Progress -->
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wider mb-2.5" style="color:#ec4899;">In Progress</p>
+                <div class="space-y-2">
+                  <div class="kanban-card-animate bg-white rounded-lg p-2.5 shadow-sm border border-pink-100">
+                    <p class="text-xs text-saas-dark font-medium">Dashboard redesign</p>
+                    <div class="flex items-center gap-1.5 mt-2">
+                      <div class="w-4 h-4 rounded-full bg-gradient-to-br from-pink-200 to-orange-200"></div>
+                      <span class="text-xs text-gray-400">2d</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Column: Done -->
+              <div>
+                <p class="text-xs font-semibold text-green-500 uppercase tracking-wider mb-2.5">Done</p>
+                <div class="space-y-2">
+                  <div class="kanban-card-animate bg-white rounded-lg p-2.5 shadow-sm opacity-60">
+                    <p class="text-xs text-gray-400 line-through font-medium">Auth flow</p>
+                    <div class="flex items-center gap-1.5 mt-2">
+                      <div class="w-4 h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-300"></div>
+                      <span class="text-xs text-gray-400">Done</span>
+                    </div>
+                  </div>
+                  <div class="kanban-card-animate bg-white rounded-lg p-2.5 shadow-sm opacity-60">
+                    <p class="text-xs text-gray-400 line-through font-medium">Onboarding</p>
+                    <div class="flex items-center gap-1.5 mt-2">
+                      <div class="w-4 h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-300"></div>
+                      <span class="text-xs text-gray-400">Done</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bento-meta">
+            <p class="text-sm font-semibold text-saas-dark">Board View</p>
+            <p class="text-xs text-saas-muted mt-0.5">Kanban that syncs with your tasks and threads</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration Logos -->
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="reveal text-xs tracking-widest uppercase text-saas-muted mb-8">Works with the tools you already use</p>
+      <div class="reveal flex flex-wrap justify-center gap-4">
+        <div class="logo-placeholder">Slack</div>
+        <div class="logo-placeholder">GH</div>
+        <div class="logo-placeholder">Fig</div>
+        <div class="logo-placeholder">GCal</div>
+        <div class="logo-placeholder">Lin</div>
+        <div class="logo-placeholder">Not</div>
+        <div class="logo-placeholder">Jira</div>
+        <div class="logo-placeholder">+[N]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof — specific, not AI-generic (constraints #22, #23, #25) -->
+  <section class="py-24 px-6" style="background:#fafafa;">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="reveal text-3xl md:text-4xl text-saas-dark text-center mb-16" style="letter-spacing:-0.02em;">
+        Teams that <span class="gradient-text">shipped</span> with us
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="reveal feature-card p-8">
+          <p class="text-sm text-saas-dark leading-relaxed mb-6">
+            "We had tasks in Asana, docs in Notion, and chat in Slack. Every meeting started with 'wait, where is that link?' We moved to Superflow and that question just stopped being asked."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-200 to-orange-200"></div>
+            <div>
+              <p class="text-sm font-medium text-saas-dark">[Your customer]</p>
+              <p class="text-xs text-saas-muted">[Role], [Company]</p>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="reveal reveal-delay-1 feature-card p-8">
+          <p class="text-sm text-saas-dark leading-relaxed mb-6">
+            "I was skeptical of another productivity tool. But the threaded docs changed how our remote team works — decisions happen in context now, not in a random DM I'll never find again."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-200 to-rose-200"></div>
+            <div>
+              <p class="text-sm font-medium text-saas-dark">[Your customer]</p>
+              <p class="text-xs text-saas-muted">[Role], [Company]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works — numbered steps -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <h2 class="reveal text-4xl md:text-5xl text-saas-dark mb-4" style="letter-spacing:-0.02em;">
+          Up and running in <span class="gradient-text">minutes</span>
+        </h2>
+        <p class="reveal text-base text-saas-muted max-w-md mx-auto">
+          No migration headache. Import from your existing tools or start fresh.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="reveal text-center">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5" style="background:linear-gradient(135deg, rgba(236,72,153,0.1), rgba(249,115,22,0.1));">
+            <span class="gradient-text text-lg font-bold" style="font-family:'DM Sans',sans-serif;">1</span>
+          </div>
+          <h3 class="text-lg text-saas-dark mb-2">Connect your tools</h3>
+          <p class="text-sm text-saas-muted leading-relaxed">
+            One-click integrations with Slack, GitHub, Google Calendar, and [N] more. We pull in your existing data — no manual re-entry.
+          </p>
+        </div>
+        <div class="reveal reveal-delay-1 text-center">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5" style="background:linear-gradient(135deg, rgba(236,72,153,0.1), rgba(249,115,22,0.1));">
+            <span class="gradient-text text-lg font-bold" style="font-family:'DM Sans',sans-serif;">2</span>
+          </div>
+          <h3 class="text-lg text-saas-dark mb-2">Set up your workspace</h3>
+          <p class="text-sm text-saas-muted leading-relaxed">
+            Create projects, invite teammates, and organize by team or initiative. Templates get you started — customize everything later.
+          </p>
+        </div>
+        <div class="reveal reveal-delay-2 text-center">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5" style="background:linear-gradient(135deg, rgba(236,72,153,0.1), rgba(249,115,22,0.1));">
+            <span class="gradient-text text-lg font-bold" style="font-family:'DM Sans',sans-serif;">3</span>
+          </div>
+          <h3 class="text-lg text-saas-dark mb-2">Ship together</h3>
+          <p class="text-sm text-saas-muted leading-relaxed">
+            Discuss in threads, track in boards, write in docs — all in the same window. Your team's context stays in one place.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Teaser (simple, not a full grid) -->
+  <section class="py-28 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="reveal text-4xl md:text-5xl text-saas-dark mb-4" style="letter-spacing:-0.02em;">
+        Start free. Scale when ready.
+      </h2>
+      <p class="reveal text-base text-saas-muted mb-10 max-w-md mx-auto leading-relaxed">
+        Free for teams up to [N]. No credit card required. Upgrade when your team outgrows the free tier — pricing scales with your usage, not your headcount.
+      </p>
+      <div class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#" class="btn-gradient">Get Started Free</a>
+        <a href="#" class="btn-secondary">Compare Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 px-6 border-t border-gray-100">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <p class="text-lg font-bold text-saas-dark mb-4" style="font-family:'DM Sans',sans-serif;">
+            <span class="gradient-text">super</span>flow
+          </p>
+          <p class="text-sm text-saas-muted">Work, connected.</p>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-saas-dark uppercase tracking-wider mb-4">Product</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Features</a></li>
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Pricing</a></li>
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-saas-dark uppercase tracking-wider mb-4">Resources</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Documentation</a></li>
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">API Reference</a></li>
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-saas-dark uppercase tracking-wider mb-4">Company</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">About</a></li>
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Careers</a></li>
+            <li><a href="#" class="text-sm text-saas-muted hover:text-saas-dark transition-colors">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-saas-muted">Design reference 027 — Gradient SaaS</p>
+        <p class="text-xs text-saas-muted">Inspired by Superlist, Wealthsimple</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Reveal Script (animations repeat on scroll) -->
+  <script>
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, observerOptions);
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Nav scroll effect
-    const nav = document.getElementById('mainNav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 40);
-    });
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
   </script>
+
 </body>
 </html>

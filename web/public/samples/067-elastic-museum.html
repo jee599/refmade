@@ -3,31 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FunVault — We Put Fun In Fund</title>
+  <title>The Currency Lab — Interactive Money Museum</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --green-dark: #14532d;
-      --green-hero: #15613a;
-      --green-mid: #166534;
-      --green-accent: #22c55e;
-      --green-bright: #4ade80;
+      --bg: #0a0a0a;
+      --bg-card: #141414;
+      --bg-elevated: #1a1a1a;
+      --text: #f5f5f5;
+      --text-secondary: #a3a3a3;
+      --border: #2a2a2a;
+      --muted: #737373;
+      --accent: #22c55e;
+      --accent-dark: #16a34a;
+      --accent-glow: rgba(34, 197, 94, 0.15);
       --pink: #f472b6;
-      --pink-hot: #ec4899;
-      --white: #ffffff;
-      --black: #000000;
       --elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
       --elastic-out: cubic-bezier(0.22, 1.2, 0.36, 1);
-      --elastic-soft: cubic-bezier(0.25, 1.4, 0.55, 1);
+      --ease-color: cubic-bezier(0.216, 0.62, 0.356, 1);
       --elastic-linear: linear(0, 0.5737 7.6%, 0.8382 11.87%, 0.9463 14.19%,
         1.0292 16.54%, 1.0886 18.97%, 1.1258 21.53%, 1.137 22.97%,
         1.1424 24.48%, 1.1423 26.1%, 1.1366 27.86%, 1.1165 31.01%,
         1.0507 38.62%, 1.0219 42.57%, 0.9995 46.99%, 0.9872 51.63%,
         0.9842 58.77%, 1.0011 81.26%, 1);
-      --perspective: 1200px;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -42,684 +44,245 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    ::selection { background: var(--pink); color: var(--green-dark); }
+    ::selection { background: var(--accent); color: var(--bg); }
 
     body {
       font-family: 'Space Grotesk', system-ui, sans-serif;
-      background: var(--green-dark);
-      color: var(--white);
+      background: var(--bg);
+      color: var(--text);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
     }
 
+    .font-mono { font-family: 'DM Mono', monospace; }
+
+    h1, h2, h3 {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+    }
+
     a { color: inherit; text-decoration: none; }
 
+    /* ── Elastic transition helpers ──────────────────── */
     .elastic { transition: all 300ms var(--elastic); }
     .elastic-fast { transition: all 200ms var(--elastic); }
-    .elastic-slow { transition: all 500ms var(--elastic-out); }
-    .elastic-bounce { transition: all 600ms var(--elastic-linear); }
+    .elastic-slow { transition: all 500ms var(--elastic); }
 
-    /* ── Nav ──────────────────── */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      opacity: 0.85;
-      transition: opacity 300ms var(--elastic), transform 300ms var(--elastic);
-      display: inline-block;
-    }
-
-    .nav-links a:hover {
-      opacity: 1;
-      transform: translateY(-2px) scale(1.05);
-    }
-
-    .nav-logo {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    /* ── Primary CTA Button (3D flip with divider) ──── */
+    .btn-main {
       position: relative;
-    }
-
-    .nav-logo-sub {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      opacity: 0.6;
-      display: block;
-      text-align: center;
-    }
-
-    /* ── Buttons ──────────────────── */
-    .btn-tickets {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--green-accent);
-      color: var(--green-dark);
+      align-items: stretch;
+      background: var(--accent);
+      color: #000;
       border: none;
       border-radius: 999px;
-      padding: 10px 24px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      overflow: hidden;
       cursor: pointer;
-      transition: transform 600ms var(--elastic-linear),
-                  box-shadow 300ms ease,
-                  background-color 200ms ease;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      transition: transform 0.75s var(--elastic-linear),
+                  background-color 0.2s var(--ease-color),
+                  box-shadow 0.3s ease;
     }
 
-    .btn-tickets:hover {
-      transform: scale(1.06);
-      box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
-      background: var(--green-bright);
+    .btn-main:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 24px var(--accent-glow);
     }
 
-    .btn-tickets:active {
-      transform: scale(0.95);
+    .btn-main:active {
+      transform: scaleX(0.955) scaleY(0.954);
     }
 
-    .btn-tickets .arrow {
-      display: inline-block;
-      transition: transform 400ms var(--elastic);
+    .btn-main:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }
 
-    .btn-tickets:hover .arrow {
-      transform: translateX(4px);
-    }
-
-    /* ── Hero Section ──────────────────── */
-    .hero {
-      min-height: 100vh;
+    .btn-main__label {
+      position: relative;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      padding: 12px 20px;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .btn-main__divider {
+      width: 1px;
+      background: rgba(0,0,0,0.2);
+      align-self: stretch;
+    }
+
+    .btn-main__icon {
+      display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      padding: 120px 40px 80px;
-      overflow: hidden;
-      background: var(--green-hero);
+      padding: 12px 16px;
     }
 
-    /* Hero title with mixed filled + outlined letters and photo cutouts */
-    .hero-title-wrap {
+    /* 3D flip text inside button */
+    .flip-text {
       position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .hero-title {
-      font-size: clamp(64px, 12vw, 150px);
-      font-weight: 800;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-title .line {
       display: block;
-      position: relative;
-      transition: transform 500ms var(--elastic-out);
-    }
-
-    .hero-title .line:hover {
-      transform: scale(1.03);
-    }
-
-    /* Filled green letters */
-    .letter-filled {
-      color: var(--green-accent);
-      position: relative;
-      display: inline-block;
-    }
-
-    /* Outlined (stroked) letters -- transparent fill, green stroke */
-    .letter-outlined {
-      -webkit-text-stroke: 3px var(--green-accent);
-      color: transparent;
-      position: relative;
-      display: inline-block;
-    }
-
-    /* Photo-filled letters using background-clip */
-    .letter-photo {
-      background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=500&fit=crop');
-      background-size: cover;
-      background-position: center;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-stroke: 0;
-      display: inline-block;
-      position: relative;
-    }
-
-    .letter-photo-2 {
-      background-image: url('https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=500&fit=crop');
-      background-size: cover;
-      background-position: center;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      display: inline-block;
-      position: relative;
-    }
-
-    .letter-photo-3 {
-      background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=500&fit=crop');
-      background-size: cover;
-      background-position: center 30%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      display: inline-block;
-      position: relative;
-    }
-
-    /* Small collage photos that peek out from behind/between letters */
-    .hero-photo-peek {
-      position: absolute;
-      border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
-      z-index: 1;
-      transition: transform 500ms var(--elastic-out);
+      height: 1.3em;
+      line-height: 1.3em;
     }
 
-    .hero-photo-peek img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .flip-text__front,
+    .flip-text__back {
       display: block;
+      transition: transform 0.75s var(--elastic-linear);
+      will-change: transform;
     }
 
-    .hero-title-wrap:hover .hero-photo-peek {
-      transform: scale(1.06);
-    }
-
-    .peek-1 {
-      width: clamp(80px, 10vw, 140px);
-      height: clamp(55px, 7vw, 95px);
-      top: 15%;
-      left: 42%;
-      transform: rotate(-4deg);
-    }
-
-    .peek-2 {
-      width: clamp(70px, 9vw, 120px);
-      height: clamp(50px, 6vw, 85px);
-      top: 10%;
-      left: 58%;
-      transform: rotate(3deg);
-    }
-
-    .peek-3 {
-      width: clamp(65px, 8vw, 110px);
-      height: clamp(45px, 5.5vw, 75px);
-      top: 48%;
-      left: 36%;
-      transform: rotate(-2deg);
-    }
-
-    .hero-title-wrap:hover .peek-1 {
-      transform: rotate(-6deg) scale(1.06) translate(-3px, -3px);
-    }
-    .hero-title-wrap:hover .peek-2 {
-      transform: rotate(5deg) scale(1.06) translate(3px, -2px);
-    }
-    .hero-title-wrap:hover .peek-3 {
-      transform: rotate(1deg) scale(1.06) translate(2px, 3px);
-    }
-
-    /* Pink smiley */
-    .smiley {
-      position: absolute;
-      z-index: 3;
-      transition: transform 600ms var(--elastic-linear);
-      cursor: grab;
-      user-select: none;
-    }
-
-    .smiley:hover {
-      transform: scale(1.2) rotate(15deg);
-    }
-
-    .smiley:active {
-      cursor: grabbing;
-      transform: scale(0.9) rotate(-10deg);
-    }
-
-    .smiley svg {
-      filter: drop-shadow(0 4px 12px rgba(244, 114, 182, 0.4));
-    }
-
-    .smiley-1 {
-      bottom: 32%;
-      right: 14%;
-    }
-
-    .smiley-2 {
-      top: 34%;
-      left: 7%;
-      transform: scale(0.55);
-    }
-
-    /* Decorative doodles */
-    .doodle {
-      position: absolute;
-      z-index: 3;
-      transition: transform 500ms var(--elastic);
-    }
-
-    .doodle:hover {
-      transform: rotate(20deg) scale(1.15);
-    }
-
-    .doodle-star {
-      top: 26%;
-      left: 13%;
-    }
-
-    .doodle-spark {
-      bottom: 34%;
-      left: 20%;
-    }
-
-    /* Hero subtitle */
-    .hero-subtitle {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 1.6;
-      opacity: 0.75;
-      max-width: 420px;
-      z-index: 2;
-    }
-
-    .hero-cta {
-      margin-top: 32px;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .hero-cta .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 999px;
-      padding: 10px 24px;
-      font-weight: 600;
-      font-size: 13px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      cursor: pointer;
-      background: transparent;
-      color: var(--white);
-      font-family: 'Space Grotesk', sans-serif;
-      transition: all 400ms var(--elastic);
-    }
-
-    .hero-cta .btn-outline:hover {
-      border-color: var(--white);
-      transform: scale(1.05);
-      background: rgba(255,255,255,0.08);
-    }
-
-    /* ── 3D Card Flip Section ──────────────────── */
-    .exhibits {
-      padding: 80px 40px 100px;
-      background: var(--green-mid);
-      position: relative;
-    }
-
-    .exhibits-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .exhibits-header h2 {
-      font-size: clamp(36px, 5vw, 56px);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: -0.03em;
-      color: var(--green-accent);
-    }
-
-    .exhibits-header p {
-      margin-top: 12px;
-      font-size: 15px;
-      opacity: 0.7;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 28px;
-      max-width: 1100px;
-      margin: 0 auto;
-      perspective: var(--perspective);
-    }
-
-    .flip-card {
-      height: 380px;
-      cursor: pointer;
-      perspective: var(--perspective);
-    }
-
-    .flip-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 700ms var(--elastic-out);
-      transform-style: preserve-3d;
-    }
-
-    .flip-card:hover .flip-card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .flip-card-front,
-    .flip-card-back {
+    .flip-text__back {
       position: absolute;
       inset: 0;
-      border-radius: 20px;
-      backface-visibility: hidden;
+      transform: translateY(120%) rotateX(-85deg);
+      transform-origin: bottom center;
+    }
+
+    .btn-main:hover .flip-text__front {
+      transform: translateY(-120%) rotateX(85deg);
+      transform-origin: top center;
+    }
+
+    .btn-main:hover .flip-text__back {
+      transform: translateY(0) rotateX(0deg);
+    }
+
+    /* ── Secondary/outline button ───────────────────── */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: stretch;
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.75s var(--elastic-linear),
+                  border-color 0.2s var(--ease-color);
+    }
+
+    .btn-secondary:hover {
+      transform: scale(1.04);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-secondary:active {
+      transform: scaleX(0.955) scaleY(0.954);
+    }
+
+    .btn-secondary__label {
+      padding: 12px 20px;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn-secondary__divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+      transition: background 0.2s ease;
+    }
+
+    .btn-secondary:hover .btn-secondary__divider {
+      background: var(--accent);
+    }
+
+    .btn-secondary__icon {
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px;
-      text-align: center;
+      padding: 12px 16px;
     }
 
-    .flip-card-front {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(8px);
-    }
-
-    .flip-card-front .card-icon {
-      font-size: 56px;
-      margin-bottom: 20px;
-      transition: transform 400ms var(--elastic);
-    }
-
-    .flip-card:hover .card-icon {
-      transform: scale(1.15) rotate(-5deg);
-    }
-
-    .flip-card-front h3 {
-      font-size: 22px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-      margin-bottom: 8px;
-    }
-
-    .flip-card-front p {
-      font-size: 14px;
-      opacity: 0.65;
-      line-height: 1.5;
-    }
-
-    .flip-card-back {
-      background: var(--green-accent);
-      color: var(--green-dark);
-      transform: rotateY(180deg);
-    }
-
-    .flip-card-back h3 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
-
-    .flip-card-back p {
-      font-size: 14px;
-      line-height: 1.6;
-      opacity: 0.85;
-    }
-
-    .flip-card-back .back-cta {
-      margin-top: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 20px;
-      border-radius: 999px;
-      background: var(--green-dark);
-      color: var(--green-accent);
-      font-weight: 700;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      transition: transform 300ms var(--elastic);
-    }
-
-    .flip-card-back .back-cta:hover {
-      transform: scale(1.08);
-    }
-
-    /* ── Ticker ──────────────────── */
-    .ticker-wrap {
-      overflow: hidden;
-      background: var(--green-accent);
-      color: var(--green-dark);
-      padding: 14px 0;
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .ticker {
-      display: inline-flex;
-      animation: ticker-scroll 20s linear infinite;
-    }
-
-    .ticker span {
-      padding: 0 32px;
-      display: inline-flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .ticker span::after {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: var(--green-dark);
-      border-radius: 50%;
-      opacity: 0.5;
-    }
-
-    @keyframes ticker-scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ── Articles Section ──────────────────── */
-    .articles {
-      padding: 80px 40px;
-      background: var(--green-dark);
-    }
-
-    .articles-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .articles-header h2 {
-      font-size: clamp(32px, 4.5vw, 48px);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: -0.03em;
-      color: var(--green-accent);
-    }
-
-    .articles-header p {
-      margin-top: 10px;
-      font-size: 15px;
-      opacity: 0.6;
-    }
-
-    .article-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .article-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+    /* ── Exhibit card ────────────────────────────────── */
+    .exhibit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
-      transition: transform 500ms var(--elastic-out), box-shadow 400ms ease;
+      transition: transform 0.5s var(--elastic),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .exhibit-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border-color: #3a3a3a;
+    }
+
+    .exhibit-card:active {
+      transform: translateY(-2px) scale(0.98);
+    }
+
+    .exhibit-card__img {
+      transition: transform 500ms ease;
+    }
+
+    .exhibit-card:hover .exhibit-card__img {
+      transform: scale(1.1);
+    }
+
+    /* ── Article card ────────────────────────────────── */
+    .article-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 500ms var(--elastic),
+                  box-shadow 300ms ease,
+                  border-color 300ms ease;
       cursor: pointer;
     }
 
     .article-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      border-color: #3a3a3a;
     }
 
-    .article-card-img {
-      width: 100%;
-      height: 180px;
-      background: var(--green-mid);
-      position: relative;
-      overflow: hidden;
+    .article-card__img {
+      transition: transform 500ms ease;
     }
 
-    .article-card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 500ms var(--elastic-out);
-    }
-
-    .article-card:hover .article-card-img img {
+    .article-card:hover .article-card__img {
       transform: scale(1.08);
     }
 
-    .article-card-body {
-      padding: 24px;
-    }
-
-    .article-card-tag {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--green-accent);
-      margin-bottom: 10px;
-    }
-
-    .article-card-body h3 {
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-
-    .article-card-body p {
-      font-size: 14px;
-      opacity: 0.55;
-      line-height: 1.5;
-    }
-
-    /* ── Gallery Slider ──────────────────── */
-    .gallery {
-      padding: 80px 0;
-      background: var(--green-mid);
-      overflow: hidden;
-    }
-
-    .gallery-header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding: 0 40px;
-    }
-
-    .gallery-header h2 {
-      font-size: clamp(32px, 4.5vw, 48px);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: -0.03em;
-      color: var(--green-accent);
-    }
-
-    .gallery-track {
-      display: flex;
-      gap: 20px;
-      animation: gallery-scroll 30s linear infinite;
-      width: max-content;
-    }
-
-    .gallery-track:hover {
-      animation-play-state: paused;
-    }
-
-    .gallery-item {
-      flex-shrink: 0;
-      width: 320px;
-      height: 220px;
-      border-radius: 16px;
-      overflow: hidden;
-      position: relative;
-      transition: transform 500ms var(--elastic-out);
-    }
-
-    .gallery-item:hover {
-      transform: scale(1.05);
-      z-index: 2;
-    }
-
-    .gallery-item img {
+    /* ── Interactive grid canvas ─────────────────────── */
+    #grid-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── Gallery continuous scroll ───────────────────── */
+    .gallery-track {
+      display: flex;
+      gap: 16px;
+      animation: gallery-scroll 40s linear infinite;
     }
 
     @keyframes gallery-scroll {
@@ -727,225 +290,59 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* ── Fun Facts Section ──── */
-    .fun-facts {
-      padding: 100px 40px;
-      background: var(--green-dark);
-      text-align: center;
-      position: relative;
+    .gallery-track:hover { animation-play-state: paused; }
+
+    .gallery-item {
+      flex-shrink: 0;
+      width: 340px;
+      height: 240px;
+      border-radius: 14px;
       overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.45s var(--elastic),
+                  border-color 0.3s ease;
     }
 
-    .fun-facts h2 {
-      font-size: clamp(32px, 5vw, 52px);
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--green-accent);
-      letter-spacing: -0.03em;
-      margin-bottom: 60px;
+    .gallery-item:hover {
+      transform: scale(1.06);
+      border-color: var(--accent);
     }
 
-    .physics-balls {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      flex-wrap: wrap;
-      max-width: 900px;
-      margin: 0 auto;
+    /* ── Navigation ──────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
     }
 
-    .physics-ball {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
+    .nav-bar {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-link {
       font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      transition: transform 600ms var(--elastic-linear),
-                  box-shadow 400ms ease;
-      position: relative;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease, transform 0.3s var(--elastic);
+      display: inline-block;
     }
 
-    .physics-ball:hover {
-      transform: scale(1.12) translateY(-8px);
+    .nav-link:hover {
+      color: var(--text);
+      transform: translateY(-1px);
     }
 
-    .physics-ball:active {
-      transform: scale(0.92);
-    }
-
-    .physics-ball .ball-number {
-      font-size: 42px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .ball-green {
-      background: var(--green-accent);
-      color: var(--green-dark);
-      box-shadow: 0 8px 32px rgba(34, 197, 94, 0.25);
-    }
-    .ball-green:hover {
-      box-shadow: 0 16px 48px rgba(34, 197, 94, 0.35);
-    }
-
-    .ball-pink {
-      background: var(--pink);
-      color: var(--green-dark);
-      box-shadow: 0 8px 32px rgba(244, 114, 182, 0.25);
-    }
-    .ball-pink:hover {
-      box-shadow: 0 16px 48px rgba(244, 114, 182, 0.35);
-    }
-
-    .ball-white {
-      background: var(--white);
-      color: var(--green-dark);
-      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.15);
-    }
-    .ball-white:hover {
-      box-shadow: 0 16px 48px rgba(255, 255, 255, 0.2);
-    }
-
-    .ball-outline {
-      background: transparent;
-      color: var(--white);
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-    .ball-outline:hover {
-      border-color: var(--green-accent);
-      box-shadow: 0 16px 48px rgba(34, 197, 94, 0.15);
-    }
-
-    /* ── Visit Section ──────────────────── */
-    .visit {
-      padding: 100px 40px;
-      background: var(--green-mid);
-      text-align: center;
-      position: relative;
-    }
-
-    .visit h2 {
-      font-size: clamp(40px, 7vw, 80px);
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--white);
-      letter-spacing: -0.03em;
-      line-height: 0.95;
-      margin-bottom: 24px;
-    }
-
-    .visit p {
-      font-size: 16px;
-      opacity: 0.7;
-      max-width: 480px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-    }
-
-    /* ── Footer ──────────────────── */
-    footer {
-      padding: 40px;
-      background: #0c3b1e;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      opacity: 0.5;
-    }
-
-    footer a {
-      transition: opacity 200ms ease;
-    }
-
-    footer a:hover {
-      opacity: 0.8;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      list-style: none;
-    }
-
-    /* ── Animations ──────────────────── */
-    @keyframes elasticFadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-      }
-      60% {
-        opacity: 1;
-        transform: translateY(-8px) scale(1.02);
-      }
-      80% {
-        transform: translateY(3px) scale(0.995);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes elasticScale {
-      0% {
-        opacity: 0;
-        transform: scale(0.6);
-      }
-      50% {
-        transform: scale(1.08);
-      }
-      75% {
-        transform: scale(0.97);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes floatBounce {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-12px) rotate(3deg); }
-      75% { transform: translateY(-6px) rotate(-2deg); }
-    }
-
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(5deg); }
-      50% { transform: rotate(-5deg); }
-      75% { transform: rotate(3deg); }
-    }
-
-    .animate-in {
-      opacity: 0;
-      animation: elasticFadeUp 800ms var(--elastic-out) forwards;
-    }
-
-    .delay-1 { animation-delay: 100ms; }
-    .delay-2 { animation-delay: 200ms; }
-    .delay-3 { animation-delay: 350ms; }
-    .delay-4 { animation-delay: 500ms; }
-    .delay-5 { animation-delay: 650ms; }
-
-    .float { animation: floatBounce 4s ease-in-out infinite; }
-    .float-slow { animation: floatBounce 6s ease-in-out infinite; }
-    .wiggle { animation: wiggle 3s ease-in-out infinite; }
-
-    /* ── Scroll-triggered reveal ──────────────────── */
+    /* ── Scroll-triggered reveal ─────────────────────── */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 600ms ease, transform 700ms var(--elastic-out);
+      transform: translateY(24px);
+      transition: opacity 0.6s ease-out, transform 0.6s var(--elastic);
     }
 
     .reveal.visible {
@@ -953,429 +350,806 @@
       transform: translateY(0);
     }
 
-    /* ── Responsive ──────────────────── */
-    @media (max-width: 768px) {
-      nav { padding: 16px 20px; }
-      .nav-links { display: none; }
-      .hero { padding: 100px 20px 60px; }
-      .hero-title { font-size: clamp(42px, 14vw, 80px); }
-      .letter-outlined { -webkit-text-stroke-width: 1.5px; }
-      .exhibits { padding: 60px 20px 80px; }
-      .card-grid { grid-template-columns: 1fr; }
-      .articles { padding: 60px 20px; }
-      .article-grid { grid-template-columns: 1fr; }
-      .fun-facts { padding: 60px 20px; }
-      .physics-balls { gap: 20px; }
-      .physics-ball { width: 140px; height: 140px; }
-      .physics-ball .ball-number { font-size: 32px; }
-      .visit { padding: 60px 20px; }
-      .gallery { padding: 60px 0; }
-      .gallery-item { width: 260px; height: 180px; }
-      footer { flex-direction: column; gap: 16px; text-align: center; }
-      .smiley-1 { right: 5%; bottom: 22%; }
-      .smiley-2 { left: 2%; }
-      .hero-photo-peek { display: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+
+    /* ── Promo banner ────────────────────────────────── */
+    .promo-banner {
+      animation: banner-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes banner-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    /* ── Pill tag ─────────────────────────────────────── */
+    .pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 14px;
+      color: var(--text-secondary);
+      display: inline-block;
+      transition: all 0.3s var(--elastic);
+    }
+
+    .pill:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      transform: scale(1.08);
+    }
+
+    /* ── Stat number bounce ──────────────────────────── */
+    .stat-number {
+      display: inline-block;
+      transition: transform 0.45s var(--elastic);
+      cursor: default;
+    }
+
+    .stat-number:hover {
+      transform: scale(1.15) rotate(-2deg);
+      color: var(--accent);
+    }
+
+    /* ── Footer links ────────────────────────────────── */
+    .footer-link {
+      color: var(--muted);
+      font-size: 14px;
+      transition: color 0.2s ease, transform 0.3s var(--elastic);
+      display: inline-block;
+    }
+
+    .footer-link:hover {
+      color: var(--text);
+      transform: translateX(4px);
+    }
+
+    /* ── Game section ────────────────────────────────── */
+    .game-area {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Cart badge ───────────────────────────────────── */
+    .cart-btn {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s var(--elastic);
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .cart-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #000;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 767px) {
+      .desktop-only { display: none !important; }
+      .grid-3 { grid-template-columns: 1fr !important; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+      .span-2 { grid-column: span 1 !important; }
+      .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
+  <!-- ── Color Trail Grid Canvas ──────────────────── -->
+  <canvas id="grid-canvas"></canvas>
+
+  <!-- ── Navigation ───────────────────────────────── -->
   <nav>
-    <div class="nav-left">
-      <ul class="nav-links">
-        <li><a href="#exhibits" class="elastic-fast">Exhibits</a></li>
-        <li><a href="#contact" class="elastic-fast">Contact</a></li>
-        <li><a href="#blog" class="elastic-fast">Blog</a></li>
-      </ul>
+    <!-- Promo banner -->
+    <div style="background: var(--accent); color: #000; text-align: center; padding: 7px 16px; font-size: 13px; font-weight: 600;">
+      <span class="promo-banner" style="display: inline-block;">
+        <span class="font-mono" style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;">
+          Last day — 50% off all tickets this weekend
+        </span>
+        <span style="margin-left: 10px; text-decoration: underline; cursor: pointer; font-weight: 500;">Grab yours</span>
+      </span>
     </div>
 
-    <a href="#" class="nav-logo animate-in">
-      FunVault
-      <span class="nav-logo-sub">Interactive Museum</span>
-    </a>
+    <div class="nav-bar">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px;">
+        <!-- Logo -->
+        <a href="#" style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.04em; color: var(--text);">
+            Currency<span style="color: var(--accent);">Lab</span>
+          </span>
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>
+        </a>
 
-    <button class="btn-tickets animate-in delay-2" onclick="document.getElementById('visit').scrollIntoView({behavior:'smooth'})">
-      Book Tickets <span class="arrow">&rarr;</span>
-    </button>
+        <!-- Nav links -->
+        <div style="display: flex; align-items: center; gap: 28px;" class="desktop-only">
+          <a href="#exhibits" class="nav-link">Exhibits</a>
+          <a href="#gallery" class="nav-link">Gallery</a>
+          <a href="#articles" class="nav-link">Money Talks</a>
+          <a href="#visit" class="nav-link">Visit</a>
+        </div>
+
+        <!-- Right actions -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="cart-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="m1 1 4 2 3 12h13l3-8H7"/></svg>
+            <span class="cart-badge">0</span>
+          </button>
+          <button class="btn-main">
+            <span class="btn-main__label">
+              <span class="flip-text">
+                <span class="flip-text__front">Book Tickets</span>
+                <span class="flip-text__back">Let's Go!</span>
+              </span>
+            </span>
+            <span class="btn-main__divider"></span>
+            <span class="btn-main__icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7M17 7H7M17 7v10"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <!-- Decorative doodle: star scribble -->
-    <div class="doodle doodle-star float animate-in delay-3">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <path d="M24 4L28 18H42L30.5 27L34.5 42L24 32L13.5 42L17.5 27L6 18H20L24 4Z" stroke="#22c55e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
 
-    <!-- Decorative doodle: spark -->
-    <div class="doodle doodle-spark wiggle animate-in delay-4">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-        <path d="M18 2V34M2 18H34M6 6L30 30M30 6L6 30" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </div>
+  <!-- ── Hero Section ─────────────────────────────── -->
+  <section style="padding-top: 130px; position: relative; z-index: 1;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
 
-    <div class="hero-title-wrap animate-in delay-1">
-      <!-- Photo cutouts peeking between/behind letters -->
-      <div class="hero-photo-peek peek-1">
-        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=280&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="hero-photo-peek peek-2">
-        <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=400&h=280&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="hero-photo-peek peek-3">
-        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=280&fit=crop" alt="" loading="lazy">
+      <div class="reveal" style="margin-bottom: 20px;">
+        <span class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);">
+          The city's most interactive museum
+        </span>
       </div>
 
-      <!-- Title: mix of filled, outlined, and photo-clipped letters -->
-      <div class="hero-title">
-        <span class="line"><span class="letter-outlined">W</span><span class="letter-outlined">E</span> <span class="letter-filled">P</span><span class="letter-photo">U</span><span class="letter-filled">T</span> <span class="letter-photo-2">F</span><span class="letter-filled">U</span><span class="letter-outlined">N</span></span>
-        <span class="line"><span class="letter-photo-3">I</span><span class="letter-outlined">N</span> <span class="letter-filled">F</span><span class="letter-photo">U</span><span class="letter-outlined">N</span><span class="letter-filled">D</span></span>
+      <h1 class="reveal reveal-delay-1" style="font-size: clamp(56px, 11vw, 140px); margin: 0 0 28px; max-width: 12ch; line-height: 0.9;">
+        WE PUT<br><span style="color: var(--accent);">FUN</span> IN FUND
+      </h1>
+
+      <p class="reveal reveal-delay-2" style="font-size: 17px; line-height: 1.65; color: var(--text-secondary); max-width: 46ch; margin: 0 0 36px;">
+        Crack the laser maze, snap unreal photos, and discover the city's most playful money experience. 40,000 sq ft of hands-on financial fun.
+      </p>
+
+      <!-- CTA buttons with 3D flip dividers -->
+      <div class="reveal reveal-delay-3" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button class="btn-main" style="font-size: 15px;">
+          <span class="btn-main__label" style="padding: 14px 24px;">
+            <span class="flip-text">
+              <span class="flip-text__front">Get Tickets — $24</span>
+              <span class="flip-text__back">Book Now</span>
+            </span>
+          </span>
+          <span class="btn-main__divider"></span>
+          <span class="btn-main__icon" style="padding: 14px 18px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7M17 7H7M17 7v10"/></svg>
+          </span>
+        </button>
+
+        <button class="btn-secondary" style="font-size: 15px;">
+          <span class="btn-secondary__label" style="padding: 14px 24px;">
+            <span class="flip-text">
+              <span class="flip-text__front">Watch Trailer</span>
+              <span class="flip-text__back">Play Video</span>
+            </span>
+          </span>
+          <span class="btn-secondary__divider"></span>
+          <span class="btn-secondary__icon" style="padding: 14px 18px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 20,12 8,19"/></svg>
+          </span>
+        </button>
       </div>
     </div>
 
-    <!-- Pink smiley face -->
-    <div class="smiley smiley-1 animate-in delay-4" id="smiley1">
-      <svg width="72" height="72" viewBox="0 0 72 72">
-        <circle cx="36" cy="36" r="34" fill="#f472b6"/>
-        <circle cx="26" cy="28" r="4" fill="#14532d"/>
-        <circle cx="46" cy="28" r="4" fill="#14532d"/>
-        <path d="M22 42C22 42 28 52 36 52C44 52 50 42 50 42" stroke="#14532d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-      </svg>
-    </div>
-
-    <div class="smiley smiley-2 float-slow animate-in delay-5" id="smiley2">
-      <svg width="72" height="72" viewBox="0 0 72 72">
-        <circle cx="36" cy="36" r="34" fill="#f472b6" opacity="0.7"/>
-        <circle cx="26" cy="28" r="4" fill="#14532d"/>
-        <circle cx="46" cy="28" r="4" fill="#14532d"/>
-        <path d="M22 42C22 42 28 52 36 52C44 52 50 42 50 42" stroke="#14532d" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-      </svg>
-    </div>
-
-    <p class="hero-subtitle animate-in delay-3">
-      Crack the laser maze, snap unreal photos, and discover the world's most playful money experience.
-    </p>
-
-    <div class="hero-cta animate-in delay-4">
-      <button class="btn-tickets" onclick="document.getElementById('visit').scrollIntoView({behavior:'smooth'})">
-        Book Tickets <span class="arrow">&rarr;</span>
-      </button>
-      <button class="btn-outline elastic" onclick="document.getElementById('exhibits').scrollIntoView({behavior:'smooth'})">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 5.5L8.5 8.5M8.5 5.5L5.5 8.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-        Explore
-      </button>
-    </div>
-  </section>
-
-  <!-- Ticker -->
-  <div class="ticker-wrap" aria-hidden="true">
-    <div class="ticker">
-      <span>Open Daily 10am - 8pm</span>
-      <span>Free Entry Under 12</span>
-      <span>New Laser Maze Open</span>
-      <span>Gift Shop Now Stocked</span>
-      <span>Party Bookings Available</span>
-      <span>Interactive Workshops</span>
-      <span>Open Daily 10am - 8pm</span>
-      <span>Free Entry Under 12</span>
-      <span>New Laser Maze Open</span>
-      <span>Gift Shop Now Stocked</span>
-      <span>Party Bookings Available</span>
-      <span>Interactive Workshops</span>
-    </div>
-  </div>
-
-  <!-- Exhibits with 3D Card Flips -->
-  <section class="exhibits" id="exhibits">
-    <div class="exhibits-header reveal">
-      <h2>Our Exhibits</h2>
-      <p>Hover to discover what's inside each experience</p>
-    </div>
-
-    <div class="card-grid">
-      <div class="flip-card reveal">
-        <div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="card-icon">&#x1F4B0;</div>
-            <h3>Vault of Wonders</h3>
-            <p>Step inside a real bank vault filled with interactive money displays</p>
+    <!-- Hero video placeholder -->
+    <div class="reveal reveal-delay-4" style="max-width: 1200px; margin: 48px auto 0; padding: 0 24px;">
+      <div style="width: 100%; aspect-ratio: 16/9; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; position: relative;">
+        <img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=1200&q=80&fit=crop" alt="Museum interior with dramatic lighting" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;" />
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; background: rgba(10,10,10,0.45);">
+          <div class="elastic" style="width: 80px; height: 80px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 40px var(--accent-glow);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#000"><polygon points="9,5 20,12 9,19"/></svg>
           </div>
-          <div class="flip-card-back">
-            <h3>Inside the Vault</h3>
-            <p>Touch screens reveal the history behind every bill. Feel the weight of a gold bar. Watch holographic currency come alive around you.</p>
-            <a href="#" class="back-cta">Learn More &rarr;</a>
-          </div>
+          <span class="font-mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);">Museum Experience — 2:34</span>
         </div>
-      </div>
-
-      <div class="flip-card reveal">
-        <div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="card-icon">&#x1F525;</div>
-            <h3>Laser Maze</h3>
-            <p>Navigate laser beams to crack the vault in record time</p>
-          </div>
-          <div class="flip-card-back">
-            <h3>Beat the Clock</h3>
-            <p>Dodge, duck, and weave through a web of green lasers. Your time goes on the leaderboard. The top 3 each month win real prizes.</p>
-            <a href="#" class="back-cta">Learn More &rarr;</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="flip-card reveal">
-        <div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="card-icon">&#x1F4F8;</div>
-            <h3>Photo Lab</h3>
-            <p>Snap pics in money-themed sets and take home custom prints</p>
-          </div>
-          <div class="flip-card-back">
-            <h3>Strike a Pose</h3>
-            <p>From the money rain booth to the golden bathtub, every corner is a photo op. AI-powered filters make your shots gallery-worthy.</p>
-            <a href="#" class="back-cta">Learn More &rarr;</a>
-          </div>
-        </div>
+        <!-- Subtle grid overlay -->
+        <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 48px 48px;"></div>
       </div>
     </div>
   </section>
 
-  <!-- Articles -->
-  <section class="articles" id="blog">
-    <div class="articles-header reveal">
-      <h2>Money Talks</h2>
-      <p>Stories from behind the vault doors</p>
-    </div>
 
-    <div class="article-grid">
-      <div class="article-card reveal">
-        <div class="article-card-img">
-          <img src="https://images.unsplash.com/photo-1621981386829-9b458a9f7dfd?w=500&h=300&fit=crop" alt="" loading="lazy">
+  <!-- ── Exhibits Section ─────────────────────────── -->
+  <section id="exhibits" style="padding: 96px 0; position: relative; z-index: 1;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+      <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">What's Inside</span>
+          <h2 style="font-size: clamp(36px, 6vw, 64px); margin: 8px 0 0;">Featured Exhibits</h2>
         </div>
-        <div class="article-card-body">
-          <div class="article-card-tag">Behind the Scenes</div>
-          <h3>How We Built the World's Largest Penny Floor</h3>
-          <p>Over 42,000 pennies, hand-placed in a hypnotic spiral pattern.</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="pill">Interactive</span>
+          <span class="pill">Hands-on</span>
+          <span class="pill">All Ages</span>
         </div>
       </div>
 
-      <div class="article-card reveal">
-        <div class="article-card-img">
-          <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=500&h=300&fit=crop" alt="" loading="lazy">
-        </div>
-        <div class="article-card-body">
-          <div class="article-card-tag">Events</div>
-          <h3>Summer Night Markets Return This June</h3>
-          <p>Food trucks, live music, and late-night vault tours every Friday.</p>
-        </div>
-      </div>
+      <!-- Exhibit grid -->
+      <div class="grid-3 reveal reveal-delay-1" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
 
-      <div class="article-card reveal">
-        <div class="article-card-img">
-          <img src="https://images.unsplash.com/photo-1553729459-uj8grdc0cvda?w=500&h=300&fit=crop" alt="" loading="lazy">
+        <!-- Featured exhibit — spans 2 cols + 2 rows -->
+        <div class="exhibit-card span-2" style="grid-column: span 2; grid-row: span 2;">
+          <div style="position: relative; min-height: 440px; padding: 36px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden;">
+            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&q=80&fit=crop" alt="Stock trading floor with live charts" loading="lazy" class="exhibit-card__img" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(160deg, rgba(13,40,24,0.85) 0%, rgba(10,31,20,0.75) 40%, rgba(20,20,20,0.9) 100%);"></div>
+            <!-- Floating accent circles -->
+            <div style="position: absolute; top: 28px; right: 28px; display: flex; gap: 6px; z-index: 1;">
+              <div class="elastic" style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent); opacity: 0.12;"></div>
+              <div class="elastic" style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent); opacity: 0.2;"></div>
+              <div class="elastic" style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent); opacity: 0.35;"></div>
+            </div>
+            <!-- Featured badge -->
+            <div style="position: absolute; top: 28px; left: 28px; z-index: 1;">
+              <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #000; background: var(--accent); padding: 4px 12px; border-radius: 999px; font-weight: 600;">Featured</span>
+            </div>
+            <h3 style="font-size: 30px; margin: 0 0 10px; position: relative; z-index: 1;">Dex Diamondhands</h3>
+            <p style="font-size: 15px; line-height: 1.6; color: var(--text-secondary); max-width: 40ch; margin: 0 0 20px; position: relative; z-index: 1;">
+              Test your nerve in a live simulated trading floor. Hold or fold — your call.
+            </p>
+            <div style="display: flex; gap: 8px; position: relative; z-index: 1;">
+              <span class="pill" style="font-size: 10px;">Trading</span>
+              <span class="pill" style="font-size: 10px;">Simulation</span>
+            </div>
+          </div>
         </div>
-        <div class="article-card-body">
-          <div class="article-card-tag">Education</div>
-          <h3>Teaching Kids About Money Through Play</h3>
-          <p>Our new workshop series turns financial literacy into a game.</p>
+
+        <!-- Exhibit 2 -->
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 120px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?w=600&h=400&q=80&fit=crop" alt="Dollar bills spread out" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(254, 243, 199, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(254, 243, 199, 0.2);">&#x1f3a8;</div>
+            <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Currency Designer</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Design your own banknote with pro tools.</p>
+          </div>
+        </div>
+
+        <!-- Exhibit 3 -->
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 120px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=600&h=400&q=80&fit=crop" alt="Interactive museum exhibit" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(254, 226, 226, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(254, 226, 226, 0.2);">&#x1f514;</div>
+            <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Bull vs Bear Bell Bash</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Ring the opening bell in a frenzy of market chaos.</p>
+          </div>
+        </div>
+
+        <!-- Exhibit 4 -->
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 100px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Stacked coins close-up" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(237, 233, 254, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(237, 233, 254, 0.2);">&#x1f4a1;</div>
+            <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Penny Thinkers</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Philosophy meets finance. Big ideas, small change.</p>
+          </div>
+        </div>
+
+        <!-- Exhibit 5 -->
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 100px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins collection" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(219, 234, 254, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(219, 234, 254, 0.2);">&#x1f4b0;</div>
+            <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Cash Shower Splash</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Step into a tornado of flying bills. Grab what you can.</p>
+          </div>
+        </div>
+
+        <!-- Exhibit 6 -->
+        <div class="exhibit-card" style="overflow: hidden;">
+          <div style="height: 100px; overflow: hidden;"><img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&q=80&fit=crop" alt="Bitcoin and digital currency" loading="lazy" class="exhibit-card__img" style="width: 100%; height: 100%; object-fit: cover;" /></div>
+          <div style="padding: 28px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--accent-glow); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; border: 1px solid rgba(34, 197, 94, 0.2);">&#x1f916;</div>
+            <h3 style="font-size: 19px; margin: 0 0 6px; letter-spacing: -0.02em;">Ask MoAI</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Chat with our AI about anything money. It knows things.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Gallery Slider -->
-  <section class="gallery">
-    <div class="gallery-header reveal">
-      <h2>Gallery</h2>
+
+  <!-- ── Gallery Slider ───────────────────────────── -->
+  <section id="gallery" style="padding: 80px 0; position: relative; z-index: 1; overflow: hidden;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px 40px;">
+      <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">Once Upon a Dime</span>
+          <h2 style="font-size: clamp(32px, 5vw, 56px); margin: 8px 0 0;">Gallery</h2>
+        </div>
+        <span class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase;">Hover to pause</span>
+      </div>
     </div>
-    <div class="gallery-track">
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1621981386829-9b458a9f7dfd?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1621981386829-9b458a9f7dfd?w=640&h=440&fit=crop" alt="" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=640&h=440&fit=crop" alt="" loading="lazy">
+
+    <div style="overflow: hidden;" class="reveal reveal-delay-1">
+      <div class="gallery-track">
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=600&h=400&q=80&fit=crop" alt="Museum interior" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Coin stack" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?w=600&h=400&q=80&fit=crop" alt="Dollar bills" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&q=80&fit=crop" alt="Bitcoin digital currency" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1542222024-c39e2281f121?w=600&h=400&q=80&fit=crop" alt="Dark museum hall" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <!-- Duplicates for seamless loop -->
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=600&h=400&q=80&fit=crop" alt="Museum interior" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Coin stack" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621981386829-9b458a2cddde?w=600&h=400&q=80&fit=crop" alt="Dollar bills" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&q=80&fit=crop" alt="Bitcoin digital currency" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1542222024-c39e2281f121?w=600&h=400&q=80&fit=crop" alt="Dark museum hall" loading="lazy" style="width:100%;height:100%;object-fit:cover;" /></div>
       </div>
     </div>
   </section>
 
-  <!-- Fun Facts with Physics Balls -->
-  <section class="fun-facts">
-    <h2 class="reveal">Fun Facts</h2>
 
-    <div class="physics-balls">
-      <div class="physics-ball ball-green reveal" id="ball1">
-        <span class="ball-number">50K+</span>
-        <span>Visitors</span>
-      </div>
-      <div class="physics-ball ball-pink reveal" id="ball2">
-        <span class="ball-number">12</span>
-        <span>Exhibits</span>
-      </div>
-      <div class="physics-ball ball-white reveal" id="ball3">
-        <span class="ball-number">4.9</span>
-        <span>Rating</span>
-      </div>
-      <div class="physics-ball ball-outline reveal" id="ball4">
-        <span class="ball-number">#1</span>
-        <span>Attraction</span>
+  <!-- ── Cash Cascade Game Section ─────────────────── -->
+  <section style="padding: 0 0 96px; position: relative; z-index: 1;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+      <div class="reveal">
+        <div class="game-area" style="padding: 48px; display: flex; align-items: center; gap: 48px; flex-wrap: wrap;">
+          <!-- Game preview -->
+          <div style="flex: 1; min-width: 280px;">
+            <div style="width: 100%; aspect-ratio: 4/3; border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; position: relative; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1553729459-afe8f2e2ed65?w=600&h=400&q=80&fit=crop" alt="Piggy bank savings" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+              <div style="position: absolute; inset: 0; background: linear-gradient(160deg, rgba(13,40,24,0.7), rgba(20,20,20,0.8));"></div>
+              <!-- Game placeholder coins -->
+              <div style="position: absolute; top: 20%; left: 20%; width: 32px; height: 32px; border-radius: 50%; background: #fbbf24; opacity: 0.6; animation: float 3s ease-in-out infinite;"></div>
+              <div style="position: absolute; top: 35%; right: 25%; width: 24px; height: 24px; border-radius: 50%; background: #fbbf24; opacity: 0.4; animation: float 3s ease-in-out 0.5s infinite;"></div>
+              <div style="position: absolute; bottom: 30%; left: 35%; width: 28px; height: 28px; border-radius: 50%; background: #fbbf24; opacity: 0.5; animation: float 3s ease-in-out 1s infinite;"></div>
+              <span style="font-size: 56px; opacity: 0.5; position: relative; z-index: 1;">&#x1f416;</span>
+              <span class="font-mono" style="font-size: 11px; color: var(--text-secondary); letter-spacing: 0.08em; text-transform: uppercase; position: relative; z-index: 1;">Tap to Play</span>
+            </div>
+          </div>
+
+          <style>
+            @keyframes float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-12px); }
+            }
+          </style>
+
+          <!-- Game info -->
+          <div style="flex: 1; min-width: 280px;">
+            <span class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">Play Now</span>
+            <h2 style="font-size: clamp(28px, 4vw, 44px); margin: 0 0 16px;">Cash Cascade</h2>
+            <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.65; margin: 0 0 12px;">
+              Catch falling coins, dodge the debts, beat the high score. Our most addictive exhibit — now playable online.
+            </p>
+            <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+              <div>
+                <span class="stat-number" style="font-size: 28px; font-weight: 700;">2.1M</span>
+                <p class="font-mono" style="font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px;">Games Played</p>
+              </div>
+              <div>
+                <span class="stat-number" style="font-size: 28px; font-weight: 700;">847K</span>
+                <p class="font-mono" style="font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px;">High Score</p>
+              </div>
+            </div>
+            <button class="btn-main">
+              <span class="btn-main__label">
+                <span class="flip-text">
+                  <span class="flip-text__front">Play Cash Cascade</span>
+                  <span class="flip-text__back">Start Game</span>
+                </span>
+              </span>
+              <span class="btn-main__divider"></span>
+              <span class="btn-main__icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 20,12 8,19"/></svg>
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Visit / CTA Section -->
-  <section class="visit" id="visit">
-    <h2 class="reveal">Come Play<br>With Money</h2>
-    <p class="reveal">The most fun you'll have learning about finance. Seriously. We checked.</p>
-    <button class="btn-tickets reveal" style="font-size:16px; padding:14px 36px;">
-      Book Tickets <span class="arrow">&rarr;</span>
-    </button>
+
+  <!-- ── Articles / Money Talks ───────────────────── -->
+  <section id="articles" style="padding: 80px 0; position: relative; z-index: 1; border-top: 1px solid var(--border);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+      <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">Blog</span>
+          <h2 style="font-size: clamp(32px, 5vw, 56px); margin: 8px 0 0;">Money Talks</h2>
+        </div>
+        <a href="#" class="nav-link" style="font-weight: 600; color: var(--accent);">View all posts &#x2192;</a>
+      </div>
+
+      <div class="grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+
+        <!-- Article 1 — featured -->
+        <div class="article-card span-2 reveal reveal-delay-1" style="grid-column: span 2;">
+          <div style="overflow: hidden;">
+            <div class="article-card__img" style="width: 100%; height: 220px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1542222024-c39e2281f121?w=600&h=400&q=80&fit=crop" alt="Museum in the dark" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </div>
+          <div style="padding: 24px 28px 28px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+              <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);">Story</span>
+              <span class="font-mono" style="font-size: 10px; color: var(--muted);">3.15.26</span>
+            </div>
+            <h3 style="font-size: 21px; margin: 0 0 8px; font-weight: 700; letter-spacing: -0.02em;">Why We Built a Museum That Doesn't Take Itself Seriously</h3>
+            <p style="font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.6;">The origin story of CurrencyLab — from a napkin sketch at a diner to a 40,000 sq ft playground for the financially curious.</p>
+          </div>
+        </div>
+
+        <!-- Article 2 -->
+        <div class="article-card reveal reveal-delay-2">
+          <div style="overflow: hidden;">
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1554672723-b208dc85134f?w=600&h=400&q=80&fit=crop" alt="Gold coins collection" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </div>
+          <div style="padding: 20px 24px 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);">History</span>
+              <span class="font-mono" style="font-size: 10px; color: var(--muted);">2.28.26</span>
+            </div>
+            <h3 style="font-size: 17px; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.02em;">The World's Weirdest Currencies</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">From giant stone discs to parmesan cheese.</p>
+          </div>
+        </div>
+
+        <!-- Article 3 -->
+        <div class="article-card reveal reveal-delay-3">
+          <div style="overflow: hidden;">
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=600&h=400&q=80&fit=crop" alt="Interactive exhibit display" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </div>
+          <div style="padding: 20px 24px 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);">Behind the Scenes</span>
+              <span class="font-mono" style="font-size: 10px; color: var(--muted);">2.14.26</span>
+            </div>
+            <h3 style="font-size: 17px; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.02em;">How We Built Cash Cascade</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">The physics engine behind our most addictive game.</p>
+          </div>
+        </div>
+
+        <!-- Article 4 -->
+        <div class="article-card reveal reveal-delay-3">
+          <div style="overflow: hidden;">
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&q=80&fit=crop" alt="Stock market trading charts" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </div>
+          <div style="padding: 20px 24px 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);">Education</span>
+              <span class="font-mono" style="font-size: 10px; color: var(--muted);">1.28.26</span>
+            </div>
+            <h3 style="font-size: 17px; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.02em;">Teaching Kids About Money (Without Boring Them)</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Our school program reaches 12,000 students annually.</p>
+          </div>
+        </div>
+
+        <!-- Article 5 -->
+        <div class="article-card reveal reveal-delay-4">
+          <div style="overflow: hidden;">
+            <div class="article-card__img" style="width: 100%; height: 150px; overflow: hidden;">
+              <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&q=80&fit=crop" alt="Stacked coins" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </div>
+          <div style="padding: 20px 24px 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <span class="font-mono" style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);">Exhibit</span>
+              <span class="font-mono" style="font-size: 10px; color: var(--muted);">1.10.26</span>
+            </div>
+            <h3 style="font-size: 17px; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.02em;">New: Hoard of Gold Opens March 2026</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Touch real gold bars in our most Instagrammable room yet.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Footer -->
-  <footer id="contact">
-    <span>&copy; 2026 FunVault. All rights reserved.</span>
-    <ul class="footer-links">
-      <li><a href="#">Privacy</a></li>
-      <li><a href="#">Terms</a></li>
-      <li><a href="#">Instagram</a></li>
-      <li><a href="#">TikTok</a></li>
-    </ul>
+
+  <!-- ── Visit Info ───────────────────────────────── -->
+  <section id="visit" style="padding: 96px 0; position: relative; z-index: 1; border-top: 1px solid var(--border);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+      <div class="reveal" style="text-align: center; margin-bottom: 56px;">
+        <span class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">Plan Your Visit</span>
+        <h2 style="font-size: clamp(36px, 6vw, 64px); margin: 8px 0 0;">Come Play With Money</h2>
+      </div>
+
+      <!-- Stats row -->
+      <div class="grid-4 reveal reveal-delay-1" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 56px; text-align: center;">
+        <div>
+          <span class="stat-number" style="font-size: 48px; font-weight: 700;">40K</span>
+          <p class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px;">Sq Ft</p>
+        </div>
+        <div>
+          <span class="stat-number" style="font-size: 48px; font-weight: 700;">22</span>
+          <p class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px;">Exhibits</p>
+        </div>
+        <div>
+          <span class="stat-number" style="font-size: 48px; font-weight: 700;">4.8</span>
+          <p class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px;">Rating</p>
+        </div>
+        <div>
+          <span class="stat-number" style="font-size: 48px; font-weight: 700;">500K+</span>
+          <p class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px;">Visitors / Year</p>
+        </div>
+      </div>
+
+      <!-- Info cards -->
+      <div class="grid-3 reveal reveal-delay-2" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+
+        <!-- Location -->
+        <div class="exhibit-card" style="padding: 32px;">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 style="font-size: 19px; margin: 0 0 8px; letter-spacing: -0.02em;">Find Us</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 16px;">
+            86 Chambers Street<br>New York, NY 10007
+          </p>
+          <a href="#" class="font-mono" style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);">Get Directions &#x2192;</a>
+        </div>
+
+        <!-- Hours -->
+        <div class="exhibit-card" style="padding: 32px;">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3 style="font-size: 19px; margin: 0 0 8px; letter-spacing: -0.02em;">Hours</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin: 0;">
+            Mon — Thu: 10am — 8pm<br>
+            Fri — Sat: 10am — 9pm<br>
+            Sunday: 10am — 7pm
+          </p>
+        </div>
+
+        <!-- Tickets -->
+        <div class="exhibit-card" style="padding: 32px; background: linear-gradient(160deg, #0d2818, var(--bg-card)); border-color: rgba(34, 197, 94, 0.2);">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <h3 style="font-size: 19px; margin: 0 0 8px; letter-spacing: -0.02em;">Tickets</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 20px;">
+            Adults: $24 | Kids (5–12): $16<br>
+            Under 5: Free
+          </p>
+          <button class="btn-main" style="width: 100%;">
+            <span class="btn-main__label" style="flex: 1; justify-content: center;">
+              <span class="flip-text">
+                <span class="flip-text__front">Book Now</span>
+                <span class="flip-text__back">Let's Go!</span>
+              </span>
+            </span>
+            <span class="btn-main__divider"></span>
+            <span class="btn-main__icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17 17 7M17 7H7M17 7v10"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── Footer ───────────────────────────────────── -->
+  <footer style="border-top: 1px solid var(--border); padding: 64px 0 32px; position: relative; z-index: 1;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+      <div class="footer-grid" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px; margin-bottom: 56px;">
+
+        <!-- Brand -->
+        <div>
+          <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.04em; display: block; margin-bottom: 16px;">
+            Currency<span style="color: var(--accent);">Lab</span>
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 2px;"></span>
+          </span>
+          <p style="font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 30ch; margin: 0 0 24px;">
+            The city's most interactive money museum. 40,000 sq ft of hands-on financial fun for all ages.
+          </p>
+          <!-- Social -->
+          <div style="display: flex; gap: 10px;">
+            <a href="#" class="cart-btn" style="width: 34px; height: 34px; font-size: 13px; font-weight: 600;">f</a>
+            <a href="#" class="cart-btn" style="width: 34px; height: 34px; font-size: 11px; font-weight: 600;">ig</a>
+            <a href="#" class="cart-btn" style="width: 34px; height: 34px; font-size: 11px; font-weight: 600;">yt</a>
+            <a href="#" class="cart-btn" style="width: 34px; height: 34px; font-size: 11px; font-weight: 600;">tk</a>
+          </div>
+        </div>
+
+        <!-- Explore -->
+        <div>
+          <h3 class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 20px; font-weight: 500;">Explore</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="#" class="footer-link">Exhibits</a>
+            <a href="#" class="footer-link">Events</a>
+            <a href="#" class="footer-link">Money Lab</a>
+            <a href="#" class="footer-link">Gift Shop</a>
+            <a href="#" class="footer-link">Blog</a>
+          </div>
+        </div>
+
+        <!-- Support -->
+        <div>
+          <h3 class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 20px; font-weight: 500;">Support</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="#" class="footer-link">Contact</a>
+            <a href="#" class="footer-link">FAQ</a>
+            <a href="#" class="footer-link">About</a>
+            <a href="#" class="footer-link">Careers</a>
+            <a href="#" class="footer-link">Legal</a>
+          </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div>
+          <h3 class="font-mono" style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 20px; font-weight: 500;">Stay in the loop</h3>
+          <p style="font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0 0 16px;">Get exhibit updates, event invites, and the occasional money fact.</p>
+          <div style="display: flex; gap: 8px;">
+            <input type="email" placeholder="your@email.com"
+              style="flex: 1; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 999px; padding: 10px 18px; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s ease; min-width: 0;"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='var(--border)'">
+            <button class="btn-main" style="font-size: 13px; flex-shrink: 0;">
+              <span class="btn-main__label" style="padding: 10px 18px;">Join</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div style="border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <span class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.04em;">
+          &copy; 2026 The Currency Lab. All rights reserved.
+        </span>
+        <span class="font-mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.04em;">
+          Made with elastic energy in NYC
+        </span>
+      </div>
+    </div>
   </footer>
 
+
+  <!-- ── Scripts ──────────────────────────────────── -->
   <script>
-    // ── Scroll-triggered reveal ──────────────────
-    const reveals = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
+    // Color-trail grid (mouse-tracking green squares)
+    (function() {
+      const canvas = document.getElementById('grid-canvas');
+      const ctx = canvas.getContext('2d');
+      const isMobile = window.matchMedia('(pointer: coarse)').matches;
+
+      if (isMobile) {
+        canvas.style.display = 'none';
+        return;
+      }
+
+      const cols = 36;
+      let squareSize, rows;
+      const blocks = [];
+      const trail = [];
+      const trailMax = 8;
+      const opacities = [0.18, 0.14, 0.11, 0.08, 0.06, 0.04, 0.03, 0.02];
+
+      let resizeTimer;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = document.documentElement.scrollHeight;
+        squareSize = canvas.width / cols;
+        rows = Math.ceil(canvas.height / squareSize);
+
+        blocks.length = 0;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            blocks.push({ x: c * squareSize, y: r * squareSize, col: c, row: r, alpha: 0, target: 0 });
+          }
+        }
+      }
+
+      resize();
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resize, 200);
+      });
+
+      const accent = { r: 34, g: 197, b: 94 };
+
+      document.addEventListener('mousemove', (e) => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const col = Math.floor(e.clientX / squareSize);
+        const row = Math.floor((e.clientY + scrollY) / squareSize);
+        const key = `${col}-${row}`;
+
+        if (trail.length === 0 || trail[trail.length - 1] !== key) {
+          trail.push(key);
+          if (trail.length > trailMax) trail.shift();
+        }
+
+        for (let i = 0; i < trail.length; i++) {
+          const [tc, tr] = trail[i].split('-').map(Number);
+          const block = blocks.find(b => b.col === tc && b.row === tr);
+          if (block) {
+            block.target = opacities[trail.length - 1 - i] || 0;
+          }
         }
       });
-    }, { threshold: 0.15 });
 
-    reveals.forEach(el => revealObserver.observe(el));
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // ── Physics-style ball drag ──────────────────
-    const balls = document.querySelectorAll('.physics-ball');
-    balls.forEach(ball => {
-      let isDragging = false;
-      let startX, startY;
+        for (const b of blocks) {
+          b.alpha += (b.target - b.alpha) * 0.08;
+          if (b.alpha > 0.005) {
+            ctx.fillStyle = `rgba(${accent.r},${accent.g},${accent.b},${b.alpha})`;
+            ctx.fillRect(b.x + 1, b.y + 1, squareSize - 2, squareSize - 2);
+          }
+          // Decay target
+          b.target *= 0.97;
+        }
 
-      ball.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        ball.style.transition = 'none';
-        ball.style.zIndex = '10';
-        e.preventDefault();
-      });
-
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        ball.style.transform = `translate(${dx}px, ${dy}px) scale(1.08)`;
-      });
-
-      document.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        ball.style.transition = 'transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-        ball.style.transform = 'translate(0, 0) scale(1)';
-        ball.style.zIndex = '';
-      });
-    });
-
-    // ── Smiley drag interaction ──────────────────
-    document.querySelectorAll('.smiley').forEach(smiley => {
-      let isDragging = false;
-      let startX, startY;
-
-      smiley.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        smiley.style.transition = 'none';
-        e.preventDefault();
-      });
-
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        const rotate = dx * 0.3;
-        smiley.style.transform = `translate(${dx}px, ${dy}px) rotate(${rotate}deg) scale(1.1)`;
-      });
-
-      document.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        smiley.style.transition = 'transform 1000ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-        smiley.style.transform = '';
-      });
-    });
-
-    // ── Hero parallax on mouse move ──────────────────
-    const hero = document.querySelector('.hero');
-    hero.addEventListener('mousemove', (e) => {
-      const rect = hero.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-      const peeks = hero.querySelectorAll('.hero-photo-peek');
-      peeks.forEach((c, i) => {
-        const depth = (i + 1) * 8;
-        c.style.transform = `translate(${x * depth}px, ${y * depth}px) rotate(${x * 3 - i * 3}deg)`;
-      });
-
-      const doodles = hero.querySelectorAll('.doodle');
-      doodles.forEach((d, i) => {
-        const depth = (i + 1) * 12;
-        d.style.transform += ` translate(${x * depth}px, ${y * depth}px)`;
-      });
-    });
-
-    // ── Elastic nav hide/show on scroll ──────────────────
-    let lastScroll = 0;
-    const navEl = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.scrollY;
-      if (currentScroll > lastScroll && currentScroll > 100) {
-        navEl.style.transform = 'translateY(-100%)';
-        navEl.style.transition = 'transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-      } else {
-        navEl.style.transform = 'translateY(0)';
-        navEl.style.transition = 'transform 500ms cubic-bezier(0.22, 1.2, 0.36, 1)';
+        requestAnimationFrame(draw);
       }
-      lastScroll = currentScroll;
-    }, { passive: true });
+
+      draw();
+    })();
+
+    // Scroll-reveal observer
+    (function() {
+      const els = document.querySelectorAll('.reveal');
+      if (!els.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      els.forEach(el => observer.observe(el));
+    })();
   </script>
+
 </body>
 </html>

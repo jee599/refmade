@@ -310,7 +310,7 @@ function TerminalBlock({ isVisible }: { isVisible: boolean }) {
         <span className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
         <span className={`ml-2 text-xs text-zinc-600 ${MONO}`}>refmade</span>
       </div>
-      <div className={`space-y-1 overflow-hidden p-4 text-xs leading-relaxed ${MONO}`} style={{ height: "220px" }}>
+      <div className={`space-y-1 p-4 text-xs leading-relaxed ${MONO}`} style={{ minHeight: "180px" }}>
         <div>
           <span className="text-accent">$</span>{" "}
           <span className="text-zinc-300">{cmdLabel}</span>

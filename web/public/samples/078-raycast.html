@@ -3,1787 +3,509 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaunchPad - Your shortcut to everything.</title>
+  <title>LaunchPad — Your Shortcut to Everything</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
 
     :root {
-      --bg: #070921;
-      --bg-nav: rgba(7, 9, 33, 0.82);
+      --bg-deep: #070921;
       --bg-surface: #0d1023;
-      --bg-elevated: #111430;
-      --bg-card: #0a0c1a;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-light: rgba(255, 255, 255, 0.12);
-      --text-primary: #f5f5f5;
+      --bg-elevated: #151831;
+      --border: rgba(255,255,255,0.08);
+      --text-primary: #f4feff;
       --text-secondary: #7a7d8e;
-      --text-tertiary: #4a4d5e;
-      --accent-red: #ff6363;
-      --accent-pink: #ff167a;
-      --accent-purple: #635bff;
-      --accent-teal: #00d4aa;
+      --red: #ff6363;
+      --pink: #ff2d55;
+      --purple: #635bff;
+      --teal: #00d4aa;
     }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background: var(--bg);
-      color: var(--text-primary);
-      overflow-x: hidden;
+    body { background: var(--bg-deep); }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-12px) scale(1.02); }
+    }
+    @keyframes subtle-pulse {
+      0%, 100% { opacity: 0.15; }
+      50% { opacity: 0.25; }
+    }
+    @keyframes cube-rotate {
+      0% { transform: rotateX(-20deg) rotateY(0deg); }
+      100% { transform: rotateX(-20deg) rotateY(360deg); }
     }
 
-    a { color: inherit; text-decoration: none; }
-    button { cursor: pointer; font-family: inherit; }
+    .hero-glow {
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,45,85,0.12) 0%, rgba(99,91,255,0.08) 40%, transparent 70%);
+    }
 
-    /* ── Nav ── */
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: var(--bg-nav);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 54px;
-      display: flex;
-      align-items: center;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 14.5px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-      margin-right: 32px;
-      flex-shrink: 0;
-    }
-    .nav-logo-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 5px;
-      background: linear-gradient(135deg, #ff6363, #e5484d);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .nav-logo-icon svg { width: 12px; height: 12px; }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      list-style: none;
-      flex: 1;
-    }
-    .nav-links a {
-      font-size: 13px;
-      color: var(--text-secondary);
-      transition: color 0.15s;
-      padding: 6px 11px;
-      border-radius: 6px;
-    }
-    .nav-links a:hover {
-      color: var(--text-primary);
+    .glass {
       background: rgba(255,255,255,0.04);
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .nav-text-btn {
-      font-size: 13px;
-      color: var(--text-secondary);
-      padding: 6px 11px;
-      border-radius: 6px;
-      border: none;
-      background: none;
-      transition: color 0.15s, background 0.15s;
-    }
-    .nav-text-btn:hover {
-      color: var(--text-primary);
-      background: rgba(255,255,255,0.04);
-    }
-    .nav-download-btn {
-      font-size: 13px;
-      font-weight: 500;
-      padding: 7px 16px;
-      border-radius: 8px;
-      border: none;
-      background: var(--text-primary);
-      color: var(--bg);
-      transition: opacity 0.15s;
-      margin-left: 8px;
-    }
-    .nav-download-btn:hover { opacity: 0.88; }
-
-    /* ── Hero ── */
-    .hero {
-      position: relative;
-      padding: 160px 24px 60px;
-      text-align: center;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .hero-blob-1 {
-      position: absolute;
-      top: -120px;
-      left: 50%;
-      transform: translateX(-60%);
-      width: 700px;
-      height: 500px;
-      background: radial-gradient(ellipse at center, rgba(255, 22, 122, 0.07) 0%, rgba(255, 22, 122, 0.02) 40%, transparent 70%);
-      animation: blobFloat1 12s ease-in-out infinite;
-    }
-    .hero-blob-2 {
-      position: absolute;
-      top: -60px;
-      right: -100px;
-      width: 600px;
-      height: 500px;
-      background: radial-gradient(ellipse at center, rgba(99, 91, 255, 0.06) 0%, transparent 65%);
-      animation: blobFloat2 14s ease-in-out infinite;
-    }
-    .hero-blob-3 {
-      position: absolute;
-      bottom: -100px;
-      left: -50px;
-      width: 500px;
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.04) 0%, transparent 60%);
-      animation: blobFloat3 16s ease-in-out infinite;
-    }
-    @keyframes blobFloat1 {
-      0%, 100% { transform: translateX(-60%) translateY(0); }
-      50% { transform: translateX(-55%) translateY(-30px); }
-    }
-    @keyframes blobFloat2 {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(20px) translateX(-20px); }
-    }
-    @keyframes blobFloat3 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-25px); }
-    }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .hero h1 {
-      font-size: 68px;
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
-      margin-bottom: 24px;
-      color: var(--text-primary);
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s ease forwards;
-    }
-    .hero-subtitle {
-      font-size: 17px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      max-width: 460px;
-      margin: 0 auto 44px;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.8s ease 0.12s forwards;
-    }
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.8s ease 0.24s forwards;
-    }
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13.5px;
-      font-weight: 500;
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: 1px solid var(--border-light);
-      background: rgba(255,255,255,0.05);
-      color: var(--text-primary);
-      transition: all 0.2s;
-      backdrop-filter: blur(8px);
-    }
-    .hero-btn:hover {
-      background: rgba(255,255,255,0.09);
-      border-color: rgba(255, 255, 255, 0.22);
-    }
-    .hero-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-    .hero-btn-windows {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
     }
-    .hero-btn-windows:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255, 255, 255, 0.16);
-    }
-    .hero-version {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      font-family: 'JetBrains Mono', 'SF Mono', monospace;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.36s forwards;
-      letter-spacing: 0.01em;
-    }
-    .hero-version span { margin: 0 7px; opacity: 0.35; }
-
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Command Palette ── */
-    .cmd-section {
-      padding: 40px 24px 100px;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeUp 0.8s ease 0.5s forwards;
-    }
-    .cmd-palette {
-      max-width: 660px;
-      margin: 0 auto;
-      background: rgba(13, 16, 35, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      overflow: hidden;
-      backdrop-filter: blur(40px);
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.03),
-        0 8px 40px rgba(0, 0, 0, 0.5),
-        0 32px 80px rgba(0, 0, 0, 0.45),
-        0 0 120px rgba(99, 91, 255, 0.04);
-    }
-    .cmd-search {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 13px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .cmd-search svg {
-      width: 15px;
-      height: 15px;
-      color: var(--text-tertiary);
-      flex-shrink: 0;
-      opacity: 0.7;
-    }
-    .cmd-search-text {
-      font-size: 13.5px;
-      color: var(--text-tertiary);
-      flex: 1;
-    }
-    .cmd-esc {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--text-tertiary);
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 4px;
-      padding: 2px 5px;
-      line-height: 1.3;
-    }
-    .cmd-body {
-      display: flex;
-      min-height: 280px;
-    }
-    .cmd-list {
-      width: 240px;
-      border-right: 1px solid rgba(255,255,255,0.06);
-      padding: 6px;
-      overflow: hidden;
-    }
-    .cmd-label {
-      padding: 8px 10px 5px;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .cmd-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 8px;
-      border-radius: 7px;
-      transition: background 0.1s;
-      cursor: default;
-    }
-    .cmd-row:hover { background: rgba(255, 255, 255, 0.04); }
-    .cmd-row.active {
-      background: rgba(255, 255, 255, 0.07);
-    }
-    .cmd-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      flex-shrink: 0;
-    }
-    .cmd-row-text {
-      flex: 1;
-      min-width: 0;
-    }
-    .cmd-row-title {
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .cmd-row-sub {
-      font-size: 10.5px;
-      color: var(--text-tertiary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Detail panel */
-    .cmd-detail {
-      flex: 1;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-    }
-    .cmd-detail-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .cmd-detail-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    .cmd-detail-title {
-      font-size: 14.5px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .cmd-detail-sub {
-      font-size: 11.5px;
-      color: var(--text-tertiary);
-      margin-top: 2px;
-    }
-    .cmd-detail-body {
-      flex: 1;
-    }
-    .cmd-detail-desc {
-      font-size: 12.5px;
-      line-height: 1.65;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-    }
-    .cmd-detail-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .cmd-detail-tag {
-      font-size: 10.5px;
-      color: var(--text-tertiary);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-    .cmd-detail-actions {
-      margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .cmd-detail-action {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 11.5px;
-      color: var(--text-secondary);
-      background: rgba(255,255,255,0.03);
-      transition: background 0.1s;
-    }
-    .cmd-detail-action:hover {
-      background: rgba(255,255,255,0.06);
-    }
-    .cmd-detail-action .cmd-kbd { font-size: 10px; }
-    .cmd-kbd {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
-      color: var(--text-tertiary);
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 4px;
-      padding: 1px 5px;
-      line-height: 1.4;
-      flex-shrink: 0;
-    }
-    .cmd-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 16px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.015);
-    }
-    .cmd-footer-left {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .cmd-footer-left .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, #ff6363, #e5484d);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .cmd-footer-left .dot svg { width: 8px; height: 8px; }
-    .cmd-footer-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-tertiary);
-    }
-
-    /* ── Features Grid ── */
-    .features {
-      padding: 100px 24px;
-      position: relative;
-    }
-    .features::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(99, 91, 255, 0.035) 0%, transparent 65%);
-      pointer-events: none;
-    }
-    .features-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-    .section-header h2 {
-      font-size: 40px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      margin-bottom: 14px;
-      line-height: 1.1;
-    }
-    .section-header p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 460px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-    .feature-card {
-      background: var(--bg);
-      padding: 36px 28px;
-      transition: background 0.25s;
-    }
-    .feature-card:hover { background: rgba(255,255,255,0.02); }
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-    }
-    .feature-card h3 {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 7px;
-      letter-spacing: -0.01em;
-    }
-    .feature-card p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* ── Extensions Section ── */
-    .extensions {
-      padding: 100px 24px;
-    }
-    .extensions-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .ext-categories {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 40px;
-    }
-    .ext-pill {
-      font-size: 12.5px;
-      font-weight: 500;
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text-secondary);
-      transition: all 0.15s;
-    }
-    .ext-pill:hover {
-      border-color: var(--border-light);
-      color: var(--text-primary);
-    }
-    .ext-pill.active {
+    .glass-hover:hover {
       background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.16);
-      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
     }
-    .ext-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+
+    .cmd-palette {
+      background: rgba(13,16,35,0.95);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 20px 70px rgba(0,0,0,0.5),
+        0 0 40px rgba(99,91,255,0.08);
     }
+
+    .cmd-row {
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+    .cmd-row:hover { background: rgba(255,255,255,0.06); }
+    .cmd-row.active { background: rgba(255,255,255,0.08); }
+
     .ext-card {
-      background: rgba(255,255,255,0.025);
+      background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
     }
     .ext-card:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: var(--border-light);
-      transform: translateY(-1px);
+      background: var(--bg-elevated);
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
     }
-    .ext-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      flex-shrink: 0;
-    }
-    .ext-info h4 {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .ext-info p {
-      font-size: 11.5px;
-      color: var(--text-secondary);
-    }
-    .ext-browse {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 28px;
-      transition: color 0.15s;
-    }
-    .ext-browse:hover { color: var(--text-primary); }
 
-    /* ── AI Section ── */
-    .ai-section {
-      padding: 100px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .ai-section::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px;
-      height: 500px;
-      background: radial-gradient(ellipse at center, rgba(99, 91, 255, 0.05) 0%, transparent 65%);
-      pointer-events: none;
-    }
-    .ai-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 72px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-    .ai-text h2 {
-      font-size: 40px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      line-height: 1.1;
-    }
     .gradient-text {
-      background: linear-gradient(135deg, #ff167a 0%, #635bff 50%, #00d4aa 100%);
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--teal));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .ai-text p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .ai-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .ai-features li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13.5px;
-      color: var(--text-secondary);
-    }
-    .ai-check {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: rgba(99, 91, 255, 0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #635bff;
-      font-size: 10px;
-      flex-shrink: 0;
-    }
-    .ai-mockup {
-      background: rgba(13, 16, 35, 0.9);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 80px rgba(99, 91, 255, 0.04);
-    }
-    .ai-mockup-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .ai-mockup-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-      background: linear-gradient(135deg, #635bff, #8b5cf6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-    }
-    .ai-mockup-title {
-      font-size: 13px;
-      font-weight: 500;
-    }
-    .ai-mockup-model {
-      margin-left: auto;
-      font-size: 11px;
-      color: var(--text-tertiary);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-    }
-    .ai-chat-body {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .ai-bubble {
-      padding: 10px 14px;
-      font-size: 12.5px;
-      line-height: 1.55;
-      border-radius: 10px;
-      max-width: 88%;
-    }
-    .ai-bubble-user {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-secondary);
-      border-radius: 10px 10px 4px 10px;
-      align-self: flex-start;
-    }
-    .ai-bubble-reply {
-      background: rgba(99, 91, 255, 0.06);
-      border: 1px solid rgba(99, 91, 255, 0.1);
-      border-radius: 10px 10px 10px 4px;
-      align-self: flex-end;
-      color: var(--text-secondary);
-    }
-    .ai-bubble-reply code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      background: rgba(255, 255, 255, 0.07);
-      padding: 1px 5px;
-      border-radius: 3px;
-      color: var(--text-primary);
-    }
-    .ai-chat-input {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-top: 1px solid var(--border);
-    }
-    .ai-chat-input span {
-      font-size: 12px;
-      color: var(--text-tertiary);
-    }
-    .ai-chat-input .cmd-kbd { margin-left: auto; }
-
-    /* ── Shortcuts Section ── */
-    .shortcuts {
-      padding: 100px 24px;
-    }
-    .shortcuts-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .shortcut-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .shortcut-card {
-      background: rgba(255,255,255,0.025);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      transition: all 0.2s;
-      backdrop-filter: blur(8px);
-    }
-    .shortcut-card:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: var(--border-light);
-    }
-    .shortcut-card-text h4 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      letter-spacing: -0.01em;
-    }
-    .shortcut-card-text p {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .shortcut-keys {
-      display: flex;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .shortcut-key {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--text-secondary);
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 6px;
-      padding: 4px 10px;
-      min-width: 32px;
-      text-align: center;
     }
 
-    /* ── Automation Section ── */
-    .automation {
-      padding: 100px 24px;
-      position: relative;
-    }
-    .automation::before {
-      content: '';
-      position: absolute;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.04) 0%, transparent 65%);
-      pointer-events: none;
-    }
-    .automation-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 72px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-    .automation-mockup {
-      background: rgba(13, 16, 35, 0.9);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 80px rgba(0, 212, 170, 0.03);
-    }
-    .snippet-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .snippet-header-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-      background: linear-gradient(135deg, #00d4aa, #10b981);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-    }
-    .snippet-header-title {
-      font-size: 13px;
-      font-weight: 500;
-    }
-    .snippet-body { padding: 16px; }
-    .snippet-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 10px;
-      border-radius: 7px;
-      margin-bottom: 2px;
-      transition: background 0.1s;
-    }
-    .snippet-row.active { background: rgba(255,255,255,0.05); }
-    .snippet-trigger {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: #00d4aa;
-      background: rgba(0, 212, 170, 0.08);
-      padding: 2px 8px;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
-    .snippet-text {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .snippet-arrow {
-      color: var(--text-tertiary);
-      flex-shrink: 0;
-      font-size: 11px;
-    }
-    .auto-text h2 {
-      font-size: 40px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-      line-height: 1.1;
-    }
-    .auto-text p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .auto-text ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .auto-text ul li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13.5px;
-      color: var(--text-secondary);
-    }
-    .auto-check {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: rgba(0, 212, 170, 0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #00d4aa;
-      font-size: 10px;
-      flex-shrink: 0;
-    }
-
-    /* ── Developer Section ── */
-    .developer {
-      padding: 80px 24px;
-    }
-    .developer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .dev-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 48px;
-    }
-    .dev-card {
-      background: rgba(255,255,255,0.025);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 32px 24px;
-      text-align: left;
-      transition: all 0.2s;
-      backdrop-filter: blur(8px);
-    }
-    .dev-card:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: var(--border-light);
-    }
-    .dev-card-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 16px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-    }
-    .dev-card h4 {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 7px;
-      letter-spacing: -0.01em;
-    }
-    .dev-card p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* ── CTA ── */
-    .cta {
-      padding: 120px 24px;
-      text-align: center;
-      position: relative;
-    }
-    .cta::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 700px;
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(255, 22, 122, 0.04) 0%, rgba(99, 91, 255, 0.03) 40%, transparent 65%);
-      pointer-events: none;
-    }
-    .cta-content {
-      position: relative;
-      z-index: 1;
-    }
-    .cta h2 {
-      font-size: 48px;
-      font-weight: 600;
-      letter-spacing: -0.035em;
-      margin-bottom: 14px;
-      line-height: 1.1;
-    }
-    .cta p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin-bottom: 36px;
-    }
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14.5px;
-      font-weight: 500;
-      padding: 13px 32px;
-      border-radius: 12px;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white;
       border: none;
-      background: linear-gradient(135deg, #ff167a, #635bff, #00d4aa);
-      background-size: 200% 200%;
-      color: #fff;
-      transition: all 0.3s;
-      animation: gradientShift 6s ease infinite;
-    }
-    .cta-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 32px rgba(255, 22, 122, 0.2), 0 4px 16px rgba(99, 91, 255, 0.15);
-    }
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-    .cta-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-    .cta-note {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      margin-top: 16px;
-    }
-
-    /* ── Footer ── */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 56px 24px;
-    }
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-    .footer-brand { padding-right: 24px; }
-    .footer-brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .footer-brand p {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      line-height: 1.5;
-    }
-    .footer-col h5 {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-tertiary);
+      border-radius: 8px;
       font-weight: 500;
-      margin-bottom: 14px;
+      transition: all 0.2s ease;
+      cursor: pointer;
     }
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .footer-col a {
-      font-size: 13px;
-      color: var(--text-secondary);
-      transition: color 0.15s;
-    }
-    .footer-col a:hover { color: var(--text-primary); }
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 28px;
-      border-top: 1px solid var(--border);
-    }
-    .footer-bottom p {
-      font-size: 12px;
-      color: var(--text-tertiary);
-    }
-    .footer-socials {
-      display: flex;
-      gap: 14px;
-    }
-    .footer-socials a {
-      color: var(--text-tertiary);
-      transition: color 0.15s;
-    }
-    .footer-socials a:hover { color: var(--text-primary); }
-    .footer-socials svg {
-      width: 15px;
-      height: 15px;
-      fill: currentColor;
-    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
 
-    /* ── Scroll Animations ── */
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
     .fade-in {
       opacity: 0;
-      transform: translateY(24px);
+      transform: translateY(20px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    .icon-box {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-text-btn { display: none; }
-      .hero { padding: 130px 20px 40px; }
-      .hero h1 { font-size: 40px; }
-      .hero-subtitle { font-size: 15px; }
-      .hero-buttons { flex-direction: column; align-items: center; }
-      .features-grid { grid-template-columns: 1fr; }
-      .ext-grid { grid-template-columns: 1fr; }
-      .ai-inner { grid-template-columns: 1fr; gap: 40px; }
-      .automation-inner { grid-template-columns: 1fr; gap: 40px; }
-      .shortcut-grid { grid-template-columns: 1fr; }
-      .dev-cards { grid-template-columns: 1fr; }
-      .ai-text h2, .auto-text h2 { font-size: 30px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .cta h2 { font-size: 32px; }
-      .section-header h2 { font-size: 30px; }
-      .cmd-body { flex-direction: column; }
-      .cmd-list { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    kbd {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 2px 6px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--pink);
+    }
+
+    .ai-bubble-user {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px 12px 4px 12px;
+    }
+    .ai-bubble-reply {
+      background: linear-gradient(135deg, rgba(99,91,255,0.12), rgba(0,212,170,0.08));
+      border: 1px solid rgba(99,91,255,0.15);
+      border-radius: 12px 12px 12px 4px;
     }
   </style>
 </head>
-<body>
+<body class="text-[#f4feff]">
 
   <!-- Nav -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        <span class="nav-logo-icon">
-          <svg viewBox="0 0 16 16" fill="none">
-            <path d="M4 3L12 8L4 13V3Z" fill="white"/>
-          </svg>
-        </span>
-        LaunchPad
-      </a>
-      <div class="nav-links">
-        <a href="#">Store</a>
-        <a href="#">Pro</a>
-        <a href="#">AI</a>
-        <a href="#">iOS</a>
-        <a href="#">Windows</a>
-        <a href="#">Teams</a>
-        <a href="#">Developers</a>
-        <a href="#">Blog</a>
+  <nav class="fixed top-0 w-full z-50" style="background: rgba(7,9,33,0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border);">
+    <div class="max-w-[1120px] mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="#" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="w-[26px] h-[26px] rounded-[7px] bg-gradient-to-br from-[#ff2d55] to-[#635bff] flex items-center justify-center text-[11px] font-bold text-white">L</span>
+          LaunchPad
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-[13px] text-[#7a7d8e]">
+          <a href="#" class="hover:text-white transition-colors">Extensions</a>
+          <a href="#" class="hover:text-white transition-colors">AI</a>
+          <a href="#" class="hover:text-white transition-colors">Teams</a>
+          <a href="#" class="hover:text-white transition-colors">Pricing</a>
+          <a href="#" class="hover:text-white transition-colors">Changelog</a>
+        </div>
       </div>
-      <div class="nav-right">
-        <button class="nav-text-btn">Pricing</button>
-        <button class="nav-text-btn">Log in</button>
-        <button class="nav-download-btn">Download</button>
+      <div class="flex items-center gap-3">
+        <kbd class="hidden sm:inline-flex items-center gap-0.5">&#x2318; Space</kbd>
+        <button class="btn-primary text-[13px] px-4 py-[7px]">Download</button>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="hero-bg">
-      <div class="hero-blob-1"></div>
-      <div class="hero-blob-2"></div>
-      <div class="hero-blob-3"></div>
-    </div>
-    <div class="hero-content">
-      <h1>Your shortcut to<br>everything.</h1>
-      <p class="hero-subtitle">
-        A collection of powerful productivity tools all within
-        an extendable launcher. Fast, ergonomic and reliable.
+  <section class="relative pt-[140px] pb-[120px] md:pt-[180px] md:pb-[140px] overflow-hidden hero-glow">
+    <!-- Ambient glow blobs -->
+    <div class="absolute top-[80px] left-[20%] w-[500px] h-[500px] rounded-full blur-[160px] pointer-events-none" style="background: rgba(255,45,85,0.1); animation: subtle-pulse 8s ease-in-out infinite;"></div>
+    <div class="absolute top-[120px] right-[15%] w-[400px] h-[400px] rounded-full blur-[140px] pointer-events-none" style="background: rgba(99,91,255,0.1); animation: subtle-pulse 8s ease-in-out infinite 3s;"></div>
+
+    <div class="max-w-[1120px] mx-auto px-6 text-center relative z-10">
+      <h1 class="text-[48px] md:text-[72px] font-semibold leading-[1.05] tracking-[-0.035em] mb-5">
+        Your shortcut to<br><span class="gradient-text">everything</span>
+      </h1>
+      <p class="text-[17px] text-[#7a7d8e] max-w-[520px] mx-auto mb-9 leading-[1.6]">
+        LaunchPad is a blazingly fast, totally extendable launcher. It lets you complete tasks, calculate, share common links, and much more.
       </p>
-      <div class="hero-buttons">
-        <button class="hero-btn">
-          <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          Download for Mac
-        </button>
-        <button class="hero-btn hero-btn-windows">
-          <svg viewBox="0 0 24 24"><path d="M3 12V6.75l6-1.32v6.48L3 12zm6.39.09l.01 6.48-6.39-1.4V12.09h6.38zm.73-7.44L17.5 3v8.85h-7.38V4.65zm7.38 7.5V20.9l-7.38 1.2v-6.6l7.38-.35z"/></svg>
-          Download for Windows (beta)
-        </button>
+      <div class="flex justify-center gap-3">
+        <button class="btn-primary text-[14px] px-6 py-[11px]">Download for Mac</button>
+        <button class="btn-secondary text-[14px] px-6 py-[11px]">Watch demo</button>
       </div>
-      <p class="hero-version">v1.104.11<span>|</span>macOS 13+<span>|</span>Install via homebrew</p>
-    </div>
-  </section>
 
-  <!-- Command Palette -->
-  <div class="cmd-section">
-    <div class="cmd-palette">
-      <div class="cmd-search">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="7" cy="7" r="4.5"/>
-          <path d="M10.5 10.5L14 14" stroke-linecap="round"/>
-        </svg>
-        <span class="cmd-search-text">Search for apps and commands...</span>
-        <span class="cmd-esc">esc</span>
-      </div>
-      <div class="cmd-body">
-        <div class="cmd-list">
-          <div class="cmd-label">Suggestions</div>
-          <div class="cmd-row active">
-            <span class="cmd-icon" style="background: linear-gradient(135deg, #ff6363, #e5484d);">&#x1F4CB;</span>
-            <div class="cmd-row-text">
-              <div class="cmd-row-title">Clipboard History</div>
-              <div class="cmd-row-sub">Built-in</div>
-            </div>
+      <!-- Command Palette Mockup -->
+      <div class="max-w-[480px] mx-auto mt-16">
+        <div class="cmd-palette rounded-[14px] overflow-hidden">
+          <!-- Search bar -->
+          <div class="flex items-center gap-3 px-4 py-3 border-b" style="border-color: var(--border);">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#7a7d8e" stroke-width="1.5"/><path d="M11 11L14.5 14.5" stroke="#7a7d8e" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span class="text-[13px] text-[#7a7d8e] flex-1">Search for apps and commands...</span>
+            <kbd>&#x238B;</kbd>
           </div>
-          <div class="cmd-row">
-            <span class="cmd-icon" style="background: rgba(255, 255, 255, 0.06);">&#x1F4DD;</span>
-            <div class="cmd-row-text">
-              <div class="cmd-row-title">Floating Notes</div>
-              <div class="cmd-row-sub">Built-in</div>
+          <!-- Results -->
+          <div class="p-1.5">
+            <div class="px-3 py-1.5 mb-0.5">
+              <span class="text-[11px] text-[#7a7d8e] font-medium uppercase tracking-wider">Suggestions</span>
             </div>
-          </div>
-          <div class="cmd-row">
-            <span class="cmd-icon" style="background: rgba(255, 255, 255, 0.06);">&#x1F517;</span>
-            <div class="cmd-row-text">
-              <div class="cmd-row-title">Quick Links</div>
-              <div class="cmd-row-sub">Built-in</div>
-            </div>
-          </div>
-          <div class="cmd-row">
-            <span class="cmd-icon" style="background: rgba(255, 255, 255, 0.06);">&#x1F9EE;</span>
-            <div class="cmd-row-text">
-              <div class="cmd-row-title">Calculator</div>
-              <div class="cmd-row-sub">Built-in</div>
-            </div>
-          </div>
-          <div class="cmd-row">
-            <span class="cmd-icon" style="background: rgba(255, 255, 255, 0.06);">&#x1F5D4;&#xFE0F;</span>
-            <div class="cmd-row-text">
-              <div class="cmd-row-title">Window Manager</div>
-              <div class="cmd-row-sub">Built-in</div>
-            </div>
-          </div>
-          <div class="cmd-row">
-            <span class="cmd-icon" style="background: rgba(255, 255, 255, 0.06);">&#x1F50D;</span>
-            <div class="cmd-row-text">
-              <div class="cmd-row-title">File Search</div>
-              <div class="cmd-row-sub">Built-in</div>
-            </div>
-          </div>
-        </div>
-        <div class="cmd-detail">
-          <div class="cmd-detail-header">
-            <span class="cmd-detail-icon" style="background: linear-gradient(135deg, #ff6363, #e5484d);">&#x1F4CB;</span>
-            <div>
-              <div class="cmd-detail-title">Clipboard History</div>
-              <div class="cmd-detail-sub">Search and paste recent copies</div>
-            </div>
-          </div>
-          <div class="cmd-detail-body">
-            <p class="cmd-detail-desc">Access your full clipboard history. Search through text, images, files, and links. Pin frequently used items for instant access.</p>
-            <div class="cmd-detail-tags">
-              <span class="cmd-detail-tag">Built-in</span>
-              <span class="cmd-detail-tag">v1.0</span>
-              <span class="cmd-detail-tag">Productivity</span>
-            </div>
-            <div class="cmd-detail-actions">
-              <div class="cmd-detail-action">
-                <span>Open</span>
-                <span class="cmd-kbd">&#x21A9;</span>
+            <div class="cmd-row active flex items-center gap-3 px-3 py-2">
+              <span class="icon-box bg-gradient-to-br from-[#ff2d55] to-[#ff6363]">&#x1F4CB;</span>
+              <div class="flex-1 text-left">
+                <p class="text-[13px] font-medium">Clipboard History</p>
+                <p class="text-[11px] text-[#7a7d8e]">Search and paste recent copies</p>
               </div>
-              <div class="cmd-detail-action">
-                <span>Paste to Active App</span>
-                <span class="cmd-kbd">&#x2318;&#x21A9;</span>
+              <kbd>&#x2318;&#x21E7;V</kbd>
+            </div>
+            <div class="cmd-row flex items-center gap-3 px-3 py-2">
+              <span class="icon-box bg-gradient-to-br from-[#635bff] to-[#8b85ff]">&#x1F4DD;</span>
+              <div class="flex-1 text-left">
+                <p class="text-[13px] font-medium">Floating Notes</p>
+                <p class="text-[11px] text-[#7a7d8e]">Quick note-taking overlay</p>
               </div>
-              <div class="cmd-detail-action">
-                <span>Copy to Clipboard</span>
-                <span class="cmd-kbd">&#x2318;C</span>
+              <kbd>&#x2318;&#x21E7;N</kbd>
+            </div>
+            <div class="cmd-row flex items-center gap-3 px-3 py-2">
+              <span class="icon-box bg-gradient-to-br from-[#00d4aa] to-[#00e5bb]">&#x1F517;</span>
+              <div class="flex-1 text-left">
+                <p class="text-[13px] font-medium">Quick Links</p>
+                <p class="text-[11px] text-[#7a7d8e]">Open bookmarks instantly</p>
               </div>
-              <div class="cmd-detail-action">
-                <span>Delete Entry</span>
-                <span class="cmd-kbd">&#x2318;D</span>
+              <kbd>&#x2318;&#x21E7;L</kbd>
+            </div>
+            <div class="cmd-row flex items-center gap-3 px-3 py-2">
+              <span class="icon-box bg-gradient-to-br from-[#f5a623] to-[#ff7a59]">&#x1F9EE;</span>
+              <div class="flex-1 text-left">
+                <p class="text-[13px] font-medium">Calculator</p>
+                <p class="text-[11px] text-[#7a7d8e]">Quick math and conversions</p>
               </div>
+              <kbd>&#x2318;&#x21E7;C</kbd>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="cmd-footer">
-        <div class="cmd-footer-left">
-          <span class="dot">
-            <svg viewBox="0 0 16 16" fill="none">
-              <path d="M4 3L12 8L4 13V3Z" fill="white"/>
-            </svg>
-          </span>
-          LaunchPad
-        </div>
-        <div class="cmd-footer-right">
-          <span>Open</span>
-          <span class="cmd-kbd">&#x21A9;</span>
-          <span style="margin-left: 8px;">Actions</span>
-          <span class="cmd-kbd">&#x2318;K</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Features -->
-  <section class="features fade-in">
-    <div class="features-inner">
-      <div class="section-header">
-        <h2>Built for productivity</h2>
-        <p>Everything you need to stay focused and move faster. One keystroke away.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">&#x26A1;</div>
-          <h3>Blazingly Fast</h3>
-          <p>Native performance with instant results. No loading spinners, no delays.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#x1F50C;</div>
-          <h3>Extensible</h3>
-          <p>1,000+ community extensions. From GitHub to Figma, connect all your tools.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#x1F916;</div>
-          <h3>AI Built In</h3>
-          <p>Chat with AI, generate code, translate text. All without leaving your launcher.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#x1F4CB;</div>
-          <h3>Clipboard History</h3>
-          <p>Never lose a copy. Search and paste from your complete clipboard history.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#x2328;&#xFE0F;</div>
-          <h3>Snippets</h3>
-          <p>Text expansion with dynamic placeholders. Type less, do more.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#x1F5D4;&#xFE0F;</div>
-          <h3>Window Management</h3>
-          <p>Organize windows with keyboard shortcuts. No mouse needed.</p>
+          <!-- Footer -->
+          <div class="flex items-center justify-between px-4 py-2 border-t" style="border-color: var(--border);">
+            <span class="text-[11px] text-[#7a7d8e]">LaunchPad</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] text-[#7a7d8e]">Open</span>
+              <kbd>&#x21A9;</kbd>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Extensions -->
-  <section class="extensions fade-in">
-    <div class="extensions-inner">
-      <div class="section-header">
-        <h2>1,000+ extensions</h2>
-        <p>From developer tools to design workflows. Everything connects through LaunchPad.</p>
+  <section class="py-24 fade-in">
+    <div class="max-w-[1120px] mx-auto px-6">
+      <div class="text-center mb-14">
+        <p class="section-label mb-3">Extensions</p>
+        <h2 class="text-[32px] sm:text-[40px] font-semibold tracking-[-0.025em] mb-3">1,000+ extensions</h2>
+        <p class="text-[#7a7d8e] max-w-[480px] mx-auto text-[15px]">From developer tools to design workflows. Everything you need, one keystroke away.</p>
       </div>
-      <div class="ext-categories">
-        <button class="ext-pill active">Productivity</button>
-        <button class="ext-pill">Engineering</button>
-        <button class="ext-pill">Design</button>
-        <button class="ext-pill">Writing</button>
+      <!-- Category Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <button class="text-[12px] px-3.5 py-[6px] rounded-full bg-white/[0.08] text-white border border-white/[0.08] cursor-pointer">Productivity</button>
+        <button class="text-[12px] px-3.5 py-[6px] rounded-full text-[#7a7d8e] border border-white/[0.06] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer">Engineering</button>
+        <button class="text-[12px] px-3.5 py-[6px] rounded-full text-[#7a7d8e] border border-white/[0.06] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer">Design</button>
+        <button class="text-[12px] px-3.5 py-[6px] rounded-full text-[#7a7d8e] border border-white/[0.06] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer">Writing</button>
+        <button class="text-[12px] px-3.5 py-[6px] rounded-full text-[#7a7d8e] border border-white/[0.06] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer">Communication</button>
       </div>
-      <div class="ext-grid">
-        <div class="ext-card">
-          <span class="ext-icon" style="background: #161b22;">&#x1F419;</span>
-          <div class="ext-info">
-            <h4>GitHub</h4>
-            <p>Search repos, PRs, issues</p>
+      <!-- Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div class="ext-card p-5 cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-[10px] bg-[#161b22] flex items-center justify-center text-lg border border-white/[0.08]">&#x1F419;</span>
+            <div>
+              <p class="text-[13px] font-medium group-hover:text-white transition-colors">GitHub</p>
+              <p class="text-[12px] text-[#7a7d8e]">Search repos, PRs, issues</p>
+            </div>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"><kbd>&#x21A9;</kbd></div>
           </div>
         </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(168, 85, 247, 0.1);">&#x1F3A8;</span>
-          <div class="ext-info">
-            <h4>Figma</h4>
-            <p>Open files and projects</p>
+        <div class="ext-card p-5 cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-[10px] bg-gradient-to-br from-[#635bff]/20 to-[#635bff]/10 flex items-center justify-center text-lg border border-white/[0.08]">&#x1F3A8;</span>
+            <div>
+              <p class="text-[13px] font-medium group-hover:text-white transition-colors">Figma</p>
+              <p class="text-[12px] text-[#7a7d8e]">Open files and projects</p>
+            </div>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"><kbd>&#x21A9;</kbd></div>
           </div>
         </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(74, 154, 104, 0.12);">&#x1F4AC;</span>
-          <div class="ext-info">
-            <h4>Slack</h4>
-            <p>Set status, open channels</p>
+        <div class="ext-card p-5 cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-[10px] bg-gradient-to-br from-[#00d4aa]/20 to-[#00d4aa]/10 flex items-center justify-center text-lg border border-white/[0.08]">&#x1F4AC;</span>
+            <div>
+              <p class="text-[13px] font-medium group-hover:text-white transition-colors">Slack</p>
+              <p class="text-[12px] text-[#7a7d8e]">Set status, open channels</p>
+            </div>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"><kbd>&#x21A9;</kbd></div>
           </div>
         </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(94, 106, 210, 0.1);">&#x1F4E7;</span>
-          <div class="ext-info">
-            <h4>Linear</h4>
-            <p>Create and search issues</p>
+        <div class="ext-card p-5 cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-[10px] bg-gradient-to-br from-[#5e6ad2]/20 to-[#5e6ad2]/10 flex items-center justify-center text-lg border border-white/[0.08]">&#x1F4E7;</span>
+            <div>
+              <p class="text-[13px] font-medium group-hover:text-white transition-colors">Linear</p>
+              <p class="text-[12px] text-[#7a7d8e]">Create and search issues</p>
+            </div>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"><kbd>&#x21A9;</kbd></div>
           </div>
         </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(245, 166, 35, 0.1);">&#x1F4C5;</span>
-          <div class="ext-info">
-            <h4>Calendar</h4>
-            <p>View events, join meetings</p>
+        <div class="ext-card p-5 cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-[10px] bg-gradient-to-br from-[#f5a623]/20 to-[#f5a623]/10 flex items-center justify-center text-lg border border-white/[0.08]">&#x1F4C5;</span>
+            <div>
+              <p class="text-[13px] font-medium group-hover:text-white transition-colors">Calendar</p>
+              <p class="text-[12px] text-[#7a7d8e]">View events, join meetings</p>
+            </div>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"><kbd>&#x21A9;</kbd></div>
           </div>
         </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(59, 130, 246, 0.1);">&#x1F4E6;</span>
-          <div class="ext-info">
-            <h4>Notion</h4>
-            <p>Search pages and databases</p>
-          </div>
-        </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(229, 72, 77, 0.1);">&#x1F511;</span>
-          <div class="ext-info">
-            <h4>1Password</h4>
-            <p>Search and copy passwords</p>
-          </div>
-        </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(16, 185, 129, 0.1);">&#x1F4B0;</span>
-          <div class="ext-info">
-            <h4>Stripe</h4>
-            <p>View payments and customers</p>
-          </div>
-        </div>
-        <div class="ext-card">
-          <span class="ext-icon" style="background: rgba(251, 191, 36, 0.1);">&#x2601;&#xFE0F;</span>
-          <div class="ext-info">
-            <h4>AWS</h4>
-            <p>Manage cloud resources</p>
+        <div class="ext-card p-5 cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-[10px] bg-gradient-to-br from-[#ff2d55]/20 to-[#ff2d55]/10 flex items-center justify-center text-lg border border-white/[0.08]">&#x1F511;</span>
+            <div>
+              <p class="text-[13px] font-medium group-hover:text-white transition-colors">1Password</p>
+              <p class="text-[12px] text-[#7a7d8e]">Search and copy passwords</p>
+            </div>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"><kbd>&#x21A9;</kbd></div>
           </div>
         </div>
       </div>
-      <div style="text-align: center;">
-        <a href="#" class="ext-browse">Browse all extensions &rarr;</a>
+      <div class="text-center mt-8">
+        <a href="#" class="text-[13px] text-[#7a7d8e] hover:text-white transition-colors">Browse all extensions &rarr;</a>
       </div>
     </div>
   </section>
 
   <!-- AI Section -->
-  <section class="ai-section fade-in">
-    <div class="ai-inner">
-      <div class="ai-text">
-        <h2>AI that <span class="gradient-text">understands</span><br>your workflow</h2>
-        <p>Ask questions, translate text, generate code, and summarize content. All from your launcher, without switching context.</p>
-        <ul class="ai-features">
-          <li><span class="ai-check">&#x2713;</span> GPT-4o, Claude, and Llama models</li>
-          <li><span class="ai-check">&#x2713;</span> Context-aware completions</li>
-          <li><span class="ai-check">&#x2713;</span> Custom AI commands & presets</li>
-          <li><span class="ai-check">&#x2713;</span> Inline AI for any text field</li>
-        </ul>
-      </div>
-      <div class="ai-mockup">
-        <div class="ai-mockup-header">
-          <span class="ai-mockup-dot">&#x2728;</span>
-          <span class="ai-mockup-title">AI Chat</span>
-          <span class="ai-mockup-model">GPT-4o</span>
-        </div>
-        <div class="ai-chat-body">
-          <div class="ai-bubble ai-bubble-user">
-            Explain this error: "Cannot read property 'map' of undefined"
-          </div>
-          <div class="ai-bubble ai-bubble-reply">
-            <p style="margin-bottom: 8px;">This error occurs when you try to call <code>.map()</code> on a variable that is <code>undefined</code>.</p>
-            <p style="font-size: 11.5px; color: var(--text-tertiary); margin-bottom: 4px;">Common fixes:</p>
-            <p style="font-size: 11.5px; color: var(--text-tertiary);">1. <code>data?.map()</code><br>2. <code>(data || []).map()</code></p>
-          </div>
-          <div class="ai-bubble ai-bubble-user">
-            Convert this to TypeScript with proper types
+  <section class="py-24 fade-in relative overflow-hidden">
+    <div class="absolute top-0 left-[30%] w-[500px] h-[500px] bg-[#635bff]/[0.06] rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="max-w-[1120px] mx-auto px-6 relative z-10">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div>
+          <p class="section-label mb-4">AI Built In</p>
+          <h2 class="text-[32px] sm:text-[40px] font-semibold tracking-[-0.025em] mb-5 leading-[1.1]">AI that understands<br>your workflow</h2>
+          <p class="text-[#7a7d8e] leading-[1.7] mb-8 text-[15px]">Ask questions, translate text, generate code, and summarize content. All from your launcher, without switching context.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-full bg-[#00d4aa]/15 flex items-center justify-center text-[#00d4aa] text-[10px]">&#x2713;</span>
+              <span class="text-[13px]">GPT-4, Claude, and Llama models</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-full bg-[#00d4aa]/15 flex items-center justify-center text-[#00d4aa] text-[10px]">&#x2713;</span>
+              <span class="text-[13px]">Context-aware completions</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-5 h-5 rounded-full bg-[#00d4aa]/15 flex items-center justify-center text-[#00d4aa] text-[10px]">&#x2713;</span>
+              <span class="text-[13px]">Custom AI commands & presets</span>
+            </div>
           </div>
         </div>
-        <div class="ai-chat-input">
-          <span>Ask AI anything...</span>
-          <span class="cmd-kbd">&#x21A9;</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Shortcuts Section -->
-  <section class="shortcuts fade-in">
-    <div class="shortcuts-inner">
-      <div class="section-header">
-        <h2>Keyboard-first design</h2>
-        <p>Every action is a shortcut away. Learn once, use forever.</p>
-      </div>
-      <div class="shortcut-grid">
-        <div class="shortcut-card">
-          <div class="shortcut-card-text">
-            <h4>Open Launcher</h4>
-            <p>Summon LaunchPad from anywhere</p>
-          </div>
-          <div class="shortcut-keys">
-            <span class="shortcut-key">&#x2325;</span>
-            <span class="shortcut-key">Space</span>
-          </div>
-        </div>
-        <div class="shortcut-card">
-          <div class="shortcut-card-text">
-            <h4>Clipboard History</h4>
-            <p>Browse and search all copies</p>
-          </div>
-          <div class="shortcut-keys">
-            <span class="shortcut-key">&#x2318;</span>
-            <span class="shortcut-key">&#x21E7;</span>
-            <span class="shortcut-key">V</span>
-          </div>
-        </div>
-        <div class="shortcut-card">
-          <div class="shortcut-card-text">
-            <h4>Window Management</h4>
-            <p>Resize and move windows instantly</p>
-          </div>
-          <div class="shortcut-keys">
-            <span class="shortcut-key">&#x2303;</span>
-            <span class="shortcut-key">&#x2325;</span>
-            <span class="shortcut-key">&#x2192;</span>
-          </div>
-        </div>
-        <div class="shortcut-card">
-          <div class="shortcut-card-text">
-            <h4>AI Chat</h4>
-            <p>Ask AI questions from anywhere</p>
-          </div>
-          <div class="shortcut-keys">
-            <span class="shortcut-key">&#x2318;</span>
-            <span class="shortcut-key">&#x21E7;</span>
-            <span class="shortcut-key">A</span>
-          </div>
-        </div>
-        <div class="shortcut-card">
-          <div class="shortcut-card-text">
-            <h4>Snippets</h4>
-            <p>Expand text templates on the fly</p>
-          </div>
-          <div class="shortcut-keys">
-            <span class="shortcut-key">&#x2318;</span>
-            <span class="shortcut-key">&#x21E7;</span>
-            <span class="shortcut-key">S</span>
-          </div>
-        </div>
-        <div class="shortcut-card">
-          <div class="shortcut-card-text">
-            <h4>Confetti</h4>
-            <p>Celebrate small wins</p>
-          </div>
-          <div class="shortcut-keys">
-            <span class="shortcut-key">&#x2318;</span>
-            <span class="shortcut-key">&#x21E7;</span>
-            <span class="shortcut-key">C</span>
+        <div>
+          <div class="cmd-palette rounded-[14px] p-5">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-6 h-6 rounded-[6px] bg-gradient-to-br from-[#635bff] to-[#8b85ff] flex items-center justify-center text-[11px]">&#x1F916;</span>
+              <span class="text-[13px] font-medium">AI Chat</span>
+              <span class="ml-auto text-[11px] text-[#7a7d8e]">GPT-4</span>
+            </div>
+            <div class="space-y-3">
+              <div class="ai-bubble-user p-3 text-[13px] text-[#7a7d8e] max-w-[85%]">
+                Explain this error: "Cannot read property 'map' of undefined"
+              </div>
+              <div class="ai-bubble-reply p-3 text-[13px] ml-auto max-w-[85%]">
+                <p class="mb-2">This error occurs when you try to call <code class="font-mono bg-white/[0.08] px-1 rounded text-[11px]">.map()</code> on a variable that is <code class="font-mono bg-white/[0.08] px-1 rounded text-[11px]">undefined</code>.</p>
+                <p class="text-[12px] text-[#7a7d8e] mb-1">Common fixes:</p>
+                <ul class="text-[12px] text-[#7a7d8e] space-y-0.5">
+                  <li>1. <code class="font-mono bg-white/[0.08] px-1 rounded text-[11px]">data?.map()</code></li>
+                  <li>2. <code class="font-mono bg-white/[0.08] px-1 rounded text-[11px]">(data || []).map()</code></li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Automation Section -->
-  <section class="automation fade-in">
-    <div class="automation-inner">
-      <div class="automation-mockup">
-        <div class="snippet-header">
-          <span class="snippet-header-icon">&#x26A1;</span>
-          <span class="snippet-header-title">Snippets</span>
-        </div>
-        <div class="snippet-body">
-          <div class="snippet-row active">
-            <span class="snippet-trigger">!email</span>
-            <span class="snippet-arrow">&rarr;</span>
-            <span class="snippet-text">Thanks for reaching out! I'll get back to you...</span>
-          </div>
-          <div class="snippet-row">
-            <span class="snippet-trigger">!addr</span>
-            <span class="snippet-arrow">&rarr;</span>
-            <span class="snippet-text">123 Main Street, San Francisco, CA 94105</span>
-          </div>
-          <div class="snippet-row">
-            <span class="snippet-trigger">!sig</span>
-            <span class="snippet-arrow">&rarr;</span>
-            <span class="snippet-text">Best regards, {name} | {title} | {company}</span>
-          </div>
-          <div class="snippet-row">
-            <span class="snippet-trigger">!meet</span>
-            <span class="snippet-arrow">&rarr;</span>
-            <span class="snippet-text">Would {date} at {time} work for a quick call?</span>
-          </div>
-          <div class="snippet-row">
-            <span class="snippet-trigger">!pr</span>
-            <span class="snippet-arrow">&rarr;</span>
-            <span class="snippet-text">## Summary\n- What: ...\n- Why: ...</span>
-          </div>
-        </div>
+  <!-- Keyboard Shortcuts -->
+  <section class="py-24 fade-in">
+    <div class="max-w-[1120px] mx-auto px-6">
+      <div class="text-center mb-14">
+        <p class="section-label mb-3">Keyboard First</p>
+        <h2 class="text-[32px] sm:text-[40px] font-semibold tracking-[-0.025em] mb-3">Designed for your keyboard</h2>
+        <p class="text-[#7a7d8e] text-[15px]">Every action is a keystroke away. Never leave the keyboard.</p>
       </div>
-      <div class="auto-text">
-        <h2>Automate the<br>repetitive</h2>
-        <p>Create text snippets with dynamic placeholders. Type a short trigger and let LaunchPad expand it into full templates instantly.</p>
-        <ul>
-          <li><span class="auto-check">&#x2713;</span> Dynamic placeholders ({date}, {clipboard})</li>
-          <li><span class="auto-check">&#x2713;</span> Works in any application</li>
-          <li><span class="auto-check">&#x2713;</span> Shared team snippet libraries</li>
-          <li><span class="auto-check">&#x2713;</span> Import from TextExpander & Alfred</li>
-        </ul>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="ext-card p-6 text-center">
+          <div class="inline-flex items-center gap-1 bg-white/[0.08] border border-white/[0.08] rounded-[8px] px-4 py-2.5 text-[14px] font-mono text-white mb-3">&#x2318; K</div>
+          <p class="text-[12px] text-[#7a7d8e]">Command palette</p>
+        </div>
+        <div class="ext-card p-6 text-center">
+          <div class="inline-flex items-center gap-1 bg-white/[0.08] border border-white/[0.08] rounded-[8px] px-4 py-2.5 text-[14px] font-mono text-white mb-3">&#x2318; &#x21E7; V</div>
+          <p class="text-[12px] text-[#7a7d8e]">Clipboard history</p>
+        </div>
+        <div class="ext-card p-6 text-center">
+          <div class="inline-flex items-center gap-1 bg-white/[0.08] border border-white/[0.08] rounded-[8px] px-4 py-2.5 text-[14px] font-mono text-white mb-3">&#x2318; &#x21E7; .</div>
+          <p class="text-[12px] text-[#7a7d8e]">Window management</p>
+        </div>
+        <div class="ext-card p-6 text-center">
+          <div class="inline-flex items-center gap-1 bg-white/[0.08] border border-white/[0.08] rounded-[8px] px-4 py-2.5 text-[14px] font-mono text-white mb-3">&#x2318; &#x21E7; A</div>
+          <p class="text-[12px] text-[#7a7d8e]">AI assistant</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Developer Section -->
-  <section class="developer fade-in">
-    <div class="developer-inner">
-      <div class="section-header">
-        <h2>Made for developers</h2>
-        <p>Build custom extensions with React. Publish to the store and reach thousands of users.</p>
-      </div>
-      <div class="dev-cards">
-        <div class="dev-card">
-          <div class="dev-card-icon">&#x1F6E0;&#xFE0F;</div>
-          <h4>Extension API</h4>
-          <p>Build extensions with React and TypeScript. Full access to system APIs, UI components, and user preferences.</p>
+  <!-- Pro Features -->
+  <section class="py-24 fade-in" style="background: var(--bg-surface);">
+    <div class="max-w-[1120px] mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="ext-card p-8 md:col-span-2" style="background: linear-gradient(135deg, rgba(255,45,85,0.06), rgba(99,91,255,0.06));">
+          <p class="section-label mb-3">Pro</p>
+          <h3 class="text-[24px] font-semibold tracking-[-0.02em] mb-3">Unlimited AI, synced settings</h3>
+          <p class="text-[14px] text-[#7a7d8e] leading-[1.7] mb-5 max-w-md">Get unlimited AI usage, cloud sync, custom themes, and priority support. For power users who live in their launcher.</p>
+          <button class="btn-primary text-[13px] px-5 py-[9px]">Upgrade to Pro</button>
         </div>
-        <div class="dev-card">
-          <div class="dev-card-icon">&#x1F4E6;</div>
-          <h4>Extension Store</h4>
-          <p>Publish your extensions and reach the entire LaunchPad community. Automatic updates and review process.</p>
-        </div>
-        <div class="dev-card">
-          <div class="dev-card-icon">&#x1F4D6;</div>
-          <h4>Documentation</h4>
-          <p>Comprehensive guides, API references, and example projects. Get building in minutes, not hours.</p>
+        <div class="ext-card p-8">
+          <p class="section-label mb-3">Teams</p>
+          <h3 class="text-[24px] font-semibold tracking-[-0.02em] mb-3">Shared workflows</h3>
+          <p class="text-[14px] text-[#7a7d8e] leading-[1.7] mb-5">Share snippets, quicklinks, and script commands across your entire team.</p>
+          <button class="btn-secondary text-[13px] px-5 py-[9px]">Learn more</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="cta fade-in">
-    <div class="cta-content">
-      <h2>Supercharge your<br>productivity</h2>
-      <p>Download LaunchPad for free and experience a faster way to work.</p>
-      <button class="cta-btn">
-        <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        Download for Mac &mdash; it's free
-      </button>
-      <p class="cta-note">macOS 13+ required &middot; Apple Silicon native</p>
+  <section class="py-28 fade-in relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[160px] pointer-events-none" style="background: radial-gradient(circle, rgba(255,45,85,0.08) 0%, rgba(99,91,255,0.06) 50%, transparent 70%);"></div>
+    <div class="max-w-[560px] mx-auto px-6 text-center relative z-10">
+      <h2 class="text-[32px] sm:text-[40px] font-semibold tracking-[-0.025em] mb-4">Supercharge your productivity</h2>
+      <p class="text-[#7a7d8e] mb-10 text-[15px]">Download LaunchPad for free and experience a faster way to work on your Mac.</p>
+      <button class="btn-primary text-[14px] px-8 py-[12px]">Download for Mac &mdash; it's free</button>
+      <p class="text-[12px] text-[#7a7d8e] mt-4">macOS 12+ required &middot; Apple Silicon native</p>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="footer-brand-logo">
-            <span class="nav-logo-icon">
-              <svg viewBox="0 0 16 16" fill="none" width="12" height="12">
-                <path d="M4 3L12 8L4 13V3Z" fill="white"/>
-              </svg>
-            </span>
-            LaunchPad
+  <footer style="border-top: 1px solid var(--border);" class="py-16">
+    <div class="max-w-[1120px] mx-auto px-6">
+      <div class="grid sm:grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-5 h-5 rounded-[5px] bg-gradient-to-br from-[#ff2d55] to-[#635bff] flex items-center justify-center text-[9px] font-bold text-white">L</span>
+            <span class="text-[13px] font-semibold">LaunchPad</span>
           </div>
-          <p>Your shortcut to everything.</p>
+          <p class="text-[12px] text-[#7a7d8e]">Your shortcut to everything.</p>
         </div>
-        <div class="footer-col">
-          <h5>Product</h5>
-          <ul>
-            <li><a href="#">Store</a></li>
-            <li><a href="#">Pro</a></li>
-            <li><a href="#">AI</a></li>
-            <li><a href="#">Teams</a></li>
+        <div>
+          <h4 class="text-[11px] text-[#7a7d8e] uppercase tracking-[0.1em] mb-4 font-medium">Product</h4>
+          <ul class="space-y-2.5 text-[13px] text-[#7a7d8e]">
+            <li><a href="#" class="hover:text-white transition-colors">Extensions</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">AI</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Snippets</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Quicklinks</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h5>Developers</h5>
-          <ul>
-            <li><a href="#">API</a></li>
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">Community</a></li>
-            <li><a href="#">Extensions</a></li>
+        <div>
+          <h4 class="text-[11px] text-[#7a7d8e] uppercase tracking-[0.1em] mb-4 font-medium">Developers</h4>
+          <ul class="space-y-2.5 text-[13px] text-[#7a7d8e]">
+            <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Community</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h5>Company</h5>
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Changelog</a></li>
+        <div>
+          <h4 class="text-[11px] text-[#7a7d8e] uppercase tracking-[0.1em] mb-4 font-medium">Company</h4>
+          <ul class="space-y-2.5 text-[13px] text-[#7a7d8e]">
+            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h5>Legal</h5>
-          <ul>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Terms</a></li>
+        <div>
+          <h4 class="text-[11px] text-[#7a7d8e] uppercase tracking-[0.1em] mb-4 font-medium">Legal</h4>
+          <ul class="space-y-2.5 text-[13px] text-[#7a7d8e]">
+            <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 LaunchPad, Inc.</p>
-        <div class="footer-socials">
-          <a href="#"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-          <a href="#"><svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-          <a href="#"><svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></a>
+      <div class="border-t pt-8 flex flex-col sm:flex-row items-center justify-between gap-4" style="border-color: var(--border);">
+        <p class="text-[12px] text-[#7a7d8e]/50">&copy; 2026 LaunchPad, Inc.</p>
+        <div class="flex items-center gap-5 text-[#7a7d8e]">
+          <a href="#" class="hover:text-white transition-colors"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" class="hover:text-white transition-colors"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
         </div>
       </div>
     </div>
@@ -1792,12 +514,9 @@
   <script>
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('visible');
       });
-    }, { threshold: 0.08 });
-
+    }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>

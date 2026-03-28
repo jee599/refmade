@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EdgeDeploy — Build and deploy on the AI Cloud</title>
+  <title>Deployra — Your Frontend, Globally Distributed</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,24 +11,29 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #fff;
-      --fg: #000;
-      --gray-50: #fafafa;
-      --gray-100: #f5f5f5;
-      --gray-200: #e5e5e5;
-      --gray-300: #d4d4d4;
-      --gray-400: #a3a3a3;
-      --gray-500: #737373;
-      --gray-600: #525252;
-      --gray-700: #404040;
-      --gray-800: #262626;
-      --gray-900: #171717;
-      --gray-950: #0a0a0a;
-      --blue-500: #3b82f6;
-      --blue-600: #2563eb;
-      --green-500: #22c55e;
-      --border: #e5e5e5;
-      --border-light: #f0f0f0;
+      --geist-background: #000;
+      --geist-foreground: #fff;
+      --accents-1: #111;
+      --accents-2: #333;
+      --accents-3: #444;
+      --accents-4: #666;
+      --accents-5: #888;
+      --accents-6: #999;
+      --accents-7: #eaeaea;
+      --accents-8: #fafafa;
+      --geist-success: #0070f3;
+      --geist-cyan: #79ffe1;
+      --geist-violet: #7928ca;
+      --geist-purple: #f81ce5;
+      --ds-gray-100: #0a0a0a;
+      --ds-gray-200: #1a1a1a;
+      --ds-gray-400: #333;
+      --ds-gray-600: #666;
+      --ds-gray-800: #999;
+      --ds-gray-900: #ededed;
+      --ds-gray-1000: #fff;
+      --ds-blue-700: #0070f3;
+      --ds-blue-900: #3291ff;
     }
 
     html {
@@ -39,8 +44,8 @@
     }
 
     body {
-      background: var(--bg);
-      color: var(--fg);
+      background: var(--geist-background);
+      color: var(--geist-foreground);
       line-height: 1.5;
       overflow-x: hidden;
     }
@@ -51,53 +56,16 @@
       font-family: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
     }
 
-    /* ── Announcement Banner ── */
-    .announcement {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 16px;
-      font-size: 14px;
-      color: var(--gray-600);
-      border-bottom: 1px solid var(--border);
-      background: var(--gray-50);
-    }
-
-    .announcement a {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--blue-600);
-      font-weight: 500;
-    }
-
-    .announcement a:hover {
-      text-decoration: underline;
-    }
-
-    .announcement-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--gray-900);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 3px 10px;
-      border-radius: 100px;
-    }
-
-    /* ── Nav ── */
+    /* Nav */
     .nav {
-      position: sticky;
+      position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 100;
       height: 64px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.8);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.8);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
     }
@@ -115,21 +83,21 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 24px;
     }
 
     .nav-logo {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: -0.03em;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.02em;
     }
 
     .nav-logo svg {
-      width: 20px;
-      height: 18px;
+      width: 22px;
+      height: 20px;
     }
 
     .nav-links {
@@ -140,51 +108,51 @@
 
     .nav-links a {
       font-size: 14px;
-      color: var(--gray-500);
+      color: var(--accents-5);
       padding: 6px 12px;
       border-radius: 6px;
-      transition: color 0.15s;
+      transition: color 0.15s, background 0.15s;
     }
 
     .nav-links a:hover {
-      color: var(--fg);
+      color: var(--ds-gray-1000);
     }
 
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     .nav-right .login {
       font-size: 14px;
-      color: var(--gray-500);
+      color: var(--accents-5);
       transition: color 0.15s;
       display: none;
     }
 
-    .nav-right .login:hover { color: var(--fg); }
+    .nav-right .login:hover { color: #fff; }
 
     .btn-primary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      background: var(--fg);
-      color: var(--bg);
+      background: #fff;
+      color: #000;
       font-size: 14px;
       font-weight: 500;
       font-family: inherit;
       padding: 8px 16px;
       border-radius: 8px;
-      border: 1px solid var(--fg);
+      border: 1px solid #fff;
       cursor: pointer;
-      transition: background 0.15s, opacity 0.15s;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
       white-space: nowrap;
     }
 
     .btn-primary:hover {
-      opacity: 0.85;
+      background: rgba(255,255,255,0.9);
     }
 
     .btn-secondary {
@@ -193,54 +161,109 @@
       justify-content: center;
       gap: 6px;
       background: transparent;
-      color: var(--fg);
+      color: var(--ds-gray-900);
       font-size: 14px;
       font-weight: 500;
       font-family: inherit;
       padding: 8px 16px;
       border-radius: 8px;
-      border: 1px solid var(--gray-300);
+      border: 1px solid var(--accents-2);
       cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
       white-space: nowrap;
     }
 
     .btn-secondary:hover {
-      border-color: var(--gray-400);
-      background: var(--gray-50);
+      border-color: var(--accents-3);
+      background: rgba(255,255,255,0.03);
     }
 
     .btn-large {
       padding: 12px 24px;
-      font-size: 15px;
-      border-radius: 10px;
+      font-size: 14px;
+      border-radius: 8px;
     }
 
-    /* ── Hero ── */
+    /* Hero */
     .hero {
       position: relative;
-      padding: 100px 24px 0;
+      padding: 160px 24px 120px;
       text-align: center;
       overflow: hidden;
     }
 
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--accents-2);
+      border-radius: 100px;
+      padding: 5px 14px 5px 6px;
+      font-size: 13px;
+      color: var(--accents-5);
+      margin-bottom: 40px;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .hero-badge:hover {
+      border-color: var(--accents-3);
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ds-blue-700);
+      box-shadow: 0 0 8px rgba(0,112,243,0.4);
+    }
+
+    .hero-badge-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--ds-gray-200);
+      border-radius: 100px;
+      padding: 3px 10px;
+      font-size: 12px;
+      color: var(--accents-6);
+    }
+
     .hero h1 {
-      font-size: clamp(36px, 6vw, 64px);
+      font-size: clamp(40px, 8vw, 80px);
       font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      margin-bottom: 20px;
-      max-width: 780px;
+      letter-spacing: -0.05em;
+      line-height: 1.0;
+      margin-bottom: 24px;
+      max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      color: var(--gray-950);
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.5) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hero p {
-      font-size: 17px;
-      color: var(--gray-500);
-      max-width: 520px;
-      margin: 0 auto 36px;
+      font-size: 16px;
+      color: var(--accents-5);
+      max-width: 540px;
+      margin: 0 auto 40px;
       line-height: 1.6;
       letter-spacing: -0.01em;
     }
@@ -250,245 +273,76 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 80px;
     }
 
-    /* ── Triangle Prism Visual ── */
-    .hero-visual {
-      position: relative;
-      width: 100%;
-      max-width: 1100px;
-      height: 480px;
-      margin: 0 auto;
+    .hero-terminal {
+      margin: 64px auto 0;
+      max-width: 520px;
+      border: 1px solid var(--accents-2);
+      border-radius: 12px;
       overflow: hidden;
+      background: var(--ds-gray-100);
     }
 
-    .prism-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
+    .hero-terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
-    .prism-triangle {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 180px;
-      height: 190px;
-      z-index: 12;
+    .hero-terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accents-2);
     }
 
-    .prism-triangle svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.08));
+    .hero-terminal-body {
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.8;
     }
 
-    /* Colorful spectrum canvas below the prism */
-    .spectrum-canvas {
-      position: absolute;
-      top: 120px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      overflow: hidden;
+    .hero-terminal-body .prompt {
+      color: var(--accents-5);
     }
 
-    /* Base: warm-to-cool full spectrum matching vercel.com prism visual */
-    .spectrum-base {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg,
-        #dbb898 0%,
-        #d89050 4%,
-        #d06820 8%,
-        #c84818 12%,
-        #d85820 16%,
-        #e87828 20%,
-        #f09838 24%,
-        #e8b840 28%,
-        #d8d050 32%,
-        #b0d860 36%,
-        #80d870 40%,
-        #c0ecc0 44%,
-        #f0f8f0 47%,
-        #ffffff 50%,
-        #e0f8f0 53%,
-        #90e8b8 57%,
-        #50d8a0 62%,
-        #28c898 67%,
-        #18b088 72%,
-        #109878 77%,
-        #087860 82%,
-        #065848 87%,
-        #043830 92%,
-        #021810 97%,
-        #010c08 100%
-      );
+    .hero-terminal-body .cmd {
+      color: #fff;
     }
 
-    /* Warm richness: deep reds, vibrant oranges on left */
-    .spectrum-warm {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 50%;
-      height: 100%;
-      background:
-        radial-gradient(ellipse 65% 85% at 22% 40%, rgba(190,45,5,0.6) 0%, transparent 55%),
-        radial-gradient(ellipse 55% 70% at 38% 55%, rgba(235,130,15,0.45) 0%, transparent 50%),
-        radial-gradient(ellipse 45% 65% at 6% 45%, rgba(150,60,20,0.4) 0%, transparent 45%),
-        radial-gradient(ellipse 50% 80% at 28% 72%, rgba(210,70,5,0.35) 0%, transparent 50%),
-        radial-gradient(ellipse 40% 50% at 44% 30%, rgba(200,180,40,0.25) 0%, transparent 45%);
+    .hero-terminal-body .output {
+      color: var(--accents-4);
     }
 
-    /* Center: brilliant white glow spreading from prism base */
-    .spectrum-center {
-      position: absolute;
-      top: 0;
-      left: 22%;
-      width: 56%;
-      height: 100%;
-      background:
-        radial-gradient(ellipse 32% 55% at 50% 0%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 20%, rgba(255,255,255,0.3) 40%, transparent 58%),
-        radial-gradient(ellipse 25% 35% at 40% 20%, rgba(210,240,80,0.2) 0%, transparent 50%),
-        radial-gradient(ellipse 25% 35% at 60% 20%, rgba(80,220,150,0.2) 0%, transparent 50%);
+    .hero-terminal-body .success {
+      color: var(--geist-cyan);
     }
 
-    /* Cool side: teal to deep dark green-black on right */
-    .spectrum-cool {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 48%;
-      height: 100%;
-      background:
-        radial-gradient(ellipse 65% 70% at 30% 35%, rgba(15,190,130,0.5) 0%, transparent 50%),
-        radial-gradient(ellipse 55% 80% at 60% 40%, rgba(0,90,70,0.55) 0%, transparent 50%),
-        radial-gradient(ellipse 45% 65% at 85% 50%, rgba(0,25,18,0.7) 0%, transparent 50%);
+    .hero-terminal-body .url {
+      color: var(--ds-blue-900);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
-    /* Dark blob on far right matching the screenshot's dark teal-black area */
-    .spectrum-dark-right {
-      position: absolute;
-      top: 5%;
-      right: 0;
-      width: 22%;
-      height: 90%;
-      background:
-        radial-gradient(ellipse 90% 75% at 75% 45%, rgba(0,30,22,0.8) 0%, rgba(0,15,10,0.4) 50%, transparent 75%);
-      z-index: 3;
-    }
-
-    /* White glow from the triangle base dispersing downward */
-    .spectrum-prism-glow {
-      position: absolute;
-      top: -40px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 240px;
-      height: 200px;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 12%, rgba(255,255,255,0.5) 35%, transparent 60%);
-      z-index: 5;
-    }
-
-    /* Soft horizontal grid lines over the spectrum */
-    .spectrum-grid {
-      position: absolute;
-      top: 50px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 6;
-      opacity: 0.1;
-      background-image:
-        linear-gradient(0deg, rgba(255,255,255,0.7) 1px, transparent 1px);
-      background-size: 100% 5px;
-      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.4) 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.4) 100%);
-    }
-
-    /* Vertical grid lines */
-    .spectrum-grid-v {
-      position: absolute;
-      top: 50px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 6;
-      opacity: 0.04;
-      background-image:
-        linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
-      background-size: 28px 100%;
-      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.3) 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.3) 100%);
-    }
-
-    /* Bottom fade to white */
-    .spectrum-fade-bottom {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 35%, transparent 100%);
-      z-index: 7;
-    }
-
-    /* Top fade from white into spectrum */
-    .spectrum-fade-top {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 100%);
-      z-index: 4;
-    }
-
-    /* Side fades */
-    .spectrum-fade-left {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 120px;
-      background: linear-gradient(to right, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.3) 60%, transparent 100%);
-      z-index: 7;
-    }
-
-    .spectrum-fade-right {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 60px;
-      background: linear-gradient(to left, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
-      z-index: 7;
-    }
-
-    /* ── Gradient line separator ── */
+    /* Gradient line separator */
     .gradient-line {
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gray-200) 20%, var(--gray-300) 50%, var(--gray-200) 80%, transparent);
+      background: linear-gradient(90deg, transparent, var(--accents-2) 20%, var(--accents-3) 50%, var(--accents-2) 80%, transparent);
     }
 
-    /* ── Trusted by ── */
+    /* Trusted by */
     .trusted {
-      padding: 48px 24px;
+      padding: 56px 24px;
       text-align: center;
-      background: var(--bg);
     }
 
     .trusted p {
       font-size: 14px;
-      color: var(--gray-400);
-      margin-bottom: 28px;
+      color: var(--accents-4);
+      margin-bottom: 32px;
       letter-spacing: -0.01em;
     }
 
@@ -496,28 +350,88 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 44px;
+      gap: 40px;
       flex-wrap: wrap;
       max-width: 900px;
       margin: 0 auto;
     }
 
     .trusted-logo {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
-      color: var(--gray-300);
+      color: var(--accents-4);
       letter-spacing: -0.02em;
+      transition: color 0.2s;
       cursor: default;
       user-select: none;
+    }
+
+    .trusted-logo:hover { color: var(--accents-5); }
+
+    /* Frameworks */
+    .frameworks {
+      padding: 80px 24px;
+    }
+
+    .frameworks .section-label {
+      text-align: center;
+      font-size: 14px;
+      color: var(--accents-5);
+      margin-bottom: 48px;
+      letter-spacing: -0.01em;
+    }
+
+    .frameworks-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .framework-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .framework-item:hover {
+      border-color: var(--accents-2);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .framework-item svg {
+      width: 40px;
+      height: 40px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .framework-item:hover svg {
+      opacity: 1;
+    }
+
+    .framework-item span {
+      font-size: 13px;
+      color: var(--accents-5);
       transition: color 0.2s;
     }
 
-    .trusted-logo:hover { color: var(--gray-500); }
+    .framework-item:hover span {
+      color: var(--ds-gray-900);
+    }
 
-    /* ── Features Section ── */
+    /* Feature Section */
     .feature-section {
-      padding: 100px 24px;
-      background: var(--bg);
+      padding: 120px 24px;
     }
 
     .feature-section .section-inner {
@@ -536,8 +450,9 @@
       gap: 6px;
       font-size: 13px;
       font-weight: 500;
-      color: var(--blue-600);
+      color: var(--ds-blue-900);
       margin-bottom: 16px;
+      letter-spacing: 0;
     }
 
     .section-header h2 {
@@ -546,44 +461,43 @@
       letter-spacing: -0.04em;
       line-height: 1.1;
       margin-bottom: 16px;
-      color: var(--gray-950);
     }
 
     .section-header p {
       font-size: 16px;
-      color: var(--gray-500);
-      max-width: 540px;
+      color: var(--accents-5);
+      max-width: 560px;
       margin: 0 auto;
       line-height: 1.6;
     }
 
-    /* ── Bento Grid ── */
+    /* Bento Grid */
     .bento-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1px;
-      background: var(--gray-200);
-      border: 1px solid var(--gray-200);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
       overflow: hidden;
     }
 
     .bento-card {
-      background: var(--bg);
+      background: var(--ds-gray-100);
       padding: 32px;
       transition: background 0.2s;
     }
 
     .bento-card:hover {
-      background: var(--gray-50);
+      background: rgba(255,255,255,0.04);
     }
 
     .bento-card .icon {
       width: 40px;
       height: 40px;
       border-radius: 10px;
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -593,7 +507,7 @@
     .bento-card .icon svg {
       width: 20px;
       height: 20px;
-      color: var(--gray-700);
+      color: var(--accents-7);
     }
 
     .bento-card h3 {
@@ -601,19 +515,17 @@
       font-weight: 600;
       margin-bottom: 8px;
       letter-spacing: -0.02em;
-      color: var(--gray-900);
     }
 
     .bento-card p {
       font-size: 14px;
-      color: var(--gray-500);
+      color: var(--accents-5);
       line-height: 1.5;
     }
 
-    /* ── Deploy Section ── */
+    /* Deploy Section */
     .deploy-section {
-      padding: 100px 24px;
-      background: var(--gray-50);
+      padding: 120px 24px;
     }
 
     .deploy-inner {
@@ -626,17 +538,16 @@
     }
 
     .deploy-content h2 {
-      font-size: clamp(28px, 4vw, 44px);
+      font-size: clamp(28px, 4vw, 48px);
       font-weight: 700;
       letter-spacing: -0.04em;
       line-height: 1.1;
       margin-bottom: 20px;
-      color: var(--gray-950);
     }
 
     .deploy-content p {
       font-size: 16px;
-      color: var(--gray-500);
+      color: var(--accents-5);
       line-height: 1.6;
       margin-bottom: 32px;
       max-width: 460px;
@@ -658,13 +569,13 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      border: 1px solid var(--gray-300);
+      border: 1px solid var(--accents-2);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 13px;
       font-weight: 500;
-      color: var(--gray-500);
+      color: var(--accents-5);
       flex-shrink: 0;
     }
 
@@ -673,215 +584,75 @@
       font-weight: 600;
       margin-bottom: 4px;
       letter-spacing: -0.01em;
-      color: var(--gray-900);
     }
 
     .deploy-step-text p {
       font-size: 14px;
-      color: var(--gray-500);
+      color: var(--accents-4);
       margin: 0;
       line-height: 1.5;
     }
 
-    /* ── Terminal Deploy Animation ── */
-    .terminal-block {
-      background: var(--gray-950);
-      border: 1px solid var(--gray-800);
+    /* Code Block */
+    .code-block {
+      background: var(--ds-gray-100);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
 
-    .terminal-bar {
+    .code-block-header {
       display: flex;
       align-items: center;
       gap: 8px;
       padding: 14px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+      color: var(--accents-5);
     }
 
-    .terminal-dots {
+    .code-block-header .dots {
       display: flex;
       gap: 6px;
     }
 
-    .terminal-dot {
+    .code-block-header .dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.12);
+      background: var(--accents-2);
     }
 
-    .terminal-title {
-      font-size: 12px;
-      color: rgba(255,255,255,0.35);
-      margin-left: 6px;
+    .code-block-header .filename {
+      margin-left: 8px;
     }
 
-    .terminal-body {
+    .code-block-body {
       padding: 24px;
       font-size: 13px;
-      line-height: 2;
-      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      overflow-x: auto;
     }
 
-    .terminal-body .prompt { color: rgba(255,255,255,0.3); }
-    .terminal-body .cmd { color: #fff; }
-    .terminal-body .success { color: #4ade80; }
-    .terminal-body .url { color: #60a5fa; text-decoration: underline; text-underline-offset: 2px; }
-    .terminal-body .dimmed { color: rgba(255,255,255,0.25); }
-
-    /* Deploy animation */
-    .deploy-line {
-      opacity: 0;
-      transform: translateY(4px);
-      animation: deployFadeIn 0.4s ease forwards;
-    }
-    .deploy-line:nth-child(1) { animation-delay: 0.3s; }
-    .deploy-line:nth-child(2) { animation-delay: 0.9s; }
-    .deploy-line:nth-child(3) { animation-delay: 1.4s; }
-    .deploy-line:nth-child(4) { animation-delay: 1.9s; }
-    .deploy-line:nth-child(5) { animation-delay: 2.5s; }
-
-    @keyframes deployFadeIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .typing-cursor {
+    .code-block-body .line-num {
       display: inline-block;
-      width: 8px;
-      height: 16px;
-      background: rgba(255,255,255,0.6);
-      margin-left: 2px;
-      vertical-align: middle;
-      animation: blink 1s step-end infinite;
+      width: 28px;
+      text-align: right;
+      margin-right: 20px;
+      color: var(--accents-3);
+      user-select: none;
     }
 
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
+    .code-block-body .keyword { color: #ff7b72; }
+    .code-block-body .func { color: #d2a8ff; }
+    .code-block-body .string { color: #a5d6ff; }
+    .code-block-body .comment { color: var(--accents-3); }
+    .code-block-body .type { color: #79c0ff; }
+    .code-block-body .punct { color: var(--accents-5); }
 
-    /* ── Globe/Edge Network ── */
-    .globe-section {
-      padding: 100px 24px;
-      background: var(--bg);
-      text-align: center;
-    }
-
-    .globe-container {
-      position: relative;
-      width: 400px;
-      height: 400px;
-      margin: 48px auto 0;
-    }
-
-    .globe {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-
-    .globe-circle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      border-radius: 50%;
-      border: 1px solid var(--gray-200);
-    }
-
-    .globe-circle-1 {
-      width: 380px;
-      height: 380px;
-      transform: translate(-50%, -50%);
-    }
-
-    .globe-circle-2 {
-      width: 280px;
-      height: 280px;
-      transform: translate(-50%, -50%);
-    }
-
-    .globe-circle-3 {
-      width: 180px;
-      height: 180px;
-      transform: translate(-50%, -50%);
-    }
-
-    .globe-ellipse {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 380px;
-      height: 380px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      border: 1px solid var(--gray-200);
-    }
-
-    .globe-ellipse-h {
-      transform: translate(-50%, -50%) scaleY(0.4);
-    }
-
-    .globe-ellipse-v {
-      transform: translate(-50%, -50%) scaleX(0.4);
-    }
-
-    .globe-ellipse-tilt {
-      transform: translate(-50%, -50%) rotate(30deg) scaleY(0.5);
-    }
-
-    .globe-dot {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--fg);
-    }
-
-    .globe-dot::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.06);
-      animation: dotPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes dotPulse {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-      50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-    }
-
-    .globe-dot-1 { top: 25%; left: 30%; }
-    .globe-dot-2 { top: 18%; left: 60%; }
-    .globe-dot-3 { top: 45%; left: 15%; }
-    .globe-dot-4 { top: 55%; left: 70%; }
-    .globe-dot-5 { top: 70%; left: 42%; }
-    .globe-dot-6 { top: 35%; left: 80%; }
-    .globe-dot-7 { top: 68%; left: 22%; }
-
-    .globe-label {
-      position: absolute;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--gray-400);
-      white-space: nowrap;
-    }
-
-    .globe-label-1 { top: 22%; left: 15%; }
-    .globe-label-2 { top: 13%; left: 65%; }
-    .globe-label-3 { top: 55%; left: 75%; }
-    .globe-label-4 { top: 73%; left: 28%; }
-
-    /* ── Metrics ── */
+    /* Metrics */
     .metrics {
-      padding: 100px 24px;
-      background: var(--gray-50);
+      padding: 120px 24px;
     }
 
     .metrics-inner {
@@ -894,15 +665,15 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
-      background: var(--gray-200);
-      border: 1px solid var(--gray-200);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
       overflow: hidden;
       margin-top: 64px;
     }
 
     .metric-card {
-      background: var(--bg);
+      background: var(--ds-gray-100);
       padding: 40px 24px;
       text-align: center;
     }
@@ -913,31 +684,29 @@
       letter-spacing: -0.04em;
       margin-bottom: 8px;
       font-variant-numeric: tabular-nums;
-      color: var(--gray-950);
     }
 
-    .metric-card .metric-label {
+    .metric-card .label {
       font-size: 14px;
-      color: var(--gray-500);
+      color: var(--accents-5);
     }
 
-    /* ── CTA ── */
+    /* CTA */
     .cta {
       padding: 120px 24px 140px;
       text-align: center;
       position: relative;
-      background: var(--bg);
     }
 
     .cta::before {
       content: '';
       position: absolute;
-      bottom: 40%;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 600px;
-      height: 300px;
-      background: radial-gradient(ellipse at center, rgba(0,0,0,0.02) 0%, transparent 70%);
+      height: 400px;
+      background: radial-gradient(ellipse at center bottom, rgba(255,255,255,0.03) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -948,9 +717,9 @@
     }
 
     .cta .triangle svg {
-      width: 56px;
-      height: 48px;
-      opacity: 0.15;
+      width: 64px;
+      height: 56px;
+      opacity: 0.3;
     }
 
     .cta h2 {
@@ -959,13 +728,12 @@
       letter-spacing: -0.04em;
       line-height: 1.1;
       margin-bottom: 20px;
-      color: var(--gray-950);
     }
 
     .cta p {
       font-size: 16px;
-      color: var(--gray-500);
-      max-width: 420px;
+      color: var(--accents-5);
+      max-width: 440px;
       margin: 0 auto 40px;
       line-height: 1.6;
     }
@@ -977,11 +745,10 @@
       flex-wrap: wrap;
     }
 
-    /* ── Footer ── */
+    /* Footer */
     .footer {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgba(255,255,255,0.08);
       padding: 64px 24px;
-      background: var(--bg);
     }
 
     .footer-inner {
@@ -1000,21 +767,21 @@
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      font-weight: 700;
+      font-weight: 600;
       font-size: 15px;
       letter-spacing: -0.02em;
     }
 
     .footer-brand svg {
-      width: 18px;
-      height: 16px;
-      margin-top: 3px;
+      width: 20px;
+      height: 18px;
+      margin-top: 2px;
     }
 
     .footer-col h4 {
       font-size: 14px;
       font-weight: 400;
-      color: var(--fg);
+      color: var(--geist-foreground);
       margin-bottom: 16px;
     }
 
@@ -1027,14 +794,14 @@
 
     .footer-col ul a {
       font-size: 14px;
-      color: var(--gray-400);
+      color: var(--accents-4);
       transition: color 0.15s;
     }
 
-    .footer-col ul a:hover { color: var(--fg); }
+    .footer-col ul a:hover { color: #fff; }
 
     .footer-bottom {
-      border-top: 1px solid var(--border-light);
+      border-top: 1px solid rgba(255,255,255,0.06);
       padding-top: 24px;
       display: flex;
       align-items: center;
@@ -1043,7 +810,7 @@
 
     .footer-bottom p {
       font-size: 13px;
-      color: var(--gray-400);
+      color: var(--accents-3);
     }
 
     .footer-social {
@@ -1052,22 +819,22 @@
     }
 
     .footer-social a {
-      color: var(--gray-400);
+      color: var(--accents-4);
       transition: color 0.15s;
     }
 
-    .footer-social a:hover { color: var(--fg); }
+    .footer-social a:hover { color: #fff; }
 
     .footer-social svg {
       width: 20px;
       height: 20px;
     }
 
-    /* ── Fade in ── */
+    /* Fade in */
     .fade-in {
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     .fade-in.visible {
@@ -1075,68 +842,7 @@
       transform: translateY(0);
     }
 
-    /* ── Frameworks ── */
-    .frameworks {
-      padding: 64px 24px;
-      background: var(--bg);
-    }
-
-    .frameworks .section-label {
-      text-align: center;
-      font-size: 14px;
-      color: var(--gray-400);
-      margin-bottom: 40px;
-    }
-
-    .frameworks-grid {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .framework-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 24px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      transition: border-color 0.2s, background 0.2s;
-      cursor: pointer;
-    }
-
-    .framework-item:hover {
-      border-color: var(--gray-200);
-      background: var(--gray-50);
-    }
-
-    .framework-item svg {
-      width: 36px;
-      height: 36px;
-      opacity: 0.35;
-      transition: opacity 0.2s;
-    }
-
-    .framework-item:hover svg {
-      opacity: 0.7;
-    }
-
-    .framework-item span {
-      font-size: 13px;
-      color: var(--gray-400);
-      transition: color 0.2s;
-    }
-
-    .framework-item:hover span {
-      color: var(--gray-700);
-    }
-
-    /* ── Responsive ── */
+    /* Responsive */
     @media (min-width: 640px) {
       .nav-links { display: flex; }
       .nav-right .login { display: block; }
@@ -1153,80 +859,71 @@
       .footer-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-      .globe-container {
-        width: 320px;
-        height: 320px;
-      }
     }
 
     @media (max-width: 768px) {
-      .hero { padding: 80px 24px 0; }
-      .hero-visual { height: 320px; }
-      .prism-triangle { width: 140px; height: 150px; }
-      .bento-grid { grid-template-columns: 1fr; }
-      .metrics-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero { padding: 140px 24px 80px; }
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+      .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
       .trusted-logos { gap: 24px; }
       .frameworks-grid { gap: 8px; }
       .feature-section { padding: 80px 24px; }
       .deploy-section { padding: 80px 24px; }
       .metrics { padding: 80px 24px; }
       .cta { padding: 80px 24px 100px; }
-      .globe-section { padding: 80px 24px; }
-      .globe-container { width: 280px; height: 280px; }
-      .announcement { font-size: 13px; gap: 6px; }
     }
 
     @media (max-width: 480px) {
-      .hero h1 { font-size: 32px; }
+      .hero h1 { font-size: 36px; }
       .footer-grid { grid-template-columns: 1fr; }
       .metrics-grid { grid-template-columns: 1fr; }
-      .hero-visual { height: 250px; }
-      .prism-triangle { width: 110px; height: 120px; top: 5px; }
-      .spectrum-canvas { top: 90px; }
-      .globe-container { width: 240px; height: 240px; }
     }
   </style>
 </head>
 <body>
-  <!-- Announcement Banner -->
-  <div class="announcement">
-    <span class="announcement-badge">New</span>
-    Edge Conf is coming to 5 cities
-    <a href="#">
-      Save the date
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6.5 3.5L11 8L6.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-  </div>
-
   <!-- Nav -->
   <nav class="nav">
     <div class="nav-inner">
       <div class="nav-left">
         <a href="#" class="nav-logo">
-          <svg viewBox="0 0 76 65" fill="#000"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
-          EdgeDeploy
+          <svg viewBox="0 0 76 65" fill="#fff"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
+          Deployra
         </a>
         <div class="nav-links">
           <a href="#">Products</a>
-          <a href="#">Resources</a>
           <a href="#">Solutions</a>
+          <a href="#">Resources</a>
           <a href="#">Enterprise</a>
+          <a href="#">Docs</a>
           <a href="#">Pricing</a>
         </div>
       </div>
       <div class="nav-right">
-        <a href="#" class="login">Ask AI</a>
         <a href="#" class="login">Log In</a>
-        <button class="btn-primary" style="padding: 6px 14px; font-size: 13px; border-radius: 6px;">Sign Up</button>
+        <button class="btn-primary" style="padding: 6px 14px; font-size: 13px;">Sign Up</button>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
-    <h1>Build and deploy on<br>the AI Cloud.</h1>
-    <p>EdgeDeploy provides the developer tools and cloud infrastructure to build, scale, and secure a faster, more personalized web.</p>
+    <div class="hero-badge">
+      <span class="hero-badge-inner">
+        <span class="hero-badge-dot"></span>
+        New
+      </span>
+      Introducing Deployra AI &mdash; build faster with AI
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6.5 3.5L11 8L6.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h1><span class="gradient-text">Your Frontend,<br>Globally Distributed.</span></h1>
+    <p>Deployra provides the developer experience and infrastructure to build, scale, and secure a faster, more personalized web.</p>
     <div class="hero-buttons">
       <button class="btn-primary btn-large">
         Start Deploying
@@ -1234,66 +931,17 @@
       </button>
       <button class="btn-secondary btn-large">Get a Demo</button>
     </div>
-
-    <!-- Triangle Prism Visual with Spectrum -->
-    <div class="hero-visual">
-      <div class="prism-container">
-        <!-- The white triangle prism -->
-        <div class="prism-triangle">
-          <svg viewBox="0 0 200 210" fill="none">
-            <defs>
-              <linearGradient id="prismFill" x1="100" y1="8" x2="100" y2="195" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="40%" stop-color="#fafafa"/>
-                <stop offset="80%" stop-color="#f0f0f0"/>
-                <stop offset="100%" stop-color="#e8e8e8"/>
-              </linearGradient>
-              <linearGradient id="prismEdgeLeft" x1="15" y1="190" x2="100" y2="10" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#d8d8d8"/>
-                <stop offset="100%" stop-color="#f5f5f5"/>
-              </linearGradient>
-              <linearGradient id="prismEdgeRight" x1="185" y1="190" x2="100" y2="10" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#e0e0e0"/>
-                <stop offset="100%" stop-color="#f8f8f8"/>
-              </linearGradient>
-              <filter id="prismShadow" x="-30%" y="-20%" width="160%" height="150%">
-                <feDropShadow dx="0" dy="6" stdDeviation="16" flood-opacity="0.07"/>
-              </filter>
-            </defs>
-            <!-- Main triangle face -->
-            <path d="M100 12L188 192H12L100 12Z" fill="url(#prismFill)" filter="url(#prismShadow)"/>
-            <!-- Subtle edge highlights for 3D depth -->
-            <path d="M100 12L12 192" fill="none" stroke="url(#prismEdgeLeft)" stroke-width="1" opacity="0.5"/>
-            <path d="M100 12L188 192" fill="none" stroke="url(#prismEdgeRight)" stroke-width="1" opacity="0.4"/>
-            <path d="M12 192L188 192" fill="none" stroke="#d4d4d4" stroke-width="0.5" opacity="0.6"/>
-            <!-- Very subtle inner edge for realism -->
-            <path d="M100 12L188 192H12L100 12Z" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="0.5"/>
-          </svg>
-        </div>
-
-        <!-- Colorful spectrum below prism -->
-        <div class="spectrum-canvas">
-          <!-- Base spectrum gradient -->
-          <div class="spectrum-base"></div>
-          <!-- Warm side (left) -->
-          <div class="spectrum-warm"></div>
-          <!-- Center glow -->
-          <div class="spectrum-center"></div>
-          <!-- Cool side (right) -->
-          <div class="spectrum-cool"></div>
-          <!-- Dark area on far right -->
-          <div class="spectrum-dark-right"></div>
-          <!-- White glow from prism base -->
-          <div class="spectrum-prism-glow"></div>
-          <!-- Grid lines -->
-          <div class="spectrum-grid"></div>
-          <div class="spectrum-grid-v"></div>
-          <!-- Edge fades -->
-          <div class="spectrum-fade-top"></div>
-          <div class="spectrum-fade-bottom"></div>
-          <div class="spectrum-fade-left"></div>
-          <div class="spectrum-fade-right"></div>
-        </div>
+    <div class="hero-terminal mono">
+      <div class="hero-terminal-bar">
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <span class="filename" style="color: var(--accents-4); font-size: 12px; margin-left: 4px;">Terminal</span>
+      </div>
+      <div class="hero-terminal-body">
+        <div><span class="prompt">~ </span><span class="cmd">npx deployra deploy</span></div>
+        <div class="output">Deploying to production...</div>
+        <div class="output">Build completed in 3.8s</div>
+        <div class="output">Running checks...</div>
+        <div style="margin-top: 8px;"><span class="success">&#10003; Ready</span> <span class="output">&mdash;</span> <a href="#" class="url">my-app.deployra.app</a></div>
       </div>
     </div>
   </section>
@@ -1318,35 +966,35 @@
     <p class="section-label">Works with 35+ frameworks out of the box</p>
     <div class="frameworks-grid">
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="#666" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="7" ry="16" stroke="#666" stroke-width="1.5"/><line x1="4" y1="20" x2="36" y2="20" stroke="#666" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#666"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="#888" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="7" ry="16" stroke="#888" stroke-width="1.5"/><line x1="4" y1="20" x2="36" y2="20" stroke="#888" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#888"/></svg>
         <span>React</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><path d="M20 6L34 32H6L20 6Z" stroke="#666" stroke-width="1.5"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><path d="M20 6L34 32H6L20 6Z" stroke="#888" stroke-width="1.5"/></svg>
         <span>Next.js</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><path d="M20 8L32 14V26L20 32L8 26V14L20 8Z" stroke="#666" stroke-width="1.5"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><path d="M20 8L32 14V26L20 32L8 26V14L20 8Z" stroke="#888" stroke-width="1.5"/></svg>
         <span>Nuxt</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><path d="M20 6V34M12 10L28 30M28 10L12 30" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><path d="M20 6V34M12 10L28 30M28 10L12 30" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
         <span>Svelte</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><path d="M20 8L32 16V28L20 34L8 28V16L20 8Z" stroke="#666" stroke-width="1.5"/><path d="M20 20L32 16M20 20L8 16M20 20V34" stroke="#666" stroke-width="1"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><path d="M20 8L32 16V28L20 34L8 28V16L20 8Z" stroke="#888" stroke-width="1.5"/><path d="M20 20L32 16M20 20L8 16M20 20V34" stroke="#888" stroke-width="1"/></svg>
         <span>Vue</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="#666" stroke-width="1.5"/><path d="M10 20 L 20 10 L 30 20 L 20 30 Z" stroke="#666" stroke-width="1.5"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="#888" stroke-width="1.5"/><path d="M10 20 L 20 10 L 30 20 L 20 30 Z" stroke="#888" stroke-width="1.5"/></svg>
         <span>Astro</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><rect x="8" y="8" width="24" height="24" rx="4" stroke="#666" stroke-width="1.5"/><path d="M14 20H26M20 14V26" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><rect x="8" y="8" width="24" height="24" rx="4" stroke="#888" stroke-width="1.5"/><path d="M14 20H26M20 14V26" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
         <span>Gatsby</span>
       </div>
       <div class="framework-item">
-        <svg viewBox="0 0 40 40" fill="none"><path d="M12 12H28V20L20 28L12 20V12Z" stroke="#666" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 40 40" fill="none"><path d="M12 12H28V20L20 28L12 20V12Z" stroke="#888" stroke-width="1.5" stroke-linejoin="round"/></svg>
         <span>Remix</span>
       </div>
     </div>
@@ -1448,52 +1096,27 @@
           </div>
         </div>
       </div>
-      <div class="terminal-block mono">
-        <div class="terminal-bar">
-          <div class="terminal-dots"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
-          <span class="terminal-title">Terminal</span>
+      <div class="code-block mono">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <span class="filename">app/page.tsx</span>
         </div>
-        <div class="terminal-body">
-          <div class="deploy-line"><span class="prompt">~ </span><span class="cmd">npx edgedeploy deploy</span></div>
-          <div class="deploy-line"><span class="dimmed">Deploying to production...</span></div>
-          <div class="deploy-line"><span class="dimmed">Build completed in 3.2s</span></div>
-          <div class="deploy-line"><span class="dimmed">Running checks...</span></div>
-          <div class="deploy-line" style="margin-top: 4px;"><span class="success">&#10003; Ready</span> <span class="dimmed">&mdash;</span> <a href="#" class="url">my-app.edgedeploy.app</a></div>
+        <div class="code-block-body">
+          <div><span class="line-num"> 1</span><span class="keyword">import</span> <span class="punct">{ </span><span class="type">Suspense</span><span class="punct"> } </span><span class="keyword">from</span> <span class="string">'react'</span></div>
+          <div><span class="line-num"> 2</span><span class="keyword">import</span> <span class="punct">{ </span><span class="type">headers</span><span class="punct"> } </span><span class="keyword">from</span> <span class="string">'next/headers'</span></div>
+          <div><span class="line-num"> 3</span></div>
+          <div><span class="line-num"> 4</span><span class="keyword">export default</span> <span class="keyword">async function</span> <span class="func">Page</span><span class="punct">() {</span></div>
+          <div><span class="line-num"> 5</span>  <span class="keyword">const</span> geo <span class="punct">=</span> <span class="keyword">await</span> <span class="func">headers</span><span class="punct">()</span></div>
+          <div><span class="line-num"> 6</span></div>
+          <div><span class="line-num"> 7</span>  <span class="keyword">return</span> <span class="punct">(</span></div>
+          <div><span class="line-num"> 8</span>    <span class="punct">&lt;</span><span class="type">main</span><span class="punct">&gt;</span></div>
+          <div><span class="line-num"> 9</span>      <span class="punct">&lt;</span><span class="type">Suspense</span> <span class="type">fallback</span><span class="punct">={&lt;</span><span class="type">Loading</span> <span class="punct">/&gt;}&gt;</span></div>
+          <div><span class="line-num">10</span>        <span class="punct">&lt;</span><span class="type">Dashboard</span> <span class="type">region</span><span class="punct">={</span>geo<span class="punct">} /&gt;</span></div>
+          <div><span class="line-num">11</span>      <span class="punct">&lt;/</span><span class="type">Suspense</span><span class="punct">&gt;</span></div>
+          <div><span class="line-num">12</span>    <span class="punct">&lt;/</span><span class="type">main</span><span class="punct">&gt;</span></div>
+          <div><span class="line-num">13</span>  <span class="punct">)</span></div>
+          <div><span class="line-num">14</span><span class="punct">}</span></div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Globe/Edge Network -->
-  <div class="gradient-line"></div>
-  <section class="globe-section fade-in">
-    <div class="section-header">
-      <div class="label">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
-        Global Network
-      </div>
-      <h2>Built on a global edge</h2>
-      <p>Your content, cached and served from the edge closest to every user. Fast everywhere.</p>
-    </div>
-    <div class="globe-container">
-      <div class="globe">
-        <div class="globe-circle globe-circle-1"></div>
-        <div class="globe-circle globe-circle-2"></div>
-        <div class="globe-circle globe-circle-3"></div>
-        <div class="globe-ellipse globe-ellipse-h"></div>
-        <div class="globe-ellipse globe-ellipse-v"></div>
-        <div class="globe-ellipse globe-ellipse-tilt"></div>
-        <div class="globe-dot globe-dot-1"></div>
-        <div class="globe-dot globe-dot-2"></div>
-        <div class="globe-dot globe-dot-3"></div>
-        <div class="globe-dot globe-dot-4"></div>
-        <div class="globe-dot globe-dot-5"></div>
-        <div class="globe-dot globe-dot-6"></div>
-        <div class="globe-dot globe-dot-7"></div>
-        <span class="globe-label globe-label-1">US West</span>
-        <span class="globe-label globe-label-2">EU Central</span>
-        <span class="globe-label globe-label-3">AP Southeast</span>
-        <span class="globe-label globe-label-4">SA East</span>
       </div>
     </div>
   </section>
@@ -1502,22 +1125,30 @@
   <div class="gradient-line"></div>
   <section class="metrics fade-in">
     <div class="metrics-inner">
+      <div class="section-header">
+        <div class="label">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/></svg>
+          Global Network
+        </div>
+        <h2>Built on a global edge</h2>
+        <p>Your content, cached and served from the edge closest to every user. Fast everywhere, not just in one region.</p>
+      </div>
       <div class="metrics-grid">
         <div class="metric-card">
           <div class="value">100+</div>
-          <div class="metric-label">Edge locations</div>
+          <div class="label">Edge locations</div>
         </div>
         <div class="metric-card">
           <div class="value">~50ms</div>
-          <div class="metric-label">Global latency</div>
+          <div class="label">Global latency</div>
         </div>
         <div class="metric-card">
           <div class="value">99.99%</div>
-          <div class="metric-label">Uptime SLA</div>
+          <div class="label">Uptime SLA</div>
         </div>
         <div class="metric-card">
           <div class="value">10TB</div>
-          <div class="metric-label">Free bandwidth</div>
+          <div class="label">Free bandwidth</div>
         </div>
       </div>
     </div>
@@ -1527,9 +1158,9 @@
   <div class="gradient-line"></div>
   <section class="cta fade-in">
     <div class="triangle">
-      <svg viewBox="0 0 76 65" fill="#000"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
+      <svg viewBox="0 0 76 65" fill="#fff"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
     </div>
-    <h2>Start building<br>with EdgeDeploy today</h2>
+    <h2>Start building<br>with Deployra today</h2>
     <p>Get started in under a minute. Free for hobby projects. Scale when you're ready.</p>
     <div class="cta-buttons">
       <button class="btn-primary btn-large">
@@ -1545,8 +1176,8 @@
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <svg viewBox="0 0 76 65" fill="#000"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
-          EdgeDeploy
+          <svg viewBox="0 0 76 65" fill="#fff"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
+          Deployra
         </div>
         <div class="footer-col">
           <h4>Product</h4>
@@ -1587,7 +1218,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 EdgeDeploy, Inc.</p>
+        <p>&copy; 2024 Deployra, Inc.</p>
         <div class="footer-social">
           <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
           <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>

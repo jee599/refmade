@@ -1,957 +1,959 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NexusAI — AI Research & Products</title>
+  <title>006 — AI Product Reference</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,800;1,8..60,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            body: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            surface: '#0a0a0a',
+            subtle: '#141414',
+            border: '#262626',
+            muted: '#737373',
+            accent: '#6366f1',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-primary: #f5f0e8;
-      --bg-secondary: #eae5dc;
-      --bg-dark: #191919;
-      --text-primary: #191919;
-      --text-secondary: #555;
-      --text-light: #888;
-      --text-inverse: #f5f0e8;
-      --border: #d5d0c8;
+    * { box-sizing: border-box; }
+    body { font-family: 'Space Grotesk', sans-serif; background: #0a0a0a; color: #ededed; }
+    .dot-grid {
+      background-image: radial-gradient(#262626 1px, transparent 1px);
+      background-size: 32px 32px;
     }
 
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    /* Blinking cursor */
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .type-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: #6366f1;
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 1px;
     }
 
-    /* ---- NAV ---- */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 0 48px;
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg-primary);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.3s ease;
+    /* Keystroke pulse dot */
+    @keyframes keystrokePulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(2.5); opacity: 0; }
     }
-    nav.scrolled { border-bottom-color: var(--border); }
-
-    .nav-logo {
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      text-decoration: none;
-      color: var(--text-primary);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      list-style: none;
-    }
-    .nav-right a {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .nav-right a:hover { opacity: 0.6; }
-
-    .nav-dropdown {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-    }
-    .nav-dropdown svg {
-      width: 10px;
-      height: 10px;
-      opacity: 0.5;
-    }
-
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 18px;
-      background: var(--bg-dark);
-      color: var(--text-inverse) !important;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      opacity: 1 !important;
-      transition: background 0.2s;
-    }
-    .nav-cta:hover { background: #333; }
-    .nav-cta svg { width: 10px; height: 10px; opacity: 0.6; }
-
-    /* ---- HERO ---- */
-    .hero {
-      padding: 148px 48px 88px;
-      max-width: 1280px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 60px;
-      align-items: start;
-    }
-
-    .hero-heading {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: clamp(40px, 5.2vw, 68px);
-      font-weight: 700;
-      line-height: 1.06;
-      letter-spacing: -0.025em;
-      color: var(--text-primary);
-    }
-
-    .hero-heading .ul {
-      text-decoration: underline;
-      text-decoration-thickness: 2.5px;
-      text-underline-offset: 5px;
-      text-decoration-color: var(--text-primary);
-    }
-
-    .hero-right {
-      padding-top: 12px;
-    }
-
-    .hero-description {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 19px;
-      line-height: 1.55;
-      color: var(--text-primary);
-      max-width: 380px;
-    }
-
-    /* ---- FEATURED SECTION ---- */
-    .featured-section {
-      background: var(--bg-secondary);
-      padding: 96px 48px 80px;
-      text-align: center;
-    }
-
-    .featured-inner {
-      max-width: 880px;
-      margin: 0 auto;
-    }
-
-    .featured-heading {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: clamp(34px, 4.5vw, 62px);
-      font-weight: 700;
-      line-height: 1.08;
-      letter-spacing: -0.025em;
-      margin-bottom: 18px;
-    }
-
-    .featured-subtitle {
-      font-size: 16px;
-      color: var(--text-secondary);
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .featured-globe {
-      margin-top: 48px;
-      width: 100%;
-      max-width: 420px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-      overflow: hidden;
-      opacity: 0.7;
-      background:
-        radial-gradient(ellipse 90% 80% at 40% 45%, #c9c3b5 0%, transparent 70%),
-        radial-gradient(ellipse 60% 50% at 65% 55%, #b8b2a4 0%, transparent 60%),
-        radial-gradient(circle at 50% 50%, #d8d3c8 0%, #e5e0d6 100%);
-    }
-
-    /* Continents approximation via layered shapes */
-    .featured-globe::before {
-      content: '';
+    .keystroke-dot {
       position: absolute;
-      inset: 0;
-      background:
-        /* North America shape */
-        radial-gradient(ellipse 22% 18% at 28% 32%, rgba(160,155,140,0.5) 0%, transparent 100%),
-        /* South America */
-        radial-gradient(ellipse 10% 20% at 35% 62%, rgba(160,155,140,0.45) 0%, transparent 100%),
-        /* Europe/Africa */
-        radial-gradient(ellipse 12% 28% at 52% 48%, rgba(160,155,140,0.4) 0%, transparent 100%),
-        /* Asia */
-        radial-gradient(ellipse 20% 16% at 68% 35%, rgba(160,155,140,0.35) 0%, transparent 100%),
-        /* Highlight */
-        radial-gradient(circle at 35% 38%, rgba(255,255,255,0.12) 0%, transparent 40%);
-    }
-
-    .featured-globe::after {
-      content: '';
-      position: absolute;
-      inset: 0;
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
-      box-shadow: inset 0 0 60px rgba(0,0,0,0.06);
+      background: #6366f1;
+      pointer-events: none;
+      animation: keystrokePulse 0.35s ease-out forwards;
     }
 
-    /* ---- RESEARCH SECTION ---- */
-    .research-section {
-      padding: 110px 48px;
-      max-width: 1280px;
-      margin: 0 auto;
+    /* Scroll reveal */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .reveal-line { opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .reveal-line.visible { opacity: 1; transform: translateY(0); }
 
-    .section-label {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-light);
-      margin-bottom: 32px;
-    }
+    /* Syntax colors */
+    .syn-kw { color: #c678dd; }
+    .syn-str { color: #98c379; }
+    .syn-num { color: #d19a66; }
+    .syn-cmt { color: #5c6370; }
+    .syn-fn { color: #61afef; }
+    .syn-var { color: #e5c07b; }
 
-    .research-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-    }
+    /* Code block line numbers */
+    .code-ln { color: #3e4451; user-select: none; min-width: 2ch; text-align: right; display: inline-block; margin-right: 1.5em; }
 
-    .research-card {
-      padding: 28px 0;
-      border-top: 1px solid var(--border);
-    }
+    /* Copy button */
+    .copy-btn { opacity: 0; transition: opacity 0.2s; }
+    .code-panel:hover .copy-btn { opacity: 1; }
 
-    .research-card-date {
-      font-size: 13px;
-      color: var(--text-light);
-      margin-bottom: 14px;
+    /* Typing code container */
+    .typing-code-area {
+      min-height: 7.5em;
     }
-
-    .research-card-title {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 21px;
-      font-weight: 600;
-      line-height: 1.3;
-      margin-bottom: 10px;
-    }
-
-    .research-card-title a {
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .research-card-title a:hover { opacity: 0.6; }
-
-    .research-card-desc {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* ---- STATS ---- */
-    .stats-section {
-      padding: 96px 48px;
-      background: var(--bg-dark);
-      color: var(--text-inverse);
-    }
-
-    .stats-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .stats-heading {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: clamp(30px, 3.8vw, 50px);
-      font-weight: 700;
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      max-width: 680px;
-      margin-bottom: 60px;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 40px;
-    }
-
-    .stat-item {
-      border-top: 1px solid rgba(255,255,255,0.14);
-      padding-top: 24px;
-    }
-
-    .stat-number {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 46px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 6px;
-    }
-
-    .stat-label {
-      font-size: 15px;
-      color: rgba(245,240,232,0.55);
-      line-height: 1.5;
-    }
-
-    /* ---- PRODUCT SECTION ---- */
-    .product-section {
-      padding: 110px 48px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 72px;
-      align-items: center;
-    }
-
-    .product-text h2 {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: clamp(30px, 3.2vw, 46px);
-      font-weight: 700;
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      margin-bottom: 22px;
-    }
-
-    .product-text p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 28px;
-      max-width: 460px;
-    }
-
-    .product-link {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-primary);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: gap 0.2s;
-    }
-    .product-link:hover { gap: 12px; }
-    .product-link svg { width: 16px; height: 16px; }
-
-    .product-visual {
-      aspect-ratio: 4 / 3;
-      background: var(--bg-secondary);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .product-visual-inner {
-      width: 68%;
-      height: 58%;
-      background: var(--bg-primary);
-      border-radius: 10px;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      padding: 22px;
-      gap: 11px;
-    }
-
-    .product-visual-line {
-      height: 7px;
-      border-radius: 4px;
-      background: var(--border);
-    }
-    .product-visual-line:nth-child(1) { width: 58%; }
-    .product-visual-line:nth-child(2) { width: 82%; }
-    .product-visual-line:nth-child(3) { width: 42%; }
-    .product-visual-line:nth-child(4) { width: 68%; background: rgba(200,180,140,0.3); }
-
-    /* ---- COMMITMENTS ---- */
-    .commitments-section {
-      padding: 110px 48px;
-      background: var(--bg-secondary);
-    }
-
-    .commitments-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .commitments-heading {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: clamp(30px, 3.8vw, 50px);
-      font-weight: 700;
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      max-width: 580px;
-      margin-bottom: 56px;
-    }
-
-    .commitments-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 44px;
-    }
-
-    .commitment-card {
-      padding: 36px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .commitment-icon {
-      width: 44px;
-      height: 44px;
-      margin-bottom: 22px;
-      color: var(--text-primary);
-    }
-
-    .commitment-title {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 23px;
-      font-weight: 600;
-      margin-bottom: 14px;
-      line-height: 1.3;
-    }
-
-    .commitment-desc {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    /* ---- NEWS SECTION ---- */
-    .news-section {
-      padding: 110px 48px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 44px;
-    }
-
-    .news-heading {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 40px;
-    }
-
-    .news-card {
-      border-top: 1px solid var(--border);
-      padding-top: 28px;
-    }
-
-    .news-card-meta {
-      font-size: 13px;
-      color: var(--text-light);
-      margin-bottom: 10px;
-      display: flex;
-      gap: 16px;
-    }
-
-    .news-card-title {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 22px;
-      font-weight: 600;
-      line-height: 1.3;
-      margin-bottom: 10px;
-    }
-
-    .news-card-title a {
-      color: var(--text-primary);
-      text-decoration: none;
-    }
-    .news-card-title a:hover { text-decoration: underline; text-underline-offset: 3px; }
-
-    .news-card-desc {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* ---- CAREERS BANNER ---- */
-    .careers-section {
-      padding: 110px 48px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .careers-banner {
-      background: var(--bg-dark);
-      color: var(--text-inverse);
-      border-radius: 18px;
-      padding: 72px;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 56px;
-      align-items: center;
-    }
-
-    .careers-heading {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: clamp(30px, 3.2vw, 46px);
-      font-weight: 700;
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      margin-bottom: 18px;
-    }
-
-    .careers-desc {
-      font-size: 16px;
-      color: rgba(245,240,232,0.65);
-      line-height: 1.6;
-    }
-
-    .careers-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 26px;
-      background: var(--text-inverse);
-      color: var(--bg-dark);
-      border-radius: 24px;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity 0.2s;
-      justify-self: end;
-    }
-    .careers-cta:hover { opacity: 0.85; }
-    .careers-cta svg { width: 14px; height: 14px; }
-
-    /* ---- FOOTER ---- */
-    footer {
-      padding: 56px 48px 40px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.5fr repeat(4, 1fr);
-      gap: 44px;
-    }
-
-    .footer-brand {
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 14px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .footer-tagline {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 230px;
-    }
-
-    .footer-col-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-light);
-      margin-bottom: 18px;
-    }
-
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .footer-links a {
-      font-size: 14px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--text-primary); }
-
-    .footer-bottom {
-      max-width: 1280px;
-      margin: 36px auto 0;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text-light);
-    }
-
-    /* ---- SCROLL REVEAL ---- */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ---- RESPONSIVE ---- */
-    @media (max-width: 1024px) {
-      nav { padding: 0 24px; }
-      .hero { padding: 130px 24px 56px; grid-template-columns: 1fr; gap: 32px; }
-      .hero-right { padding-top: 0; }
-      .research-grid { grid-template-columns: 1fr 1fr; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .product-grid { grid-template-columns: 1fr; gap: 44px; }
-      .commitments-grid { grid-template-columns: 1fr 1fr; }
-      .news-grid { grid-template-columns: 1fr; }
-      .careers-banner { grid-template-columns: 1fr; padding: 44px; }
-      .careers-cta { justify-self: start; }
-      .footer-inner { grid-template-columns: 1fr 1fr; }
-      .featured-section, .research-section, .stats-section,
-      .product-section, .commitments-section, .news-section,
-      .careers-section { padding-left: 24px; padding-right: 24px; }
-    }
-
-    @media (max-width: 640px) {
-      .nav-right { display: none; }
-      .hero-heading { font-size: 34px; }
-      .research-grid { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: 1fr; }
-      .commitments-grid { grid-template-columns: 1fr; }
-      .footer-inner { grid-template-columns: 1fr; }
-      .careers-banner { padding: 28px; }
-      .stats-section { padding-left: 24px; padding-right: 24px; }
-      footer { padding: 36px 24px 28px; }
+    .typing-code-area .code-line {
+      white-space: pre;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .reveal { transition: none; opacity: 1; transform: none; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal, .reveal-left, .reveal-right, .reveal-line { opacity: 1; transform: none; }
     }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Text Mask/Clip Effect */
+    .text-gradient-mask {
+      background:linear-gradient(135deg, currentColor 0%, currentColor 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+    }
+  
+
+    /* Smooth Number Counters */
+    .smooth-counter { font-variant-numeric:tabular-nums; transition:all 0.1s ease; }
+  
+
+    /* Magnetic Cursor */
+    .magnetic { transition:transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  
+  
+    @keyframes shimmer-text { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
   </style>
 </head>
-<body>
+<body class="antialiased">
 
-  <!-- NAV -->
-  <nav id="mainNav">
-    <a href="#" class="nav-logo">Nexus AI</a>
-    <ul class="nav-right">
-      <li><a href="#research">Research</a></li>
-      <li><a href="#product">Economic Futures</a></li>
-      <li>
-        <a href="#commitments" class="nav-dropdown">
-          Commitments
-          <svg viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </li>
-      <li>
-        <a href="#news" class="nav-dropdown">
-          Learn
-          <svg viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </li>
-      <li><a href="#news">News</a></li>
-      <li>
-        <a href="#" class="nav-cta">
-          Try Nexus
-          <svg viewBox="0 0 10 10" fill="none"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </li>
-    </ul>
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-border">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-heading font-medium text-lg tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded">Nexus<span class="text-accent">AI</span></a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-muted">
+        <a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded">Research</a>
+        <a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded">API</a>
+        <a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded">Safety</a>
+        <a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded">Pricing</a>
+      </div>
+      <a href="#" class="bg-accent hover:bg-indigo-400 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Get API Key</a>
+    </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <h1 class="hero-heading">
-        AI <span class="ul">research</span> and
-        <span class="ul">products</span> that put
-        safety at the frontier
-      </h1>
-    </div>
-    <div class="hero-right">
-      <p class="hero-description">
-        AI will have a vast impact on the world.
-        NexusAI is a public benefit corporation
-        dedicated to securing its benefits and
-        mitigating its risks.
-      </p>
-    </div>
-  </section>
-
-  <!-- FEATURED -->
-  <section class="featured-section">
-    <div class="featured-inner reveal">
-      <h2 class="featured-heading">What 81,000 people<br>want from AI</h2>
-      <p class="featured-subtitle">
-        The largest study ever done on AI and how it's shaping lives around the world.
-      </p>
-      <div class="featured-globe" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <!-- RESEARCH -->
-  <section class="research-section" id="research">
-    <p class="section-label reveal">Latest Research</p>
-    <div class="research-grid">
-      <article class="research-card reveal">
-        <p class="research-card-date">March 2026</p>
-        <h3 class="research-card-title"><a href="#">Alignment faking in large language models</a></h3>
-        <p class="research-card-desc">Examining whether models learn to behave differently during training vs deployment, and what it means for safety.</p>
-      </article>
-      <article class="research-card reveal">
-        <p class="research-card-date">February 2026</p>
-        <h3 class="research-card-title"><a href="#">Constitutional AI: harmlessness from AI feedback</a></h3>
-        <p class="research-card-desc">A technique for training harmless AI systems using a set of principles and the model's own feedback loop.</p>
-      </article>
-      <article class="research-card reveal">
-        <p class="research-card-date">January 2026</p>
-        <h3 class="research-card-title"><a href="#">Scaling laws for neural language models</a></h3>
-        <p class="research-card-desc">Empirical laws governing performance improvements as model size, data, and compute scale together.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- STATS -->
-  <section class="stats-section">
-    <div class="stats-inner">
-      <h2 class="stats-heading reveal">Building AI systems that are reliable, interpretable, and steerable</h2>
-      <div class="stats-grid">
-        <div class="stat-item reveal">
-          <div class="stat-number">200+</div>
-          <div class="stat-label">Published research papers on AI safety and capabilities</div>
+  <!-- Hero — SPLIT layout: left text, right code typing animation -->
+  <section class="dot-grid pt-28 md:pt-40 pb-20 md:pb-28">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <!-- Left: text, left-aligned -->
+        <div class="flex-1 max-w-xl">
+          <p class="text-sm font-mono text-accent mb-6 tracking-wider uppercase">Model v4 Now Available</p>
+          <h1 class="font-heading font-medium text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-white mb-6">
+            <span style="background:linear-gradient(135deg,#6366f1,#a78bfa,#6366f1);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer-text 4s ease-in-out infinite;">Foundation models for</span><br>structured reasoning
+          </h1>
+          <p class="text-lg text-muted mb-10 leading-relaxed">
+            Extract entities, classify intent, and generate schema-constrained outputs from unstructured text. 200K context window. Sub-200ms P95 latency.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#" class="magnetic bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Try the API</a>
+            <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Docs</a>
+          </div>
         </div>
-        <div class="stat-item reveal">
-          <div class="stat-number">1M+</div>
-          <div class="stat-label">Developers building with our API every month</div>
-        </div>
-        <div class="stat-item reveal">
-          <div class="stat-number">81K</div>
-          <div class="stat-label">People surveyed in the largest AI impact study</div>
-        </div>
-        <div class="stat-item reveal">
-          <div class="stat-number">95%</div>
-          <div class="stat-label">Reduction in harmful outputs through Constitutional AI</div>
+        <!-- Right: live code typing animation -->
+        <div class="flex-1 w-full max-w-lg code-panel">
+          <div class="bg-subtle border border-border rounded-xl overflow-hidden">
+            <!-- Tab bar -->
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-border bg-[#0f0f0f]">
+              <div class="flex items-center gap-1">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded-t border border-border border-b-0 relative top-[1px]">app.ts</span>
+                <span class="px-3 py-1 text-xs font-mono text-muted">config.ts</span>
+              </div>
+              <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+            </div>
+            <!-- Code with typing — starts empty, JS fills it -->
+            <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto typing-code-area" id="heroCodeArea" style="position:relative;">
+            </div>
+            <!-- Response typing area — types simultaneously with request -->
+            <div class="border-t border-border p-5 bg-[#0d0d0d]" id="heroResponseWrapper">
+              <p class="text-xs font-mono text-muted mb-3"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5"></span>Response — 143ms</p>
+              <div class="font-mono text-sm leading-relaxed overflow-x-auto typing-code-area" id="heroResponseArea" style="position:relative;">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PRODUCT -->
-  <section class="product-section" id="product">
-    <div class="product-grid">
-      <div class="product-text reveal">
-        <h2>Meet Nexus,<br>your AI assistant</h2>
-        <p>Nexus is a next-generation AI assistant built by NexusAI. It excels at thoughtful dialogue, content creation, complex reasoning, coding, and detailed analysis across hundreds of subjects.</p>
-        <a href="#" class="product-link">
-          Try Nexus
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M10 5l3 3-3 3"/></svg>
-        </a>
+  <!-- Social proof -->
+  <section class="py-10 border-y border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="text-sm text-muted text-center font-mono">[N] developers ship with Nexus API</p>
+    </div>
+  </section>
+
+  <!-- Full-width code showcase — "See it in action" -->
+  <section class="py-20 md:py-28 bg-subtle">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal mb-14">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">See it in action</h2>
+        <p class="text-muted max-w-xl">Send a request, get structured data back. No post-processing needed.</p>
       </div>
-      <div class="product-visual reveal" aria-label="Product interface preview">
-        <div class="product-visual-inner">
-          <div class="product-visual-line"></div>
-          <div class="product-visual-line"></div>
-          <div class="product-visual-line"></div>
-          <div class="product-visual-line"></div>
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Left: request code (typing animation) -->
+        <div class="flex-1 code-panel reveal-left">
+          <div class="bg-surface border border-border rounded-xl overflow-hidden h-full">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+              <div class="flex items-center gap-1">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded border border-border">request.ts</span>
+              </div>
+              <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+            </div>
+            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto typing-code-area" id="actionCodeArea" style="position:relative;">
+            </div>
+          </div>
+        </div>
+        <!-- Right: response with typewriter -->
+        <div class="flex-1 code-panel reveal-right">
+          <div class="bg-surface border border-border rounded-xl overflow-hidden h-full">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+              <div class="flex items-center gap-1">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded border border-border">response.json</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs font-mono text-muted">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                <span>89ms</span>
+              </div>
+            </div>
+            <div class="p-5 font-mono text-sm leading-loose overflow-x-auto typing-code-area" id="actionResponseArea" style="position:relative;">
+            </div>
+            <!-- Token footer -->
+            <div class="border-t border-border px-5 py-3 flex items-center gap-4 text-xs font-mono text-muted" id="actionTokenFooter" style="opacity:0; transition: opacity 0.4s ease;">
+              <span>tokens: 312 in / 47 out</span>
+              <span class="text-border">|</span>
+              <span>stop: end_turn</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- COMMITMENTS -->
-  <section class="commitments-section" id="commitments">
-    <div class="commitments-inner">
-      <h2 class="commitments-heading reveal">Our commitments to responsible development</h2>
-      <div class="commitments-grid">
-        <div class="commitment-card reveal">
-          <svg class="commitment-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="24" cy="24" r="20"/>
-            <path d="M16 24l6 6 10-12"/>
-          </svg>
-          <h3 class="commitment-title">Safety First</h3>
-          <p class="commitment-desc">We develop AI with safety as a core constraint, not an afterthought. Every model goes through rigorous red-teaming before release.</p>
+  <!-- Capabilities — alternating left-right layout -->
+  <section class="py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="reveal mb-16 max-w-2xl">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Core capabilities</h2>
+        <p class="text-muted">What the model does well, and what it was designed for.</p>
+      </div>
+
+      <div class="space-y-24">
+        <!-- Feature 1: left text, right visual -->
+        <div class="flex flex-col md:flex-row items-start gap-10 md:gap-16">
+          <div class="flex-1 reveal-left">
+            <div class="w-10 h-10 rounded-lg bg-subtle border border-border flex items-center justify-center mb-5">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>
+            </div>
+            <h3 class="font-heading font-medium text-xl text-white mb-3">200K Context Window</h3>
+            <p class="text-muted leading-relaxed mb-4">Process entire codebases, legal documents, or research papers in a single request. No chunking, no lost context.</p>
+            <p class="text-sm text-muted">Input and output windows are independently configurable per request.</p>
+          </div>
+          <div class="flex-1 reveal-right bg-subtle border border-border rounded-xl p-6">
+            <div class="space-y-3 font-mono text-sm text-muted">
+              <div class="flex justify-between"><span>Input tokens</span><span class="text-white">187,429</span></div>
+              <div class="w-full bg-border rounded-full h-1.5"><div class="bg-accent rounded-full h-1.5" style="width: 93%"></div></div>
+              <div class="flex justify-between mt-4"><span>Output tokens</span><span class="text-white">2,048</span></div>
+              <div class="w-full bg-border rounded-full h-1.5"><div class="bg-emerald-400 rounded-full h-1.5" style="width: 12%"></div></div>
+              <div class="flex justify-between mt-4"><span>Latency (P95)</span><span class="text-white">187ms</span></div>
+              <div class="w-full bg-border rounded-full h-1.5"><div class="bg-[#d19a66] rounded-full h-1.5" style="width: 19%"></div></div>
+            </div>
+          </div>
         </div>
-        <div class="commitment-card reveal">
-          <svg class="commitment-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="6" y="6" width="36" height="36" rx="4"/>
-            <path d="M6 18h36M18 18v24"/>
-          </svg>
-          <h3 class="commitment-title">Transparency</h3>
-          <p class="commitment-desc">We publish our research openly and share our findings about AI capabilities and risks with the broader community.</p>
+
+        <!-- Feature 2: right text, left code (reversed) -->
+        <div class="flex flex-col md:flex-row-reverse items-start gap-10 md:gap-16">
+          <div class="flex-1 reveal-right">
+            <div class="w-10 h-10 rounded-lg bg-subtle border border-border flex items-center justify-center mb-5">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"/></svg>
+            </div>
+            <h3 class="font-heading font-medium text-xl text-white mb-3">Structured Outputs</h3>
+            <p class="text-muted leading-relaxed mb-4">Define a JSON Schema and get guaranteed-valid responses. No post-processing, no regex parsing.</p>
+            <p class="text-sm text-muted">Works with nested objects, arrays, enums, and recursive schemas.</p>
+          </div>
+          <div class="flex-1 reveal-left code-panel">
+            <div class="bg-subtle border border-border rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+                <span class="px-3 py-1 text-xs font-mono text-white bg-surface rounded border border-border">output.json</span>
+                <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+              </div>
+              <div class="p-5">
+                <pre class="font-mono text-sm leading-relaxed overflow-x-auto"><code><span class="code-ln">1</span>{
+<span class="code-ln">2</span>  <span class="syn-str">"sentiment"</span>: <span class="syn-str">"positive"</span>,
+<span class="code-ln">3</span>  <span class="syn-str">"confidence"</span>: <span class="syn-num">0.94</span>,
+<span class="code-ln">4</span>  <span class="syn-str">"entities"</span>: [
+<span class="code-ln">5</span>    {
+<span class="code-ln">6</span>      <span class="syn-str">"text"</span>: <span class="syn-str">"Nexus AI"</span>,
+<span class="code-ln">7</span>      <span class="syn-str">"type"</span>: <span class="syn-str">"ORG"</span>
+<span class="code-ln">8</span>    }
+<span class="code-ln">9</span>  ]
+<span class="code-ln">10</span>}</code></pre>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="commitment-card reveal">
-          <svg class="commitment-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M24 4v40M4 24h40"/>
-            <circle cx="24" cy="24" r="12"/>
-          </svg>
-          <h3 class="commitment-title">Global Impact</h3>
-          <p class="commitment-desc">As a public benefit corporation, we consider our impact on society alongside business outcomes in every decision we make.</p>
+
+        <!-- Feature 3: left text, right visual -->
+        <div class="flex flex-col md:flex-row items-start gap-10 md:gap-16">
+          <div class="flex-1 reveal-left">
+            <div class="w-10 h-10 rounded-lg bg-subtle border border-border flex items-center justify-center mb-5">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+            </div>
+            <h3 class="font-heading font-medium text-xl text-white mb-3">Enterprise Security</h3>
+            <p class="text-muted leading-relaxed mb-4">SOC 2 Type II certified. Data encrypted at rest and in transit. Zero data retention on API requests by default.</p>
+            <p class="text-sm text-muted">Custom data residency available for regulated industries.</p>
+          </div>
+          <div class="flex-1 reveal-right bg-subtle border border-border rounded-xl p-6">
+            <div class="grid grid-cols-2 gap-4 text-center">
+              <div class="p-4 bg-surface rounded-lg border border-border"><span class="block font-mono text-lg text-white">SOC 2</span><span class="text-xs text-muted">Type II</span></div>
+              <div class="p-4 bg-surface rounded-lg border border-border"><span class="block font-mono text-lg text-white">HIPAA</span><span class="text-xs text-muted">Compliant</span></div>
+              <div class="p-4 bg-surface rounded-lg border border-border"><span class="block font-mono text-lg text-white">GDPR</span><span class="text-xs text-muted">Ready</span></div>
+              <div class="p-4 bg-surface rounded-lg border border-border"><span class="block font-mono text-lg text-white">99.9%</span><span class="text-xs text-muted">Uptime SLA</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- NEWS -->
-  <section class="news-section" id="news">
-    <div class="news-header reveal">
-      <h2 class="news-heading">Latest News</h2>
-      <a href="#" class="product-link">
-        View all
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M10 5l3 3-3 3"/></svg>
-      </a>
-    </div>
-    <div class="news-grid">
-      <article class="news-card reveal">
-        <div class="news-card-meta">
-          <span>Company</span>
-          <span>Mar 15, 2026</span>
+  <!-- Function Calling — full-width bg, contained content -->
+  <section class="bg-subtle py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="reveal mb-8">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Function calling</h2>
+        <p class="text-muted max-w-2xl">Define tools as JSON Schema, and the model decides when and how to invoke them. Supports parallel and sequential tool use.</p>
+      </div>
+      <div class="reveal code-panel">
+        <div class="bg-surface border border-border rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2.5 border-b border-border">
+            <div class="flex items-center gap-1">
+              <span class="px-3 py-1 text-xs font-mono text-white bg-subtle rounded border border-border">tools.ts</span>
+              <span class="px-3 py-1 text-xs font-mono text-muted">types.ts</span>
+            </div>
+            <button class="copy-btn text-xs font-mono text-muted hover:text-white px-2 py-1 rounded border border-border hover:border-[#404040] transition-colors duration-200" aria-label="Copy code">Copy</button>
+          </div>
+          <div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto">
+<div><span class="code-ln">1</span><span class="syn-kw">const</span> tools = [{</div>
+<div><span class="code-ln">2</span>  name: <span class="syn-str">"get_weather"</span>,</div>
+<div><span class="code-ln">3</span>  description: <span class="syn-str">"Get current weather for a location"</span>,</div>
+<div><span class="code-ln">4</span>  parameters: {</div>
+<div><span class="code-ln">5</span>    type: <span class="syn-str">"object"</span>,</div>
+<div><span class="code-ln">6</span>    properties: {</div>
+<div><span class="code-ln">7</span>      location: { type: <span class="syn-str">"string"</span> },</div>
+<div><span class="code-ln">8</span>      unit: { type: <span class="syn-str">"string"</span>, <span class="syn-kw">enum</span>: [<span class="syn-str">"celsius"</span>, <span class="syn-str">"fahrenheit"</span>] },</div>
+<div><span class="code-ln">9</span>    },</div>
+<div><span class="code-ln">10</span>  },</div>
+<div><span class="code-ln">11</span>}];</div>
+<div><span class="code-ln">12</span></div>
+<div><span class="code-ln">13</span><span class="syn-kw">const</span> response = <span class="syn-kw">await</span> nexus.<span class="syn-fn">complete</span>({</div>
+<div><span class="code-ln">14</span>  model: <span class="syn-str">"nexus-v4"</span>,</div>
+<div><span class="code-ln">15</span>  messages: [{ role: <span class="syn-str">"user"</span>, content: <span class="syn-str">"Weather in Tokyo?"</span> }],</div>
+<div><span class="code-ln">16</span>  tools,</div>
+<div><span class="code-ln">17</span>});</div>
+<div><span class="code-ln">18</span></div>
+<div><span class="code-ln">19</span><span class="syn-cmt">// response.tool_calls[0].function.name → "get_weather"</span></div>
+<div><span class="code-ln">20</span><span class="syn-cmt">// response.tool_calls[0].function.arguments → { location: "Tokyo" }</span></div>
+          </div>
         </div>
-        <h3 class="news-card-title"><a href="#">Introducing Nexus 4 with expanded context and reasoning</a></h3>
-        <p class="news-card-desc">Our most capable model yet, with improved reasoning, reduced hallucinations, and support for longer conversations.</p>
-      </article>
-      <article class="news-card reveal">
-        <div class="news-card-meta">
-          <span>Policy</span>
-          <span>Feb 28, 2026</span>
-        </div>
-        <h3 class="news-card-title"><a href="#">Our responsible scaling commitments for 2026</a></h3>
-        <p class="news-card-desc">Outlining the safety benchmarks and evaluation criteria we will meet before deploying more capable models.</p>
-      </article>
-      <article class="news-card reveal">
-        <div class="news-card-meta">
-          <span>Research</span>
-          <span>Feb 10, 2026</span>
-        </div>
-        <h3 class="news-card-title"><a href="#">Economic impact of AI: a multi-sector analysis</a></h3>
-        <p class="news-card-desc">New research examining how AI adoption is transforming productivity and labor markets across twelve industries.</p>
-      </article>
-      <article class="news-card reveal">
-        <div class="news-card-meta">
-          <span>Product</span>
-          <span>Jan 22, 2026</span>
-        </div>
-        <h3 class="news-card-title"><a href="#">Nexus for Enterprise: secure AI for organizations</a></h3>
-        <p class="news-card-desc">Enterprise-grade deployment options with SSO, audit logs, and data retention controls for businesses of every size.</p>
-      </article>
+      </div>
     </div>
   </section>
 
-  <!-- CAREERS BANNER -->
-  <section class="careers-section">
-    <div class="careers-banner reveal">
-      <div>
-        <h2 class="careers-heading">Help us build the future of AI safely</h2>
-        <p class="careers-desc">We're looking for researchers, engineers, and policy experts who want to ensure AI benefits humanity.</p>
+  <!-- Safety & Alignment -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="reveal mb-8">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-6">Safety &amp; Alignment</h2>
+        <p class="text-muted leading-relaxed max-w-2xl">
+          Every model undergoes adversarial evaluation, bias benchmarking, and alignment tuning before release. Published model cards include failure modes and known limitations.
+        </p>
       </div>
-      <a href="#" class="careers-cta">
-        View open roles
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M9 4l3 3-3 3"/></svg>
-      </a>
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="reveal border border-border rounded-xl p-5 bg-subtle hover:border-[#404040] transition-colors duration-200">
+          <h3 class="font-heading font-medium text-white mb-2">Red Teaming</h3>
+          <p class="text-sm text-muted leading-relaxed">External adversarial testing by independent security researchers before each model release.</p>
+        </div>
+        <div class="reveal border border-border rounded-xl p-5 bg-subtle hover:border-[#404040] transition-colors duration-200">
+          <h3 class="font-heading font-medium text-white mb-2">Bias Evaluation</h3>
+          <p class="text-sm text-muted leading-relaxed">Continuous monitoring across demographic axes with published evaluation results and methodology.</p>
+        </div>
+        <div class="reveal border border-border rounded-xl p-5 bg-subtle hover:border-[#404040] transition-colors duration-200">
+          <h3 class="font-heading font-medium text-white mb-2">Content Filtering</h3>
+          <p class="text-sm text-muted leading-relaxed">Multi-layer output filtering with configurable sensitivity for enterprise needs.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <div>
-        <div class="footer-brand">Nexus AI</div>
-        <p class="footer-tagline">AI research and products that put safety at the frontier.</p>
+  <!-- API Pricing -->
+  <section class="bg-subtle py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="reveal">
+        <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-4">Usage-based pricing</h2>
+        <p class="text-muted mb-12">Pay only for what you use. No seat licenses, no minimums.</p>
       </div>
-      <div>
-        <div class="footer-col-title">Research</div>
-        <ul class="footer-links">
-          <li><a href="#">Publications</a></li>
-          <li><a href="#">Safety</a></li>
-          <li><a href="#">Interpretability</a></li>
-        </ul>
+      <div class="reveal overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-border text-sm text-muted">
+              <th class="py-4 pr-6 font-medium">Model</th>
+              <th class="py-4 pr-6 font-medium">Input / 1M tokens</th>
+              <th class="py-4 pr-6 font-medium">Output / 1M tokens</th>
+              <th class="py-4 font-medium">Context</th>
+            </tr>
+          </thead>
+          <tbody class="font-mono text-sm">
+            <tr class="bg-surface">
+              <td class="py-4 pr-6 pl-3 text-white font-body font-medium rounded-l-lg">nexus-v4</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4 rounded-r-lg">200K</td>
+            </tr>
+            <tr>
+              <td class="py-4 pr-6 pl-3 text-white font-body font-medium">nexus-v4-mini</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4">128K</td>
+            </tr>
+            <tr class="bg-surface">
+              <td class="py-4 pr-6 pl-3 text-white font-body font-medium rounded-l-lg">nexus-embed</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4 pr-6 text-muted">&mdash;</td>
+              <td class="py-4 rounded-r-lg">8K</td>
+            </tr>
+            <tr>
+              <td class="py-4 pr-6 pl-3 text-white font-body font-medium">nexus-vision</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4 pr-6">$[N]</td>
+              <td class="py-4">128K + images</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div>
-        <div class="footer-col-title">Products</div>
-        <ul class="footer-links">
-          <li><a href="#">Nexus</a></li>
-          <li><a href="#">API</a></li>
-          <li><a href="#">Enterprise</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-col-title">Company</div>
-        <ul class="footer-links">
-          <li><a href="#">About</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">News</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-col-title">Connect</div>
-        <ul class="footer-links">
-          <li><a href="#">Twitter</a></li>
-          <li><a href="#">LinkedIn</a></li>
-          <li><a href="#">Discord</a></li>
-        </ul>
+      <p class="text-sm text-muted mt-6">Volume discounts available above $[N]/month. <a href="#" class="text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Contact sales</a></p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="reveal flex flex-col md:flex-row items-center gap-10 md:gap-16">
+        <div class="flex-1">
+          <h2 class="font-heading font-medium text-2xl sm:text-4xl tracking-tight text-white mb-5">Start building today</h2>
+          <p class="text-muted mb-8">Get your API key in seconds. First $[N] of usage is free.</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#" class="magnetic bg-accent hover:bg-indigo-400 text-white font-medium px-8 py-3.5 rounded-lg transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Start Building</a>
+            <a href="#" class="text-muted hover:text-white font-medium px-8 py-3.5 rounded-lg border border-border hover:border-[#404040] transition-colors duration-200 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Read Documentation</a>
+          </div>
+        </div>
+        <div class="flex-1 code-panel">
+          <div class="bg-subtle border border-border rounded-xl overflow-hidden">
+            <div class="flex items-center px-4 py-2.5 border-b border-border">
+              <span class="px-3 py-1 text-xs font-mono text-white bg-surface rounded border border-border">quickstart.sh</span>
+            </div>
+            <div class="p-5 font-mono text-sm leading-loose text-[#a3a3a3]">
+              <div><span class="code-ln">1</span><span class="syn-cmt"># Install the SDK</span></div>
+              <div><span class="code-ln">2</span>npm install <span class="syn-str">@nexus/sdk</span></div>
+              <div><span class="code-ln">3</span></div>
+              <div><span class="code-ln">4</span><span class="syn-cmt"># Set your key</span></div>
+              <div><span class="code-ln">5</span><span class="syn-kw">export</span> NEXUS_KEY=<span class="syn-str">"nx_..."</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 NexusAI PBC</span>
-      <span>Privacy &middot; Terms &middot; Responsible Disclosure</span>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#050505] py-14 border-t border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid sm:grid-cols-4 gap-8 mb-10">
+        <div>
+          <h4 class="font-heading font-medium text-white mb-4">Product</h4>
+          <ul class="space-y-2 text-sm text-muted">
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">API Reference</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Playground</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Pricing</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Status</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading font-medium text-white mb-4">Research</h4>
+          <ul class="space-y-2 text-sm text-muted">
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Publications</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Safety</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Model Cards</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading font-medium text-white mb-4">Company</h4>
+          <ul class="space-y-2 text-sm text-muted">
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Blog</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-heading font-medium text-white mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm text-muted">
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Privacy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Terms</a></li>
+            <li><a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-muted">
+        <span>&copy; 2026 NexusAI. All rights reserved.</span>
+        <div class="flex gap-4 mt-4 sm:mt-0">
+          <a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded" aria-label="GitHub">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+          </a>
+          <a href="#" class="hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded" aria-label="Twitter">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
     </div>
   </footer>
 
+  <!-- Typing animation engine + scroll reveal -->
   <script>
-    // Nav scroll border
-    const nav = document.getElementById('mainNav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 10);
-    }, { passive: true });
+    (function() {
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Scroll reveal with stagger
-    const revealEls = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+      // ─── Syntax highlighting tokenizer ───
+      // Each token: { text, className }
+      function tokenizeLine(raw) {
+        var tokens = [];
+        var keywords = ['const','let','var','await','import','from','new','export','enum','return','function','async'];
+        var i = 0;
+        while (i < raw.length) {
+          // String literals
+          if (raw[i] === '"' || raw[i] === "'") {
+            var quote = raw[i];
+            var end = raw.indexOf(quote, i + 1);
+            if (end === -1) end = raw.length - 1;
+            tokens.push({ text: raw.substring(i, end + 1), className: 'syn-str' });
+            i = end + 1;
+            continue;
+          }
+          // Comments
+          if (raw[i] === '/' && raw[i+1] === '/') {
+            tokens.push({ text: raw.substring(i), className: 'syn-cmt' });
+            i = raw.length;
+            continue;
+          }
+          // Numbers
+          if (/[0-9]/.test(raw[i]) && (i === 0 || /[\s:,(\[{]/.test(raw[i-1]))) {
+            var numEnd = i;
+            while (numEnd < raw.length && /[0-9.eE]/.test(raw[numEnd])) numEnd++;
+            tokens.push({ text: raw.substring(i, numEnd), className: 'syn-num' });
+            i = numEnd;
+            continue;
+          }
+          // Words (keywords, function calls, variables)
+          if (/[a-zA-Z_$]/.test(raw[i])) {
+            var wordEnd = i;
+            while (wordEnd < raw.length && /[a-zA-Z0-9_$]/.test(raw[wordEnd])) wordEnd++;
+            var word = raw.substring(i, wordEnd);
+            if (keywords.indexOf(word) !== -1) {
+              tokens.push({ text: word, className: 'syn-kw' });
+            } else if (wordEnd < raw.length && raw[wordEnd] === '(') {
+              tokens.push({ text: word, className: 'syn-fn' });
+            } else if (word[0] === word[0].toUpperCase() && word[0] !== word[0].toLowerCase()) {
+              tokens.push({ text: word, className: 'syn-var' });
+            } else {
+              tokens.push({ text: word, className: '' });
+            }
+            i = wordEnd;
+            continue;
+          }
+          // Plain character
+          tokens.push({ text: raw[i], className: '' });
+          i++;
+        }
+        return tokens;
+      }
+
+      // ─── Typing engine ───
+      // lines: array of { text: string, delay: number (ms pause before this line) }
+      // container: DOM element to type into
+      // options: { baseSpeed, speedVariance, onComplete }
+      function createTypingAnimation(container, lines, options) {
+        var baseSpeed = (options && options.baseSpeed) || 40;
+        var speedVariance = (options && options.speedVariance) || 30;
+        var onComplete = (options && options.onComplete) || function(){};
+
+        // Pre-tokenize all lines
+        var tokenizedLines = lines.map(function(l) { return tokenizeLine(l.text); });
+
+        // Build flat char queue: each entry = { char, className, lineIndex, isNewLine, delay }
+        var queue = [];
+        tokenizedLines.forEach(function(tokens, li) {
+          var delay = lines[li].delay || 0;
+          var isFirst = true;
+          tokens.forEach(function(tok) {
+            for (var ci = 0; ci < tok.text.length; ci++) {
+              queue.push({
+                char: tok.text[ci],
+                className: tok.className,
+                lineIndex: li,
+                isNewLine: isFirst,
+                delay: isFirst ? delay : 0
+              });
+              isFirst = false;
+            }
+          });
+          // If line is empty, still mark newline
+          if (tokens.length === 0) {
+            queue.push({ char: '', className: '', lineIndex: li, isNewLine: true, delay: delay });
+          }
+        });
+
+        // Create line elements with line numbers
+        var lineEls = [];
+        lines.forEach(function(_, li) {
+          var div = document.createElement('div');
+          div.className = 'code-line';
+          var ln = document.createElement('span');
+          ln.className = 'code-ln';
+          ln.textContent = li + 1;
+          div.appendChild(ln);
+          var codeSpan = document.createElement('span');
+          codeSpan.className = 'code-content';
+          div.appendChild(codeSpan);
+          container.appendChild(div);
+          lineEls.push(codeSpan);
+        });
+
+        // Cursor element
+        var cursor = document.createElement('span');
+        cursor.className = 'type-cursor';
+
+        var qi = 0;
+        var currentSpan = null;
+
+        function typeNext() {
+          if (qi >= queue.length) {
+            // Done — remove cursor after a moment
+            setTimeout(function() {
+              if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+            }, 1500);
+            onComplete();
+            return;
+          }
+
+          var entry = queue[qi];
+          qi++;
+
+          var lineEl = lineEls[entry.lineIndex];
+
+          // For empty lines, just move cursor
+          if (entry.char === '' && entry.isNewLine) {
+            lineEl.appendChild(cursor);
+            setTimeout(typeNext, entry.delay || 100);
+            return;
+          }
+
+          // Need new span if class changed or new line
+          if (!currentSpan || currentSpan._cls !== entry.className || entry.isNewLine) {
+            if (entry.className) {
+              currentSpan = document.createElement('span');
+              currentSpan.className = entry.className;
+            } else {
+              currentSpan = document.createDocumentFragment ? null : null;
+              currentSpan = document.createElement('span');
+            }
+            currentSpan._cls = entry.className;
+            lineEl.appendChild(currentSpan);
+          }
+
+          // Append char
+          currentSpan.textContent += entry.char;
+
+          // Move cursor after current span
+          lineEl.appendChild(cursor);
+
+          // Spawn keystroke pulse dot
+          spawnKeystrokeDot(cursor);
+
+          // Schedule next
+          var speed = baseSpeed + Math.random() * speedVariance;
+          var totalDelay = (entry.isNewLine ? entry.delay : 0) + speed;
+          setTimeout(typeNext, totalDelay);
+        }
+
+        return { start: function(initialDelay) { setTimeout(typeNext, initialDelay || 0); } };
+      }
+
+      // ─── Keystroke pulse dot ───
+      function spawnKeystrokeDot(cursorEl) {
+        if (!cursorEl || !cursorEl.parentNode) return;
+        var rect = cursorEl.getBoundingClientRect();
+        var container = cursorEl.closest('.typing-code-area');
+        if (!container) return;
+        var containerRect = container.getBoundingClientRect();
+        var dot = document.createElement('span');
+        dot.className = 'keystroke-dot';
+        dot.style.left = (rect.left - containerRect.left + 1) + 'px';
+        dot.style.top = (rect.top - containerRect.top + rect.height / 2 - 2) + 'px';
+        container.appendChild(dot);
+        setTimeout(function() { if (dot.parentNode) dot.parentNode.removeChild(dot); }, 400);
+      }
+
+      // ─── Show code immediately for reduced motion ───
+      function showCodeImmediate(container, lines) {
+        lines.forEach(function(line, li) {
+          var div = document.createElement('div');
+          div.className = 'code-line';
+          var ln = document.createElement('span');
+          ln.className = 'code-ln';
+          ln.textContent = li + 1;
+          div.appendChild(ln);
+          var tokens = tokenizeLine(line.text);
+          tokens.forEach(function(tok) {
+            if (tok.className) {
+              var s = document.createElement('span');
+              s.className = tok.className;
+              s.textContent = tok.text;
+              div.appendChild(s);
+            } else {
+              div.appendChild(document.createTextNode(tok.text));
+            }
+          });
+          container.appendChild(div);
+        });
+      }
+
+      // ─── Hero code lines (request) ───
+      var heroLines = [
+        { text: 'const response = await nexus.analyze({', delay: 0 },
+        { text: '  model: "nexus-v4",', delay: 300 },
+        { text: '  input: "Classify this contract clause",', delay: 300 },
+        { text: '  schema: ClauseSchema,', delay: 300 },
+        { text: '});', delay: 300 }
+      ];
+
+      // ─── Hero response lines (types simultaneously with request) ───
+      var heroResponseLines = [
+        { text: '{', delay: 0 },
+        { text: '  "type": "limitation_of_liability",', delay: 200 },
+        { text: '  "confidence": 0.97,', delay: 200 },
+        { text: '  "entities": ["Party A", "Party B"],', delay: 200 },
+        { text: '  "risk_level": "medium"', delay: 200 },
+        { text: '}', delay: 200 }
+      ];
+
+      // ─── "See it in action" request lines ───
+      var actionRequestLines = [
+        { text: 'import { Nexus } from "@nexus/sdk";', delay: 0 },
+        { text: '', delay: 200 },
+        { text: 'const client = new Nexus({', delay: 200 },
+        { text: '  apiKey: process.env.NEXUS_KEY,', delay: 200 },
+        { text: '});', delay: 200 },
+        { text: '', delay: 200 },
+        { text: 'const result = await client.extract({', delay: 200 },
+        { text: '  model: "nexus-v4",', delay: 200 },
+        { text: '  input: "Revenue grew 23% YoY to $4.2B",', delay: 200 },
+        { text: '  schema: {', delay: 200 },
+        { text: '    metric: "string",', delay: 150 },
+        { text: '    value: "number",', delay: 150 },
+        { text: '    period: "string",', delay: 150 },
+        { text: '  },', delay: 150 },
+        { text: '});', delay: 200 }
+      ];
+
+      // ─── "See it in action" response lines ───
+      var actionResponseLines = [
+        { text: '// Guaranteed valid — matches your schema', delay: 0 },
+        { text: '{', delay: 200 },
+        { text: '  "metric": "revenue_growth",', delay: 150 },
+        { text: '  "value": 4.2e9,', delay: 150 },
+        { text: '  "period": "YoY",', delay: 150 },
+        { text: '  "change_pct": 23,', delay: 150 },
+        { text: '  "currency": "USD"', delay: 150 },
+        { text: '}', delay: 150 }
+      ];
+
+      // ─── Reduced motion: show everything immediately ───
+      if (reducedMotion) {
+        var heroArea = document.getElementById('heroCodeArea');
+        showCodeImmediate(heroArea, heroLines);
+        var heroRespArea = document.getElementById('heroResponseArea');
+        showCodeImmediate(heroRespArea, heroResponseLines);
+
+        var actionArea = document.getElementById('actionCodeArea');
+        showCodeImmediate(actionArea, actionRequestLines);
+
+        var responseArea = document.getElementById('actionResponseArea');
+        showCodeImmediate(responseArea, actionResponseLines);
+        document.getElementById('actionTokenFooter').style.opacity = '1';
+        return;
+      }
+
+      // ─── IntersectionObserver for typing triggers ───
+      var heroTyped = false;
+      var actionTyped = false;
+
+      var typingObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+
+          // Hero section — request and response type simultaneously
+          if (entry.target.id === 'heroCodeArea' && !heroTyped) {
+            heroTyped = true;
+            var reqAnim = createTypingAnimation(entry.target, heroLines, {
+              baseSpeed: 30,
+              speedVariance: 30,
+              onComplete: function() {}
+            });
+            var heroRespArea = document.getElementById('heroResponseArea');
+            var respAnim = createTypingAnimation(heroRespArea, heroResponseLines, {
+              baseSpeed: 35,
+              speedVariance: 25,
+              onComplete: function() {}
+            });
+            // Fire both at the same time
+            reqAnim.start(500);
+            respAnim.start(500);
+            typingObserver.unobserve(entry.target);
+          }
+
+          // "See it in action" section — request and response type simultaneously
+          if (entry.target.id === 'actionCodeArea' && !actionTyped) {
+            actionTyped = true;
+            var reqAnim = createTypingAnimation(entry.target, actionRequestLines, {
+              baseSpeed: 15,
+              speedVariance: 10,
+              onComplete: function() {}
+            });
+            var responseArea = document.getElementById('actionResponseArea');
+            var respAnim = createTypingAnimation(responseArea, actionResponseLines, {
+              baseSpeed: 18,
+              speedVariance: 12,
+              onComplete: function() {
+                document.getElementById('actionTokenFooter').style.opacity = '1';
+              }
+            });
+            // Fire both at the same time
+            reqAnim.start(300);
+            respAnim.start(300);
+            typingObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      var heroArea = document.getElementById('heroCodeArea');
+      var actionArea = document.getElementById('actionCodeArea');
+      if (heroArea) typingObserver.observe(heroArea);
+      if (actionArea) typingObserver.observe(actionArea);
+
+      // ─── Scroll reveal for other elements ───
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+        observer.observe(el);
+      });
+
+      // Staggered code line reveals (for static code blocks)
+      var lineObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var lines = entry.target.querySelectorAll('.reveal-line');
+            lines.forEach(function(line, i) {
+              line.style.transitionDelay = (i * 80) + 'ms';
+              line.classList.add('visible');
+            });
+            lineObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.reveal-left, .reveal-right, .reveal').forEach(function(container) {
+        if (container.querySelectorAll('.reveal-line').length > 0) {
+          lineObserver.observe(container);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    })();
+  
 
-    revealEls.forEach(el => observer.observe(el));
+      // Smooth Number Counters (smooth interpolation)
+      (function(){
+        var counters = document.querySelectorAll('.smooth-counter');
+        if(!counters.length) return;
+        var counterObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var el = entry.target;
+              var target = parseFloat(el.getAttribute('data-target'));
+              var suffix = el.getAttribute('data-suffix') || '';
+              var decimals = parseInt(el.getAttribute('data-decimals') || '0');
+              var duration = 2000;
+              var startTime = null;
+              var startVal = 0;
+              function step(ts){
+                if(!startTime) startTime = ts;
+                var progress = Math.min((ts - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 4);
+                var current = startVal + (target - startVal) * eased;
+                el.textContent = current.toFixed(decimals) + suffix;
+                if(progress < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            } else {
+              var suffix = entry.target.getAttribute('data-suffix') || '';
+              entry.target.textContent = '0' + suffix;
+            }
+          });
+        }, {threshold:0.3});
+        counters.forEach(function(el){ counterObs.observe(el); });
+      })();
+  
+
+      // Magnetic Cursor
+      (function(){
+        document.querySelectorAll('.magnetic').forEach(function(el){
+          el.addEventListener('mousemove', function(e){
+            var rect = el.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width/2;
+            var y = e.clientY - rect.top - rect.height/2;
+            el.style.transform = 'translate(' + (x*0.3) + 'px,' + (y*0.3) + 'px)';
+          });
+          el.addEventListener('mouseleave', function(){
+            el.style.transform = 'translate(0,0)';
+          });
+        });
+      })();
+  
   </script>
 
 </body>

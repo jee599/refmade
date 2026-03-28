@@ -3,69 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WorkSpace — Meet the night shift.</title>
+  <title>Pagecraft — One workspace. Every team.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy: #1b1b3a;
-      --navy-deep: #13132b;
-      --blue-accent: #4f6cf7;
-      --blue-cta: #4f6cf7;
-      --purple-accent: #6c4bf4;
-      --white: #ffffff;
-      --text-muted: rgba(255,255,255,0.65);
+      --bg-cream: #ffffff;
+      --bg-warm: #f6f5f4;
+      --bg-subtle: #fbfbfa;
+      --text-primary: #1a1a1a;
+      --text-secondary: #73726e;
+      --text-tertiary: #9b9a97;
+      --border-light: #e3e2de;
+      --border-subtle: #ebebea;
+      --accent-blue: #2383e2;
+      --accent-teal: #0b877d;
+      --accent-orange: #d9730d;
+      --accent-red: #e03e3e;
+      --accent-purple: #6940a5;
+      --accent-pink: #ad1a72;
+
+      /* Notion-style pastel card backgrounds */
+      --card-blue: #d3e5ef;
+      --card-teal: #d1ece8;
+      --card-orange: #fadec9;
+      --card-red: #ffe2dd;
+      --card-purple: #e8deee;
+      --card-yellow: #fdecc8;
+      --card-pink: #f5e0e9;
+      --card-green: #dbeddb;
+
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --max-width: 1100px;
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
     body {
       font-family: var(--sans);
-      color: var(--white);
-      background: var(--navy-deep);
+      color: var(--text-primary);
+      background: var(--bg-cream);
       line-height: 1.5;
       overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    img { max-width: 100%; display: block; }
 
-    /* NAV */
+    /* ─── NAV ─── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(27, 27, 58, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      height: 56px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      height: 52px;
     }
     .nav-inner {
-      max-width: 1200px;
+      max-width: var(--max-width);
       margin: 0 auto;
-      padding: 0 32px;
+      padding: 0 24px;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .nav-left { display: flex; align-items: center; gap: 28px; }
+    .nav-left { display: flex; align-items: center; gap: 24px; }
     .nav-logo {
       font-size: 16px;
       font-weight: 700;
+      letter-spacing: -0.02em;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .nav-logo-icon {
-      width: 28px; height: 28px;
-      background: var(--white);
-      border-radius: 6px;
+      width: 24px; height: 24px;
+      background: var(--text-primary);
+      border-radius: 4px;
       display: flex; align-items: center; justify-content: center;
-      color: var(--navy); font-size: 15px; font-weight: 800;
+      color: white; font-size: 14px; font-weight: 700;
     }
     .nav-links {
       display: flex; align-items: center; gap: 4px;
@@ -73,1101 +98,1014 @@
     }
     .nav-links a {
       font-size: 14px;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover {
+      background: var(--bg-warm);
+      color: var(--text-primary);
+    }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-right a {
+      font-size: 14px;
+      color: var(--text-secondary);
       padding: 6px 12px;
       border-radius: 6px;
-      transition: color 0.2s, background 0.2s;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-right a:hover { color: var(--text-primary); }
+
+    /* ─── BUTTONS ─── */
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--accent-blue);
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s, transform 0.1s;
       white-space: nowrap;
     }
-    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.08); }
-    .nav-links .chv { font-size: 10px; margin-left: 2px; opacity: 0.5; }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .btn-nav-cta {
-      background: var(--blue-cta);
-      color: var(--white);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 8px;
-      transition: opacity 0.2s;
-    }
-    .btn-nav-cta:hover { opacity: 0.9; }
-    .btn-nav-login {
-      font-size: 14px;
-      color: var(--text-muted);
-      padding: 8px 12px;
-      transition: color 0.2s;
-    }
-    .btn-nav-login:hover { color: var(--white); }
+    .btn-primary:hover { background: #1b6ec2; }
+    .btn-primary:active { transform: scale(0.98); }
 
-    /* HERO */
+    .btn-primary-dark {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--text-primary);
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn-primary-dark:hover { background: #333; }
+    .btn-primary-dark:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover { border-color: var(--text-tertiary); background: var(--bg-warm); }
+
+    .btn-nav {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--accent-blue);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .btn-nav:hover { background: #1b6ec2; }
+
+    /* ─── HERO ─── */
     .hero {
-      position: relative;
-      padding: 130px 32px 0;
+      padding: 120px 24px 80px;
       text-align: center;
+      position: relative;
       overflow: hidden;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #1b1b3a 0%, #1e1e45 40%, #1a1a3c 100%);
     }
-
-    /* Radial glow */
     .hero::before {
       content: '';
       position: absolute;
-      top: -120px; left: 50%; transform: translateX(-50%);
-      width: 1100px; height: 800px;
-      background: radial-gradient(ellipse, rgba(79,108,247,0.12) 0%, rgba(108,75,244,0.06) 40%, transparent 70%);
-      pointer-events: none;
-    }
-
-    /* Connection network lines - SVG paths */
-    .hero-network {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .hero-network svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
+      top: 0; left: 0; right: 0;
       height: 100%;
+      background: linear-gradient(180deg, #f6f5f4 0%, #ffffff 100%);
+      z-index: -1;
     }
-
-    /* Floating illustrated badges */
-    .badge {
-      position: absolute;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 4;
-      animation: bobble 5s ease-in-out infinite;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.35), 0 0 0 3px rgba(255,255,255,0.08);
-    }
-    .badge-lg { width: 68px; height: 68px; }
-    .badge-md { width: 56px; height: 56px; }
-    .badge-sm { width: 44px; height: 44px; }
-    .badge-xs { width: 36px; height: 36px; }
-
-    /* Avatar badges with face illustrations */
-    .badge-face {
-      overflow: hidden;
-      background: #fff;
-    }
-    .badge-face .face-inner {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-      line-height: 1;
-    }
-    .badge-face.badge-md .face-inner { font-size: 24px; }
-    .badge-face.badge-sm .face-inner { font-size: 20px; }
-
-    /* Icon badges */
-    .badge-icon {
-      display: flex; align-items: center; justify-content: center;
-    }
-    .badge-icon svg { width: 50%; height: 50%; }
-
-    @keyframes bobble {
-      0%, 100% { transform: translateY(0); }
-      33% { transform: translateY(-10px); }
-      66% { transform: translateY(4px); }
-    }
-
-    /* Positions - left side */
-    .b1  { top: 11%; left: 5%;  animation-delay: 0s; }
-    .b2  { top: 24%; left: 2%;  animation-delay: 1.4s; }
-    .b3  { top: 38%; left: 1%;  animation-delay: 0.7s; }
-    .b4  { top: 52%; left: 4%;  animation-delay: 2.1s; }
-    .b5  { top: 18%; left: 14%; animation-delay: 3s; }
-    .b6  { top: 34%; left: 11%; animation-delay: 0.4s; }
-    .b7  { top: 48%; left: 9%;  animation-delay: 1.8s; }
-    .b8  { top: 60%; left: 2%;  animation-delay: 2.5s; }
-    .b9  { top: 28%; left: 8%;  animation-delay: 3.5s; }
-
-    /* Positions - right side */
-    .b10 { top: 10%; right: 7%;  animation-delay: 0.8s; }
-    .b11 { top: 22%; right: 3%;  animation-delay: 2.2s; }
-    .b12 { top: 35%; right: 1%;  animation-delay: 1.1s; }
-    .b13 { top: 48%; right: 5%;  animation-delay: 0.2s; }
-    .b14 { top: 16%; right: 16%; animation-delay: 2.8s; }
-    .b15 { top: 32%; right: 12%; animation-delay: 3.3s; }
-    .b16 { top: 44%; right: 10%; animation-delay: 1.6s; }
-    .b17 { top: 52%; right: 2%;  animation-delay: 0.5s; animation: none; }
-    .b18 { top: 46%; right: 6%; animation-delay: 2.6s; animation: none; }
-
-    /* Node dots on connection lines */
-    .node-dot {
-      position: absolute;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--blue-accent);
-      z-index: 3;
-      opacity: 0.6;
-      animation: pulse-dot 3s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 0.9; transform: scale(1.5); }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 5;
+    .hero-inner {
       max-width: 780px;
       margin: 0 auto;
     }
-    .hero-title {
-      font-size: clamp(42px, 6vw, 68px);
-      font-weight: 800;
-      line-height: 1.06;
-      letter-spacing: -0.035em;
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
       margin-bottom: 20px;
-      color: var(--white);
     }
-    .hero-subtitle {
-      font-size: clamp(15px, 1.8vw, 18px);
-      color: var(--text-muted);
-      max-width: 720px;
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent-blue);
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 480px;
       margin: 0 auto 32px;
-      line-height: 1.55;
+      line-height: 1.6;
     }
     .hero-ctas {
       display: flex;
-      align-items: center;
-      justify-content: center;
       gap: 12px;
-      margin-bottom: 56px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
-    .btn-primary {
-      background: var(--blue-cta);
-      color: var(--white);
-      font-size: 15px;
-      font-weight: 600;
-      padding: 12px 26px;
-      border-radius: 10px;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
-    .btn-secondary {
-      background: transparent;
-      color: var(--white);
-      font-size: 15px;
-      font-weight: 600;
-      padding: 12px 26px;
-      border-radius: 10px;
-      border: 1.5px solid rgba(255,255,255,0.25);
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover {
-      border-color: rgba(255,255,255,0.5);
-      background: rgba(255,255,255,0.05);
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-top: 16px;
     }
 
-    /* APP PREVIEW */
-    .app-preview {
+    /* Hero illustration — CSS-only Notion-style scene */
+    .hero-illustration {
+      margin-top: 56px;
       position: relative;
-      z-index: 5;
-      max-width: 1040px;
-      margin: 0 auto;
-      border-radius: 16px 16px 0 0;
-      overflow: hidden;
-      box-shadow: 0 -8px 80px rgba(79,108,247,0.18), 0 24px 80px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .app-window {
-      background: #ffffff;
-      border-radius: 16px 16px 0 0;
+    .hero-app-frame {
+      background: white;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
       overflow: hidden;
     }
     .app-titlebar {
-      background: #f7f7f5;
-      padding: 12px 16px;
       display: flex;
       align-items: center;
       gap: 8px;
-      border-bottom: 1px solid #ebebea;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-subtle);
     }
-    .app-dot {
-      width: 12px; height: 12px;
-      border-radius: 50%;
-    }
-    .app-dot.r { background: #ff5f57; }
-    .app-dot.y { background: #febc2e; }
-    .app-dot.g { background: #28c840; }
-    .app-titlebar-text {
-      flex: 1;
-      text-align: center;
-      font-size: 13px;
-      color: #73726e;
-      font-weight: 500;
-    }
-    .app-titlebar-actions {
+    .app-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .app-dot-r { background: #ff5f57; }
+    .app-dot-y { background: #febc2e; }
+    .app-dot-g { background: #28c840; }
+    .app-content {
       display: flex;
-      gap: 6px;
-      align-items: center;
+      min-height: 340px;
     }
-    .tb {
-      font-size: 11px;
-      color: #73726e;
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid #ebebea;
-      background: #fff;
-    }
-    .app-body {
-      display: flex;
-      min-height: 430px;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 240px;
-      background: #f7f7f5;
-      padding: 14px 10px;
-      border-right: 1px solid #ebebea;
+    .app-sidebar {
+      width: 220px;
+      border-right: 1px solid var(--border-subtle);
+      padding: 16px 12px;
+      background: var(--bg-warm);
       flex-shrink: 0;
     }
-    .sw {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .sidebar-item {
+      display: flex; align-items: center; gap: 8px;
       padding: 6px 8px;
-      margin-bottom: 14px;
-    }
-    .sw-icon {
-      width: 22px; height: 22px;
-      background: #6c4bf4;
-      border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 11px; font-weight: 700;
-    }
-    .sw-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
-    .si {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 4px 8px;
-      border-radius: 5px;
-      font-size: 13px;
-      color: #73726e;
-      cursor: default;
-      transition: background 0.12s;
-      line-height: 1.6;
-    }
-    .si:hover { background: rgba(0,0,0,0.04); }
-    .si.active { background: rgba(0,0,0,0.06); color: #1a1a1a; font-weight: 500; }
-    .si-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
-    .si-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sdiv { height: 1px; background: #ebebea; margin: 8px 0; }
-    .si-head {
-      font-size: 11px;
-      font-weight: 600;
-      color: #9b9a97;
-      padding: 8px 8px 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    /* Main content area */
-    .main {
-      flex: 1;
-      padding: 20px 28px;
-      background: #ffffff;
-      overflow: hidden;
-    }
-    .main-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
-    .main-emoji { font-size: 26px; }
-    .main-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-    .main-breadcrumb {
-      font-size: 12px;
-      color: #9b9a97;
-      margin-bottom: 14px;
-    }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 0;
-      border-bottom: 1px solid #ebebea;
-      margin-bottom: 14px;
-    }
-    .tab {
-      font-size: 13px;
-      color: #9b9a97;
-      padding: 7px 14px;
-      border-bottom: 2px solid transparent;
-    }
-    .tab.active {
-      color: #1a1a1a;
-      font-weight: 500;
-      border-bottom-color: #1a1a1a;
-    }
-
-    /* Toolbar */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #ebebea;
-      flex-wrap: wrap;
-    }
-    .tbn {
-      font-size: 12px;
-      color: #73726e;
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid #ebebea;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-    }
-    .tbn.active {
-      background: #f0f0ee;
-      color: #1a1a1a;
-      font-weight: 500;
-    }
-    .tdiv { width: 1px; height: 16px; background: #ebebea; }
-
-    /* Kanban */
-    .kanban {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-    }
-    .kcol {
-      min-width: 170px;
-      flex: 1;
-    }
-    .kh {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 4px 8px;
-      margin-bottom: 6px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .kh-count {
-      font-size: 10px;
-      font-weight: 400;
-      opacity: 0.6;
-    }
-    .kh-todo    { background: #f1f1ef; color: #37352f; }
-    .kh-prog    { background: #d3e5ef; color: #2383e2; }
-    .kh-review  { background: #fadec9; color: #d9730d; }
-    .kh-done    { background: #dbeddb; color: #0f7b6c; }
-    .kh-blocked { background: #ffe2dd; color: #e03e3e; }
-    .kcard {
-      background: #ffffff;
-      border: 1px solid #ebebea;
       border-radius: 6px;
-      padding: 8px 10px;
-      margin-bottom: 5px;
-      font-size: 12px;
-      color: #37352f;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-      line-height: 1.4;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: background 0.15s;
     }
-    .kcard-title {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    .kcard-meta {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-    }
-    .ktag {
-      display: inline-block;
-      font-size: 10px;
-      padding: 1px 5px;
-      border-radius: 3px;
+    .sidebar-item:hover { background: rgba(0,0,0,0.04); }
+    .sidebar-item.active {
+      background: rgba(0,0,0,0.04);
+      color: var(--text-primary);
       font-weight: 500;
     }
-    .ktag-b { background: #d3e5ef; color: #2383e2; }
-    .ktag-o { background: #fadec9; color: #d9730d; }
-    .ktag-p { background: #e8deee; color: #6940a5; }
-    .ktag-g { background: #dbeddb; color: #0f7b6c; }
-    .ktag-r { background: #ffe2dd; color: #e03e3e; }
-    .ktag-y { background: #fdecc8; color: #9f6b0a; }
-    .ktag-gr { background: #f1f1ef; color: #73726e; }
-    .kav {
-      width: 16px; height: 16px;
+    .sidebar-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-section {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      padding: 16px 8px 6px;
+      font-weight: 600;
+    }
+    .app-main {
+      flex: 1;
+      padding: 32px 40px;
+    }
+    .app-page-icon { font-size: 40px; margin-bottom: 8px; }
+    .app-page-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+    .app-block {
+      display: flex; align-items: flex-start; gap: 4px;
+      padding: 4px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .app-block-bullet {
+      width: 6px; height: 6px;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 8px; font-weight: 600; color: #fff;
+      background: var(--text-tertiary);
+      margin-top: 7px;
+      flex-shrink: 0;
     }
-    .kdate {
-      font-size: 10px;
-      color: #9b9a97;
+    .app-toggle {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 0;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .app-toggle-arrow { color: var(--text-tertiary); font-size: 12px; }
+    .app-callout {
+      background: var(--card-yellow);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 13px;
+      display: flex;
+      gap: 10px;
+      margin: 8px 0;
+      color: var(--text-primary);
+    }
+    .app-tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
     }
 
-    /* LOGO BAR */
-    .logo-bar {
-      padding: 56px 32px 72px;
+    /* ─── LOGO STRIP ─── */
+    .logo-strip {
+      padding: 48px 24px;
       text-align: center;
-      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
-      position: relative;
-      z-index: 5;
     }
-    .logo-bar-inner {
-      max-width: 1040px;
-      margin: 0 auto;
-    }
-    .logo-bar-label {
+    .logo-strip p {
       font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 28px;
-      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
     }
     .logo-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 36px;
       flex-wrap: wrap;
-    }
-    .logo-item {
-      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 7px;
-      color: rgba(255,255,255,0.45);
-      transition: color 0.2s;
-      white-space: nowrap;
+      gap: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0.35;
     }
-    .logo-item:hover { color: rgba(255,255,255,0.7); }
-    .logo-item svg { flex-shrink: 0; }
-    .logo-item span {
-      font-size: 15px;
+    .logo-row span {
+      font-size: 18px;
       font-weight: 700;
+      color: var(--text-primary);
       letter-spacing: -0.01em;
     }
 
-    /* FEATURES */
+    /* ─── FEATURE SECTION (Notion-style colored bento cards) ─── */
     .features {
-      background: #ffffff;
-      padding: 96px 32px;
-      color: #1a1a1a;
-    }
-    .features-inner {
-      max-width: 1100px;
+      padding: 80px 24px;
+      max-width: var(--max-width);
       margin: 0 auto;
     }
     .features-header {
       text-align: center;
-      margin-bottom: 56px;
+      margin-bottom: 48px;
     }
-    .features-badge {
-      display: inline-block;
+    .features-header .eyebrow {
       font-size: 13px;
       font-weight: 600;
-      color: var(--blue-accent);
-      background: rgba(79,108,247,0.08);
-      padding: 5px 16px;
-      border-radius: 20px;
-      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
     }
-    .features-title {
-      font-size: clamp(30px, 4vw, 46px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 14px;
-      color: #1a1a1a;
+    .features-header h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
     }
-    .features-subtitle {
-      font-size: 17px;
-      color: #73726e;
-      max-width: 540px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .fcard {
-      background: #f7f7f5;
-      border-radius: 16px;
-      padding: 28px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .fcard:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 36px rgba(0,0,0,0.07);
-    }
-    .fcard-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      margin-bottom: 16px;
-    }
-    .fcard-icon.blue { background: #d3e5ef; }
-    .fcard-icon.orange { background: #fadec9; }
-    .fcard-icon.purple { background: #e8deee; }
-    .fcard-icon.green { background: #dbeddb; }
-    .fcard-icon.pink { background: #f5e0e9; }
-    .fcard-icon.teal { background: #d1ece8; }
-    .fcard h3 {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #1a1a1a;
-    }
-    .fcard p {
-      font-size: 14px;
-      color: #73726e;
-      line-height: 1.55;
+    .features-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
     }
 
-    /* CTA BANNER */
-    .cta-banner {
-      background: var(--navy);
-      padding: 96px 32px;
-      text-align: center;
-    }
-    .cta-banner-inner {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .cta-banner h2 {
-      font-size: clamp(30px, 4vw, 44px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 14px;
-    }
-    .cta-banner p {
-      font-size: 17px;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-    }
-    .cta-banner .hero-ctas { margin-bottom: 0; }
-
-    /* FOOTER */
-    .footer {
-      background: var(--navy-deep);
-      padding: 56px 32px 36px;
-      color: rgba(255,255,255,0.45);
-    }
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
+    .bento-grid {
       display: grid;
-      grid-template-columns: 1.5fr repeat(4, 1fr);
-      gap: 36px;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
-    .footer-brand h4 {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 10px;
+    .bento-card {
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .bento-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .bento-card.wide {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .bento-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .footer-brand p {
-      font-size: 13px;
-      line-height: 1.6;
-      color: rgba(255,255,255,0.35);
-    }
-    .footer-col h5 {
+    .bento-eyebrow .new-badge {
+      background: rgba(0,0,0,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 14px;
+      letter-spacing: 0.04em;
     }
-    .footer-col a {
-      display: block;
-      font-size: 13px;
-      color: rgba(255,255,255,0.35);
-      padding: 3px 0;
-      transition: color 0.2s;
+    .bento-card h3 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 10px;
     }
-    .footer-col a:hover { color: var(--white); }
-    .footer-bottom {
-      max-width: 1100px;
-      margin: 36px auto 0;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      font-size: 12px;
-      color: rgba(255,255,255,0.25);
-      text-align: center;
+    .bento-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .bento-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s;
+    }
+    .bento-link:hover { gap: 8px; }
+    .bento-link .arrow { transition: transform 0.2s; }
+    .bento-link:hover .arrow { transform: translateX(2px); }
+
+    /* Mini UI previews inside bento cards */
+    .mini-ui {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
     }
 
-    /* Animations */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+    .mini-doc-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
     }
-    .fade-up.visible {
+    .mini-doc-line .icon { width: 18px; text-align: center; }
+    .mini-doc-heading {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 4px 0;
+      margin-bottom: 4px;
+    }
+
+    .mini-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+    .mini-table th {
+      text-align: left;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .mini-table td {
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+    .status-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .status-done { background: var(--card-green); color: #2b7a2b; }
+    .status-progress { background: var(--card-blue); color: #2270b5; }
+    .status-todo { background: var(--bg-warm); color: var(--text-tertiary); }
+
+    .mini-kanban {
+      display: flex; gap: 8px;
+    }
+    .mini-kanban-col {
+      flex: 1;
+      background: var(--bg-warm);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+    }
+    .mini-kanban-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+    .mini-kanban-card {
+      background: white;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .mini-kanban-card:last-child { margin-bottom: 0; }
+
+    .mini-chat { display: flex; flex-direction: column; gap: 10px; }
+    .mini-chat-msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .mini-chat-user {
+      background: var(--bg-warm);
+      color: var(--text-primary);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .mini-chat-ai {
+      background: var(--card-purple);
+      color: var(--text-primary);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* ─── USE CASES ─── */
+    .use-cases {
+      background: var(--bg-warm);
+      padding: 80px 24px;
+    }
+    .use-cases-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .use-cases-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .use-cases-header h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    .use-cases-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+    .use-cases-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .use-case-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .use-case-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    .use-case-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .use-case-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .use-case-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ─── TEMPLATE GALLERY ─── */
+    .templates {
+      padding: 80px 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .templates-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .templates-header h2 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    .templates-header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .template-card {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .template-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+    .template-preview {
+      height: 160px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .template-preview-inner {
+      background: white;
+      border-radius: 6px;
+      padding: 12px;
+      height: 100%;
+      border: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      overflow: hidden;
+    }
+    .template-preview-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .template-info {
+      padding: 16px;
+      background: white;
+    }
+    .template-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .template-info p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .template-meta {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 8px;
+    }
+    .template-author {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--card-blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 600;
+    }
+    .template-author-name { font-size: 12px; color: var(--text-tertiary); }
+
+    /* ─── INTEGRATIONS ─── */
+    .integrations {
+      padding: 80px 24px;
+      background: var(--bg-warm);
+    }
+    .integrations-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      text-align: center;
+    }
+    .integrations-inner h2 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .integrations-inner > p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .integration-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 720px;
+      margin: 0 auto 32px;
+    }
+    .integration-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1px solid var(--border-subtle);
+      border-radius: 100px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .integration-chip:hover {
+      border-color: var(--border-light);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .integration-icon {
+      width: 20px; height: 20px;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials {
+      padding: 80px 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .testimonials-header h2 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .testimonial-card {
+      background: white;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+    .testimonial-card.featured {
+      border: 2px solid var(--text-primary);
+    }
+    .testimonial-quote {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      flex: 1;
+      margin-bottom: 20px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonial-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .testimonial-role {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ─── PLATFORMS ─── */
+    .platforms {
+      padding: 64px 24px;
+      text-align: center;
+      background: var(--bg-warm);
+    }
+    .platforms h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .platforms > p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+    .platform-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .platform-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .platform-pill:hover {
+      border-color: var(--border-light);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .platform-pill .platform-icon { font-size: 18px; }
+
+    /* ─── CTA ─── */
+    .cta {
+      padding: 100px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, var(--card-yellow) 0%, var(--card-orange) 50%, var(--card-red) 100%);
+      opacity: 0.3;
+      z-index: 0;
+    }
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .cta h2 {
+      font-family: var(--serif);
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .cta p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-note {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-top: 16px;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      border-top: 1px solid var(--border-light);
+      padding: 56px 24px 40px;
+      background: white;
+    }
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(4, 1fr);
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    .footer-brand p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+    .footer h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
+    }
+    .footer ul { list-style: none; }
+    .footer li { margin-bottom: 10px; }
+    .footer a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 0.15s;
+    }
+    .footer a:hover { color: var(--text-primary); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-bottom span {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    .footer-legal {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-legal a {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* Responsive */
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 900px) {
-      .nav-links { display: none; }
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .footer-inner { grid-template-columns: repeat(2, 1fr); }
-      .sidebar { display: none; }
-      .badge { display: none; }
-      .hero-network { display: none; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-card.wide {
+        grid-column: span 1;
+        grid-template-columns: 1fr;
+      }
+      .use-cases-grid { grid-template-columns: repeat(2, 1fr); }
+      .template-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .app-sidebar { display: none; }
     }
     @media (max-width: 600px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .footer-inner { grid-template-columns: 1fr; }
-      .logo-row { gap: 20px; }
-      .logo-item span { font-size: 13px; }
-      .hero-ctas { flex-direction: column; }
-      .kanban { flex-direction: column; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 16px 60px; }
+      .use-cases-grid { grid-template-columns: 1fr; }
+      .template-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .templates-header { flex-direction: column; align-items: flex-start; gap: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav">
+  <!-- ─── NAV ─── -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
       <div class="nav-left">
         <a href="#" class="nav-logo">
-          <div class="nav-logo-icon">W</div>
+          <div class="nav-logo-icon">P</div>
+          Pagecraft
         </a>
         <ul class="nav-links">
-          <li><a href="#">Product <span class="chv">&#9662;</span></a></li>
-          <li><a href="#">AI <span class="chv">&#9662;</span></a></li>
-          <li><a href="#">Solutions <span class="chv">&#9662;</span></a></li>
-          <li><a href="#">Resources <span class="chv">&#9662;</span></a></li>
-          <li><a href="#">Enterprise</a></li>
+          <li><a href="#">Product</a></li>
+          <li><a href="#">Teams</a></li>
+          <li><a href="#">Individuals</a></li>
           <li><a href="#">Pricing</a></li>
-          <li><a href="#">Request a demo</a></li>
         </ul>
       </div>
       <div class="nav-right">
-        <a href="#" class="btn-nav-cta">Get WorkSpace free</a>
-        <a href="#" class="btn-nav-login">Log in</a>
+        <a href="#">Log in</a>
+        <button class="btn-nav">Get Pagecraft free</button>
       </div>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- ─── HERO ─── -->
   <section class="hero">
-
-    <!-- Network connection lines -->
-    <div class="hero-network">
-      <svg viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <!-- Left side curved connection paths -->
-        <path d="M100 120 C130 180 160 220 140 310" stroke="rgba(79,108,247,0.35)" stroke-width="2.5" fill="none"/>
-        <path d="M140 310 C120 380 90 410 80 480" stroke="rgba(79,108,247,0.3)" stroke-width="2.5" fill="none"/>
-        <path d="M100 120 C180 110 220 130 250 180" stroke="rgba(79,108,247,0.3)" stroke-width="2.5" fill="none"/>
-        <path d="M250 180 C230 250 200 300 180 360" stroke="rgba(79,108,247,0.25)" stroke-width="2" fill="none"/>
-        <path d="M80 480 C100 530 110 570 95 620" stroke="rgba(79,108,247,0.2)" stroke-width="2" fill="none"/>
-        <path d="M180 360 C160 420 150 460 140 520" stroke="rgba(108,75,244,0.2)" stroke-width="2" fill="none"/>
-        <path d="M140 310 C160 310 190 330 180 360" stroke="rgba(79,108,247,0.2)" stroke-width="1.5" fill="none"/>
-
-        <!-- Right side curved connection paths -->
-        <path d="M1340 110 C1310 170 1290 220 1300 300" stroke="rgba(79,108,247,0.35)" stroke-width="2.5" fill="none"/>
-        <path d="M1300 300 C1320 370 1350 410 1360 480" stroke="rgba(79,108,247,0.3)" stroke-width="2.5" fill="none"/>
-        <path d="M1340 110 C1260 120 1220 140 1200 190" stroke="rgba(79,108,247,0.3)" stroke-width="2.5" fill="none"/>
-        <path d="M1200 190 C1220 260 1240 310 1260 370" stroke="rgba(79,108,247,0.25)" stroke-width="2" fill="none"/>
-        <path d="M1360 480 C1340 540 1330 580 1350 640" stroke="rgba(79,108,247,0.2)" stroke-width="2" fill="none"/>
-        <path d="M1260 370 C1280 420 1300 470 1310 530" stroke="rgba(108,75,244,0.2)" stroke-width="2" fill="none"/>
-        <path d="M1300 300 C1280 310 1250 340 1260 370" stroke="rgba(79,108,247,0.2)" stroke-width="1.5" fill="none"/>
-
-        <!-- Small white dots along paths -->
-        <circle cx="100" cy="120" r="4" fill="rgba(79,108,247,0.6)"/>
-        <circle cx="120" cy="215" r="3" fill="rgba(79,108,247,0.4)"/>
-        <circle cx="140" cy="310" r="4" fill="rgba(79,108,247,0.5)"/>
-        <circle cx="110" cy="395" r="3" fill="rgba(79,108,247,0.35)"/>
-        <circle cx="80" cy="480" r="3" fill="rgba(79,108,247,0.4)"/>
-        <circle cx="250" cy="180" r="3" fill="rgba(108,75,244,0.45)"/>
-        <circle cx="180" cy="360" r="3" fill="rgba(108,75,244,0.4)"/>
-
-        <circle cx="1340" cy="110" r="4" fill="rgba(79,108,247,0.6)"/>
-        <circle cx="1320" cy="205" r="3" fill="rgba(79,108,247,0.4)"/>
-        <circle cx="1300" cy="300" r="4" fill="rgba(79,108,247,0.5)"/>
-        <circle cx="1330" cy="390" r="3" fill="rgba(79,108,247,0.35)"/>
-        <circle cx="1360" cy="480" r="3" fill="rgba(79,108,247,0.4)"/>
-        <circle cx="1200" cy="190" r="3" fill="rgba(108,75,244,0.45)"/>
-        <circle cx="1260" cy="370" r="3" fill="rgba(108,75,244,0.4)"/>
-      </svg>
-    </div>
-
-    <!-- Floating badges - LEFT side -->
-    <!-- Person avatar with orange ring -->
-    <div class="badge badge-lg b1" style="background:#fff; border: 3px solid #f59e42;">
-      <div style="width:100%;height:100%;border-radius:50%;background:#fde8cd;display:flex;align-items:center;justify-content:center;font-size:32px;">&#129489;</div>
-    </div>
-    <!-- Chat bubble icon -->
-    <div class="badge badge-md b2" style="background:#e3f0ff;">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <!-- Purple message icon -->
-    <div class="badge badge-lg b3" style="background:#f0e6ff;">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.85 0 3.58-.5 5.07-1.38L22 22l-1.62-4.93C21.42 15.58 22 13.85 22 12c0-5.52-4.48-10-10-10z" stroke="#8b5cf6" stroke-width="2"/><circle cx="8" cy="12" r="1.5" fill="#8b5cf6"/><circle cx="12" cy="12" r="1.5" fill="#8b5cf6"/><circle cx="16" cy="12" r="1.5" fill="#8b5cf6"/></svg>
-    </div>
-    <!-- Pencil/write icon -->
-    <div class="badge badge-sm b4" style="background:#fef3c7;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#d97706" stroke-width="2" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <!-- Green checkmark badge -->
-    <div class="badge badge-sm b5" style="background:#d1fae5;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="#059669" stroke-width="2"/></svg>
-    </div>
-    <!-- Lightbulb icon -->
-    <div class="badge badge-md b6" style="background:#fce7f3;">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <!-- Link chain -->
-    <div class="badge badge-xs b7" style="background:#e0f2fe;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/></svg>
-    </div>
-    <!-- Person 2 -->
-    <div class="badge badge-sm b8" style="background:#fff; border: 3px solid #a78bfa;">
-      <div style="width:100%;height:100%;border-radius:50%;background:#ede9fe;display:flex;align-items:center;justify-content:center;font-size:22px;">&#128104;&#8205;&#128187;</div>
-    </div>
-    <!-- Calendar -->
-    <div class="badge badge-md b9" style="background:#dcfce7;">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#16a34a" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/><rect x="7" y="14" width="3" height="3" rx="0.5" fill="#16a34a" opacity="0.4"/><rect x="14" y="14" width="3" height="3" rx="0.5" fill="#16a34a" opacity="0.4"/></svg>
-    </div>
-
-    <!-- Floating badges - RIGHT side -->
-    <!-- Gear/settings large -->
-    <div class="badge badge-lg b10" style="background:#f3e8ff;">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#7c3aed" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="#7c3aed" stroke-width="1.5"/></svg>
-    </div>
-    <!-- Checkbox square -->
-    <div class="badge badge-md b11" style="background:#dbeafe;">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#2563eb" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <!-- Rocket -->
-    <div class="badge badge-lg b12" style="background:#fef9c3;">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" stroke="#ca8a04" stroke-width="2" stroke-linecap="round"/><path d="M12 15l-3-3" stroke="#ca8a04" stroke-width="2" stroke-linecap="round"/><path d="M22 2l-7.5 7.5" stroke="#ca8a04" stroke-width="2" stroke-linecap="round"/><path d="M15 2l7 0 0 7" stroke="#ca8a04" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7.5C9 7.5 11 5 14 4l4.5 4.5c-1 3-3.5 5-3.5 5" stroke="#ca8a04" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <!-- Person face 3 -->
-    <div class="badge badge-md b13" style="background:#fff; border: 3px solid #f472b6;">
-      <div style="width:100%;height:100%;border-radius:50%;background:#fce7f3;display:flex;align-items:center;justify-content:center;font-size:26px;">&#128105;&#8205;&#128188;</div>
-    </div>
-    <!-- Target/bullseye -->
-    <div class="badge badge-sm b14" style="background:#fee2e2;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2"/><circle cx="12" cy="12" r="6" stroke="#ef4444" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="#ef4444"/></svg>
-    </div>
-    <!-- Database/stack -->
-    <div class="badge badge-sm b15" style="background:#e0e7ff;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="9" ry="3" stroke="#4f46e5" stroke-width="2"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3" stroke="#4f46e5" stroke-width="2"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" stroke="#4f46e5" stroke-width="2"/></svg>
-    </div>
-    <!-- Lightning bolt -->
-    <div class="badge badge-md b16" style="background:#fef3c7;">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <!-- Large gear 1 - big and prominent -->
-    <div class="badge b17" style="background:#d4d6dd;width:100px;height:100px;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4),0 0 0 4px rgba(255,255,255,0.06);">
-      <svg width="60" height="60" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="#5a5e6a" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="#5a5e6a" stroke-width="1.5"/></svg>
-    </div>
-    <!-- Large gear 2 - overlapping -->
-    <div class="badge b18" style="background:#8b8fa0;width:80px;height:80px;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4),0 0 0 3px rgba(255,255,255,0.08);">
-      <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="#fff" stroke-width="1.8" opacity="0.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="#fff" stroke-width="1.3" opacity="0.7"/></svg>
-    </div>
-
-    <!-- Hero content -->
-    <div class="hero-content">
-      <h1 class="hero-title fade-up">Meet the night shift.</h1>
-      <p class="hero-subtitle fade-up" style="transition-delay: 0.1s;">
-        WorkSpace agents keep work moving 24/7. They capture knowledge, answer questions, and push projects forward — all while you sleep.
-      </p>
-      <div class="hero-ctas fade-up" style="transition-delay: 0.2s;">
-        <a href="#" class="btn-primary">Get WorkSpace free</a>
-        <a href="#" class="btn-secondary">Request a demo</a>
+    <div class="hero-inner">
+      <h1>The happier way to&nbsp;<em>work</em></h1>
+      <p>Docs, projects, and wikis for every team. One workspace that does it all. Beautifully simple. Powerfully flexible.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary">Get Pagecraft free</button>
+        <button class="btn-secondary">Request a demo</button>
       </div>
+      <p class="hero-sub">Free for individuals. Team plans start at $10/seat/month.</p>
     </div>
 
-    <!-- App Preview -->
-    <div class="app-preview fade-up" style="transition-delay: 0.3s;">
-      <div class="app-window">
+    <!-- Notion-style app preview -->
+    <div class="hero-illustration reveal">
+      <div class="hero-app-frame">
         <div class="app-titlebar">
-          <div class="app-dot r"></div>
-          <div class="app-dot y"></div>
-          <div class="app-dot g"></div>
-          <span class="app-titlebar-text">Ramp HQ</span>
-          <div class="app-titlebar-actions">
-            <span class="tb">Share</span>
-            <span class="tb">&#x22EF;</span>
-            <span class="tb">&#x2699;</span>
-          </div>
+          <div class="app-dot app-dot-r"></div>
+          <div class="app-dot app-dot-y"></div>
+          <div class="app-dot app-dot-g"></div>
         </div>
-        <div class="app-body">
-          <div class="sidebar">
-            <div class="sw">
-              <div class="sw-icon">R</div>
-              <span class="sw-name">Ramp</span>
+        <div class="app-content">
+          <div class="app-sidebar">
+            <div class="sidebar-item active">
+              <span class="sidebar-icon">🏠</span> Home
             </div>
-            <div class="si"><span class="si-icon">&#128269;</span><span class="si-label">Search</span></div>
-            <div class="si"><span class="si-icon">&#127968;</span><span class="si-label">Home</span></div>
-            <div class="si"><span class="si-icon">&#128229;</span><span class="si-label">Inbox</span></div>
-            <div class="sdiv"></div>
-            <div class="si-head">Agents</div>
-            <div class="si"><span class="si-icon">&#129302;</span><span class="si-label">Company wiki agent</span></div>
-            <div class="si"><span class="si-icon">&#128203;</span><span class="si-label">Status update agent</span></div>
-            <div class="si active"><span class="si-icon">&#128202;</span><span class="si-label">Q&A Agent</span></div>
-            <div class="si"><span class="si-icon">&#128221;</span><span class="si-label">Meeting notes</span></div>
-            <div class="sdiv"></div>
-            <div class="si-head">Workspace</div>
-            <div class="si"><span class="si-icon">&#128196;</span><span class="si-label">Product roadmap</span></div>
-            <div class="si"><span class="si-icon">&#128101;</span><span class="si-label">Team directory</span></div>
-            <div class="si"><span class="si-icon">&#127919;</span><span class="si-label">OKRs 2026</span></div>
-            <div class="si"><span class="si-icon">&#128193;</span><span class="si-label">Design system</span></div>
-            <div class="si"><span class="si-icon">&#128200;</span><span class="si-label">Analytics</span></div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">🔍</span> Search
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">📥</span> Inbox
+            </div>
+            <div class="sidebar-section">Workspace</div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">📋</span> Product Roadmap
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">📝</span> Meeting Notes
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">🎯</span> OKRs — Q1 2026
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">📚</span> Team Wiki
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">📊</span> Sprint Board
+            </div>
           </div>
-          <div class="main">
-            <div class="main-header">
-              <span class="main-emoji">&#127970;</span>
-              <span class="main-title">Ramp HQ</span>
+          <div class="app-main">
+            <div class="app-page-icon">🚀</div>
+            <div class="app-page-title">Product Roadmap</div>
+            <div class="app-callout">
+              <span>💡</span>
+              <span>Updated weekly by the product team. Tag @design for visual specs.</span>
             </div>
-            <div class="main-breadcrumb">Workspace / Projects / Ramp HQ</div>
-            <div class="tabs">
-              <div class="tab active">All projects</div>
-              <div class="tab">My tasks</div>
-              <div class="tab">Timeline</div>
-              <div class="tab">Calendar</div>
-              <div class="tab">Docs</div>
+            <div class="app-toggle" style="margin-top: 12px;">
+              <span class="app-toggle-arrow">▸</span> Q1 2026 Goals
             </div>
-            <div class="toolbar">
-              <span class="tbn active">&#x229E; Board</span>
-              <span class="tbn">&#9776; List</span>
-              <span class="tbn">&#x25EB; Table</span>
-              <div class="tdiv"></div>
-              <span class="tbn">&#x2295; Filter</span>
-              <span class="tbn">&#x2195; Sort</span>
-              <span class="tbn">&#128100; Group by: Team</span>
+            <div class="app-block" style="margin-top: 8px;">
+              <div class="app-block-bullet"></div>
+              <span>Mobile app v3 launch — <span class="app-tag status-done">Done</span></span>
             </div>
-            <div class="kanban">
-              <!-- To Do -->
-              <div class="kcol">
-                <div class="kh kh-todo">To Do <span class="kh-count">5</span></div>
-                <div class="kcard">
-                  <div class="kcard-title">Review performance metrics</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-b">Engineering</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 28</span>
-                    <span class="kav" style="background:#6366f1;">JK</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Respond to fake SSH pipelines</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-r">Urgent</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 27</span>
-                    <span class="kav" style="background:#ec4899;">AL</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Launch demo videos</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-o">Marketing</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 30</span>
-                    <span class="kav" style="background:#f59e0b;">SL</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Update sprint goals</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-g">Product</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Apr 1</span>
-                    <span class="kav" style="background:#10b981;">TN</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Update help center and office docs</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-p">Design</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Apr 2</span>
-                    <span class="kav" style="background:#8b5cf6;">MR</span>
-                  </div>
-                </div>
-              </div>
-              <!-- In Progress -->
-              <div class="kcol">
-                <div class="kh kh-prog">In Progress <span class="kh-count">4</span></div>
-                <div class="kcard">
-                  <div class="kcard-title">Sales demo sync setup</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-b">Engineering</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 27</span>
-                    <span class="kav" style="background:#3b82f6;">AW</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Weekly status report</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-g">Product</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 28</span>
-                    <span class="kav" style="background:#10b981;">LP</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Marketing campaign designs</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-o">Marketing</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 29</span>
-                    <span class="kav" style="background:#f59e0b;">EM</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Headcount planning Q2</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-y">HR</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 30</span>
-                    <span class="kav" style="background:#eab308;">KP</span>
-                  </div>
-                </div>
-              </div>
-              <!-- Review -->
-              <div class="kcol">
-                <div class="kh kh-review">Review <span class="kh-count">4</span></div>
-                <div class="kcard">
-                  <div class="kcard-title">Latest features customer facing</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-g">Product</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 26</span>
-                    <span class="kav" style="background:#059669;">RJ</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Engineering sync notes</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-b">Engineering</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 25</span>
-                    <span class="kav" style="background:#6366f1;">YC</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">New features documentation</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-p">Design</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 27</span>
-                    <span class="kav" style="background:#a855f7;">KH</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">All hands alignment Q2</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-gr">Ops</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 28</span>
-                    <span class="kav" style="background:#6b7280;">DK</span>
-                  </div>
-                </div>
-              </div>
-              <!-- Done -->
-              <div class="kcol">
-                <div class="kh kh-done">Done <span class="kh-count">5</span></div>
-                <div class="kcard">
-                  <div class="kcard-title">Project onboarding flow</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-g">Product</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 22</span>
-                    <span class="kav" style="background:#10b981;">SL</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Feature launch timeline</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-p">Design</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 20</span>
-                    <span class="kav" style="background:#8b5cf6;">MR</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Data pipeline migration</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-b">Engineering</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 19</span>
-                    <span class="kav" style="background:#3b82f6;">JK</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Drafts: press release</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-o">Marketing</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 18</span>
-                    <span class="kav" style="background:#f59e0b;">EM</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Budget weekly report</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-y">Finance</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 17</span>
-                    <span class="kav" style="background:#ca8a04;">NW</span>
-                  </div>
-                </div>
-              </div>
-              <!-- Blocked -->
-              <div class="kcol">
-                <div class="kh kh-blocked">Blocked <span class="kh-count">2</span></div>
-                <div class="kcard">
-                  <div class="kcard-title">Hotfix: Auth token refresh</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-r">Urgent</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Today</span>
-                    <span class="kav" style="background:#ef4444;">DK</span>
-                  </div>
-                </div>
-                <div class="kcard">
-                  <div class="kcard-title">Vendor contract renewal</div>
-                  <div class="kcard-meta">
-                    <span class="ktag ktag-gr">Ops</span>
-                    <span style="flex:1"></span>
-                    <span class="kdate">Mar 29</span>
-                    <span class="kav" style="background:#6b7280;">LP</span>
-                  </div>
-                </div>
-              </div>
+            <div class="app-block">
+              <div class="app-block-bullet"></div>
+              <span>AI writing assistant — <span class="app-tag status-progress">In progress</span></span>
+            </div>
+            <div class="app-block">
+              <div class="app-block-bullet"></div>
+              <span>Enterprise SSO integration — <span class="app-tag status-todo">Planned</span></span>
+            </div>
+            <div class="app-toggle" style="margin-top: 12px;">
+              <span class="app-toggle-arrow">▸</span> Q2 2026 Goals
             </div>
           </div>
         </div>
@@ -1175,159 +1113,418 @@
     </div>
   </section>
 
-  <!-- LOGO BAR -->
-  <section class="logo-bar">
-    <div class="logo-bar-inner">
-      <p class="logo-bar-label fade-up">Trusted by teams at</p>
-      <div class="logo-row fade-up" style="transition-delay: 0.1s;">
-        <!-- OpenAI -->
-        <div class="logo-item">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22.28 9.82a5.98 5.98 0 00-.52-4.91 6.05 6.05 0 00-6.51-2.9A6.07 6.07 0 0011.71.5a6.05 6.05 0 00-5.77 4.21 5.98 5.98 0 00-4.01 2.9 6.05 6.05 0 00.75 7.09 5.98 5.98 0 00.52 4.91 6.05 6.05 0 006.51 2.9A6.07 6.07 0 0012.29 23.5a6.05 6.05 0 005.77-4.21 5.98 5.98 0 004.01-2.9 6.05 6.05 0 00-.75-7.09" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>OpenAI</span>
-        </div>
-        <!-- Figma -->
-        <div class="logo-item">
-          <svg width="14" height="20" viewBox="0 0 38 57" fill="currentColor" opacity="0.7"><path d="M19 28.5a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"/><path d="M0 47.5A9.5 9.5 0 019.5 38H19v9.5a9.5 9.5 0 01-19 0z" opacity="0.5"/><path d="M19 0v19h9.5a9.5 9.5 0 000-19H19z" opacity="0.6"/><path d="M0 9.5A9.5 9.5 0 009.5 19H19V0H9.5A9.5 9.5 0 000 9.5z" opacity="0.4"/><path d="M0 28.5A9.5 9.5 0 009.5 38H19V19H9.5A9.5 9.5 0 000 28.5z" opacity="0.55"/></svg>
-          <span>Figma</span>
-        </div>
-        <!-- ramp -->
-        <div class="logo-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h6v6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>ramp</span>
-        </div>
-        <!-- Cursor -->
-        <div class="logo-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><path d="M8 16V8l8 4-8 4z" fill="currentColor" opacity="0.5"/></svg>
-          <span>Cursor</span>
-        </div>
-        <!-- Vercel -->
-        <div class="logo-item">
-          <svg width="18" height="16" viewBox="0 0 24 22" fill="currentColor" opacity="0.7"><path d="M12 1L23 21H1L12 1z"/></svg>
-          <span>Vercel</span>
-        </div>
-        <!-- NVIDIA -->
-        <div class="logo-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>NVIDIA</span>
-        </div>
-        <!-- L'OREAL -->
-        <div class="logo-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v12M8 10c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          <span>L&#8217;OR&#201;AL</span>
-        </div>
-        <!-- Discord -->
-        <div class="logo-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20.32 4.37A19.8 19.8 0 0015.36 3c-.22.4-.47.94-.64 1.36a18.27 18.27 0 00-5.44 0C9.11 3.94 8.86 3.4 8.64 3a19.74 19.74 0 00-4.97 1.37C.53 9.1-.33 13.7.1 18.23a19.9 19.9 0 006.07 3.07c.49-.66.92-1.36 1.29-2.1a12.9 12.9 0 01-2.03-.97c.17-.12.34-.25.5-.38a14.18 14.18 0 0012.14 0c.17.13.34.26.5.38-.65.38-1.33.71-2.04.97.37.74.8 1.44 1.29 2.1a19.85 19.85 0 006.08-3.07c.5-5.23-.86-9.77-3.58-13.86zM8.01 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.95-2.42 2.16-2.42 1.2 0 2.18 1.09 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.98 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.95-2.42 2.16-2.42 1.2 0 2.18 1.09 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z" fill="currentColor" opacity="0.7"/></svg>
-          <span>Discord</span>
-        </div>
-      </div>
+  <!-- ─── LOGO STRIP ─── -->
+  <section class="logo-strip reveal">
+    <p>Trusted by teams at</p>
+    <div class="logo-row">
+      <span>Toyota</span>
+      <span>Figma</span>
+      <span>Pixar</span>
+      <span>Nike</span>
+      <span>Spotify</span>
+      <span>Headspace</span>
+      <span>Vercel</span>
     </div>
   </section>
 
-  <!-- FEATURES -->
+  <!-- ─── FEATURES (Bento Grid) ─── -->
   <section class="features">
-    <div class="features-inner">
-      <div class="features-header">
-        <div class="features-badge fade-up">Why WorkSpace</div>
-        <h2 class="features-title fade-up" style="transition-delay: 0.1s;">Everything your team<br>needs in one place.</h2>
-        <p class="features-subtitle fade-up" style="transition-delay: 0.2s;">
-          Docs, projects, wikis, and AI — connected in one workspace that adapts to how your team works.
-        </p>
+    <div class="features-header reveal">
+      <div class="eyebrow">Product</div>
+      <h2>Everything you need, beautifully connected</h2>
+      <p>Replace your scattered tools with one workspace that adapts to how your team actually works.</p>
+    </div>
+
+    <div class="bento-grid">
+      <!-- Wide card: Docs -->
+      <div class="bento-card wide reveal" style="background: var(--card-blue);">
+        <div>
+          <div class="bento-eyebrow" style="color: var(--accent-blue);">Docs & Notes</div>
+          <h3>Write, plan, and organize with blocks</h3>
+          <p>Beautiful documents with drag-and-drop blocks. Embed databases, images, code, and 50+ block types.</p>
+          <a href="#" class="bento-link">Learn more <span class="arrow">&rarr;</span></a>
+        </div>
+        <div class="mini-ui">
+          <div class="mini-doc-heading">📄 Q4 Product Roadmap</div>
+          <div class="mini-doc-line"><span class="icon">📌</span> Pinned to workspace</div>
+          <div class="mini-doc-line" style="font-weight: 500; color: var(--text-primary); font-size: 14px; padding-top: 8px;">Launch milestones</div>
+          <div class="mini-doc-line"><span class="icon">☑️</span> Design system update</div>
+          <div class="mini-doc-line"><span class="icon">☑️</span> API rate limiting</div>
+          <div class="mini-doc-line"><span class="icon">⬜</span> Push notifications</div>
+          <div class="mini-doc-line"><span class="icon">⬜</span> Analytics dashboard</div>
+        </div>
       </div>
-      <div class="features-grid">
-        <div class="fcard fade-up">
-          <div class="fcard-icon blue">&#128221;</div>
-          <h3>Docs &amp; Notes</h3>
-          <p>Beautiful documents that live alongside your projects. Real-time collaboration with your team.</p>
+
+      <!-- Database -->
+      <div class="bento-card reveal" style="background: var(--card-yellow);">
+        <div class="bento-eyebrow" style="color: var(--accent-orange);">Databases</div>
+        <h3>Tables, boards, timelines</h3>
+        <p>View your data any way you want. Filter, sort, and group with powerful built-in databases.</p>
+        <div class="mini-ui" style="margin-top: 16px;">
+          <table class="mini-table">
+            <thead><tr><th>Task</th><th>Status</th><th>Owner</th></tr></thead>
+            <tbody>
+              <tr><td>Design review</td><td><span class="status-tag status-done">Done</span></td><td>Alice</td></tr>
+              <tr><td>API integration</td><td><span class="status-tag status-progress">In progress</span></td><td>Bob</td></tr>
+              <tr><td>User testing</td><td><span class="status-tag status-todo">Planned</span></td><td>Carol</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="fcard fade-up" style="transition-delay: 0.1s;">
-          <div class="fcard-icon orange">&#128202;</div>
-          <h3>Projects &amp; Tasks</h3>
-          <p>Manage any project with views that fit your workflow — boards, timelines, tables, and more.</p>
+      </div>
+
+      <!-- Projects -->
+      <div class="bento-card reveal" style="background: var(--card-pink);">
+        <div class="bento-eyebrow" style="color: var(--accent-pink);">Projects</div>
+        <h3>Manage any workflow</h3>
+        <p>Kanban boards, timelines, and custom workflows for every team's needs.</p>
+        <div class="mini-ui" style="margin-top: 16px;">
+          <div class="mini-kanban">
+            <div class="mini-kanban-col">
+              <div class="mini-kanban-title">To Do</div>
+              <div class="mini-kanban-card">Research competitors</div>
+              <div class="mini-kanban-card">Write brief</div>
+            </div>
+            <div class="mini-kanban-col">
+              <div class="mini-kanban-title">Doing</div>
+              <div class="mini-kanban-card">Build prototype</div>
+            </div>
+            <div class="mini-kanban-col">
+              <div class="mini-kanban-title">Done</div>
+              <div class="mini-kanban-card">User interviews</div>
+            </div>
+          </div>
         </div>
-        <div class="fcard fade-up" style="transition-delay: 0.2s;">
-          <div class="fcard-icon purple">&#129302;</div>
-          <h3>AI Agents</h3>
-          <p>Intelligent agents that automate routine work, answer questions, and keep your team moving.</p>
+      </div>
+
+      <!-- AI — wide card -->
+      <div class="bento-card wide reveal" style="background: var(--card-purple);">
+        <div>
+          <div class="bento-eyebrow" style="color: var(--accent-purple);">
+            AI Assistant
+            <span class="new-badge">New</span>
+          </div>
+          <h3>Your AI that knows your work</h3>
+          <p>Ask questions, generate summaries, draft proposals, and automate tasks. Built right into your workspace, with full context of your content.</p>
+          <a href="#" class="bento-link">Explore AI <span class="arrow">&rarr;</span></a>
         </div>
-        <div class="fcard fade-up" style="transition-delay: 0.3s;">
-          <div class="fcard-icon green">&#128218;</div>
-          <h3>Team Wiki</h3>
-          <p>Centralize your team's knowledge. Instantly find answers across all your docs and data.</p>
-        </div>
-        <div class="fcard fade-up" style="transition-delay: 0.4s;">
-          <div class="fcard-icon pink">&#128197;</div>
-          <h3>Calendar &amp; Planning</h3>
-          <p>Plan sprints, track deadlines, and coordinate schedules without switching tools.</p>
-        </div>
-        <div class="fcard fade-up" style="transition-delay: 0.5s;">
-          <div class="fcard-icon teal">&#128279;</div>
-          <h3>Integrations</h3>
-          <p>Connect with Slack, GitHub, Jira, and 200+ tools your team already uses.</p>
+        <div class="mini-ui">
+          <div class="mini-chat">
+            <div class="mini-chat-msg mini-chat-user">Summarize last week's meeting notes</div>
+            <div class="mini-chat-msg mini-chat-ai">Here's a summary of your 3 meetings: Product sync covered the v2 launch timeline. Design review approved the new dashboard layout. Sprint retro identified 2 action items for next cycle.</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA BANNER -->
-  <section class="cta-banner">
-    <div class="cta-banner-inner">
-      <h2 class="fade-up">Get started for free.</h2>
-      <p class="fade-up" style="transition-delay: 0.1s;">Join millions of teams using WorkSpace to build better products, faster.</p>
-      <div class="hero-ctas fade-up" style="transition-delay: 0.2s;">
-        <a href="#" class="btn-primary">Get WorkSpace free</a>
-        <a href="#" class="btn-secondary">Request a demo</a>
+  <!-- ─── USE CASES ─── -->
+  <section class="use-cases">
+    <div class="use-cases-inner">
+      <div class="use-cases-header reveal">
+        <h2>Built for every team</h2>
+        <p>From startups to enterprises, Pagecraft adapts to how your team works.</p>
+      </div>
+      <div class="use-cases-grid">
+        <div class="use-case-card reveal reveal-delay-1">
+          <div class="use-case-icon" style="background: var(--card-blue);">🛠️</div>
+          <h3>Engineering</h3>
+          <p>Sprint planning, bug tracking, and technical docs all in one place.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-1">
+          <div class="use-case-icon" style="background: var(--card-pink);">🎨</div>
+          <h3>Design</h3>
+          <p>Design specs, feedback boards, and asset libraries your whole team can find.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-2">
+          <div class="use-case-icon" style="background: var(--card-orange);">📊</div>
+          <h3>Product</h3>
+          <p>Roadmaps, user research, and feature prioritization connected together.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-2">
+          <div class="use-case-icon" style="background: var(--card-green);">📢</div>
+          <h3>Marketing</h3>
+          <p>Content calendars, campaign trackers, and brand guidelines in one wiki.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-3">
+          <div class="use-case-icon" style="background: var(--card-purple);">👥</div>
+          <h3>HR &amp; People</h3>
+          <p>Onboarding checklists, policies, and team directories everyone can access.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-3">
+          <div class="use-case-icon" style="background: var(--card-yellow);">💰</div>
+          <h3>Sales</h3>
+          <p>CRM databases, deal trackers, and proposal templates to close faster.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-3">
+          <div class="use-case-icon" style="background: var(--card-red);">🎓</div>
+          <h3>Education</h3>
+          <p>Course materials, student wikis, and research notes in a shared space.</p>
+        </div>
+        <div class="use-case-card reveal reveal-delay-3">
+          <div class="use-case-icon" style="background: var(--card-teal);">🏠</div>
+          <h3>Personal</h3>
+          <p>Journals, reading lists, habit trackers, and life dashboards.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ─── TEMPLATE GALLERY ─── -->
+  <section class="templates">
+    <div class="templates-header reveal">
+      <div>
+        <h2>Start with a template</h2>
+        <p>Get going fast with 10,000+ community templates.</p>
+      </div>
+      <a href="#" class="bento-link">Browse all templates <span class="arrow">&rarr;</span></a>
+    </div>
+    <div class="template-grid">
+      <div class="template-card reveal reveal-delay-1">
+        <div class="template-preview" style="background: var(--card-blue);">
+          <div class="template-preview-inner">
+            <div class="template-preview-title">📋 Sprint Board</div>
+            <div style="display: flex; gap: 6px; margin-top: 6px;">
+              <div style="flex:1; background: var(--bg-warm); border-radius: 4px; padding: 6px; font-size: 10px;">Backlog</div>
+              <div style="flex:1; background: var(--bg-warm); border-radius: 4px; padding: 6px; font-size: 10px;">In Progress</div>
+              <div style="flex:1; background: var(--bg-warm); border-radius: 4px; padding: 6px; font-size: 10px;">Done</div>
+            </div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Sprint Board</h4>
+          <p>Agile project management with customizable workflows.</p>
+          <div class="template-meta">
+            <div class="template-author" style="background: var(--card-teal);">P</div>
+            <span class="template-author-name">Pagecraft</span>
+          </div>
+        </div>
+      </div>
+      <div class="template-card reveal reveal-delay-2">
+        <div class="template-preview" style="background: var(--card-yellow);">
+          <div class="template-preview-inner">
+            <div class="template-preview-title">📅 Content Calendar</div>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-top: 8px;">
+              <div style="background: var(--bg-warm); border-radius: 3px; padding: 4px; font-size: 9px;">Mon</div>
+              <div style="background: var(--bg-warm); border-radius: 3px; padding: 4px; font-size: 9px;">Tue</div>
+              <div style="background: var(--bg-warm); border-radius: 3px; padding: 4px; font-size: 9px;">Wed</div>
+              <div style="background: var(--bg-warm); border-radius: 3px; padding: 4px; font-size: 9px;">Thu</div>
+              <div style="background: var(--bg-warm); border-radius: 3px; padding: 4px; font-size: 9px;">Fri</div>
+            </div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Content Calendar</h4>
+          <p>Plan and schedule your content across all channels.</p>
+          <div class="template-meta">
+            <div class="template-author" style="background: var(--card-orange);">M</div>
+            <span class="template-author-name">Maria Chen</span>
+          </div>
+        </div>
+      </div>
+      <div class="template-card reveal reveal-delay-3">
+        <div class="template-preview" style="background: var(--card-purple);">
+          <div class="template-preview-inner">
+            <div class="template-preview-title">🎯 OKR Tracker</div>
+            <div style="margin-top: 8px;">
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <div style="flex:1; height: 6px; background: var(--border-subtle); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 75%; height: 100%; background: var(--accent-purple); border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 10px;">75%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="flex:1; height: 6px; background: var(--border-subtle); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 40%; height: 100%; background: var(--accent-orange); border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 10px;">40%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>OKR Tracker</h4>
+          <p>Set objectives and track key results across your org.</p>
+          <div class="template-meta">
+            <div class="template-author" style="background: var(--card-pink);">J</div>
+            <span class="template-author-name">James Park</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── INTEGRATIONS ─── -->
+  <section class="integrations">
+    <div class="integrations-inner reveal">
+      <h2>Connects to the tools you already use</h2>
+      <p>Bring your favorite tools together in one workspace.</p>
+      <div class="integration-grid">
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #4285f4; color: white; border-radius: 50%;">G</span>
+          Google Drive
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #7b68ee; color: white; border-radius: 50%;">S</span>
+          Slack
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #f24e1e; color: white; border-radius: 50%;">F</span>
+          Figma
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #333; color: white; border-radius: 50%;">G</span>
+          GitHub
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #0079bf; color: white; border-radius: 50%;">J</span>
+          Jira
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #ff4500; color: white; border-radius: 50%;">Z</span>
+          Zapier
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #00a4ef; color: white; border-radius: 50%;">O</span>
+          Outlook
+        </div>
+        <div class="integration-chip">
+          <span class="integration-icon" style="background: #1db954; color: white; border-radius: 50%;">A</span>
+          Asana
+        </div>
+      </div>
+      <a href="#" class="bento-link">See all 100+ integrations <span class="arrow">&rarr;</span></a>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─── -->
+  <section class="testimonials">
+    <div class="testimonials-header reveal">
+      <h2>Loved by teams everywhere</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal reveal-delay-1">
+        <p class="testimonial-quote">"Pagecraft replaced 5 tools for us. Docs, tasks, wikis, spreadsheets, and meeting notes. Our team of 7 now moves like a team of 70."</p>
+        <div class="testimonial-author">
+          <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=72&h=72&fit=crop&crop=face" alt="" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Maria Chen</div>
+            <div class="testimonial-role">Head of Product, Flowstate</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card featured reveal reveal-delay-2">
+        <p class="testimonial-quote">"The flexibility is incredible. Engineering uses it for sprint planning, marketing for content calendars, and HR for onboarding. One tool, every team."</p>
+        <div class="testimonial-author">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=72&h=72&fit=crop&crop=face" alt="" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">James Park</div>
+            <div class="testimonial-role">CTO, Luminary Labs</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-3">
+        <p class="testimonial-quote">"The AI features are genuinely useful. I ask it to draft proposals, summarize threads, and create action items. It saves me 2 hours every day."</p>
+        <div class="testimonial-author">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=72&h=72&fit=crop&crop=face" alt="" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Sophie Laurent</div>
+            <div class="testimonial-role">Operations Lead, Craft&Co</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PLATFORMS ─── -->
+  <section class="platforms reveal">
+    <h2>Available everywhere you work</h2>
+    <p>Mac, Windows, iOS, Android, and web. Your workspace travels with you.</p>
+    <div class="platform-row">
+      <div class="platform-pill"><span class="platform-icon">&#63743;</span> Mac</div>
+      <div class="platform-pill"><span class="platform-icon">&#8862;</span> Windows</div>
+      <div class="platform-pill"><span class="platform-icon">&#9898;</span> iOS</div>
+      <div class="platform-pill"><span class="platform-icon">&#9654;</span> Android</div>
+      <div class="platform-pill"><span class="platform-icon">&#127760;</span> Web</div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="cta">
+    <div class="cta-inner reveal">
+      <h2>Get started for free</h2>
+      <p>Play around with it first. Pay when you're ready. Generous free tier with unlimited blocks for individuals.</p>
+      <div class="cta-buttons">
+        <button class="btn-primary-dark">Get Pagecraft free</button>
+        <button class="btn-secondary">Request a demo</button>
+      </div>
+      <p class="cta-note">No credit card required</p>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
   <footer class="footer">
     <div class="footer-inner">
-      <div class="footer-brand">
-        <h4>
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#fff;border-radius:4px;color:#1b1b3a;font-size:12px;font-weight:800;">W</span>
-          WorkSpace
-        </h4>
-        <p>The connected workspace where better, faster work happens.</p>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo">
+            <div class="nav-logo-icon">P</div>
+            Pagecraft
+          </a>
+          <p>One workspace for docs, projects, and wikis. Built for every team.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">AI</a></li>
+            <li><a href="#">Docs</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Wikis</a></li>
+            <li><a href="#">Calendar</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="#">Engineering</a></li>
+            <li><a href="#">Design</a></li>
+            <li><a href="#">Product</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">HR</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Help center</a></li>
+            <li><a href="#">Guides</a></li>
+            <li><a href="#">Templates</a></li>
+            <li><a href="#">API docs</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="footer-col">
-        <h5>Product</h5>
-        <a href="#">Docs</a>
-        <a href="#">Wikis</a>
-        <a href="#">Projects</a>
-        <a href="#">AI</a>
-        <a href="#">Calendar</a>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Pagecraft, Inc.</span>
+        <div class="footer-legal">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookie settings</a>
+        </div>
       </div>
-      <div class="footer-col">
-        <h5>Solutions</h5>
-        <a href="#">Enterprise</a>
-        <a href="#">Small Business</a>
-        <a href="#">Startups</a>
-        <a href="#">Education</a>
-      </div>
-      <div class="footer-col">
-        <h5>Resources</h5>
-        <a href="#">Blog</a>
-        <a href="#">Guides</a>
-        <a href="#">Help Center</a>
-        <a href="#">API Docs</a>
-        <a href="#">Community</a>
-      </div>
-      <div class="footer-col">
-        <h5>Company</h5>
-        <a href="#">About</a>
-        <a href="#">Careers</a>
-        <a href="#">Press</a>
-        <a href="#">Contact</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      &copy; 2026 WorkSpace Labs, Inc. All rights reserved.
     </div>
   </footer>
 
   <script>
+    // Intersection Observer for reveal animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1336,8 +1533,7 @@
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
-
 </body>
 </html>

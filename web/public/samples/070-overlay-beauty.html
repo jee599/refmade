@@ -3,30 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aura Beauty — The Future of Beauty is Automated</title>
+  <title>Lumière — Precision Skincare by AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Roboto+Flex:opsz,wght@8..144,300;8..144,400;8..144,500&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg: #ffffff;
+      --text: #2E2F53;
+      --text-60: rgba(46, 47, 83, 0.60);
+      --text-40: rgba(46, 47, 83, 0.40);
+      --text-10: rgba(46, 47, 83, 0.08);
+      --text-05: rgba(46, 47, 83, 0.04);
+
+      /* Watercolor blob palette — matched to Overlay's WebGL shader */
+      --blob-beige: rgba(241, 224, 221, 1);
+      --blob-mauve: rgba(199, 166, 180, 1);
+      --blob-terracotta: rgba(176, 118, 113, 1);
+      --blob-plum: rgba(102, 48, 75, 1);
+      --blob-teal: rgba(105, 142, 138, 1);
+      --blob-sage: rgba(174, 184, 180, 1);
+      --blob-blue: rgba(197, 218, 255, 1);
+      --blob-gold: rgba(251, 225, 194, 1);
+      --blob-pink: rgba(255, 206, 237, 1);
+      --blob-lavender: rgba(195, 178, 255, 1);
+      --blob-periwinkle: rgba(130, 139, 249, 1);
+
+      --accent: rgba(176, 118, 113, 1);
+      --accent-hover: rgba(142, 90, 84, 1);
+      --glass-bg: rgba(255, 255, 255, 0.50);
+      --glass-border: rgba(255, 255, 255, 0.20);
+      --glass-blur: 19px;
+      --radius: 1.875rem;
+      --nav-dark: #2E2F53;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
-    }
-
-    :root {
-      --bg: #ffffff;
-      --bg-alt: #f8f6f4;
-      --text: #2E2F53;
-      --text-60: rgba(46, 47, 83, 0.60);
-      --text-30: rgba(46, 47, 83, 0.30);
-      --accent: #B07A71;
-      --blush: #F1E0DD;
-      --mauve: #C7A6B4;
-      --sky: #C5D9FF;
-      --pink: #FBD9F5;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +55,7 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Roboto Flex', -apple-system, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       overflow-x: hidden;
@@ -47,607 +64,1009 @@
       line-height: 1.6;
     }
 
+    /* ── Typography ─────────────────────────────────── */
     h1, h2, h3, h4 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-weight: 300;
-      line-height: 1.05;
+      font-family: 'Geist Mono', 'SF Mono', monospace;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
     }
 
-    /* ── Navigation ─────────────────────────────────── */
+    .font-mono {
+      font-family: 'Geist Mono', 'SF Mono', monospace;
+    }
+
+    .font-body {
+      font-family: 'Roboto Flex', -apple-system, sans-serif;
+    }
+
+    .label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-60);
+    }
+
+    .label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    /* ── Blob layer (watercolor-on-crystal) ────────── */
+    .blob-field {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform;
+      /* Heavy blur + low opacity = "behind frosted glass" */
+      mix-blend-mode: normal;
+    }
+
+    /* Each blob gets its own drift — slow, organic, barely perceptible */
+    @keyframes drift-a { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-50px) scale(1.06)} 66%{transform:translate(-20px,30px) scale(0.97)} }
+    @keyframes drift-b { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(-40px,25px) scale(1.04)} 50%{transform:translate(25px,-40px) scale(0.96)} 75%{transform:translate(-15px,10px) scale(1.02)} }
+    @keyframes drift-c { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(35px,-30px) scale(1.05)} 80%{transform:translate(-30px,20px) scale(0.95)} }
+    @keyframes drift-d { 0%,100%{transform:translate(0,0) scale(1)} 30%{transform:translate(-25px,-35px) scale(1.03)} 60%{transform:translate(20px,25px) scale(0.98)} }
+    @keyframes drift-e { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(15px,-20px) scale(1.04)} }
+
+    /* ── Glassmorphic panels ──────────────────────── */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1.75px solid var(--glass-border);
+      border-radius: var(--radius);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px rgba(46,47,83,0.05);
+    }
+
+    .glass-subtle {
+      background: var(--text-05);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--text-10);
+      border-radius: var(--radius);
+    }
+
+    /* ── Word-by-word blur reveal ──────────────────── */
+    .word-reveal .word {
+      display: inline-block;
+      opacity: 0;
+      filter: blur(30px);
+      transform: translateY(6px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .word-reveal.is-visible .word {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+
+    /* ── Fade-up on scroll ─────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fade-up.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Nav ──────────────────────────────────────── */
     nav {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 100;
-      padding: 28px 48px;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(46,47,83,0.04);
+    }
+
+    .nav-inner {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 2rem;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      height: 64px;
     }
 
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    .nav-logo-circle {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1.5px solid var(--text-30);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .nav-logo-circle::after {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--text);
-    }
-
-    .nav-brand {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-
-    .nav-right a {
-      color: var(--text-60);
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      transition: color 0.2s;
-    }
-
-    .nav-right a:hover {
-      color: var(--text);
-    }
-
-    .nav-right .nav-icon {
-      width: 18px;
-      height: 18px;
-      opacity: 0.5;
-    }
-
-    /* ── Hero Section ─────────────────────────────────── */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 120px 48px 0;
-      padding-bottom: 0;
-      overflow: hidden;
-    }
-
-    .hero-text {
-      text-align: center;
-      position: relative;
-      z-index: 3;
-      margin-bottom: 20px;
-    }
-
-    .hero-text h1 {
-      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
-      font-weight: 300;
-      letter-spacing: -0.01em;
-      line-height: 1.08;
-      color: var(--text);
-    }
-
-    .hero-subtitle {
-      margin-top: 20px;
-      font-size: 0.85rem;
-      color: var(--text-60);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    /* ── Hero Image ─────────────────────────────────── */
-    .hero-image-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 720px;
-      margin: 0 auto;
-      z-index: 2;
-    }
-
-    .hero-image-wrapper img {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: cover;
-    }
-
-    /* Holographic overlay on the image */
-    .hero-image-holo {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 3;
-      background:
-        radial-gradient(ellipse at 35% 45%, rgba(197, 217, 255, 0.18) 0%, transparent 50%),
-        radial-gradient(ellipse at 65% 50%, rgba(251, 217, 245, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 65%, rgba(199, 166, 180, 0.12) 0%, transparent 40%);
-      mix-blend-mode: screen;
-      animation: holoShift 8s ease-in-out infinite;
-    }
-
-    @keyframes holoShift {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-
-    /* Fade edges of image into white background */
-    .hero-image-fade {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 4;
-      background:
-        linear-gradient(to bottom, rgba(255,255,255,0) 60%, rgba(255,255,255,1) 100%),
-        linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 15%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%);
-    }
-
-    /* ── Glassmorphic Feature Cards ───────────────── */
-    .features {
-      padding: 100px 48px 80px;
-      background: var(--bg-alt);
-    }
-
-    .features-header {
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto 60px;
-    }
-
-    .features-header h2 {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      margin-bottom: 16px;
-    }
-
-    .features-header p {
-      font-size: 0.9rem;
-      color: var(--text-60);
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .feature-card {
-      background: rgba(255, 255, 255, 0.55);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 30px;
-      padding: 40px 32px;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(176, 122, 113, 0.08);
-    }
-
-    .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-
-    .card-icon-blush { background: var(--blush); }
-    .card-icon-sky { background: var(--sky); }
-    .card-icon-pink { background: var(--pink); }
-
-    .feature-card h3 {
-      font-size: 1.3rem;
-      font-weight: 400;
-      margin-bottom: 12px;
-    }
-
-    .feature-card p {
-      font-size: 0.85rem;
-      color: var(--text-60);
-      line-height: 1.6;
-    }
-
-    /* ── Before/After Section ─────────────────────── */
-    .before-after {
-      padding: 100px 48px;
-      background: var(--bg);
-    }
-
-    .ba-header {
-      text-align: center;
-      max-width: 550px;
-      margin: 0 auto 50px;
-    }
-
-    .ba-header h2 {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      margin-bottom: 12px;
-    }
-
-    .ba-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .ba-card {
-      border-radius: 30px;
-      overflow: hidden;
-      position: relative;
-      aspect-ratio: 4 / 3;
-    }
-
-    .ba-card-before {
-      background: linear-gradient(135deg, var(--blush), #e8d5cf, #d4bdb5);
-    }
-
-    .ba-card-after {
-      background: linear-gradient(135deg, var(--sky), var(--pink), var(--mauve));
-    }
-
-    .ba-card-label {
-      position: absolute;
-      bottom: 20px;
-      left: 24px;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
+    .nav-link {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--text-60);
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border-radius: 20px;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* Abstract face silhouette in BA cards */
-    .ba-face {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 120px;
-      height: 160px;
-      border-radius: 48% 48% 42% 42% / 38% 38% 60% 60%;
-      opacity: 0.25;
-    }
-
-    .ba-card-before .ba-face {
-      background: rgba(46, 47, 83, 0.15);
-    }
-
-    .ba-card-after .ba-face {
-      background: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 0 40px rgba(197, 217, 255, 0.3);
-    }
-
-    /* ── Testimonials ────────────────────────────────── */
-    .testimonials {
-      padding: 100px 48px;
-      background: var(--bg-alt);
-    }
-
-    .testimonials-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .testimonials-header h2 {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-    }
-
-    .testimonial-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .testimonial-card {
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      border-radius: 30px;
-      padding: 36px 28px;
-    }
-
-    .testimonial-stars {
-      color: var(--accent);
-      font-size: 0.75rem;
-      letter-spacing: 4px;
-      margin-bottom: 16px;
-    }
-
-    .testimonial-card blockquote {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-style: italic;
-      font-weight: 300;
-      line-height: 1.5;
+    .nav-link:hover {
       color: var(--text);
-      margin-bottom: 20px;
+      background: rgba(255,255,255,0.30);
     }
 
-    .testimonial-author {
-      font-size: 0.75rem;
-      color: var(--text-60);
-      letter-spacing: 0.04em;
-    }
-
-    /* ── CTA Section ────────────────────────────────── */
-    .cta {
-      padding: 100px 48px;
-      background: var(--bg);
-      text-align: center;
-    }
-
-    .cta h2 {
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      margin-bottom: 20px;
-    }
-
-    .cta p {
-      font-size: 0.9rem;
-      color: var(--text-60);
-      margin-bottom: 36px;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .cta-btn {
-      display: inline-block;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 400;
-      letter-spacing: 0.08em;
-      padding: 16px 40px;
-      border-radius: 50px;
+    /* ── Buttons ──────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 9999px;
       background: var(--accent);
       color: #fff;
-      text-decoration: none;
-      transition: background 0.3s, transform 0.3s;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .cta-btn:hover {
-      background: #9e6b63;
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(176,118,113,0.25);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(46,47,83,0.12);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
       transform: translateY(-2px);
     }
 
-    /* ── Footer ─────────────────────────────────────── */
-    footer {
-      padding: 48px;
-      background: var(--bg-alt);
+    /* ── Email form (Overlay-style) ──────────────── */
+    .email-form {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      gap: 0;
+      max-width: 440px;
+      border-radius: 9999px;
+      overflow: hidden;
+      border: 1.75px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
     }
 
-    .footer-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .email-form input {
+      flex: 1;
+      padding: 16px 24px;
+      border: none;
+      background: transparent;
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      letter-spacing: 0.01em;
     }
 
-    .footer-logo-circle {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid var(--text-30);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .email-form input::placeholder {
+      color: var(--text-40);
     }
 
-    .footer-logo-circle::after {
+    .email-form button {
+      padding: 14px 28px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 9999px;
+      margin: 4px;
+      transition: background 0.3s ease;
+    }
+
+    .email-form button:hover {
+      background: var(--accent-hover);
+    }
+
+    /* ── Pill ──────────────────────────────────────── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Gradient text ────────────────────────────── */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--blob-lavender) 50%, var(--blob-periwinkle) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Horizontal scroll track ──────────────────── */
+    .scroll-track {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 1rem 0;
+    }
+
+    .scroll-track::-webkit-scrollbar { display: none; }
+
+    .scroll-track > * {
+      scroll-snap-align: start;
+      flex-shrink: 0;
+    }
+
+    /* ── Step progress bar (Overlay-style) ─────── */
+    .step-progress {
+      height: 2px;
+      background: var(--text-10);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    .step-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 9999px;
+      transition: width 4s linear;
+    }
+
+    /* ── Shimmer divider ──────────────────────────── */
+    .shimmer {
+      height: 1px;
+      background: var(--text-10);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shimmer::after {
       content: '';
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--text);
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--blob-beige), transparent);
+      animation: shimmer-slide 8s ease-in-out infinite;
     }
 
-    .footer-brand {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      color: var(--text-60);
+    @keyframes shimmer-slide {
+      0%   { left: -60%; }
+      100% { left: 110%; }
     }
 
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      font-size: 0.75rem;
-      color: var(--text-30);
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: var(--text-60);
-    }
-
-    /* ── Responsive ─────────────────────────────────── */
-    @media (max-width: 900px) {
-      .features-grid,
-      .testimonial-cards {
-        grid-template-columns: 1fr;
-        max-width: 480px;
-      }
-      .ba-grid {
-        grid-template-columns: 1fr;
-        max-width: 480px;
-      }
-      .hero-image-wrapper {
-        max-width: 100%;
-      }
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 767px) {
+      .md-grid-2 { grid-template-columns: 1fr !important; }
+      .md-grid-3 { grid-template-columns: 1fr !important; }
+      .md-grid-4 { grid-template-columns: 1fr 1fr !important; }
+      .md-hide { display: none !important; }
+      .hero-h1 { font-size: 2.5rem !important; }
+      .email-form { flex-direction: column; border-radius: var(--radius); }
+      .email-form button { margin: 0 4px 4px 4px; border-radius: calc(var(--radius) - 4px); }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Navigation -->
+  <!-- ═══════════════ NAV ═══════════════ -->
   <nav>
-    <a href="#" class="nav-left">
-      <div class="nav-logo-circle"></div>
-      <span class="nav-brand">Aura</span>
-    </a>
-    <div class="nav-right">
-      <a href="#">About</a>
-      <a href="#">Technology</a>
-      <a href="#">Results</a>
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M12 12c2.5 0 4.5-2 4.5-4.5S14.5 3 12 3 7.5 5 7.5 7.5 9.5 12 12 12zM4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke-linecap="round"/>
-      </svg>
+    <div class="nav-inner">
+      <a href="#" class="font-mono" style="font-size:1.05rem;color:var(--text);text-decoration:none;letter-spacing:-0.03em;font-weight:500;">
+        lumière
+      </a>
+      <div class="md-hide" style="display:flex;align-items:center;gap:0.25rem;">
+        <a href="#science" class="nav-link">Science</a>
+        <a href="#ritual" class="nav-link">Ritual</a>
+        <a href="#results" class="nav-link">Results</a>
+      </div>
+      <a href="#subscribe" class="btn-ghost" style="padding:10px 24px;font-size:10px;">Get Early Access</a>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-text">
-      <h1>The Future of<br>Beauty is Automated</h1>
-      <p class="hero-subtitle">Subscribe for updates</p>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section style="min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;">
+
+    <!-- Blob layer — 8 blobs, heavy blur, low opacity = watercolor behind crystal -->
+    <div class="blob-field">
+      <div class="blob" style="width:900px;height:900px;top:-25%;left:-15%;background:radial-gradient(circle at 40% 40%,var(--blob-beige),rgba(241,224,221,0.15) 55%,transparent 75%);filter:blur(120px);opacity:0.55;animation:drift-a 30s ease-in-out infinite;"></div>
+      <div class="blob" style="width:750px;height:750px;top:5%;right:-18%;background:radial-gradient(circle at 55% 50%,var(--blob-blue),rgba(197,218,255,0.12) 55%,transparent 75%);filter:blur(110px);opacity:0.45;animation:drift-b 34s ease-in-out infinite;"></div>
+      <div class="blob" style="width:600px;height:600px;bottom:-12%;left:20%;background:radial-gradient(circle at 50% 50%,var(--blob-pink),rgba(255,206,237,0.12) 55%,transparent 75%);filter:blur(100px);opacity:0.40;animation:drift-c 28s ease-in-out infinite;"></div>
+      <div class="blob" style="width:500px;height:500px;top:40%;left:35%;background:radial-gradient(circle at 50% 55%,var(--blob-lavender),rgba(195,178,255,0.10) 55%,transparent 75%);filter:blur(105px);opacity:0.30;animation:drift-d 32s ease-in-out infinite;"></div>
+      <div class="blob" style="width:450px;height:450px;top:15%;left:55%;background:radial-gradient(circle at 45% 45%,var(--blob-gold),rgba(251,225,194,0.10) 55%,transparent 75%);filter:blur(95px);opacity:0.28;animation:drift-e 26s ease-in-out infinite;"></div>
+      <div class="blob" style="width:350px;height:350px;bottom:5%;right:10%;background:radial-gradient(circle at 50% 50%,var(--blob-mauve),rgba(199,166,180,0.10) 55%,transparent 75%);filter:blur(90px);opacity:0.25;animation:drift-a 36s ease-in-out infinite reverse;"></div>
     </div>
 
-    <div class="hero-image-wrapper">
-      <img src="images/070-beauty.jpg" alt="Close-up portrait with holographic beauty overlay" />
-      <div class="hero-image-holo"></div>
-      <div class="hero-image-fade"></div>
-    </div>
-  </section>
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;padding-top:180px;padding-bottom:160px;">
+      <div style="max-width:48rem;">
 
-  <!-- Features -->
-  <section class="features">
-    <div class="features-header">
-      <h2>Precision Skincare,<br>Powered by AI</h2>
-      <p>Our algorithms analyze thousands of data points to create a routine uniquely calibrated to your skin.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="card-icon card-icon-blush">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B07A71" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12s1.5 3 4 3 4-3 4-3"/></svg>
+        <!-- Pill -->
+        <div class="pill fade-up" style="background:rgba(241,224,221,0.55);color:var(--accent);margin-bottom:2.5rem;">
+          <svg width="5" height="5" viewBox="0 0 5 5" fill="none"><circle cx="2.5" cy="2.5" r="2.5" fill="currentColor"/></svg>
+          AI-Formulated · Clinical Grade
         </div>
-        <h3>Dermal Mapping</h3>
-        <p>Real-time topographic analysis of pore structure, texture variance, and moisture distribution across 42 facial zones.</p>
-      </div>
-      <div class="feature-card">
-        <div class="card-icon card-icon-sky">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6a8fc7" stroke-width="1.5"><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.07-7.07l-2.83 2.83M9.76 14.24l-2.83 2.83m0-10.14l2.83 2.83m4.48 4.48l2.83 2.83"/></svg>
+
+        <!-- H1 — word-by-word blur reveal (30px blur like Overlay's GSAP) -->
+        <h1 class="word-reveal hero-h1" id="hero-title"
+            style="font-size:clamp(2.8rem,6vw,4.5rem);font-weight:400;line-height:1.08;color:var(--text);margin-bottom:2rem;">
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="font-body fade-up" style="font-size:1.05rem;line-height:1.85;color:var(--text-60);max-width:30rem;margin-bottom:3rem;font-weight:300;">
+          Precision skincare engineered by generative AI — formulated at the molecular level for your skin's exact biology.
+        </p>
+
+        <!-- Email signup (Overlay-style inline form, not button CTA) -->
+        <div class="fade-up" style="margin-bottom:6rem;">
+          <form class="email-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="your@email.com" />
+            <button type="submit">Get Early Access</button>
+          </form>
         </div>
-        <h3>Light Spectrum</h3>
-        <p>Multi-wavelength imaging captures what the naked eye cannot, revealing sub-dermal conditions before they surface.</p>
+
       </div>
-      <div class="feature-card">
-        <div class="card-icon card-icon-pink">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c476a8" stroke-width="1.5"><path d="M20 7l-8 5-8-5m16 0v10l-8 5-8-5V7l8-5 8 5z"/></svg>
+
+      <!-- Floating stat chips — far below, extreme whitespace -->
+      <div class="fade-up" style="display:flex;flex-wrap:wrap;gap:1rem;">
+        <div class="glass" style="padding:1.5rem 2rem;">
+          <span class="font-mono" style="font-size:1.4rem;color:var(--text);display:block;line-height:1;font-weight:500;">98%</span>
+          <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.10em;text-transform:uppercase;margin-top:6px;display:block;">efficacy rate</span>
         </div>
-        <h3>Adaptive Formula</h3>
-        <p>Machine learning adjusts your serum composition weekly, responding to environmental shifts, stress markers, and seasonal change.</p>
+        <div class="glass" style="padding:1.5rem 2rem;">
+          <span class="font-mono" style="font-size:1.4rem;color:var(--text);display:block;line-height:1;font-weight:500;">14d</span>
+          <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.10em;text-transform:uppercase;margin-top:6px;display:block;">visible results</span>
+        </div>
+        <div class="glass" style="padding:1.5rem 2rem;">
+          <span class="font-mono" style="font-size:1.4rem;color:var(--text);display:block;line-height:1;font-weight:500;">3.2M</span>
+          <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.10em;text-transform:uppercase;margin-top:6px;display:block;">data points / formula</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="shimmer"></div>
+
+
+  <!-- ═══════════════ FEATURE CARDS (2x2 grid, Overlay-style) ═══════════════ -->
+  <section style="position:relative;padding:8rem 0;">
+
+    <div class="blob-field" style="opacity:0.25;">
+      <div class="blob" style="width:600px;height:600px;top:-10%;right:-10%;background:radial-gradient(circle,var(--blob-sage),transparent 70%);filter:blur(100px);opacity:0.5;animation:drift-b 30s ease-in-out infinite;"></div>
+      <div class="blob" style="width:500px;height:500px;bottom:-15%;left:5%;background:radial-gradient(circle,var(--blob-pink),transparent 70%);filter:blur(90px);opacity:0.4;animation:drift-d 28s ease-in-out infinite;"></div>
+    </div>
+
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;">
+
+      <div style="text-align:center;margin-bottom:5rem;" class="fade-up">
+        <span class="label">Why Lumière</span>
+        <h2 class="word-reveal" id="features-title"
+            style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;color:var(--text);margin-top:1.25rem;">
+        </h2>
+      </div>
+
+      <!-- 2x2 feature grid (matches Overlay's card layout) -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;" class="md-grid-2">
+
+        <div class="glass fade-up" style="padding:2.75rem;">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(241,224,221,0.6);display:flex;align-items:center;justify-content:center;margin-bottom:1.75rem;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2v14M2 9h14" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Full-stack formulation</h3>
+          <p class="font-body" style="font-size:0.875rem;line-height:1.75;color:var(--text-60);">
+            AI-powered molecular design meets clinical-grade manufacturing. From genome to bottle in 72 hours.
+          </p>
+        </div>
+
+        <div class="glass fade-up" style="padding:2.75rem;">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(197,218,255,0.45);display:flex;align-items:center;justify-content:center;margin-bottom:1.75rem;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="var(--blob-periwinkle)" stroke-width="1.5"/><circle cx="9" cy="9" r="2" fill="var(--blob-periwinkle)"/></svg>
+          </div>
+          <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Daily ritual reimagined</h3>
+          <p class="font-body" style="font-size:0.875rem;line-height:1.75;color:var(--text-60);">
+            One serum replaces six products. Your routine becomes a single, precisely dosed step every morning and night.
+          </p>
+        </div>
+
+        <div class="glass fade-up" style="padding:2.75rem;">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,206,237,0.4);display:flex;align-items:center;justify-content:center;margin-bottom:1.75rem;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9a6 6 0 1112 0A6 6 0 013 9z" stroke="var(--blob-mauve)" stroke-width="1.5"/><path d="M9 6v3l2 1.5" stroke="var(--blob-mauve)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Precision personalization</h3>
+          <p class="font-body" style="font-size:0.875rem;line-height:1.75;color:var(--text-60);">
+            240+ genetic skin markers, microbiome mapping, hydration gradient analysis. Each formula is uniquely yours.
+          </p>
+        </div>
+
+        <div class="glass fade-up" style="padding:2.75rem;">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(251,225,194,0.5);display:flex;align-items:center;justify-content:center;margin-bottom:1.75rem;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" stroke="var(--accent)" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Safe & effortless</h3>
+          <p class="font-body" style="font-size:0.875rem;line-height:1.75;color:var(--text-60);">
+            Zero preservative compromise. Molecular encapsulation replaces conventional chemicals. 98% tolerability across all skin types.
+          </p>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Before / After -->
-  <section class="before-after">
-    <div class="ba-header">
-      <h2>Visible Transformation</h2>
+  <div class="shimmer"></div>
+
+
+  <!-- ═══════════════ VISION SECTION (story carousel, Overlay-style) ═══════════════ -->
+  <section id="science" style="position:relative;padding:9rem 0;">
+
+    <div class="blob-field" style="opacity:0.20;">
+      <div class="blob" style="width:800px;height:800px;top:10%;left:-20%;background:radial-gradient(circle,var(--blob-lavender),transparent 70%);filter:blur(120px);opacity:0.4;animation:drift-c 35s ease-in-out infinite;"></div>
+      <div class="blob" style="width:500px;height:500px;bottom:-10%;right:-5%;background:radial-gradient(circle,var(--blob-gold),transparent 70%);filter:blur(100px);opacity:0.35;animation:drift-e 30s ease-in-out infinite;"></div>
     </div>
-    <div class="ba-grid">
-      <div class="ba-card ba-card-before">
-        <div class="ba-face"></div>
-        <div class="ba-card-label">Before</div>
+
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;">
+
+      <!-- Vision intro — extreme whitespace, centered, editorial -->
+      <div style="text-align:center;max-width:40rem;margin:0 auto 6rem;" class="fade-up">
+        <span class="label">Our Vision</span>
+        <h2 class="word-reveal" id="vision-title"
+            style="font-size:clamp(2rem,4vw,3rem);font-weight:400;color:var(--text);margin-top:1.5rem;margin-bottom:2rem;">
+        </h2>
+        <p class="font-body" style="font-size:1rem;line-height:1.85;color:var(--text-60);">
+          The ritual of skincare has remained unchanged for centuries. As AI moves from pixels to atoms, a new era of molecular personalization begins.
+        </p>
       </div>
-      <div class="ba-card ba-card-after">
-        <div class="ba-face"></div>
-        <div class="ba-card-label">After &middot; 8 weeks</div>
+
+      <!-- Horizontal scroll carousel — Overlay's draggable gallery feel -->
+      <div class="fade-up">
+        <div class="scroll-track" style="padding-left:2rem;padding-right:2rem;">
+
+          <div class="glass" style="width:320px;padding:2.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;">
+            <div>
+              <span class="font-mono" style="font-size:2rem;color:var(--text);font-weight:300;display:block;margin-bottom:1rem;">01</span>
+              <h3 class="font-mono" style="font-size:0.95rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Skin Diagnostic</h3>
+              <p class="font-body" style="font-size:0.8rem;line-height:1.7;color:var(--text-60);">
+                4-minute consultation. Our AI maps your microbiome, hydration gradient, and melanin distribution.
+              </p>
+            </div>
+            <div class="step-progress"><div class="step-progress-fill"></div></div>
+          </div>
+
+          <div class="glass" style="width:320px;padding:2.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;">
+            <div>
+              <span class="font-mono" style="font-size:2rem;color:var(--text);font-weight:300;display:block;margin-bottom:1rem;">02</span>
+              <h3 class="font-mono" style="font-size:0.95rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">AI Formulation</h3>
+              <p class="font-body" style="font-size:0.8rem;line-height:1.7;color:var(--text-60);">
+                The model synthesises your unique formula in 9 seconds from 3.2 million data points. Cold-compounded within 48 hours.
+              </p>
+            </div>
+            <div class="step-progress"><div class="step-progress-fill"></div></div>
+          </div>
+
+          <div class="glass" style="width:320px;padding:2.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;">
+            <div>
+              <span class="font-mono" style="font-size:2rem;color:var(--text);font-weight:300;display:block;margin-bottom:1rem;">03</span>
+              <h3 class="font-mono" style="font-size:0.95rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Personalize</h3>
+              <p class="font-body" style="font-size:0.8rem;line-height:1.7;color:var(--text-60);">
+                Fine-tune for texture preference, fragrance sensitivity, and seasonal skin shifts. Your formula adapts to your circadian rhythm.
+              </p>
+            </div>
+            <div class="step-progress"><div class="step-progress-fill"></div></div>
+          </div>
+
+          <div class="glass" style="width:320px;padding:2.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;">
+            <div>
+              <span class="font-mono" style="font-size:2rem;color:var(--text);font-weight:300;display:block;margin-bottom:1rem;">04</span>
+              <h3 class="font-mono" style="font-size:0.95rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Continuous Refinement</h3>
+              <p class="font-body" style="font-size:0.8rem;line-height:1.7;color:var(--text-60);">
+                Monthly skin scans feed back into your model. Each refill is more precise than the last.
+              </p>
+            </div>
+            <div class="step-progress"><div class="step-progress-fill"></div></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="shimmer"></div>
+
+
+  <!-- ═══════════════ PRODUCT COLLECTION ═══════════════ -->
+  <section id="ritual" style="position:relative;padding:8rem 0;">
+
+    <div class="blob-field" style="opacity:0.22;">
+      <div class="blob" style="width:600px;height:600px;top:-15%;right:-8%;background:radial-gradient(circle,var(--blob-beige),transparent 70%);filter:blur(100px);opacity:0.5;animation:drift-a 28s ease-in-out infinite;"></div>
+      <div class="blob" style="width:450px;height:450px;bottom:-10%;left:10%;background:radial-gradient(circle,var(--blob-teal),transparent 70%);filter:blur(90px);opacity:0.3;animation:drift-c 32s ease-in-out infinite;"></div>
+    </div>
+
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;">
+
+      <div style="margin-bottom:4.5rem;" class="fade-up">
+        <span class="label">The Collection</span>
+        <h2 class="word-reveal" id="collection-title"
+            style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;color:var(--text);margin-top:1.25rem;">
+        </h2>
+      </div>
+
+      <!-- Product grid: featured + smaller cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" class="md-grid-3">
+
+        <!-- Featured card (spans 2 cols) -->
+        <div class="glass fade-up" style="grid-column:span 2;padding:0;min-height:400px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--blob-beige),var(--blob-mauve));opacity:0.20;filter:blur(50px);z-index:1;"></div>
+          <div style="position:relative;padding:3rem;display:flex;flex-direction:column;justify-content:space-between;z-index:1;">
+            <div class="pill" style="background:rgba(241,224,221,0.45);color:var(--accent);margin-bottom:1.75rem;">Bestseller</div>
+            <h3 class="font-mono" style="font-size:1.4rem;color:var(--text);margin-bottom:0.75rem;font-weight:500;">Sérum Lumière</h3>
+            <p class="font-body" style="color:var(--text-60);font-size:0.9rem;line-height:1.75;max-width:28rem;">
+              Our flagship AI-formulated serum. 47 active compounds, sequenced by a transformer model trained on 12 years of dermatology clinical data.
+            </p>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:2rem;">
+            <div>
+              <span class="font-mono" style="font-size:1.6rem;color:var(--text);font-weight:500;">$148</span>
+              <span class="font-mono" style="font-size:11px;color:var(--text-40);margin-left:0.5rem;">30ml</span>
+            </div>
+            <button class="btn-primary" style="padding:12px 26px;font-size:10px;">Add to Ritual</button>
+          </div>
+          </div>
+          <div style="position:relative;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=600&q=80&fit=crop" alt="Serum dropper with golden liquid" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,0.3) 0%,transparent 40%);"></div>
+          </div>
+
+        <!-- Card 2 -->
+        <div class="glass fade-up" style="padding:0;min-height:400px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;bottom:-10px;left:-10px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,var(--blob-blue),transparent);opacity:0.25;filter:blur(35px);z-index:1;"></div>
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80&fit=crop" alt="Cream jar on minimal white background" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
+            <div class="pill" style="background:rgba(197,218,255,0.35);color:var(--blob-periwinkle);margin-bottom:1.5rem;">New</div>
+            <h3 class="font-mono" style="font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Voile Hydra</h3>
+            <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
+              Ultra-light moisture veil. Biofermented hyaluronic matrix in three molecular weights.
+            </p>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
+            <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$96</span>
+            <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass fade-up" style="padding:0;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-5px;right:-5px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--blob-pink),transparent);opacity:0.25;filter:blur(30px);z-index:1;"></div>
+          <div style="height:160px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&q=80&fit=crop" alt="Pink cosmetics and beauty products" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
+            <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Masque Éclat</h3>
+            <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
+              Enzyme-activated clay. Weekly reset treatment refined by feedback loop from 210,000 skin scans.
+            </p>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
+            <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$74</span>
+            <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass fade-up" style="padding:0;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;bottom:-5px;right:10px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,var(--blob-lavender),transparent);opacity:0.20;filter:blur(25px);z-index:1;"></div>
+          <div style="height:160px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&q=80&fit=crop" alt="Beauty product flat lay arrangement" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
+            <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Brume Sensorielle</h3>
+            <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
+              Rose-infused mist with adaptive peptides. Locks in the bioactive layer between applications.
+            </p>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
+            <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$58</span>
+            <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="glass fade-up" style="padding:0;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:10px;left:-5px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,var(--blob-gold),transparent);opacity:0.25;filter:blur(30px);z-index:1;"></div>
+          <div style="height:160px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80&fit=crop" alt="Minimal beauty product on white background" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="position:relative;padding:1.5rem 2.25rem 0;">
+            <h3 class="font-mono" style="font-size:1.05rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">Crème Nuit</h3>
+            <p class="font-body" style="color:var(--text-60);font-size:0.8rem;line-height:1.7;">
+              Night-optimised barrier restoration. Retinoid-alternative complex with zero purge response.
+            </p>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2.25rem 2.25rem;">
+            <span class="font-mono" style="font-size:1.25rem;color:var(--text);font-weight:500;">$112</span>
+            <button class="btn-ghost" style="padding:9px 20px;font-size:10px;">Add</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="testimonials">
-    <div class="testimonials-header">
-      <h2>What They Say</h2>
+  <div class="shimmer"></div>
+
+
+  <!-- ═══════════════ RESULTS ═══════════════ -->
+  <section id="results" style="position:relative;padding:9rem 0;">
+
+    <div class="blob-field" style="opacity:0.18;">
+      <div class="blob" style="width:600px;height:600px;bottom:-10%;right:5%;background:radial-gradient(circle,var(--blob-beige),transparent 70%);filter:blur(110px);opacity:0.5;animation:drift-d 30s ease-in-out infinite;"></div>
+      <div class="blob" style="width:450px;height:450px;top:-10%;left:10%;background:radial-gradient(circle,var(--blob-periwinkle),transparent 70%);filter:blur(100px);opacity:0.3;animation:drift-b 28s ease-in-out infinite;"></div>
     </div>
-    <div class="testimonial-cards">
-      <div class="testimonial-card">
-        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <blockquote>"My skin has never felt this balanced. The personalization is unlike anything I've tried before."</blockquote>
-        <div class="testimonial-author">Mina K. &middot; Seoul</div>
+
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;">
+
+      <div style="text-align:center;margin-bottom:5rem;" class="fade-up">
+        <span class="label">Real Results</span>
+        <h2 class="word-reveal" id="results-title"
+            style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;color:var(--text);margin-top:1.25rem;display:inline-block;">
+        </h2>
+        <p class="font-body" style="color:var(--text-60);max-width:28rem;margin:1.5rem auto 0;font-size:0.95rem;line-height:1.75;">
+          14 days. No filters. No retouching. Independent clinical measurement.
+        </p>
       </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <blockquote>"I was skeptical about AI skincare. Two months in, my dermatologist asked what I changed."</blockquote>
-        <div class="testimonial-author">Clara J. &middot; Paris</div>
+
+      <!-- Metric cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2.5rem;" class="md-grid-3">
+        <div class="glass fade-up" style="padding:3rem 2rem;text-align:center;">
+          <span class="font-mono text-gradient" style="font-size:2.5rem;display:block;margin-bottom:0.5rem;font-weight:500;">+41%</span>
+          <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.12em;text-transform:uppercase;">Hydration Depth</span>
+          <p class="font-body" style="font-size:0.75rem;color:var(--text-40);margin-top:0.75rem;line-height:1.6;">Corneometer measurement at 7 and 14 days.</p>
+        </div>
+
+        <div class="glass fade-up" style="padding:3rem 2rem;text-align:center;">
+          <span class="font-mono text-gradient" style="font-size:2.5rem;display:block;margin-bottom:0.5rem;font-weight:500;">-29%</span>
+          <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.12em;text-transform:uppercase;">Fine Line Depth</span>
+          <p class="font-body" style="font-size:0.75rem;color:var(--text-40);margin-top:0.75rem;line-height:1.6;">PRIMOS profilometry, n=312 participants.</p>
+        </div>
+
+        <div class="glass fade-up" style="padding:3rem 2rem;text-align:center;">
+          <span class="font-mono text-gradient" style="font-size:2.5rem;display:block;margin-bottom:0.5rem;font-weight:500;">98%</span>
+          <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.12em;text-transform:uppercase;">Tolerability</span>
+          <p class="font-body" style="font-size:0.75rem;color:var(--text-40);margin-top:0.75rem;line-height:1.6;">Zero adverse events, Fitzpatrick I-VI.</p>
+        </div>
       </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <blockquote>"The scan results are fascinating. It's like having a lab on your vanity."</blockquote>
-        <div class="testimonial-author">Priya S. &middot; Mumbai</div>
+
+      <!-- Before/After bar -->
+      <div class="glass fade-up" style="padding:2.5rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;" class="md-grid-2">
+          <div>
+            <span class="font-mono" style="font-size:10px;color:var(--text-40);letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:0.75rem;">Before — Day 0</span>
+            <div style="height:4px;border-radius:9999px;background:var(--text-10);overflow:hidden;">
+              <div style="height:100%;width:32%;background:var(--blob-mauve);border-radius:9999px;"></div>
+            </div>
+            <span class="font-mono" style="font-size:10px;color:var(--text-40);display:block;margin-top:0.5rem;">Barrier integrity 32%</span>
+          </div>
+          <div>
+            <span class="font-mono" style="font-size:10px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:0.75rem;">After — Day 14</span>
+            <div style="height:4px;border-radius:9999px;background:var(--text-10);overflow:hidden;">
+              <div class="bar-animated" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--blob-lavender));border-radius:9999px;transition:width 1.4s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+            </div>
+            <span class="font-mono" style="font-size:10px;color:var(--accent);display:block;margin-top:0.5rem;">Barrier integrity 87%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="shimmer"></div>
+
+
+  <!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+  <section style="position:relative;padding:8rem 0;">
+
+    <div class="blob-field" style="opacity:0.18;">
+      <div class="blob" style="width:550px;height:550px;top:-5%;left:35%;background:radial-gradient(circle,var(--blob-pink),transparent 70%);filter:blur(100px);opacity:0.4;animation:drift-a 32s ease-in-out infinite;"></div>
+    </div>
+
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;">
+
+      <div style="text-align:center;margin-bottom:5rem;" class="fade-up">
+        <span class="label">Voices</span>
+        <h2 class="word-reveal" id="voices-title"
+            style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;color:var(--text);margin-top:1.25rem;display:inline-block;">
+        </h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" class="md-grid-3">
+
+        <div class="glass fade-up" style="padding:2.5rem;position:relative;overflow:hidden;">
+          <span class="font-mono" style="font-size:48px;line-height:1;color:var(--blob-beige);position:absolute;top:16px;left:24px;">&ldquo;</span>
+          <div style="position:relative;padding-top:2rem;">
+            <p class="font-body" style="color:var(--text);font-size:0.875rem;line-height:1.8;font-weight:300;margin-bottom:1.75rem;">
+              I've tried everything. Lumière is the first product that made a visible difference before I finished the first bottle. My dermatologist asked what I changed.
+            </p>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=100&q=80&fit=crop&crop=face" alt="Mia K." loading="lazy" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+              <div>
+                <span class="font-mono" style="font-size:0.75rem;color:var(--text);display:block;font-weight:500;">Mia K.</span>
+                <span class="font-mono" style="font-size:10px;color:var(--text-40);">Tokyo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass fade-up" style="padding:2.5rem;position:relative;overflow:hidden;">
+          <span class="font-mono" style="font-size:48px;line-height:1;color:var(--blob-blue);position:absolute;top:16px;left:24px;">&ldquo;</span>
+          <div style="position:relative;padding-top:2rem;">
+            <p class="font-body" style="color:var(--text);font-size:0.875rem;line-height:1.8;font-weight:300;margin-bottom:1.75rem;">
+              Sensitive skin since my twenties. Most serums cause a reaction within three days. Lumière's barrier serum is the first thing I've used consistently for four months.
+            </p>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=100&q=80&fit=crop&crop=face" alt="Camille D." loading="lazy" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+              <div>
+                <span class="font-mono" style="font-size:0.75rem;color:var(--text);display:block;font-weight:500;">Camille D.</span>
+                <span class="font-mono" style="font-size:10px;color:var(--text-40);">Paris</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass fade-up" style="padding:2.5rem;position:relative;overflow:hidden;">
+          <span class="font-mono" style="font-size:48px;line-height:1;color:var(--blob-lavender);position:absolute;top:16px;left:24px;">&ldquo;</span>
+          <div style="position:relative;padding-top:2rem;">
+            <p class="font-body" style="color:var(--text);font-size:0.875rem;line-height:1.8;font-weight:300;margin-bottom:1.75rem;">
+              The questionnaire was unexpectedly thorough. Within two weeks my formula arrived and within two more weeks the hyperpigmentation on my jawline had faded measurably.
+            </p>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=100&q=80&fit=crop&crop=face" alt="Priya N." loading="lazy" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+              <div>
+                <span class="font-mono" style="font-size:0.75rem;color:var(--text);display:block;font-weight:500;">Priya N.</span>
+                <span class="font-mono" style="font-size:10px;color:var(--text-40);">Mumbai</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="cta">
-    <h2>Begin Your<br>Skin Journey</h2>
-    <p>Join the waitlist for early access to Aura's AI-driven skincare platform.</p>
-    <a href="#" class="cta-btn">Request Early Access</a>
-  </section>
+  <div class="shimmer"></div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-left">
-      <div class="footer-logo-circle"></div>
-      <span class="footer-brand">Aura Beauty &copy; 2025</span>
+
+  <!-- ═══════════════ FOOTER (dark navy, Overlay-style) ═══════════════ -->
+  <footer style="background:var(--nav-dark);position:relative;padding:6rem 0 3rem;overflow:hidden;">
+
+    <!-- Subtle dark blobs -->
+    <div class="blob-field" style="opacity:0.08;">
+      <div class="blob" style="width:600px;height:600px;bottom:-30%;left:-10%;background:radial-gradient(circle,var(--blob-lavender),transparent 70%);filter:blur(120px);opacity:0.5;"></div>
+      <div class="blob" style="width:400px;height:400px;top:-20%;right:-5%;background:radial-gradient(circle,var(--blob-pink),transparent 70%);filter:blur(100px);opacity:0.4;"></div>
     </div>
-    <div class="footer-links">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#">Instagram</a>
+
+    <div style="position:relative;z-index:1;max-width:72rem;margin:0 auto;padding:0 2rem;">
+
+      <!-- CTA — subscribe form -->
+      <div id="subscribe" style="text-align:center;margin-bottom:5rem;" class="fade-up">
+        <span class="font-mono" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.40);display:block;margin-bottom:1.25rem;">Follow Our Journey</span>
+        <h2 class="font-mono" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:400;color:#fff;margin-bottom:1.25rem;line-height:1.1;letter-spacing:-0.025em;">
+          Your skin.<br>
+          <span style="background:linear-gradient(135deg,var(--blob-beige) 0%,var(--blob-lavender) 50%,var(--blob-periwinkle) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Precisely yours.</span>
+        </h2>
+        <p style="color:rgba(255,255,255,0.45);max-width:24rem;margin:0 auto 2rem;font-size:0.9rem;line-height:1.75;">
+          Subscribe for updates and early access to AI-formulated skincare.
+        </p>
+        <form class="email-form" style="margin:0 auto;border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="your@email.com" style="color:rgba(255,255,255,0.85);" />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+
+      <!-- Footer columns -->
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3.5rem;" class="md-grid-4">
+        <div>
+          <span class="font-mono" style="font-size:1.05rem;color:#fff;display:block;margin-bottom:1rem;font-weight:500;">lumière</span>
+          <p style="font-size:0.8rem;line-height:1.7;color:rgba(255,255,255,0.35);max-width:16rem;">AI precision skincare.<br>Made for your biology.</p>
+        </div>
+        <div>
+          <span class="font-mono" style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.30);display:block;margin-bottom:1rem;">Products</span>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Sérum Lumière</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Voile Hydra</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Masque Éclat</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Ritual Set</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="font-mono" style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.30);display:block;margin-bottom:1rem;">Science</span>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">How it works</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Clinical trials</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Ingredients</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="font-mono" style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.30);display:block;margin-bottom:1rem;">Company</span>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">About</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Journal</a></li>
+            <li><a href="#" style="font-size:0.8rem;color:rgba(255,255,255,0.50);text-decoration:none;transition:color 0.3s;">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:1.5rem;"></div>
+
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;">
+        <span class="font-mono" style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:0.06em;">&copy; 2026 Lumière Precision Skincare, SAS</span>
+        <div style="display:flex;gap:1rem;">
+          <a href="#" class="font-mono" style="font-size:10px;color:rgba(255,255,255,0.30);text-decoration:none;letter-spacing:0.06em;">Privacy Policy</a>
+          <a href="#" class="font-mono" style="font-size:10px;color:rgba(255,255,255,0.30);text-decoration:none;letter-spacing:0.06em;">Terms</a>
+        </div>
+      </div>
+
     </div>
   </footer>
+
+
+  <script>
+    // ── Word-reveal injection ──────────────────────────
+    function injectWords(el, text) {
+      if (!el) return;
+      el.innerHTML = text.split(' ').map((w, i) =>
+        `<span class="word" style="transition-delay:${i * 0.05}s">${w}&nbsp;</span>`
+      ).join('');
+    }
+
+    injectWords(document.getElementById('hero-title'), 'The future of skincare is automated.');
+    injectWords(document.getElementById('features-title'), 'Full-stack beauty innovation.');
+    injectWords(document.getElementById('vision-title'), 'The daily ritual, reimagined.');
+    injectWords(document.getElementById('collection-title'), 'Four formulas. One complete ritual.');
+    injectWords(document.getElementById('results-title'), 'Measured. Not claimed.');
+    injectWords(document.getElementById('voices-title'), 'Heard from real skin.');
+
+
+    // ── IntersectionObserver for scroll animations ─────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.word-reveal, .fade-up').forEach(el => observer.observe(el));
+
+    // Trigger hero immediately
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const hero = document.getElementById('hero-title');
+        if (hero) hero.classList.add('is-visible');
+
+        const heroSection = hero?.closest('section');
+        if (heroSection) {
+          heroSection.querySelectorAll('.fade-up').forEach((el, i) => {
+            el.style.transitionDelay = `${0.3 + i * 0.18}s`;
+            el.classList.add('is-visible');
+          });
+        }
+      });
+    });
+
+
+    // ── Smooth scroll for anchors ──────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+
+    // ── Animate progress bar on scroll ─────────────────
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bar = entry.target.querySelector('.bar-animated');
+          if (bar) {
+            bar.style.width = '0%';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => { bar.style.width = '87%'; });
+            });
+          }
+        }
+      });
+    }, { threshold: 0.4 });
+
+    document.querySelectorAll('.bar-animated').forEach(el => {
+      const parent = el.closest('.glass');
+      if (parent) barObserver.observe(parent);
+    });
+
+
+    // ── Step progress bars animate on scroll ────────────
+    const stepObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fill = entry.target.querySelector('.step-progress-fill');
+          if (fill) {
+            fill.style.width = '0%';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => { fill.style.width = '100%'; });
+            });
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.step-progress').forEach(el => stepObserver.observe(el));
+  </script>
 
 </body>
 </html>

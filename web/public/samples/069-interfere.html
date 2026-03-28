@@ -3,28 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BugShield — Build software that never breaks</title>
+  <title>Synthwave — Real-time Error Tracking for Developers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Heldane Text proxy: Playfair Display (serif display) -->
+  <!-- Redaction 35 proxy: Cormorant Garamond italic (degraded serif accent) -->
+  <!-- Body: Inter Variable -->
+  <!-- Mono: JetBrains Mono (Berkeley Mono proxy) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
+    /* ─── Design Tokens (matches interfere.com palette) ─── */
     :root {
-      --bg: #ffffff;
-      --surface: #fafafa;
-      --surface-2: #f5f5f5;
-      --text: #1a1a1a;
-      --text-secondary: #6b6b6b;
-      --text-tertiary: #999999;
-      --border: #e8e8e8;
-      --border-light: #f0f0f0;
-      --accent: #e8364e;
-      --accent-light: #fdf2f4;
-      --accent-bg: rgba(232,54,78,0.06);
-      --pink-subtle: #fef7f8;
+      --bg:         #050505;
+      --surface:    #0a0a0c;
+      --text:       #f0f0f0;
+      --text-secondary: #888;
+      --text-tertiary: #555;
+      --border:     rgba(255,255,255,0.08);
+      --border-subtle: rgba(255,255,255,0.04);
+
+      /* Interfere's 4-stop neon gradient */
+      --neon-orange:  #FF3B00;
+      --neon-magenta: #F6009D;
+      --neon-purple:  #973EC6;
+      --neon-blue:    #008EFF;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; }
 
     body {
       background: var(--bg);
@@ -33,887 +47,1181 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
-      line-height: 1.6;
     }
 
-    .font-display { font-family: 'Playfair Display', Georgia, serif; }
-    .font-mono { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+    /* ─── Triple Font System ─── */
+    .font-display  { font-family: 'Playfair Display', Georgia, serif; }
+    .font-accent   { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .font-body     { font-family: 'Inter', system-ui, sans-serif; }
+    .font-mono     { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
 
-    /* ═══ NAV ═══ */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 0 48px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-light);
+    /* ─── The Signature Gradient ─── */
+    .neon-gradient {
+      background: linear-gradient(90deg,
+        rgba(255,59,0,0.2)   0%,
+        rgba(246,0,157,0.2) 38%,
+        rgba(151,62,198,0.2) 71%,
+        rgba(0,142,255,0.2) 100%
+      );
+      filter: blur(100px);
     }
 
-    nav a {
-      color: var(--text-secondary);
-      text-decoration: none;
+    .gradient-text {
+      background: linear-gradient(90deg, var(--neon-orange), var(--neon-magenta), var(--neon-purple), var(--neon-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── Glassmorphism — "neon through frost" ─── */
+    .glass {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(24px) saturate(1.5);
+      -webkit-backdrop-filter: blur(24px) saturate(1.5);
+      border-radius: 16px;
+    }
+    .glass-strong {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(40px) saturate(1.8);
+      -webkit-backdrop-filter: blur(40px) saturate(1.8);
+      border-radius: 16px;
+    }
+    .glass:hover {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* ─── Buttons ─── */
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 10px;
       font-size: 14px;
-      transition: color 0.2s;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      text-decoration: none;
+      display: inline-block;
     }
-    nav a:hover { color: var(--text); }
+    .btn-primary:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-weight: 500;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.16);
+      transform: translateY(-1px);
+    }
 
-    .nav-logo {
+    /* ─── Nav ─── */
+    .nav-glass {
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      background: rgba(5,5,5,0.75);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* ─── Marquee ─── */
+    .marquee-track {
+      display: flex;
+      gap: 48px;
+      width: max-content;
+      animation: marquee-scroll 28s linear infinite;
+    }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-mask {
+      position: relative;
+      overflow: hidden;
+    }
+    .marquee-mask::before,
+    .marquee-mask::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .marquee-mask::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg), transparent);
+    }
+    .marquee-mask::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg), transparent);
+    }
+
+    /* ─── Code Block ─── */
+    .code-block {
+      background: rgba(8,8,16,0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .code-header {
       display: flex;
       align-items: center;
       gap: 8px;
-      color: var(--text);
-      font-weight: 600;
-      font-size: 15px;
-      text-decoration: none;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
     }
-
-    .btn-nav {
-      display: inline-flex;
-      align-items: center;
-      padding: 7px 16px;
-      background: var(--text);
-      color: #fff;
-      font-weight: 500;
-      font-size: 13px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .btn-nav:hover { opacity: 0.85; }
-
-    /* ═══ HERO ═══ */
-    .hero {
-      padding: 120px 48px 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      max-width: 1200px;
-      margin: 0 auto;
-      gap: 48px;
-    }
-
-    .hero-left {
-      flex: 1;
-      padding-top: 40px;
-    }
-
-    .hero-left h1 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 54px;
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-
-    .hero-left h1 em {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-style: italic;
-      font-weight: 400;
-    }
-
-    .hero-right {
-      flex: 0 0 420px;
-      padding-top: 48px;
-    }
-
-    .hero-right p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 28px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 22px;
-      background: var(--text);
-      color: #fff;
-      font-weight: 500;
-      font-size: 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.85; }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      padding: 10px 22px;
-      background: transparent;
-      color: var(--text);
-      font-weight: 500;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover {
-      border-color: #ccc;
-      background: var(--surface);
-    }
-
-    /* ═══ PRODUCT UI MOCKUP ═══ */
-    .mockup-section {
-      max-width: 1200px;
-      margin: 56px auto 0;
-      padding: 0 48px 80px;
-    }
-
-    .mockup-container {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
-    }
-
-    /* Toolbar */
-    .mockup-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .traffic-lights {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-    .traffic-lights span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    /* Three-column layout */
-    .mockup-body {
-      display: grid;
-      grid-template-columns: 260px 1fr 240px;
-      min-height: 440px;
-    }
-
-    /* Left: Issue list */
-    .issue-list {
-      border-right: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .issue-list-search {
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 12px;
-      color: var(--text-tertiary);
-    }
-
-    .issue-item {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border-light);
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .issue-item:hover { background: rgba(0,0,0,0.02); }
-    .issue-item.active {
-      background: var(--accent-light);
-      border-left: 2px solid var(--accent);
-    }
-
-    .issue-item-id {
-      font-size: 11px;
-      color: var(--text-tertiary);
-    }
-
-    .issue-item-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-      margin-top: 3px;
-    }
-
-    .issue-item-meta {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      margin-top: 3px;
-    }
-
-    /* Tags */
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .tag-bug {
-      background: #fef2f2;
-      color: #dc2626;
-    }
-    .tag-enhancement {
-      background: #fefce8;
-      color: #ca8a04;
-    }
-    .tag-critical {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-    .tag-open {
-      background: #f0fdf4;
-      color: #16a34a;
-    }
-    .tag-progress {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    /* Center: Issue detail */
-    .issue-detail {
-      padding: 24px 28px;
-      overflow-y: auto;
-      background: var(--bg);
-    }
-
-    .breadcrumb {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      margin-bottom: 12px;
-    }
-    .breadcrumb a {
-      color: var(--text-tertiary);
-      text-decoration: none;
-    }
-    .breadcrumb a:hover {
-      color: var(--text-secondary);
-    }
-
-    .issue-detail h2 {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-
-    .issue-detail .description {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 16px;
-    }
-
-    .tags-row {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 24px;
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
-    }
-
-    .rca-block {
-      padding: 14px 16px;
-      border-radius: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border-light);
-      margin-bottom: 24px;
-    }
-
-    .rca-block p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    .rca-block strong {
-      color: var(--text);
-    }
-
-    .rca-block code {
-      background: #fef2f2;
-      color: #dc2626;
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-size: 12px;
+    .dot-r { width:12px; height:12px; border-radius:50%; background:#FF5F57; }
+    .dot-y { width:12px; height:12px; border-radius:50%; background:#FEBC2E; }
+    .dot-g { width:12px; height:12px; border-radius:50%; background:#28C840; }
+    .code-body {
+      padding: 24px;
+      overflow-x: auto;
       font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .tok-keyword  { color: #FF3B00; }
+    .tok-fn       { color: #F6009D; }
+    .tok-string   { color: #73D7E8; }
+    .tok-comment  { color: #444; font-style: italic; }
+    .tok-number   { color: #008EFF; }
+    .tok-var      { color: #C4C4C4; }
+    .tok-prop     { color: #973EC6; }
+    .tok-op       { color: #666; }
+    .tok-class    { color: #FFB86C; }
+    .line-highlight {
+      display: inline-block;
+      width: calc(100% + 48px);
+      margin-left: -24px;
+      padding-left: 20px;
+      border-left: 3px solid var(--neon-orange);
+      background: rgba(255,59,0,0.06);
     }
 
-    /* Activity / comments */
-    .activity-item {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 16px;
+    /* ─── Scroll Fade-in ─── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
+    /* ─── Slow drift on neon blobs ─── */
+    @keyframes drift {
+      0%,100% { transform: translate(-50%, -50%) scale(1); }
+      50%     { transform: translate(-50%, -50%) scale(1.08); }
+    }
+    @keyframes drift2 {
+      0%,100% { transform: translate(-50%, -50%) scale(1.05); }
+      50%     { transform: translate(-50%, -50%) scale(0.95); }
+    }
+
+    /* ─── Section label line ─── */
+    .section-label {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 600;
-      color: white;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .activity-author {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .activity-time {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      margin-left: 6px;
-      font-weight: 400;
-    }
-
-    .activity-text {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-top: 3px;
-    }
-
-    /* Right sidebar */
-    .detail-sidebar {
-      border-left: 1px solid var(--border);
-      padding: 20px 16px;
-      background: var(--surface);
-    }
-
-    .sidebar-section-title {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    .sidebar-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border-light);
-      font-size: 12px;
-    }
-    .sidebar-row:last-child { border-bottom: none; }
-
-    .sidebar-label {
-      color: var(--text-tertiary);
-    }
-
-    .sidebar-value {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* ═══ FEATURES SECTION ═══ */
-    .features-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 48px;
-    }
-
-    .features-header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-
-    .features-header .label {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .features-header h2 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .features-header p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .feature-card {
-      padding: 28px 24px;
-      border-radius: 10px;
-      background: var(--surface);
-      border: 1px solid var(--border-light);
-      transition: all 0.25s ease;
-    }
-    .feature-card:hover {
-      border-color: var(--border);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-      transform: translateY(-2px);
-    }
-
-    .feature-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      background: var(--accent-light);
-    }
-
-    .feature-card h3 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .feature-card p {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* ═══ CTA SECTION ═══ */
-    .cta-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px 96px;
-    }
-
-    .cta-box {
-      background: var(--pink-subtle);
-      border: 1px solid #f5e0e4;
-      border-radius: 16px;
-      padding: 56px;
-      text-align: center;
-    }
-
-    .cta-box h2 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .cta-box p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      margin-bottom: 28px;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .cta-actions {
-      display: flex;
       gap: 12px;
-      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .section-label::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--neon-magenta), var(--neon-purple));
     }
 
-    /* ═══ FOOTER ═══ */
-    footer {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px 48px;
+    /* ─── Error stream ─── */
+    .error-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text-tertiary);
-      border-top: 1px solid var(--border-light);
-      padding-top: 24px;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      transition: background 0.12s ease;
+    }
+    .error-row:hover {
+      background: rgba(255,255,255,0.02);
     }
 
-    footer a {
-      color: var(--text-tertiary);
-      text-decoration: none;
-      transition: color 0.2s;
+    /* ─── Pricing popular ring ─── */
+    .pricing-ring {
+      position: relative;
     }
-    footer a:hover { color: var(--text-secondary); }
+    .pricing-ring::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 17px;
+      background: linear-gradient(135deg, var(--neon-orange), var(--neon-magenta), var(--neon-purple), var(--neon-blue));
+      z-index: -1;
+      opacity: 0.4;
+    }
+
+    /* ─── Status pulse ─── */
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+      50%     { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ═══ NAV ═══ -->
-  <nav>
-    <div style="display:flex; align-items:center; gap:36px;">
-      <a href="#" class="nav-logo">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="4" stroke="#1a1a1a" stroke-width="1.5"/>
-          <circle cx="9" cy="9" r="3" fill="#e8364e"/>
+<!-- ═══════════════════════════════════════════════ NAV ═══ -->
+<nav class="nav-glass fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-[1200px] mx-auto px-6 h-[56px] flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2">
+      <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stop-color="#FF3B00"/>
+            <stop offset="33%"  stop-color="#F6009D"/>
+            <stop offset="66%"  stop-color="#973EC6"/>
+            <stop offset="100%" stop-color="#008EFF"/>
+          </linearGradient>
+        </defs>
+        <rect width="28" height="28" rx="7" fill="url(#lg)"/>
+        <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="font-display font-semibold text-[15px] tracking-tight">Synthwave</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#features" class="font-body text-[13px] transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Features</a>
+      <a href="#demo"     class="font-body text-[13px] transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Docs</a>
+      <a href="#pricing"  class="font-body text-[13px] transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Pricing</a>
+      <a href="#"          class="font-body text-[13px] transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Changelog</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="#" class="hidden md:block font-body text-[13px] transition-colors duration-150 hover:text-white px-1" style="color: var(--text-secondary);">Log in</a>
+      <a href="#" class="btn-secondary" style="padding: 8px 18px; font-size: 13px;">Request a demo</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════ HERO ═══ -->
+<section class="relative overflow-hidden" style="padding: 140px 0 120px;">
+
+  <!-- THE KEY ELEMENT: single wide gradient strip, blur 100px, positioned behind content -->
+  <div class="neon-gradient" style="position: absolute; top: 0; left: 50%; width: 100%; height: 420px; transform: translate(-50%, -50%); pointer-events: none; animation: drift 20s ease-in-out infinite;"></div>
+
+  <!-- Secondary deeper glow for richness -->
+  <div style="position: absolute; top: 80px; left: 50%; width: 800px; height: 500px; transform: translateX(-50%); background: radial-gradient(ellipse, rgba(151,62,198,0.12) 0%, transparent 60%); filter: blur(80px); pointer-events: none; animation: drift2 25s ease-in-out infinite;"></div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6 text-center">
+
+    <!-- Status pill — glass with neon bleeding through -->
+    <div class="inline-flex items-center gap-2.5 glass px-4 py-2.5 mb-10 fade-up" style="border-radius: 10px;">
+      <div style="width:8px; height:8px; border-radius:50%; background:#22c55e; animation: pulse-dot 2s ease-in-out infinite;"></div>
+      <span class="font-mono text-xs" style="color: var(--text-secondary);">All systems operational</span>
+      <span style="color: rgba(255,255,255,0.10);">|</span>
+      <span class="font-mono text-xs" style="color: var(--text-secondary);">99.99% uptime</span>
+    </div>
+
+    <!-- Headline: Heldane-style serif heading with Redaction-style accent -->
+    <h1 class="font-display text-[44px] md:text-[56px] lg:text-[72px] font-medium leading-[1.08] mb-7 fade-up" style="letter-spacing: -0.02em;">
+      Build software that<br>
+      never <span class="font-accent gradient-text" style="font-style: italic; letter-spacing: -0.03em; font-size: 1.05em;">breaks</span>.
+    </h1>
+
+    <!-- Sub-headline: Inter body -->
+    <p class="font-body text-[17px] md:text-lg max-w-[540px] mx-auto leading-[1.65] mb-11 fade-up" style="color: var(--text-secondary); transition-delay: 0.06s;">
+      Synthwave intercepts errors before your users notice. Real-time traces, smart alerts, and full context — zero config required.
+    </p>
+
+    <!-- CTA row -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-14 fade-up" style="transition-delay: 0.12s;">
+      <a href="#" class="btn-secondary" style="min-width: 160px; text-align: center;">Join waitlist</a>
+      <a href="#" class="btn-primary" style="min-width: 160px; text-align: center;">Request a demo</a>
+    </div>
+
+    <!-- Install snippet -->
+    <div class="inline-flex items-center gap-3 glass px-5 py-3 fade-up" style="transition-delay: 0.18s; border-radius: 10px;">
+      <span class="font-mono text-xs" style="color: var(--text-tertiary);">$</span>
+      <span class="font-mono text-sm" style="color: #aaa;">npm install <span class="gradient-text font-semibold">@synthwave/sdk</span></span>
+      <button onclick="copyInstall(this)" aria-label="Copy install command"
+              class="ml-2 p-1 rounded transition-colors duration-150 hover:text-white cursor-pointer"
+              style="color: var(--text-tertiary);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
         </svg>
-        BugShield
-      </a>
-      <div style="display:flex; gap:24px;">
-        <a href="#">Product</a>
-        <a href="#">Pricing</a>
-        <a href="#">Careers</a>
+      </button>
+    </div>
+
+    <!-- Hero showcase image — dashboard screenshot -->
+    <div class="mt-16 fade-up" style="transition-delay: 0.24s;">
+      <div class="glass-strong overflow-hidden" style="border-radius: 16px; padding: 4px;">
+        <img
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80&fit=crop"
+          alt="Analytics dashboard with real-time error monitoring charts and metrics"
+          loading="lazy"
+          style="width: 100%; height: auto; border-radius: 13px; object-fit: cover; display: block; aspect-ratio: 16/9;"
+        />
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:16px;">
-      <a href="#">Login</a>
-      <a href="#" class="btn-nav">Request a demo</a>
-    </div>
-  </nav>
 
-  <!-- ═══ HERO ═══ -->
-  <section class="hero">
-    <div class="hero-left">
-      <h1>Build software that<br>never <em>breaks</em></h1>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ PARTNERS MARQUEE ═══ -->
+<section class="py-10" style="border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+  <div class="max-w-[1200px] mx-auto px-6 mb-5 text-center">
+    <p class="font-mono text-[11px] uppercase tracking-[0.15em]" style="color: var(--text-tertiary);">Trusted by engineering teams at</p>
+  </div>
+  <div class="marquee-mask">
+    <div class="marquee-track" style="align-items: center;">
+      <svg width="80" height="24" viewBox="0 0 80 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Vercel</text></svg>
+      <svg width="64" height="24" viewBox="0 0 64 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Linear</text></svg>
+      <svg width="90" height="24" viewBox="0 0 90 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Supabase</text></svg>
+      <svg width="100" height="24" viewBox="0 0 100 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">PlanetScale</text></svg>
+      <svg width="60" height="24" viewBox="0 0 60 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Turso</text></svg>
+      <svg width="56" height="24" viewBox="0 0 56 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Fly.io</text></svg>
+      <svg width="72" height="24" viewBox="0 0 72 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Render</text></svg>
+      <svg width="76" height="24" viewBox="0 0 76 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Railway</text></svg>
+      <!-- duplicate for seamless loop -->
+      <svg width="80" height="24" viewBox="0 0 80 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Vercel</text></svg>
+      <svg width="64" height="24" viewBox="0 0 64 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Linear</text></svg>
+      <svg width="90" height="24" viewBox="0 0 90 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Supabase</text></svg>
+      <svg width="100" height="24" viewBox="0 0 100 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">PlanetScale</text></svg>
+      <svg width="60" height="24" viewBox="0 0 60 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Turso</text></svg>
+      <svg width="56" height="24" viewBox="0 0 56 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Fly.io</text></svg>
+      <svg width="72" height="24" viewBox="0 0 72 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Render</text></svg>
+      <svg width="76" height="24" viewBox="0 0 76 24"><text x="0" y="17" fill="#555" font-family="Inter, sans-serif" font-weight="600" font-size="14">Railway</text></svg>
     </div>
-    <div class="hero-right">
-      <p>BugShield is the experience layer for broken product flows. Detect, triage, and fix bugs automatically — no human response required.</p>
-      <div class="hero-actions">
-        <a href="#" class="btn-primary">
-          Join waitlist
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L8 4m3 3L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="#" class="btn-secondary">Request a demo</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ HOW IT WORKS (3-step) ═══ -->
+<section id="features" class="relative py-28">
+
+  <!-- Neon bleed behind the glass cards — this is the "frost over neon" effect -->
+  <div class="neon-gradient" style="position: absolute; top: 50%; left: 50%; width: 120%; height: 500px; transform: translate(-50%, -50%); pointer-events: none;"></div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6">
+
+    <div class="section-label fade-up">
+      <span class="font-mono text-[11px] uppercase tracking-[0.15em]" style="color: var(--text-tertiary);">How it works</span>
+    </div>
+
+    <h2 class="font-display text-[32px] md:text-[48px] font-medium leading-[1.1] mb-5 fade-up" style="letter-spacing: -0.02em;">
+      Find. Understand. <span class="font-accent gradient-text" style="font-style: italic; letter-spacing: -0.03em;">Fix.</span>
+    </h2>
+    <p class="font-body text-[15px] max-w-[500px] leading-[1.7] mb-16 fade-up" style="color: var(--text-secondary);">
+      Synthwave surfaces the issue, shows you exactly what went wrong, and points you to the line of code that needs fixing.
+    </p>
+
+    <!-- 3-col step cards — glass panels with neon bleeding through from behind -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- Step 1: Detect -->
+      <div class="glass fade-up" style="padding: 32px 28px;">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex items-center justify-center w-8 h-8 rounded-lg" style="background: rgba(255,59,0,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--neon-orange)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <span class="font-mono text-[11px] uppercase tracking-[0.12em]" style="color: var(--neon-orange);">01 — Detect</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold mb-3">Instant Detection</h3>
+        <p class="font-body text-sm leading-[1.7]" style="color: var(--text-secondary);">
+          Catches errors, unhandled rejections, and slow queries the moment they fire. Zero-config, sub-millisecond overhead.
+        </p>
+        <!-- Mini metric -->
+        <div class="mt-6 flex items-baseline gap-2">
+          <span class="font-mono text-2xl font-semibold gradient-text">340%</span>
+          <span class="font-mono text-xs" style="color: var(--text-tertiary);">error spike detected</span>
+        </div>
+        <!-- Feature image -->
+        <div class="mt-5 overflow-hidden" style="border-radius: 10px;">
+          <img
+            src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80&fit=crop"
+            alt="Code on screen showing error detection patterns"
+            loading="lazy"
+            style="width: 100%; height: 120px; object-fit: cover; display: block; opacity: 0.7;"
+          />
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ═══ PRODUCT UI MOCKUP ═══ -->
-  <div class="mockup-section">
-    <div class="mockup-container">
-
-      <!-- Toolbar -->
-      <div class="mockup-toolbar">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div class="traffic-lights">
-            <span style="background:#FF5F56;"></span>
-            <span style="background:#FFBD2E;"></span>
-            <span style="background:#27C93F;"></span>
+      <!-- Step 2: Analyze -->
+      <div class="glass fade-up" style="padding: 32px 28px; transition-delay: 0.08s;">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex items-center justify-center w-8 h-8 rounded-lg" style="background: rgba(246,0,157,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--neon-magenta)" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </div>
-          <span class="font-mono" style="font-size:12px; color:var(--text-tertiary);">Issues</span>
+          <span class="font-mono text-[11px] uppercase tracking-[0.12em]" style="color: var(--neon-magenta);">02 — Analyze</span>
         </div>
-        <div style="display:flex; gap:8px; align-items:center; font-size:12px; color:var(--text-tertiary);">
-          <span>12 open</span>
-          <span>·</span>
-          <span>3 critical</span>
+        <h3 class="font-display text-xl font-semibold mb-3">Root Cause in 2s</h3>
+        <p class="font-body text-sm leading-[1.7]" style="color: var(--text-secondary);">
+          Traces the full request across services, workers, and APIs. Pinpoints the exact commit, file, and line.
+        </p>
+        <!-- Mini trace -->
+        <div class="mt-6 space-y-2">
+          <div class="flex items-center gap-2">
+            <div class="h-[6px] rounded-full flex-1" style="background: linear-gradient(90deg, var(--neon-orange), var(--neon-magenta));"></div>
+            <span class="font-mono text-[10px]" style="color: var(--text-tertiary);">gateway 42ms</span>
+          </div>
+          <div class="flex items-center gap-2 pl-3">
+            <div class="h-[6px] rounded-full" style="background: linear-gradient(90deg, var(--neon-magenta), var(--neon-purple)); width: 55%;"></div>
+            <span class="font-mono text-[10px]" style="color: var(--text-tertiary);">auth 28ms</span>
+          </div>
+          <div class="flex items-center gap-2 pl-6">
+            <div class="h-[6px] rounded-full" style="background: var(--neon-blue); width: 25%;"></div>
+            <span class="font-mono text-[10px]" style="color: var(--text-tertiary);">db 7ms</span>
+          </div>
+        </div>
+        <!-- Feature image -->
+        <div class="mt-5 overflow-hidden" style="border-radius: 10px;">
+          <img
+            src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80&fit=crop"
+            alt="Matrix-style code visualization representing trace analysis"
+            loading="lazy"
+            style="width: 100%; height: 120px; object-fit: cover; display: block; opacity: 0.7;"
+          />
         </div>
       </div>
 
-      <div class="mockup-body">
-
-        <!-- LEFT: Issue list -->
-        <div class="issue-list">
-          <div class="issue-list-search">
-            <div class="search-box">
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#999" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="#999" stroke-width="1.2" stroke-linecap="round"/></svg>
-              Search issues...
-            </div>
+      <!-- Step 3: Resolve -->
+      <div class="glass fade-up" style="padding: 32px 28px; transition-delay: 0.16s;">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex items-center justify-center w-8 h-8 rounded-lg" style="background: rgba(0,142,255,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
           </div>
-
-          <div class="issue-item active">
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-              <span class="tag tag-bug">Bug</span>
-              <span class="issue-item-id font-mono">#BUG-2847</span>
-            </div>
-            <div class="issue-item-title">Broken Password Reset Link</div>
-            <div class="issue-item-meta">2 hours ago · Critical</div>
+          <span class="font-mono text-[11px] uppercase tracking-[0.12em]" style="color: var(--neon-blue);">03 — Resolve</span>
+        </div>
+        <h3 class="font-display text-xl font-semibold mb-3">Auto-Route & Fix</h3>
+        <p class="font-body text-sm leading-[1.7]" style="color: var(--text-secondary);">
+          Assigns to the right owner via CODEOWNERS. Pings Slack or PagerDuty. MTTR drops from hours to minutes.
+        </p>
+        <!-- Mini stat -->
+        <div class="mt-6 grid grid-cols-2 gap-3">
+          <div class="rounded-lg py-3 text-center" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
+            <div class="font-mono text-lg font-semibold gradient-text">6m 21s</div>
+            <div class="font-mono text-[10px]" style="color: var(--text-tertiary);">avg MTTR</div>
           </div>
-
-          <div class="issue-item">
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-              <span class="tag tag-bug">Bug</span>
-              <span class="issue-item-id font-mono">#BUG-2846</span>
-            </div>
-            <div class="issue-item-title">Cart Total Mismatch on Checkout</div>
-            <div class="issue-item-meta">5 hours ago · High</div>
-          </div>
-
-          <div class="issue-item">
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-              <span class="tag tag-enhancement">Enhancement</span>
-              <span class="issue-item-id font-mono">#ENH-412</span>
-            </div>
-            <div class="issue-item-title">Add Dark Mode to Settings</div>
-            <div class="issue-item-meta">1 day ago · Medium</div>
-          </div>
-
-          <div class="issue-item">
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-              <span class="tag tag-bug">Bug</span>
-              <span class="issue-item-id font-mono">#BUG-2845</span>
-            </div>
-            <div class="issue-item-title">Search Returns Stale Results</div>
-            <div class="issue-item-meta">1 day ago · High</div>
-          </div>
-
-          <div class="issue-item">
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-              <span class="tag tag-bug">Bug</span>
-              <span class="issue-item-id font-mono">#BUG-2844</span>
-            </div>
-            <div class="issue-item-title">Image Upload Fails on Safari</div>
-            <div class="issue-item-meta">2 days ago · Medium</div>
+          <div class="rounded-lg py-3 text-center" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
+            <div class="font-mono text-lg font-semibold gradient-text">14ms</div>
+            <div class="font-mono text-[10px]" style="color: var(--text-tertiary);">alert latency</div>
           </div>
         </div>
+        <!-- Feature image -->
+        <div class="mt-5 overflow-hidden" style="border-radius: 10px;">
+          <img
+            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80&fit=crop"
+            alt="Server room with blinking status lights for infrastructure monitoring"
+            loading="lazy"
+            style="width: 100%; height: 120px; object-fit: cover; display: block; opacity: 0.7;"
+          />
+        </div>
+      </div>
 
-        <!-- CENTER: Issue detail -->
-        <div class="issue-detail">
-          <div class="breadcrumb">
-            <a href="#">Home</a> &nbsp;›&nbsp; Broken Password Reset Link
-          </div>
+    </div>
+  </div>
+</section>
 
-          <h2>Broken Password Reset Link</h2>
 
-          <p class="description">
-            A spike in users clicking on reset links but not completing the reset flow were detected. Error rates surged ten minutes after the latest deployment.
-          </p>
+<!-- ═══════════════════════════════════ ISSUE DEMO (wide card) ═══ -->
+<section class="relative py-20">
 
-          <div class="tags-row">
-            <span class="tag tag-critical">Critical</span>
-            <span class="tag tag-open">Open</span>
-            <span class="tag tag-progress">In Progress</span>
-          </div>
+  <!-- Background neon glow -->
+  <div style="position: absolute; top: 50%; left: 30%; width: 700px; height: 500px; background: radial-gradient(ellipse, rgba(255,59,0,0.08) 0%, transparent 60%); filter: blur(100px); pointer-events: none; transform: translate(-50%, -50%);"></div>
+  <div style="position: absolute; top: 60%; right: 10%; width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(0,142,255,0.06) 0%, transparent 60%); filter: blur(100px); pointer-events: none;"></div>
 
-          <!-- Root cause -->
-          <div class="section-label">Root Cause Analysis</div>
-          <div class="rca-block">
-            <p>
-              <strong>BugShield</strong> flagged this incident after observing a surge in failed password reset attempts.<br><br>
-              Detection showed a spike in users clicking on email links but not completing the reset flow. Token validation endpoint returning <code>403 Forbidden</code> for all requests.
-            </p>
-          </div>
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6">
 
-          <!-- Activity -->
-          <div class="section-label">Activity</div>
+    <div class="section-label fade-up">
+      <span class="font-mono text-[11px] uppercase tracking-[0.15em]" style="color: var(--text-tertiary);">Issue resolution</span>
+    </div>
 
-          <div class="activity-item">
-            <div class="avatar" style="background:#8b5cf6;">SK</div>
-            <div>
-              <div>
-                <span class="activity-author">Sarah Kim</span>
-                <span class="activity-time">· 45 min ago</span>
+    <!-- Wide glass panel — issue demo -->
+    <div class="glass-strong fade-up overflow-hidden" style="border-radius: 16px;">
+
+      <!-- Issue header -->
+      <div class="flex items-center justify-between px-6 py-4" style="border-bottom: 1px solid var(--border);">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-[11px] font-medium px-2 py-1 rounded" style="background: rgba(255,59,0,0.15); color: var(--neon-orange);">P1</span>
+          <span class="font-body font-semibold text-sm">Broken Password Reset Link</span>
+        </div>
+        <span class="font-mono text-[11px] px-2.5 py-1 rounded" style="background: rgba(246,0,157,0.10); color: var(--neon-magenta);">12,881 users affected</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+
+        <!-- Left: Timeline -->
+        <div class="px-6 py-6" style="border-right: 1px solid var(--border-subtle);">
+          <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-5" style="color: var(--text-tertiary);">Event Timeline</div>
+          <div class="space-y-0">
+            <div class="flex items-start gap-3">
+              <div class="flex flex-col items-center">
+                <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: var(--neon-orange);"></div>
+                <div class="w-0.5 min-h-[28px]" style="background: rgba(255,255,255,0.06);"></div>
               </div>
-              <p class="activity-text">
-                Research says this was caused by a stale JWT signing key after the deployment rotated secrets, but the cache never invalidated the old key.
-              </p>
-            </div>
-          </div>
-
-          <div class="activity-item">
-            <div class="avatar" style="background:#3b82f6;">MR</div>
-            <div>
-              <div>
-                <span class="activity-author">Mike Rivera</span>
-                <span class="activity-time">· 20 min ago</span>
+              <div class="pb-4">
+                <div class="font-body text-sm font-medium">Issue detected</div>
+                <div class="font-mono text-[11px]" style="color: var(--text-tertiary);">14:32:01 UTC · Error rate spiked 340%</div>
               </div>
-              <p class="activity-text">
-                Patch submitted. Token cache now flushes on deployment. Reset tests were closed successfully, but users never reached the final "Password Updated" confirmation screen.
-              </p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex flex-col items-center">
+                <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: var(--neon-magenta);"></div>
+                <div class="w-0.5 min-h-[28px]" style="background: rgba(255,255,255,0.06);"></div>
+              </div>
+              <div class="pb-4">
+                <div class="font-body text-sm font-medium">Root cause identified</div>
+                <div class="font-mono text-[11px]" style="color: var(--text-tertiary);">14:32:03 UTC · Staging URL in production config</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex flex-col items-center">
+                <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: var(--neon-purple);"></div>
+                <div class="w-0.5 min-h-[28px]" style="background: rgba(255,255,255,0.06);"></div>
+              </div>
+              <div class="pb-4">
+                <div class="font-body text-sm font-medium">Assigned to @maya</div>
+                <div class="font-mono text-[11px]" style="color: var(--text-tertiary);">14:32:04 UTC · Auto-routed via CODEOWNERS</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex flex-col items-center">
+                <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: var(--neon-blue);"></div>
+              </div>
+              <div>
+                <div class="font-body text-sm font-medium">Resolved</div>
+                <div class="font-mono text-[11px]" style="color: var(--text-tertiary);">14:38:22 UTC · MTTR: 6m 21s</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: Sidebar metadata -->
-        <div class="detail-sidebar">
-          <div class="sidebar-section-title">Details</div>
-
-          <div class="sidebar-row">
-            <span class="sidebar-label">Status</span>
-            <span class="tag tag-open" style="font-size:10px; padding:1px 6px;">Open</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-label">Priority</span>
-            <span class="sidebar-value" style="color:#dc2626;">Critical</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-label">Assignee</span>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <div class="avatar" style="width:20px; height:20px; font-size:9px; background:#8b5cf6;">SK</div>
-              <span class="sidebar-value" style="font-size:12px;">Sarah K.</span>
-            </div>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-label">Label</span>
-            <span class="tag tag-bug" style="font-size:10px; padding:1px 6px;">Bug</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-label">Sprint</span>
-            <span class="sidebar-value" style="font-size:12px;">Sprint 24</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-label">Created</span>
-            <span class="sidebar-value" style="font-size:12px;">Mar 25, 2026</span>
-          </div>
-
-          <div style="margin-top:20px;">
-            <div class="sidebar-section-title">Linked Issues</div>
-            <div style="font-size:12px; color:var(--text-secondary); padding:6px 0; border-bottom:1px solid var(--border-light);">
-              <span class="font-mono" style="color:var(--text-tertiary); font-size:11px;">#BUG-2841</span>
-              <div style="margin-top:2px;">JWT key rotation docs</div>
-            </div>
-          </div>
-
-          <div style="margin-top:20px;">
-            <div class="sidebar-section-title">Impact</div>
-            <div style="font-size:24px; font-weight:700; color:var(--text);">12,841</div>
-            <div style="font-size:11px; color:var(--text-tertiary);">affected users</div>
+        <!-- Right: Code diff -->
+        <div class="px-6 py-6">
+          <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-5" style="color: var(--text-tertiary);">Source · auth/reset.ts</div>
+          <div class="font-mono text-xs leading-[2]" style="color: var(--text-tertiary);">
+            <div><span style="color:#555">7</span>&nbsp;&nbsp;<span style="color:#C4C4C4"><span style="color:var(--neon-purple)">const</span> baseUrl = config.urls</span></div>
+            <div><span style="color:#555">8</span>&nbsp;&nbsp;<span style="color:#C4C4C4">&nbsp;&nbsp;[process.env.NODE_ENV]</span></div>
+            <div class="line-highlight"><span style="color:#555">9</span>&nbsp;&nbsp;<span style="color: var(--neon-orange);">- &nbsp;&nbsp;.replace('https', 'http')</span></div>
+            <div style="background:rgba(0,142,255,0.06); margin-left:-24px; padding-left:20px; border-left:3px solid var(--neon-blue); display:inline-block; width:calc(100% + 48px);"><span style="color:#555">10</span>&nbsp;<span style="color: var(--neon-blue);">+ &nbsp;&nbsp;// protocol already correct</span></div>
+            <div><span style="color:#555">11</span></div>
+            <div><span style="color:#555">12</span>&nbsp;<span style="color:#C4C4C4"><span style="color:var(--neon-purple)">const</span> resetLink =</span></div>
+            <div><span style="color:#555">13</span>&nbsp;<span style="color:#C4C4C4">&nbsp;&nbsp;`<span style="color:#73D7E8">${baseUrl}/auth/reset?token=${token}</span>`</span></div>
           </div>
         </div>
 
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ TESTIMONIAL ═══ -->
+<section class="relative py-24">
+  <!-- Faint neon wash -->
+  <div style="position: absolute; top: 0; left: 50%; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(246,0,157,0.2), rgba(151,62,198,0.2), transparent); transform: translateX(-50%);"></div>
+
+  <!-- Background ambiance image -->
+  <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none;">
+    <img
+      src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200&q=80&fit=crop"
+      alt=""
+      loading="lazy"
+      style="width: 100%; height: 100%; object-fit: cover; opacity: 0.04;"
+    />
+  </div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6">
+    <div class="max-w-2xl mx-auto text-center fade-up">
+      <svg class="mx-auto mb-6" width="36" height="28" viewBox="0 0 40 32" fill="none">
+        <path d="M0 32V18.5C0 6.5 7 1 17 0l2 4c-8 1.5-11 5.5-11.5 10H16v18H0zm24 0V18.5C24 6.5 31 1 41 0l2 4c-8 1.5-11 5.5-11.5 10H40v18H24z" fill="rgba(255,255,255,0.05)"/>
+      </svg>
+      <blockquote class="font-display text-[22px] md:text-[28px] font-medium leading-[1.35] mb-8" style="letter-spacing: -0.01em;">
+        Synthwave cut our mean time to resolution from 45 minutes to under 7. It's not a nice-to-have anymore — it's infrastructure.
+      </blockquote>
+      <div class="flex items-center justify-center gap-3">
+        <div class="w-9 h-9 rounded-full" style="background: linear-gradient(135deg, var(--neon-magenta), var(--neon-purple));"></div>
+        <div class="text-left">
+          <div class="font-body text-sm font-medium">Maya Chen</div>
+          <div class="font-mono text-[11px]" style="color: var(--text-tertiary);">CTO, Profound</div>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- ═══ FEATURES ═══ -->
-  <section class="features-section">
-    <div class="features-header">
-      <div class="label">Platform</div>
-      <h2>Everything you need to ship confidently</h2>
-      <p>From detection to resolution, BugShield handles the entire lifecycle of broken product experiences.</p>
+
+<!-- ═══════════════════════════════════ LIVE ERROR STREAM ═══ -->
+<section class="relative py-20">
+
+  <div class="neon-gradient" style="position: absolute; bottom: -100px; left: 50%; width: 100%; height: 350px; transform: translateX(-50%); pointer-events: none;"></div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6">
+
+    <div class="section-label fade-up">
+      <span class="font-mono text-[11px] uppercase tracking-[0.15em]" style="color: var(--text-tertiary);">Live monitoring</span>
     </div>
 
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2v14M2 9h14" stroke="#e8364e" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-        <h3>Automatic Detection</h3>
-        <p>Monitors every user flow in real time. Surfaces broken experiences before users file tickets.</p>
-      </div>
+    <h2 class="font-display text-[32px] md:text-[48px] font-medium leading-[1.1] mb-5 fade-up" style="letter-spacing: -0.02em;">
+      Every error,<br><span class="font-accent gradient-text" style="font-style: italic; letter-spacing: -0.03em;">in real time.</span>
+    </h2>
+    <p class="font-body text-[15px] max-w-[480px] leading-[1.7] mb-12 fade-up" style="color: var(--text-secondary);">
+      Watch your production environment in real time. Errors, warnings, and deployments — all in one stream.
+    </p>
 
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#e8364e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <!-- Error stream panel — glass with neon bleeding through -->
+    <div class="glass-strong fade-up overflow-hidden" style="border-radius: 14px;">
+      <div class="flex items-center justify-between px-5 py-3" style="border-bottom: 1px solid var(--border);">
+        <div class="flex items-center gap-3">
+          <div style="width:8px; height:8px; border-radius:50%; background:#FF5F57;"></div>
+          <span class="font-mono text-[11px]" style="color: var(--text-tertiary);">Live Error Stream</span>
         </div>
-        <h3>Root Cause Analysis</h3>
-        <p>Traces every issue back to the exact commit, config change, or deployment that caused it.</p>
+        <span class="font-mono text-[10px] px-2 py-0.5 rounded" style="background: rgba(255,59,0,0.12); color: var(--neon-orange);">LIVE</span>
       </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#e8364e" stroke-width="1.5"/><path d="M7 7h4M7 11h2" stroke="#e8364e" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div>
+        <div class="error-row">
+          <span class="font-semibold" style="min-width:28px; color: var(--neon-orange);">ERR</span>
+          <span style="color: var(--text-tertiary); min-width:100px;">14:32:01.204</span>
+          <span style="color: #aaa;">TypeError: Cannot read property 'user' of undefined</span>
+          <span class="ml-auto" style="color: var(--text-tertiary);">api/auth.ts:47</span>
         </div>
-        <h3>Smart Triage</h3>
-        <p>Prioritizes issues by user impact, not just error count. Focus on what matters most.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#e8364e" stroke-width="1.5"/><path d="M9 6v3l2 2" stroke="#e8364e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="error-row">
+          <span class="font-semibold" style="min-width:28px; color: #FEBC2E;">WRN</span>
+          <span style="color: var(--text-tertiary); min-width:100px;">14:32:01.891</span>
+          <span style="color: #aaa;">Rate limit approaching: 87% of quota used</span>
+          <span class="ml-auto" style="color: var(--text-tertiary);">middleware/rate.ts:12</span>
         </div>
-        <h3>Instant Alerts</h3>
-        <p>Get notified in Slack, email, or PagerDuty the moment a critical flow breaks in production.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 14l3-4 3 2 4-6" stroke="#e8364e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="error-row">
+          <span class="font-semibold" style="min-width:28px; color: var(--neon-blue);">INF</span>
+          <span style="color: var(--text-tertiary); min-width:100px;">14:32:02.117</span>
+          <span style="color: #aaa;">Deployment detected — new session: v2.4.1</span>
+          <span class="ml-auto" style="color: var(--text-tertiary);">core/lifecycle.ts:3</span>
         </div>
-        <h3>Impact Dashboard</h3>
-        <p>See exactly how many users are affected, what they tried to do, and where they dropped off.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 3v12M12 3v12M3 6h12M3 12h12" stroke="#e8364e" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="error-row">
+          <span class="font-semibold" style="min-width:28px; color: var(--neon-orange);">ERR</span>
+          <span style="color: var(--text-tertiary); min-width:100px;">14:32:02.553</span>
+          <span style="color: #aaa;">UnhandledPromiseRejection: fetch failed</span>
+          <span class="ml-auto" style="color: var(--text-tertiary);">lib/client.ts:91</span>
         </div>
-        <h3>CI/CD Integration</h3>
-        <p>Plugs into your deployment pipeline. Automatically links issues to releases and pull requests.</p>
+        <div class="error-row" style="border-bottom: none;">
+          <span class="font-semibold" style="min-width:28px; color: #FEBC2E;">WRN</span>
+          <span style="color: var(--text-tertiary); min-width:100px;">14:32:03.008</span>
+          <span style="color: #aaa;">Slow query detected: 2340ms on users table</span>
+          <span class="ml-auto" style="color: var(--text-tertiary);">db/query.ts:228</span>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- ═══ CTA ═══ -->
-  <section class="cta-section">
-    <div class="cta-box">
-      <h2>Ship with confidence</h2>
-      <p>Join the teams who stopped guessing and started knowing when their product breaks.</p>
-      <div class="cta-actions">
-        <a href="#" class="btn-primary">
-          Get early access
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L8 4m3 3L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="#" class="btn-secondary">Talk to sales</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ SHOWCASE IMAGE ═══ -->
+<section class="relative py-16">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="glass overflow-hidden fade-up" style="border-radius: 16px; padding: 3px;">
+      <img
+        src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&q=80&fit=crop"
+        alt="Dark workspace setup with multiple monitors showing developer tools"
+        loading="lazy"
+        style="width: 100%; height: 340px; object-fit: cover; display: block; border-radius: 14px;"
+      />
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ CODE DEMO ═══ -->
+<section id="demo" class="relative py-24">
+
+  <div style="position: absolute; top: 0; right: 15%; width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(0,142,255,0.06) 0%, transparent 60%); filter: blur(100px); pointer-events: none;"></div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6">
+
+    <div class="section-label fade-up">
+      <span class="font-mono text-[11px] uppercase tracking-[0.15em]" style="color: var(--text-tertiary);">Integration</span>
+    </div>
+
+    <h2 class="font-display text-[32px] md:text-[48px] font-medium leading-[1.1] mb-5 fade-up" style="letter-spacing: -0.02em;">
+      Three lines to<br><span class="font-accent gradient-text" style="font-style: italic; letter-spacing: -0.03em;">full observability.</span>
+    </h2>
+    <p class="font-body text-[15px] max-w-[480px] leading-[1.7] mb-12 fade-up" style="color: var(--text-secondary);">
+      Drop Synthwave into any Next.js, Express, or FastAPI app. No agent. No YAML. Just import and ship.
+    </p>
+
+    <!-- Tab selector -->
+    <div class="flex gap-1 mb-6 p-1 rounded-lg w-fit glass fade-up" style="border-radius: 10px;">
+      <button onclick="setTab('next')" id="tab-next"
+              class="font-mono text-[12px] px-4 py-2 rounded-md transition-all duration-150 cursor-pointer"
+              style="background: rgba(255,255,255,0.10); color: white;">
+        Next.js
+      </button>
+      <button onclick="setTab('express')" id="tab-express"
+              class="font-mono text-[12px] px-4 py-2 rounded-md transition-all duration-150 cursor-pointer"
+              style="color: var(--text-tertiary);">
+        Express
+      </button>
+      <button onclick="setTab('python')" id="tab-python"
+              class="font-mono text-[12px] px-4 py-2 rounded-md transition-all duration-150 cursor-pointer"
+              style="color: var(--text-tertiary);">
+        Python
+      </button>
+    </div>
+
+    <!-- Code blocks -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <div class="code-block fade-up" id="code-block-1">
+        <div class="code-header">
+          <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+          <span class="font-mono text-[11px] ml-2" style="color: var(--text-tertiary);" id="code-filename-1">instrumentation.ts</span>
+        </div>
+        <div class="code-body" id="code-content-1">
+          <pre><span class="tok-comment">// Runs once at server startup</span>
+<span class="tok-keyword">import</span> <span class="tok-var">Synthwave</span> <span class="tok-keyword">from</span> <span class="tok-string">'@synthwave/sdk'</span>
+
+<span class="tok-keyword">export</span> <span class="tok-keyword">async function</span> <span class="tok-fn">register</span>() {
+  <span class="tok-keyword">if</span> (<span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">NEXT_RUNTIME</span> === <span class="tok-string">'nodejs'</span>) {
+    <span class="tok-keyword">await</span> <span class="tok-class">Synthwave</span>.<span class="tok-fn">init</span>({
+      dsn: <span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">SYNTHWAVE_DSN</span>,
+      tracing: <span class="tok-number">true</span>,
+      release: <span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA</span>,
+    })
+  }
+}</pre>
+        </div>
+      </div>
+
+      <div class="code-block fade-up" id="code-block-2" style="transition-delay:0.08s">
+        <div class="code-header">
+          <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+          <span class="font-mono text-[11px] ml-2" style="color: var(--text-tertiary);" id="code-filename-2">global-error.tsx</span>
+        </div>
+        <div class="code-body" id="code-content-2">
+          <pre><span class="tok-string">"use client"</span>
+
+<span class="tok-keyword">import</span> * <span class="tok-keyword">as</span> <span class="tok-class">Synthwave</span> <span class="tok-keyword">from</span> <span class="tok-string">'@synthwave/nextjs'</span>
+<span class="tok-keyword">import</span> <span class="tok-class">NextError</span> <span class="tok-keyword">from</span> <span class="tok-string">'next/error'</span>
+<span class="tok-keyword">import</span> { <span class="tok-class">useEffect</span> } <span class="tok-keyword">from</span> <span class="tok-string">'react'</span>
+
+<span class="tok-keyword">export default function</span> <span class="tok-fn">GlobalError</span>({ <span class="tok-var">error</span> }: { <span class="tok-var">error</span>: <span class="tok-class">Error</span> }) {
+  <span class="tok-fn">useEffect</span>(() =&gt; {
+    <span class="tok-class">Synthwave</span>.<span class="tok-fn">captureException</span>(<span class="tok-var">error</span>)
+  }, [<span class="tok-var">error</span>])
+
+  <span class="tok-keyword">return</span> (
+    &lt;<span class="tok-class">html</span>&gt;&lt;<span class="tok-class">body</span>&gt;
+      &lt;<span class="tok-class">NextError</span> <span class="tok-prop">statusCode</span>=<span class="tok-number">{500}</span> /&gt;
+    &lt;/<span class="tok-class">body</span>&gt;&lt;/<span class="tok-class">html</span>&gt;
+  )
+}</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ CODE EDITOR IMAGE ═══ -->
+<section class="relative py-12">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 fade-up">
+      <div class="glass overflow-hidden" style="border-radius: 14px; padding: 3px;">
+        <img
+          src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80&fit=crop"
+          alt="Dark code editor with syntax-highlighted source code"
+          loading="lazy"
+          style="width: 100%; height: 220px; object-fit: cover; display: block; border-radius: 12px;"
+        />
+      </div>
+      <div class="glass overflow-hidden" style="border-radius: 14px; padding: 3px;">
+        <img
+          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80&fit=crop"
+          alt="Laptop displaying code in a modern development environment"
+          loading="lazy"
+          style="width: 100%; height: 220px; object-fit: cover; display: block; border-radius: 12px;"
+        />
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ═══ FOOTER ═══ -->
-  <footer>
-    <div style="display:flex; align-items:center; gap:8px;">
-      <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-        <rect x="1" y="1" width="16" height="16" rx="4" stroke="#999" stroke-width="1.2"/>
-        <circle cx="9" cy="9" r="3" fill="#999"/>
-      </svg>
-      <span>BugShield</span>
+
+<!-- ═══════════════════════════════════ PRICING ═══ -->
+<section id="pricing" class="relative py-28">
+
+  <div style="position: absolute; top: 50%; left: 50%; width: 900px; height: 500px; background: radial-gradient(ellipse, rgba(246,0,157,0.05) 0%, transparent 60%); filter: blur(100px); pointer-events: none; transform: translate(-50%, -50%);"></div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6">
+
+    <div class="section-label fade-up">
+      <span class="font-mono text-[11px] uppercase tracking-[0.15em]" style="color: var(--text-tertiary);">Pricing</span>
     </div>
-    <div style="display:flex; gap:20px;">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#">Status</a>
-      <a href="#">GitHub</a>
+
+    <h2 class="font-display text-[32px] md:text-[48px] font-medium leading-[1.1] mb-5 fade-up" style="letter-spacing: -0.02em;">
+      Pay for what you<br>actually <span class="font-accent gradient-text" style="font-style: italic; letter-spacing: -0.03em;">use.</span>
+    </h2>
+    <p class="font-body text-[15px] max-w-[420px] leading-[1.7] mb-16 fade-up" style="color: var(--text-secondary);">
+      No seat licences. No event caps on the free tier. Transparent usage-based billing.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- Hobby -->
+      <div class="glass fade-up" style="padding: 32px 28px;">
+        <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-5" style="color: var(--text-tertiary);">Hobby</div>
+        <div class="font-display text-[40px] font-semibold mb-1 leading-none">$0</div>
+        <div class="font-body text-sm mb-8" style="color: var(--text-tertiary);">Forever free</div>
+        <ul class="space-y-3 mb-9">
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-blue);">&#10003;</span> 50k events / month
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-blue);">&#10003;</span> 24h data retention
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-blue);">&#10003;</span> 1 project
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-blue);">&#10003;</span> Community support
+          </li>
+        </ul>
+        <a href="#" class="btn-secondary block text-center" style="padding: 10px 20px;">Get started</a>
+      </div>
+
+      <!-- Pro — popular -->
+      <div class="glass pricing-ring fade-up" style="padding: 32px 28px; transition-delay: 0.08s; background: linear-gradient(160deg, rgba(255,59,0,0.06) 0%, rgba(246,0,157,0.06) 40%, rgba(151,62,198,0.06) 70%, rgba(0,142,255,0.06) 100%); border-color: rgba(246,0,157,0.25);">
+        <div class="flex items-center justify-between mb-5">
+          <span class="font-mono text-[11px] uppercase tracking-[0.12em]" style="color: var(--neon-magenta);">Pro</span>
+          <span class="font-mono text-[10px] px-2.5 py-1 rounded-md gradient-text font-semibold" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border);">Most popular</span>
+        </div>
+        <div class="font-display text-[40px] font-semibold mb-1 leading-none gradient-text">$29</div>
+        <div class="font-body text-sm mb-8" style="color: var(--text-tertiary);">per month</div>
+        <ul class="space-y-3 mb-9">
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text);">
+            <span style="color: var(--neon-magenta);">&#10003;</span> 2M events / month
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text);">
+            <span style="color: var(--neon-magenta);">&#10003;</span> 90 day retention
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text);">
+            <span style="color: var(--neon-magenta);">&#10003;</span> Unlimited projects
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text);">
+            <span style="color: var(--neon-magenta);">&#10003;</span> Slack + PagerDuty
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text);">
+            <span style="color: var(--neon-magenta);">&#10003;</span> Distributed tracing
+          </li>
+        </ul>
+        <a href="#" class="btn-primary block text-center">Start free trial</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="glass fade-up" style="padding: 32px 28px; transition-delay: 0.16s;">
+        <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-5" style="color: var(--text-tertiary);">Enterprise</div>
+        <div class="font-display text-[40px] font-semibold mb-1 leading-none">Custom</div>
+        <div class="font-body text-sm mb-8" style="color: var(--text-tertiary);">Talk to us</div>
+        <ul class="space-y-3 mb-9">
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-purple);">&#10003;</span> Unlimited events
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-purple);">&#10003;</span> 1 year retention
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-purple);">&#10003;</span> SSO + SAML
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-purple);">&#10003;</span> SLA + dedicated CSM
+          </li>
+          <li class="font-body text-sm flex items-center gap-2.5" style="color: var(--text-secondary);">
+            <span style="color: var(--neon-purple);">&#10003;</span> On-prem option
+          </li>
+        </ul>
+        <a href="#" class="btn-secondary block text-center" style="padding: 10px 20px;">Contact sales</a>
+      </div>
+
     </div>
-  </footer>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ CTA BANNER ═══ -->
+<section class="relative py-20 overflow-hidden">
+  <!-- Background dev image with heavy overlay -->
+  <div style="position: absolute; inset: 0; pointer-events: none;">
+    <img
+      src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&q=80&fit=crop"
+      alt=""
+      loading="lazy"
+      style="width: 100%; height: 100%; object-fit: cover; opacity: 0.06;"
+    />
+  </div>
+  <div class="neon-gradient" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 300px; transform: translate(-50%, -50%); pointer-events: none;"></div>
+
+  <div class="relative z-10 max-w-[600px] mx-auto px-6 text-center fade-up">
+    <h2 class="font-display text-[28px] md:text-[40px] font-medium leading-[1.1] mb-5" style="letter-spacing: -0.02em;">
+      Ready to ship with<br><span class="font-accent gradient-text" style="font-style: italic; letter-spacing: -0.03em;">confidence?</span>
+    </h2>
+    <p class="font-body text-[15px] leading-[1.7] mb-8" style="color: var(--text-secondary);">
+      Join thousands of developers who trust Synthwave to catch errors before their users do.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+      <a href="#" class="btn-primary" style="min-width: 160px; text-align: center;">Start free trial</a>
+      <a href="#" class="btn-secondary" style="min-width: 160px; text-align: center;">View documentation</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════ FOOTER ═══ -->
+<footer class="py-16" style="border-top: 1px solid var(--border-subtle);">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10 mb-14">
+
+      <!-- Brand -->
+      <div class="col-span-2">
+        <div class="flex items-center gap-2 mb-4">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+            <defs>
+              <linearGradient id="lg2" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#FF3B00"/>
+                <stop offset="33%"  stop-color="#F6009D"/>
+                <stop offset="66%"  stop-color="#973EC6"/>
+                <stop offset="100%" stop-color="#008EFF"/>
+              </linearGradient>
+            </defs>
+            <rect width="28" height="28" rx="7" fill="url(#lg2)"/>
+            <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="font-display font-semibold text-sm">Synthwave</span>
+        </div>
+        <p class="font-body text-sm leading-[1.7] max-w-[260px]" style="color: var(--text-tertiary);">
+          Real-time error tracking and observability for teams that ship fast.
+        </p>
+        <div class="flex items-center gap-2 mt-5">
+          <a href="#" class="p-2 rounded-lg transition-colors duration-150 hover:text-white" style="color: var(--text-tertiary);" aria-label="GitHub">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </a>
+          <a href="#" class="p-2 rounded-lg transition-colors duration-150 hover:text-white" style="color: var(--text-tertiary);" aria-label="X / Twitter">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" class="p-2 rounded-lg transition-colors duration-150 hover:text-white" style="color: var(--text-tertiary);" aria-label="Discord">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.082.116 18.107.135 18.12a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Product -->
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-4" style="color: var(--text-tertiary);">Product</div>
+        <ul class="space-y-2.5">
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Features</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Changelog</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Roadmap</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Status</a></li>
+        </ul>
+      </div>
+
+      <!-- Developers -->
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-4" style="color: var(--text-tertiary);">Developers</div>
+        <ul class="space-y-2.5">
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Documentation</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">API Reference</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">SDKs</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Integrations</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[0.12em] mb-4" style="color: var(--text-tertiary);">Company</div>
+        <ul class="space-y-2.5">
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">About</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Careers</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Blog</a></li>
+          <li><a href="#" class="font-body text-sm transition-colors duration-150 hover:text-white" style="color: var(--text-secondary);">Privacy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="flex flex-col md:flex-row items-center justify-between pt-8" style="border-top: 1px solid var(--border-subtle);">
+      <p class="font-mono text-[11px]" style="color: var(--text-tertiary);">
+        &copy; 2026 Synthwave, Inc. All rights reserved.
+      </p>
+      <div class="flex items-center gap-2 mt-3 md:mt-0">
+        <div style="width:6px; height:6px; border-radius:50%; background:#22c55e; animation: pulse-dot 2s ease-in-out infinite;"></div>
+        <span class="font-mono text-[11px]" style="color: var(--text-tertiary);">All systems operational</span>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════ JavaScript ═══ -->
+<script>
+  /* ── Scroll Fade-In ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible')
+    })
+  }, { threshold: 0.08 })
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el))
+
+  /* ── Code Tab Switcher ── */
+  const codeContent = {
+    next: {
+      filename1: 'instrumentation.ts',
+      filename2: 'global-error.tsx',
+      code1: `<span class="tok-comment">// Runs once at server startup</span>
+<span class="tok-keyword">import</span> <span class="tok-var">Synthwave</span> <span class="tok-keyword">from</span> <span class="tok-string">'@synthwave/sdk'</span>
+
+<span class="tok-keyword">export</span> <span class="tok-keyword">async function</span> <span class="tok-fn">register</span>() {
+  <span class="tok-keyword">if</span> (<span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">NEXT_RUNTIME</span> === <span class="tok-string">'nodejs'</span>) {
+    <span class="tok-keyword">await</span> <span class="tok-class">Synthwave</span>.<span class="tok-fn">init</span>({
+      dsn: <span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">SYNTHWAVE_DSN</span>,
+      tracing: <span class="tok-number">true</span>,
+      release: <span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA</span>,
+    })
+  }
+}`,
+      code2: `<span class="tok-string">"use client"</span>
+
+<span class="tok-keyword">import</span> * <span class="tok-keyword">as</span> <span class="tok-class">Synthwave</span> <span class="tok-keyword">from</span> <span class="tok-string">'@synthwave/nextjs'</span>
+<span class="tok-keyword">import</span> <span class="tok-class">NextError</span> <span class="tok-keyword">from</span> <span class="tok-string">'next/error'</span>
+<span class="tok-keyword">import</span> { <span class="tok-class">useEffect</span> } <span class="tok-keyword">from</span> <span class="tok-string">'react'</span>
+
+<span class="tok-keyword">export default function</span> <span class="tok-fn">GlobalError</span>({ <span class="tok-var">error</span> }: { <span class="tok-var">error</span>: <span class="tok-class">Error</span> }) {
+  <span class="tok-fn">useEffect</span>(() =&gt; {
+    <span class="tok-class">Synthwave</span>.<span class="tok-fn">captureException</span>(<span class="tok-var">error</span>)
+  }, [<span class="tok-var">error</span>])
+
+  <span class="tok-keyword">return</span> (
+    &lt;<span class="tok-class">html</span>&gt;&lt;<span class="tok-class">body</span>&gt;
+      &lt;<span class="tok-class">NextError</span> <span class="tok-prop">statusCode</span>=<span class="tok-number">{500}</span> /&gt;
+    &lt;/<span class="tok-class">body</span>&gt;&lt;/<span class="tok-class">html</span>&gt;
+  )
+}`
+    },
+    express: {
+      filename1: 'app.ts',
+      filename2: 'error-handler.ts',
+      code1: `<span class="tok-keyword">import</span> <span class="tok-class">express</span> <span class="tok-keyword">from</span> <span class="tok-string">'express'</span>
+<span class="tok-keyword">import</span> * <span class="tok-keyword">as</span> <span class="tok-class">Synthwave</span> <span class="tok-keyword">from</span> <span class="tok-string">'@synthwave/node'</span>
+
+<span class="tok-class">Synthwave</span>.<span class="tok-fn">init</span>({
+  dsn: <span class="tok-var">process</span>.<span class="tok-prop">env</span>.<span class="tok-prop">SYNTHWAVE_DSN</span>,
+  integrations: [
+    <span class="tok-keyword">new</span> <span class="tok-class">Synthwave</span>.<span class="tok-fn">Integrations</span>.<span class="tok-fn">Http</span>(),
+    <span class="tok-keyword">new</span> <span class="tok-class">Synthwave</span>.<span class="tok-fn">Integrations</span>.<span class="tok-fn">Express</span>(),
+  ],
+})
+
+<span class="tok-keyword">const</span> <span class="tok-var">app</span> = <span class="tok-fn">express</span>()
+<span class="tok-comment">// Must be first middleware</span>
+<span class="tok-var">app</span>.<span class="tok-fn">use</span>(<span class="tok-class">Synthwave</span>.<span class="tok-fn">Handlers</span>.<span class="tok-fn">requestHandler</span>())
+<span class="tok-var">app</span>.<span class="tok-fn">use</span>(<span class="tok-class">Synthwave</span>.<span class="tok-fn">Handlers</span>.<span class="tok-fn">tracingHandler</span>())`,
+      code2: `<span class="tok-keyword">import</span> * <span class="tok-keyword">as</span> <span class="tok-class">Synthwave</span> <span class="tok-keyword">from</span> <span class="tok-string">'@synthwave/node'</span>
+<span class="tok-keyword">import</span> { <span class="tok-class">Request</span>, <span class="tok-class">Response</span>, <span class="tok-class">NextFunction</span> } <span class="tok-keyword">from</span> <span class="tok-string">'express'</span>
+
+<span class="tok-comment">// Must be LAST middleware</span>
+<span class="tok-var">app</span>.<span class="tok-fn">use</span>((<span class="tok-var">err</span>: <span class="tok-class">Error</span>, <span class="tok-var">req</span>: <span class="tok-class">Request</span>, <span class="tok-var">res</span>: <span class="tok-class">Response</span>, <span class="tok-var">next</span>: <span class="tok-class">NextFunction</span>) =&gt; {
+  <span class="tok-class">Synthwave</span>.<span class="tok-fn">captureException</span>(<span class="tok-var">err</span>)
+  <span class="tok-var">res</span>.<span class="tok-fn">status</span>(<span class="tok-number">500</span>).<span class="tok-fn">json</span>({ <span class="tok-prop">error</span>: <span class="tok-string">'Internal server error'</span> })
+})`
+    },
+    python: {
+      filename1: 'main.py',
+      filename2: 'middleware.py',
+      code1: `<span class="tok-keyword">from</span> <span class="tok-var">fastapi</span> <span class="tok-keyword">import</span> <span class="tok-class">FastAPI</span>
+<span class="tok-keyword">import</span> <span class="tok-var">synthwave_sdk</span>
+
+<span class="tok-fn">synthwave_sdk</span>.<span class="tok-fn">init</span>(
+    dsn=<span class="tok-string">"https://key@ingest.synthwave.dev/42"</span>,
+    traces_sample_rate=<span class="tok-number">1.0</span>,
+    profiles_sample_rate=<span class="tok-number">1.0</span>,
+)
+
+<span class="tok-var">app</span> = <span class="tok-fn">FastAPI</span>()
+
+<span class="tok-keyword">@</span><span class="tok-var">app</span>.<span class="tok-fn">get</span>(<span class="tok-string">"/"</span>)
+<span class="tok-keyword">async def</span> <span class="tok-fn">root</span>():
+    <span class="tok-keyword">return</span> {<span class="tok-string">"status"</span>: <span class="tok-string">"ok"</span>}`,
+      code2: `<span class="tok-keyword">from</span> <span class="tok-var">starlette.middleware.base</span> <span class="tok-keyword">import</span> <span class="tok-class">BaseHTTPMiddleware</span>
+<span class="tok-keyword">import</span> <span class="tok-var">synthwave_sdk</span>
+
+<span class="tok-keyword">class</span> <span class="tok-class">SynthwaveMiddleware</span>(<span class="tok-class">BaseHTTPMiddleware</span>):
+    <span class="tok-keyword">async def</span> <span class="tok-fn">dispatch</span>(<span class="tok-var">self</span>, <span class="tok-var">request</span>, <span class="tok-var">call_next</span>):
+        <span class="tok-keyword">with</span> <span class="tok-var">synthwave_sdk</span>.<span class="tok-fn">start_transaction</span>(
+            op=<span class="tok-string">"http.server"</span>,
+            name=<span class="tok-fn">str</span>(<span class="tok-var">request</span>.<span class="tok-var">url</span>)
+        ):
+            <span class="tok-keyword">return</span> <span class="tok-keyword">await</span> <span class="tok-fn">call_next</span>(<span class="tok-var">request</span>)
+
+<span class="tok-var">app</span>.<span class="tok-fn">add_middleware</span>(<span class="tok-class">SynthwaveMiddleware</span>)`
+    }
+  }
+
+  let activeTab = 'next'
+
+  function setTab(tab) {
+    activeTab = tab
+    const data = codeContent[tab]
+
+    document.getElementById('code-filename-1').textContent = data.filename1
+    document.getElementById('code-filename-2').textContent = data.filename2
+    document.getElementById('code-content-1').querySelector('pre').innerHTML = data.code1
+    document.getElementById('code-content-2').querySelector('pre').innerHTML = data.code2
+
+    const tabs = { next: 'tab-next', express: 'tab-express', python: 'tab-python' }
+    Object.values(tabs).forEach(id => {
+      const btn = document.getElementById(id)
+      btn.style.background = ''
+      btn.style.color = 'var(--text-tertiary)'
+    })
+
+    const active = document.getElementById(tabs[tab])
+    active.style.background = 'rgba(255,255,255,0.10)'
+    active.style.color = 'white'
+  }
+
+  /* ── Copy Install Command ── */
+  function copyInstall(btn) {
+    navigator.clipboard.writeText('npm install @synthwave/sdk').then(() => {
+      const svg = btn.querySelector('svg')
+      svg.innerHTML = '<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+      btn.style.color = '#22c55e'
+      setTimeout(() => {
+        svg.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>'
+        btn.style.color = ''
+      }, 2000)
+    })
+  }
+</script>
 
 </body>
 </html>

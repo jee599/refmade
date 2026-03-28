@@ -1,1609 +1,969 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>핀플러스 — 금융의 모든 것</title>
+  <title>007 — Korean Modern Reference</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            t: {
+              text: '#191f28',
+              sub: '#4e5968',
+              muted: '#8b95a1',
+              border: '#e5e8eb',
+              bg: '#f9fafb',
+              blue: '#3182f6',
+              dark: '#191f28',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
       color: #191f28;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-      word-break: keep-all;
     }
 
-    /* ── Navigation ── */
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 0 40px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(225, 231, 239, 0.72);
-      backdrop-filter: saturate(180%) blur(16px);
-      -webkit-backdrop-filter: saturate(180%) blur(16px);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 18px;
-      font-weight: 800;
-      color: #3182f6;
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-logo svg {
-      width: 22px;
-      height: 22px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 14px;
-      font-weight: 500;
-      color: #4e5968;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .nav-links a:hover {
-      color: #191f28;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-lang {
-      font-size: 13px;
-      font-weight: 700;
-      color: #191f28;
-      text-decoration: none;
-      padding: 4px 6px;
-    }
-
-    .nav-lang-divider {
-      color: #d1d6db;
-      font-size: 13px;
-      font-weight: 300;
-      user-select: none;
-    }
-
-    .nav-lang-sub {
-      font-size: 13px;
-      font-weight: 500;
-      color: #8b95a1;
-      text-decoration: none;
-      padding: 4px 6px;
-    }
-
-    /* ── Hero Section ── */
-    .hero {
-      position: relative;
-      height: 100vh;
-      min-height: 700px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: linear-gradient(180deg, #dfe5ed 0%, #d0d8e4 30%, #c5ceda 55%, #bec8d6 80%, #b8c3d2 100%);
-      overflow: hidden;
-    }
-
-    /* white fade at top for nav blending */
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background: linear-gradient(180deg, rgba(230,235,242,0.6) 0%, transparent 100%);
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding-top: 160px;
-      margin-bottom: 36px;
-    }
-
-    .hero-content h1 {
-      font-size: 46px;
-      font-weight: 700;
-      line-height: 1.32;
-      letter-spacing: -0.03em;
-      color: #191f28;
-      white-space: pre-wrap;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      position: relative;
-      z-index: 10;
-      margin-bottom: 48px;
-    }
-
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 13px 24px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.2s, opacity 0.15s;
-      cursor: pointer;
-    }
-
-    .hero-btn:active {
-      transform: scale(0.97);
-    }
-
-    .hero-btn--dark {
-      background: #191f28;
-      color: #fff;
-    }
-
-    .hero-btn--white {
-      background: #fff;
-      color: #191f28;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-
-    .hero-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* ── 3D Objects Scene ── */
-    .objects-scene {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 1300px;
-      height: 55%;
-      z-index: 5;
-      pointer-events: none;
-      perspective: 800px;
-    }
-
-    .obj {
-      position: absolute;
-      pointer-events: auto;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* ── Isometric 3D base ── */
-    .iso {
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-
-    /* Top face */
-    .iso-top {
-      position: absolute;
-      border-radius: 4px;
-    }
-
-    /* Front face (right side in isometric) */
-    .iso-front {
-      position: absolute;
-      transform-origin: bottom;
-      border-radius: 0 0 4px 4px;
-    }
-
-    /* Right face (left side in isometric) */
-    .iso-right {
-      position: absolute;
-      transform-origin: left;
-      border-radius: 0 4px 4px 0;
-    }
-
-    /* Ground shadow for each object */
-    .iso-shadow {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(ellipse, rgba(80,95,120,0.18) 0%, transparent 70%);
-      filter: blur(4px);
-    }
-
-    /* ── Positions ── */
-    .obj-van     { left: 2%;  top: 8%; }
-    .obj-card    { left: 12%; top: 55%; }
-    .obj-phone   { left: 18%; top: 18%; }
-    .obj-gift    { left: 28%; top: 50%; }
-    .obj-lock    { left: 34%; top: 10%; }
-    .obj-bear    { left: 44%; top: 58%; }
-    .obj-pig     { left: 50%; top: 16%; }
-    .obj-safe    { left: 58%; top: 48%; }
-    .obj-coin    { left: 64%; top: 8%; }
-    .obj-bag     { left: 72%; top: 55%; }
-    .obj-key     { left: 78%; top: 20%; }
-    .obj-wallet  { left: 86%; top: 50%; }
-
-    /* ═══════════════════════════════════
-       1. Delivery Van (elongated, white/light gray)
-       ═══════════════════════════════════ */
-    .van-body {
-      width: 100px; height: 52px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .van-body .top {
-      position: absolute; width: 100px; height: 52px;
-      background: linear-gradient(135deg, #f0f3f7 0%, #e2e7ef 100%);
-      border-radius: 6px;
-      transform: translateZ(36px);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
-    }
-    .van-body .top::before {
-      content: ''; position: absolute;
-      right: 0; top: 0; width: 30px; height: 52px;
-      background: linear-gradient(135deg, #a8c4e0 0%, #8fb0d4 100%);
-      border-radius: 0 6px 6px 0;
-    }
-    .van-body .front {
-      position: absolute; width: 100px; height: 36px;
-      background: linear-gradient(180deg, #d8dfe8 0%, #c0c9d6 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 4px 4px;
-    }
-    .van-body .side {
-      position: absolute; width: 52px; height: 36px;
-      background: linear-gradient(180deg, #cdd5e0 0%, #b4becf 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-    .van-body .wheel {
-      position: absolute; width: 12px; height: 12px;
-      background: radial-gradient(circle, #6b7684 40%, #4e5968 100%);
-      border-radius: 50%; transform: translateZ(-2px);
-      bottom: -4px;
-    }
-    .van-body .wheel-l { left: 8px; }
-    .van-body .wheel-r { left: 60px; }
-    .van-shadow {
-      position: absolute; width: 110px; height: 60px;
-      top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(-4px);
-      background: radial-gradient(ellipse, rgba(80,95,120,0.2) 0%, transparent 70%);
-      border-radius: 50%; filter: blur(6px);
-    }
-
-    /* ═══════════════════════════════════
-       2. Credit Card (flat wide, metallic)
-       ═══════════════════════════════════ */
-    .card-body {
-      width: 80px; height: 52px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .card-body .top {
-      position: absolute; width: 80px; height: 52px;
-      background: linear-gradient(135deg, #c8d8ec 0%, #a0b8d8 40%, #d0dce8 70%, #b8cce0 100%);
-      border-radius: 6px;
-      transform: translateZ(6px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-    }
-    .card-body .top::before {
-      content: ''; position: absolute;
-      left: 8px; top: 10px; width: 16px; height: 12px;
-      background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
-      border-radius: 2px;
-    }
-    .card-body .top::after {
-      content: ''; position: absolute;
-      left: 8px; bottom: 10px; width: 40px; height: 3px;
-      background: rgba(255,255,255,0.4);
-      border-radius: 2px;
-    }
-    .card-body .front {
-      position: absolute; width: 80px; height: 6px;
-      background: linear-gradient(180deg, #9aafc8 0%, #8099b8 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0;
-    }
-    .card-body .side {
-      position: absolute; width: 52px; height: 6px;
-      background: linear-gradient(180deg, #90a5be 0%, #7890ac 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-
-    /* ═══════════════════════════════════
-       3. Phone/Device (thin, dark)
-       ═══════════════════════════════════ */
-    .phone-body {
-      width: 42px; height: 72px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .phone-body .top {
-      position: absolute; width: 42px; height: 72px;
-      background: linear-gradient(135deg, #3a4556 0%, #2b3240 60%, #1e2530 100%);
-      border-radius: 8px;
-      transform: translateZ(8px);
-    }
-    .phone-body .top::before {
-      content: ''; position: absolute;
-      left: 4px; top: 6px; right: 4px; bottom: 6px;
-      background: linear-gradient(180deg, #4a6080 0%, #3a5070 100%);
-      border-radius: 4px;
-    }
-    .phone-body .top::after {
-      content: ''; position: absolute;
-      left: 50%; top: 3px; transform: translateX(-50%);
-      width: 12px; height: 2px;
-      background: #4e5968; border-radius: 1px;
-    }
-    .phone-body .front {
-      position: absolute; width: 42px; height: 8px;
-      background: linear-gradient(180deg, #2b3240 0%, #1a2030 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 4px 4px;
-    }
-    .phone-body .side {
-      position: absolute; width: 72px; height: 8px;
-      background: linear-gradient(180deg, #252e3c 0%, #1a2030 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-
-    /* ═══════════════════════════════════
-       4. Gift Box (cube + ribbon, blue/teal)
-       ═══════════════════════════════════ */
-    .gift-body {
-      width: 64px; height: 64px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .gift-body .top {
-      position: absolute; width: 64px; height: 64px;
-      background: linear-gradient(135deg, #7cc4cc 0%, #5ab0bc 100%);
-      border-radius: 6px;
-      transform: translateZ(50px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-    }
-    /* Ribbon cross on top */
-    .gift-body .top::before {
-      content: ''; position: absolute;
-      left: 50%; top: 0; width: 8px; height: 100%;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.45), rgba(255,255,255,0.15));
-    }
-    .gift-body .top::after {
-      content: ''; position: absolute;
-      top: 50%; left: 0; height: 8px; width: 100%;
-      transform: translateY(-50%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.45), rgba(255,255,255,0.15));
-    }
-    .gift-body .front {
-      position: absolute; width: 64px; height: 50px;
-      background: linear-gradient(180deg, #58a8b4 0%, #3e8e9c 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 4px 4px;
-    }
-    .gift-body .front::before {
-      content: ''; position: absolute;
-      left: 50%; top: 0; width: 8px; height: 100%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.25);
-    }
-    .gift-body .side {
-      position: absolute; width: 64px; height: 50px;
-      background: linear-gradient(180deg, #4c9eaa 0%, #368490 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-    .gift-body .side::before {
-      content: ''; position: absolute;
-      top: 50%; left: 0; width: 100%; height: 8px;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* ═══════════════════════════════════
-       5. Padlock (body + shackle, gold)
-       ═══════════════════════════════════ */
-    .lock-body {
-      width: 50px; height: 56px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    /* Main body */
-    .lock-body .top {
-      position: absolute; width: 50px; height: 40px;
-      bottom: 0;
-      background: linear-gradient(135deg, #f0d060 0%, #d4a830 100%);
-      border-radius: 6px;
-      transform: translateZ(32px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    .lock-body .top::before {
-      content: ''; position: absolute;
-      left: 50%; top: 50%; transform: translate(-50%, -50%);
-      width: 10px; height: 10px;
-      background: #8b7020;
-      border-radius: 50%;
-    }
-    .lock-body .top::after {
-      content: ''; position: absolute;
-      left: 50%; top: 60%; transform: translateX(-50%);
-      width: 4px; height: 10px;
-      background: #8b7020;
-      border-radius: 0 0 2px 2px;
-    }
-    /* Shackle (arch) */
-    .lock-shackle {
-      position: absolute;
-      top: 0; left: 50%; transform: translateX(-50%) translateZ(32px);
-      width: 28px; height: 22px;
-      border: 6px solid #c8a030;
-      border-bottom: none;
-      border-radius: 14px 14px 0 0;
-    }
-    .lock-body .front {
-      position: absolute; width: 50px; height: 32px;
-      background: linear-gradient(180deg, #d4a830 0%, #b89020 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 4px 4px;
-    }
-    .lock-body .side {
-      position: absolute; width: 40px; height: 32px;
-      background: linear-gradient(180deg, #c89828 0%, #a88018 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-
-    /* ═══════════════════════════════════
-       6. Teddy Bear (rounded, brown)
-       ═══════════════════════════════════ */
-    .bear-body {
-      width: 56px; height: 64px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .bear-body .top {
-      position: absolute; width: 48px; height: 48px;
-      left: 4px; top: 12px;
-      background: radial-gradient(circle at 35% 35%, #d4b896 0%, #b8956c 100%);
-      border-radius: 50% 50% 46% 46%;
-      transform: translateZ(30px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
-    }
-    /* Ears */
-    .bear-body .top::before {
-      content: ''; position: absolute;
-      top: -6px; left: 2px;
-      width: 14px; height: 14px;
-      background: radial-gradient(circle, #d4b896, #b8956c);
-      border-radius: 50%;
-    }
-    .bear-body .top::after {
-      content: ''; position: absolute;
-      top: -6px; right: 2px;
-      width: 14px; height: 14px;
-      background: radial-gradient(circle, #d4b896, #b8956c);
-      border-radius: 50%;
-    }
-    /* Snout */
-    .bear-snout {
-      position: absolute;
-      left: 50%; top: 50%; transform: translate(-50%, -20%) translateZ(34px);
-      width: 18px; height: 12px;
-      background: #c8a878;
-      border-radius: 50%;
-    }
-    .bear-snout::before {
-      content: ''; position: absolute;
-      left: 50%; top: 2px; transform: translateX(-50%);
-      width: 6px; height: 4px;
-      background: #6b5540;
-      border-radius: 50%;
-    }
-    /* Eyes */
-    .bear-eye-l, .bear-eye-r {
-      position: absolute;
-      width: 6px; height: 6px;
-      background: #4e3c28;
-      border-radius: 50%;
-      transform: translateZ(34px);
-      top: 24px;
-    }
-    .bear-eye-l { left: 14px; }
-    .bear-eye-r { left: 32px; }
-    .bear-body .front {
-      position: absolute; width: 48px; height: 30px;
-      left: 4px;
-      background: linear-gradient(180deg, #b08860 0%, #98704c 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 20px 20px;
-    }
-
-    /* ═══════════════════════════════════
-       7. Piggy Bank (oval, pink)
-       ═══════════════════════════════════ */
-    .pig-body {
-      width: 60px; height: 52px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .pig-body .top {
-      position: absolute; width: 60px; height: 52px;
-      background: radial-gradient(circle at 40% 35%, #f0b8c8 0%, #e098a8 60%, #d48098 100%);
-      border-radius: 50%;
-      transform: translateZ(28px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-    }
-    /* Coin slot */
-    .pig-body .top::before {
-      content: ''; position: absolute;
-      left: 50%; top: 4px; transform: translateX(-50%);
-      width: 16px; height: 3px;
-      background: #b06878;
-      border-radius: 2px;
-    }
-    /* Snout */
-    .pig-body .top::after {
-      content: ''; position: absolute;
-      right: 2px; top: 50%; transform: translateY(-50%);
-      width: 14px; height: 12px;
-      background: #d48898;
-      border-radius: 50%;
-    }
-    /* Eyes */
-    .pig-eye-l, .pig-eye-r {
-      position: absolute;
-      width: 5px; height: 5px;
-      background: #6b4050;
-      border-radius: 50%;
-      transform: translateZ(32px);
-      top: 18px;
-    }
-    .pig-eye-l { left: 18px; }
-    .pig-eye-r { left: 30px; }
-    .pig-body .front {
-      position: absolute; width: 60px; height: 28px;
-      background: linear-gradient(180deg, #d88898 0%, #c07080 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 30px 30px;
-    }
-
-    /* ═══════════════════════════════════
-       8. Safe/Vault (heavy cube, dark gray)
-       ═══════════════════════════════════ */
-    .safe-body {
-      width: 66px; height: 66px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .safe-body .top {
-      position: absolute; width: 66px; height: 66px;
-      background: linear-gradient(135deg, #6b7a8e 0%, #4e5d70 100%);
-      border-radius: 6px;
-      transform: translateZ(52px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
-    }
-    /* Dial */
-    .safe-body .top::before {
-      content: ''; position: absolute;
-      left: 50%; top: 50%; transform: translate(-50%, -50%);
-      width: 20px; height: 20px;
-      background: radial-gradient(circle, #8b95a1 0%, #6b7684 60%);
-      border: 2px solid #8b95a1;
-      border-radius: 50%;
-    }
-    /* Handle */
-    .safe-body .top::after {
-      content: ''; position: absolute;
-      right: 8px; top: 50%; transform: translateY(-50%);
-      width: 8px; height: 18px;
-      background: #8b95a1;
-      border-radius: 3px;
-    }
-    .safe-body .front {
-      position: absolute; width: 66px; height: 52px;
-      background: linear-gradient(180deg, #4e5d70 0%, #3a4858 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 4px 4px;
-    }
-    .safe-body .side {
-      position: absolute; width: 66px; height: 52px;
-      background: linear-gradient(180deg, #445566 0%, #344050 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-
-    /* ═══════════════════════════════════
-       9. Coin Stack (cylinders, gold)
-       ═══════════════════════════════════ */
-    .coin-body {
-      width: 44px; height: 44px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .coin-stack-1, .coin-stack-2, .coin-stack-3 {
-      position: absolute;
-      border-radius: 50%;
-    }
-    .coin-stack-1 {
-      width: 38px; height: 38px; left: 3px; top: 3px;
-      background: linear-gradient(135deg, #f5d060 0%, #e0b830 100%);
-      transform: translateZ(8px);
-      box-shadow: 0 -4px 0 #c8a020, 0 -8px 0 #b89018;
-    }
-    .coin-stack-2 {
-      width: 34px; height: 34px; left: 8px; top: 0;
-      background: linear-gradient(135deg, #f8d868 0%, #e8c838 100%);
-      transform: translateZ(20px);
-      box-shadow: 0 -4px 0 #d0a828, 0 -8px 0 #c09820;
-    }
-    .coin-stack-3 {
-      width: 30px; height: 30px; left: 0; top: 6px;
-      background: linear-gradient(135deg, #fce070 0%, #ecd040 100%);
-      transform: translateZ(32px);
-      box-shadow: 0 -3px 0 #d8b830;
-    }
-    /* Coin markings */
-    .coin-stack-3::before {
-      content: '\20A9'; position: absolute;
-      left: 50%; top: 50%; transform: translate(-50%, -50%);
-      font-size: 14px; font-weight: 800;
-      color: rgba(140,100,20,0.5);
-    }
-
-    /* ═══════════════════════════════════
-       10. Shopping Bag (trapezoid, pastel)
-       ═══════════════════════════════════ */
-    .bag-body {
-      width: 56px; height: 68px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .bag-body .top {
-      position: absolute; width: 56px; height: 52px; bottom: 0;
-      background: linear-gradient(135deg, #b8d8d0 0%, #98c4b8 100%);
-      border-radius: 4px 4px 8px 8px;
-      transform: translateZ(30px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-    }
-    /* Handle */
-    .bag-handle {
-      position: absolute;
-      top: 0; left: 50%; transform: translateX(-50%) translateZ(30px);
-      width: 24px; height: 16px;
-      border: 4px solid #88b0a4;
-      border-bottom: none;
-      border-radius: 12px 12px 0 0;
-    }
-    .bag-body .front {
-      position: absolute; width: 56px; height: 30px;
-      background: linear-gradient(180deg, #88b4a8 0%, #70a090 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 6px 6px;
-    }
-    .bag-body .side {
-      position: absolute; width: 52px; height: 30px;
-      background: linear-gradient(180deg, #80aa9c 0%, #689888 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-
-    /* ═══════════════════════════════════
-       11. Key (elongated, metallic)
-       ═══════════════════════════════════ */
-    .key-body {
-      width: 72px; height: 32px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .key-body .top {
-      position: absolute; width: 72px; height: 14px;
-      top: 9px;
-      background: linear-gradient(135deg, #e8d8a0 0%, #d0c080 100%);
-      border-radius: 3px;
-      transform: translateZ(10px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    /* Key teeth */
-    .key-body .top::before {
-      content: ''; position: absolute;
-      left: 0; bottom: -4px;
-      width: 20px; height: 4px;
-      background: linear-gradient(90deg, #d0c080 4px, transparent 4px, transparent 8px, #d0c080 8px, #d0c080 12px, transparent 12px, transparent 16px, #d0c080 16px);
-    }
-    /* Key ring (bow) */
-    .key-ring {
-      position: absolute;
-      right: -2px; top: 50%; transform: translateY(-50%) translateZ(10px);
-      width: 22px; height: 22px;
-      border: 5px solid #d4c088;
-      border-radius: 50%;
-      background: transparent;
-    }
-    .key-body .front {
-      position: absolute; width: 72px; height: 10px;
-      top: 9px;
-      background: linear-gradient(180deg, #c0a860 0%, #a89050 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: auto;
-    }
-
-    /* ═══════════════════════════════════
-       12. Wallet (folded, leather brown)
-       ═══════════════════════════════════ */
-    .wallet-body {
-      width: 72px; height: 50px;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(55deg) rotateZ(-45deg);
-    }
-    .wallet-body .top {
-      position: absolute; width: 72px; height: 50px;
-      background: linear-gradient(135deg, #b08050 0%, #905830 100%);
-      border-radius: 6px;
-      transform: translateZ(14px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-    }
-    /* Fold line */
-    .wallet-body .top::before {
-      content: ''; position: absolute;
-      left: 0; top: 50%; transform: translateY(-50%);
-      width: 100%; height: 2px;
-      background: rgba(0,0,0,0.15);
-    }
-    /* Card peeking out */
-    .wallet-body .top::after {
-      content: ''; position: absolute;
-      right: 6px; top: 6px;
-      width: 20px; height: 14px;
-      background: linear-gradient(135deg, #b8cce0, #90a8c4);
-      border-radius: 2px;
-    }
-    .wallet-body .front {
-      position: absolute; width: 72px; height: 14px;
-      background: linear-gradient(180deg, #885028 0%, #704020 100%);
-      transform: rotateX(-90deg); transform-origin: bottom;
-      bottom: 0; border-radius: 0 0 4px 4px;
-    }
-    .wallet-body .side {
-      position: absolute; width: 50px; height: 14px;
-      background: linear-gradient(180deg, #804820 0%, #683818 100%);
-      transform: rotateY(90deg); transform-origin: left;
-      left: 0; bottom: 0;
-    }
-
-    /* ── Float animation ── */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    .obj { animation: float 5s ease-in-out infinite; }
-    .obj:nth-child(2)  { animation-delay: -0.6s; animation-duration: 4.5s; }
-    .obj:nth-child(3)  { animation-delay: -1.2s; animation-duration: 5.2s; }
-    .obj:nth-child(4)  { animation-delay: -1.8s; animation-duration: 4.8s; }
-    .obj:nth-child(5)  { animation-delay: -2.4s; animation-duration: 5.5s; }
-    .obj:nth-child(6)  { animation-delay: -0.9s; animation-duration: 4.3s; }
-    .obj:nth-child(7)  { animation-delay: -1.5s; animation-duration: 5.1s; }
-    .obj:nth-child(8)  { animation-delay: -2.1s; animation-duration: 4.6s; }
-    .obj:nth-child(9)  { animation-delay: -0.3s; animation-duration: 5.3s; }
-    .obj:nth-child(10) { animation-delay: -2.7s; animation-duration: 4.4s; }
-    .obj:nth-child(11) { animation-delay: -0.7s; animation-duration: 5.0s; }
-    .obj:nth-child(12) { animation-delay: -1.9s; animation-duration: 4.7s; }
-
-    /* ── Features Section ── */
-    .features {
-      padding: 160px 20px;
-      background: #fff;
-    }
-
-    .features-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-
-    .feature-block {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-      margin-bottom: 180px;
-    }
-
-    .feature-block:last-child {
-      margin-bottom: 0;
-    }
-
-    .feature-block--reverse {
-      direction: rtl;
-    }
-
-    .feature-block--reverse > * {
-      direction: ltr;
-    }
-
-    .feature-label {
-      font-size: 15px;
-      font-weight: 700;
-      color: #3182f6;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-
-    .feature-title {
-      font-size: clamp(28px, 3.5vw, 40px);
-      font-weight: 700;
-      line-height: 1.35;
-      letter-spacing: -0.03em;
-      margin-bottom: 20px;
-      color: #191f28;
-    }
-
-    .feature-desc {
-      font-size: 17px;
-      line-height: 1.7;
-      color: #4e5968;
-      font-weight: 400;
-    }
-
-    .feature-visual {
-      border-radius: 24px;
-      overflow: hidden;
-      aspect-ratio: 4/3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .feature-visual--blue {
-      background: linear-gradient(135deg, #e8f0fe 0%, #dbe6f8 100%);
-    }
-
-    .feature-visual--grey {
-      background: linear-gradient(135deg, #f2f4f6 0%, #e8eaed 100%);
-    }
-
-    .feature-visual--dark {
-      background: linear-gradient(135deg, #2b3240 0%, #191f28 100%);
-    }
-
-    /* Phone mockup */
-    .phone-mock {
-      width: 200px;
-      height: 400px;
-      background: #fff;
-      border-radius: 28px;
-      border: 4px solid #191f28;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-      position: relative;
-    }
-
-    .phone-mock::before {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 56px;
-      height: 5px;
-      background: #191f28;
-      border-radius: 3px;
-      z-index: 2;
-    }
-
-    .phone-screen {
-      width: 100%;
-      height: 100%;
-      padding: 28px 16px 16px;
-    }
-
-    .phone-screen--send { background: #f9fafb; }
-    .phone-screen--invest { background: #191f28; color: #fff; }
-    .phone-screen--insurance { background: #fff; }
-
-    .ps-header {
-      font-size: 11px;
-      font-weight: 600;
-      color: #8b95a1;
-      margin-bottom: 12px;
-    }
-
-    .ps-amount {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 4px;
-    }
-
-    .ps-amount--white { color: #fff; }
-
-    .ps-sub {
-      font-size: 12px;
-      color: #8b95a1;
-      margin-bottom: 20px;
-    }
-
-    .ps-bar {
-      height: 6px;
-      background: #e5e8eb;
-      border-radius: 3px;
-      margin-bottom: 8px;
-      overflow: hidden;
-    }
-
-    .ps-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-    }
-
-    .ps-bar-fill--blue { background: #3182f6; width: 72%; }
-    .ps-bar-fill--green { background: #03b26c; width: 45%; }
-    .ps-bar-fill--orange { background: #fe9800; width: 88%; }
-
-    .ps-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      font-size: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .ps-item-name { color: #8b95a1; }
-    .ps-item-val { font-weight: 700; }
-    .ps-item-val--up { color: #f04452; }
-    .ps-item-val--down { color: #3182f6; }
-
-    .ps-btn {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      font-family: inherit;
-      text-align: center;
-      margin-top: 16px;
-      cursor: pointer;
-    }
-
-    .ps-btn--blue { background: #3182f6; color: #fff; }
-    .ps-btn--dark { background: #333d4b; color: #fff; }
-
-    /* ── Stats Section ── */
-    .stats {
-      padding: 120px 20px;
-      background: #f2f4f6;
-    }
-
-    .stats-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .stats-title {
-      font-size: clamp(28px, 3.5vw, 42px);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      margin-bottom: 60px;
-      color: #191f28;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-    }
-
-    .stat-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 40px 28px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 48px;
-      font-weight: 800;
-      color: #3182f6;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-    }
-
-    .stat-unit {
-      font-size: 24px;
-    }
-
-    .stat-label {
-      font-size: 16px;
-      color: #4e5968;
-      font-weight: 500;
-    }
-
-    /* ── Download CTA ── */
-    .download-cta {
-      padding: 120px 20px;
-      background: #191f28;
-      text-align: center;
-    }
-
-    .download-cta h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-    }
-
-    .download-cta p {
-      font-size: 18px;
-      color: #8b95a1;
-      margin-bottom: 40px;
-      line-height: 1.6;
-    }
-
-    .download-cta .hero-buttons {
-      margin-bottom: 0;
-    }
-
-    .download-cta .hero-btn--dark {
-      background: #3182f6;
-    }
-
-    .download-cta .hero-btn--white {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: none;
-    }
-
-    /* ── Footer ── */
-    .footer {
-      padding: 60px 40px 48px;
-      background: #000;
-    }
-
-    .footer-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .footer-brand {
-      font-size: 18px;
-      font-weight: 800;
-      color: #3182f6;
-      margin-bottom: 16px;
-    }
-
-    .footer-info {
-      font-size: 13px;
-      color: #6b7684;
-      line-height: 1.9;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 40px;
-    }
-
-    .footer-col h4 {
-      font-size: 13px;
-      font-weight: 700;
-      color: #8b95a1;
-      margin-bottom: 14px;
-      text-transform: none;
-    }
-
-    .footer-col a {
-      display: block;
-      font-size: 13px;
-      color: #6b7684;
-      text-decoration: none;
-      margin-bottom: 10px;
-      transition: color 0.15s;
-    }
-
-    .footer-col a:hover {
-      color: #fff;
-    }
-
-    .footer-bottom {
-      max-width: 1080px;
-      margin: 32px auto 0;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-legal {
-      display: flex;
-      gap: 20px;
-    }
-
-    .footer-legal a {
-      font-size: 12px;
-      color: #6b7684;
-      text-decoration: none;
-    }
-
-    .footer-legal a:hover {
-      color: #fff;
-    }
-
-    .footer-legal a.bold {
-      font-weight: 700;
-      color: #8b95a1;
-    }
-
-    .footer-social {
-      display: flex;
-      gap: 16px;
-    }
-
-    .footer-social a {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-
-    .footer-social a:hover {
-      background: rgba(255,255,255,0.16);
-    }
-
-    .footer-social svg {
-      width: 14px;
-      height: 14px;
-      fill: #8b95a1;
-    }
-
-    /* ── Scroll Reveal ── */
+    h1, h2, h3 { letter-spacing: -0.02em; }
+    p { line-height: 1.7; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      .phone-float { animation: none !important; }
+      .kanban-col { opacity: 1 !important; transform: none !important; }
+      .kanban-card { opacity: 1 !important; transform: none !important; }
+      .kanban-progress { width: var(--target-width) !important; }
+      .notif-item { opacity: 1 !important; transform: none !important; }
+      .cursor-mover { transition: none !important; }
+      .hero-task-check .task-checkbox { transition: none !important; }
+    }
+
+    /* Scroll reveal */
     .reveal {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(32px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .reveal.visible {
+    .reveal.is-visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .nav { padding: 0 20px; }
-      .nav-links { display: none; }
-      .hero { min-height: auto; height: auto; padding-bottom: 300px; }
-      .hero-content { padding-top: 120px; }
-      .hero-content h1 { font-size: 28px; }
-      .objects-scene { height: 280px; }
-      .obj { zoom: 0.55; }
-      .feature-block { grid-template-columns: 1fr; gap: 40px; }
-      .feature-block--reverse { direction: ltr; }
-      .stats-grid { grid-template-columns: 1fr; gap: 20px; }
-      .footer-inner { flex-direction: column; gap: 32px; }
-      .footer-links { flex-wrap: wrap; gap: 24px; }
-      .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
-      .hero-buttons { flex-direction: column; align-items: center; }
+    /* Phone float */
+    @keyframes phoneFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .phone-float {
+      animation: phoneFloat 3s ease-in-out infinite;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .obj { animation: none; }
-      .reveal { opacity: 1; transform: none; transition: none; }
+    /* Phone frame */
+    .phone-frame {
+      width: 320px;
+      height: 640px;
+      border: 5px solid #191f28;
+      border-radius: 3rem;
+      overflow: hidden;
+      background: #fff;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.04),
+        0 30px 60px -15px rgba(0,0,0,0.2),
+        0 50px 100px -30px rgba(0,0,0,0.1);
+      position: relative;
     }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 26px;
+      background: #191f28;
+      border-radius: 13px;
+      z-index: 10;
+    }
+    .phone-screen {
+      padding-top: 52px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* CTA button */
+    .cta-primary {
+      transition: all 0.2s ease;
+    }
+    .cta-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px -4px rgba(0,0,0,0.18);
+    }
+
+    /* Feature mockup containers */
+    .mockup-wide {
+      background: #f9fafb;
+      border-radius: 1.25rem;
+      border: 1px solid #e5e8eb;
+      overflow: hidden;
+    }
+
+    /* Subtle gradient behind hero phone */
+    .hero-glow {
+      background: radial-gradient(ellipse 600px 400px at 50% 60%, rgba(49,130,246,0.06) 0%, transparent 70%);
+    }
+
+    /* === ANIMATION 2: Kanban board === */
+    .kanban-col {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .kanban-animated .kanban-col {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .kanban-card {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+    .kanban-animated .kanban-card {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .kanban-progress {
+      width: 0%;
+      transition: width 1.5s ease-out;
+    }
+    .kanban-animated .kanban-progress {
+      width: var(--target-width);
+    }
+
+    /* Kanban done checkmark */
+    @keyframes checkPop {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .done-check {
+      opacity: 0;
+      transform: scale(0);
+    }
+    .kanban-animated .done-check {
+      animation: checkPop 0.4s ease-out forwards;
+    }
+
+    /* === ANIMATION 3: Hero phone checkbox === */
+    .hero-task-check .task-checkbox {
+      transition: all 0.4s ease-out;
+    }
+    .hero-task-check .task-checkbox.checked {
+      background-color: #3182f6;
+      border-color: #3182f6;
+    }
+    .hero-task-check .task-checkbox .check-icon {
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease-out;
+    }
+    .hero-task-check .task-checkbox.checked .check-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .hero-task-check .task-label {
+      transition: all 0.4s ease-out;
+    }
+    .hero-task-check .task-label.checked {
+      text-decoration: line-through;
+      color: #8b95a1;
+    }
+    .hero-progress-bar {
+      transition: width 0.8s ease-out;
+    }
+
+    /* Confetti dots */
+    @keyframes confettiFloat {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-28px) scale(0.3); opacity: 0; }
+    }
+    .confetti-dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #3182f6;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .confetti-dot.active {
+      animation: confettiFloat 1s ease-out forwards;
+    }
+
+    /* === ANIMATION 4: Document cursor movement === */
+    .cursor-mover {
+      transition: left 4s ease-in-out;
+    }
+
+    /* Shimmer effect for document content */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .doc-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .doc-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(49,130,246,0.06) 50%, transparent 100%);
+      background-size: 200% 100%;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .doc-animated .doc-shimmer::after {
+      opacity: 1;
+      animation: shimmer 2.5s ease-in-out infinite;
+    }
+
+    /* === ANIMATION 5: Notification entrance === */
+    .notif-item {
+      opacity: 0;
+      transform: translateY(-16px) scale(0.95);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .notif-animated .notif-item {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    /* Restore muted notification's intended opacity */
+    .notif-animated .notif-item.notif-muted {
+      opacity: 0.5;
+    }
+  
+    /* === 2025-2026 Trend Effects === */
+    /* Spring Animations */
+    .spring-entrance { transition:transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease; }
+    .spring-bounce:hover { transform:translateY(-4px); transition:transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  
+
+    /* Staggered Grid Reveal */
+    .stagger-item { opacity:0; transform:translateY(20px) scale(0.95); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .stagger-item.stagger-visible { opacity:1; transform:translateY(0) scale(1); }
+  
+
+    /* Smooth Number Counters */
+    .smooth-counter { font-variant-numeric:tabular-nums; transition:all 0.1s ease; }
+  
   </style>
 </head>
-<body>
+<body class="bg-white">
 
-<!-- Navigation -->
-<nav class="nav" role="navigation" aria-label="메인 네비게이션">
-  <a href="#" class="nav-logo" aria-label="핀플러스 홈">
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="11" fill="#3182f6"/>
-      <path d="M7.5 12.5l3 3 6-7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    핀플러스
-  </a>
-  <ul class="nav-links">
-    <li><a href="#features">회사 소개</a></li>
-    <li><a href="#features">공지사항</a></li>
-    <li><a href="#features">고객센터</a></li>
-    <li><a href="#features">자주 묻는 질문</a></li>
-    <li><a href="#features">핀플러스인증서</a></li>
-    <li><a href="#features">채용</a></li>
-  </ul>
-  <div class="nav-right">
-    <a href="#" class="nav-lang">KOR</a>
-    <span class="nav-lang-divider">|</span>
-    <a href="#" class="nav-lang-sub">ENG</a>
-  </div>
-</nav>
-
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>금융의 모든 것<br>핀플러스에서 쉽고 간편하게</h1>
-  </div>
-
-  <div class="hero-buttons">
-    <a href="#" class="hero-btn hero-btn--dark" aria-label="App Store에서 다운로드">
-      <svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M12.7 1.5c.1.8-.2 1.6-.7 2.2-.5.6-1.3 1-2.1.9-.1-.8.3-1.6.7-2.1.5-.6 1.4-1 2.1-1zm2.6 3.8c-.1.1-1.5.9-1.5 2.6 0 2 1.8 2.7 1.8 2.7 0 .1-.3 1-.9 2-.6.8-1.2 1.7-2.1 1.7-.9 0-1.2-.5-2.2-.5s-1.3.5-2.2.5c-.9 0-1.5-.9-2.1-1.7C5.2 10.8 4.5 8.6 5.5 7c.5-.8 1.4-1.4 2.3-1.4.9 0 1.4.5 2.2.5.7 0 1.2-.5 2.2-.5.8 0 1.6.4 2.1 1.1l1 .6z"/></svg>
-      App Store
-    </a>
-    <a href="#" class="hero-btn hero-btn--white" aria-label="Google Play에서 다운로드">
-      <svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M3.5 1.3c-.3.2-.5.5-.5.9v13.6c0 .4.2.7.5.9l.1.1L9.3 9v-.1L3.6 1.2l-.1.1zM11.2 10.9L9.3 9v-.1l1.9-1.9 2.1 1.2c.6.4.6.9 0 1.3l-2.1 1.4zM11.2 10.9l-1.9-1.9-5.7 5.8c.2.2.5.2.8 0l6.8-3.9zM11.2 7.1L4.4 3.2c-.3-.2-.6-.2-.8 0L9.3 9l1.9-1.9z"/></svg>
-      Google Play
-    </a>
-  </div>
-
-  <!-- 3D Objects -->
-  <div class="objects-scene" aria-hidden="true">
-
-    <!-- 1. Delivery Van -->
-    <div class="obj obj-van">
-      <div class="van-body">
-        <div class="top"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-        <div class="wheel wheel-l"></div>
-        <div class="wheel wheel-r"></div>
-        <div class="van-shadow"></div>
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl">
+    <div class="max-w-[1100px] mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-extrabold text-xl text-t-text tracking-tight">태스크플로우</a>
+      <div class="hidden md:flex items-center gap-8 text-[15px] font-medium text-t-sub">
+        <a href="#" class="hover:text-t-text transition-colors">기능</a>
+        <a href="#" class="hover:text-t-text transition-colors">요금제</a>
       </div>
+      <a href="#" class="cta-primary bg-t-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl">시작하기</a>
     </div>
+  </nav>
 
-    <!-- 2. Credit Card -->
-    <div class="obj obj-card">
-      <div class="card-body">
-        <div class="top"></div>
-        <div class="front"></div>
-        <div class="side"></div>
+  <!-- ===== HERO ===== -->
+  <section class="pt-32 md:pt-40 pb-0 relative" id="hero-section">
+    <div class="hero-glow absolute inset-0 pointer-events-none"></div>
+    <div class="max-w-[1100px] mx-auto px-6 text-center relative z-10">
+      <!-- Badge -->
+      <p class="reveal inline-block text-t-blue text-sm font-semibold mb-6" style="transition-delay:0ms;">
+        새로운 업무 도구
+      </p>
+      <!-- Heading -->
+      <h1 class="reveal font-extrabold text-4xl md:text-6xl lg:text-7xl tracking-tight leading-[1.08] text-t-text mb-6" style="transition-delay:150ms;">
+        일하는 방식을<br>간결하게 바꾸다
+      </h1>
+      <!-- Subtitle -->
+      <p class="reveal text-t-muted text-lg md:text-xl max-w-lg mx-auto mb-10" style="transition-delay:300ms;">
+        태스크, 일정, 문서를 하나로 묶은 팀 협업 플랫폼.
+      </p>
+      <!-- Single CTA -->
+      <div class="reveal mb-16 md:mb-20" style="transition-delay:450ms;">
+        <a href="#" class="cta-primary inline-block bg-t-dark text-white font-semibold text-lg px-10 py-4 rounded-xl">
+          무료로 시작하기
+        </a>
       </div>
-    </div>
-
-    <!-- 3. Phone -->
-    <div class="obj obj-phone">
-      <div class="phone-body">
-        <div class="top"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-      </div>
-    </div>
-
-    <!-- 4. Gift Box -->
-    <div class="obj obj-gift">
-      <div class="gift-body">
-        <div class="top"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-      </div>
-    </div>
-
-    <!-- 5. Padlock -->
-    <div class="obj obj-lock">
-      <div class="lock-body">
-        <div class="top"></div>
-        <div class="lock-shackle"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-      </div>
-    </div>
-
-    <!-- 6. Teddy Bear -->
-    <div class="obj obj-bear">
-      <div class="bear-body">
-        <div class="top"></div>
-        <div class="bear-snout"></div>
-        <div class="bear-eye-l"></div>
-        <div class="bear-eye-r"></div>
-        <div class="front"></div>
-      </div>
-    </div>
-
-    <!-- 7. Piggy Bank -->
-    <div class="obj obj-pig">
-      <div class="pig-body">
-        <div class="top"></div>
-        <div class="pig-eye-l"></div>
-        <div class="pig-eye-r"></div>
-        <div class="front"></div>
-      </div>
-    </div>
-
-    <!-- 8. Safe/Vault -->
-    <div class="obj obj-safe">
-      <div class="safe-body">
-        <div class="top"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-      </div>
-    </div>
-
-    <!-- 9. Coin Stack -->
-    <div class="obj obj-coin">
-      <div class="coin-body">
-        <div class="coin-stack-1"></div>
-        <div class="coin-stack-2"></div>
-        <div class="coin-stack-3"></div>
-      </div>
-    </div>
-
-    <!-- 10. Shopping Bag -->
-    <div class="obj obj-bag">
-      <div class="bag-body">
-        <div class="top"></div>
-        <div class="bag-handle"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-      </div>
-    </div>
-
-    <!-- 11. Key -->
-    <div class="obj obj-key">
-      <div class="key-body">
-        <div class="top"></div>
-        <div class="key-ring"></div>
-        <div class="front"></div>
-      </div>
-    </div>
-
-    <!-- 12. Wallet -->
-    <div class="obj obj-wallet">
-      <div class="wallet-body">
-        <div class="top"></div>
-        <div class="front"></div>
-        <div class="side"></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- Features -->
-<section class="features" id="features">
-  <div class="features-inner">
-
-    <!-- Feature 1: Send Money -->
-    <div class="feature-block reveal">
-      <div>
-        <p class="feature-label">송금</p>
-        <h2 class="feature-title">수수료 없이<br>간편하게 송금</h2>
-        <p class="feature-desc">
-          은행 상관없이 누구에게나 무료로 송금하세요.
-          연락처만 있으면 1초 만에 보낼 수 있어요.
-        </p>
-      </div>
-      <div class="feature-visual feature-visual--blue">
-        <div class="phone-mock">
-          <div class="phone-screen phone-screen--send">
-            <p class="ps-header">핀플러스 머니</p>
-            <p class="ps-amount">128,500원</p>
-            <p class="ps-sub">사용 가능 잔액</p>
-            <div class="ps-bar"><div class="ps-bar-fill ps-bar-fill--blue"></div></div>
-            <p style="font-size:11px;color:#8b95a1;margin-bottom:16px;">이번 달 32건 송금</p>
-            <button class="ps-btn ps-btn--blue">송금하기</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Feature 2: Investment -->
-    <div class="feature-block feature-block--reverse reveal">
-      <div>
-        <p class="feature-label">투자</p>
-        <h2 class="feature-title">주식, ETF, 해외주식<br>한 곳에서</h2>
-        <p class="feature-desc">
-          국내외 주식부터 ETF까지 한 화면에서 관리하세요.
-          실시간 시세와 리포트를 무료로 제공합니다.
-        </p>
-      </div>
-      <div class="feature-visual feature-visual--dark">
-        <div class="phone-mock">
-          <div class="phone-screen phone-screen--invest">
-            <p class="ps-header" style="color:#6b7684;">내 투자</p>
-            <p class="ps-amount ps-amount--white">2,847,300원</p>
-            <p class="ps-sub" style="color:#f04452;">+12.4%</p>
-            <div class="ps-item"><span class="ps-item-name">삼성전자</span><span class="ps-item-val ps-item-val--up">+3.2%</span></div>
-            <div class="ps-item"><span class="ps-item-name">TIGER S&P500</span><span class="ps-item-val ps-item-val--up">+8.1%</span></div>
-            <div class="ps-item"><span class="ps-item-name">카카오</span><span class="ps-item-val ps-item-val--down">-2.4%</span></div>
-            <button class="ps-btn ps-btn--dark">더보기</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Feature 3: Insurance -->
-    <div class="feature-block reveal">
-      <div>
-        <p class="feature-label">보험</p>
-        <h2 class="feature-title">내 보험,<br>한눈에 확인</h2>
-        <p class="feature-desc">
-          흩어진 보험을 한 곳에서 관리하세요.
-          부족한 보장은 분석해서 알려드려요.
-        </p>
-      </div>
-      <div class="feature-visual feature-visual--grey">
-        <div class="phone-mock">
-          <div class="phone-screen phone-screen--insurance">
-            <p class="ps-header">내 보험 분석</p>
-            <p class="ps-amount" style="font-size:22px;">보장 분석 리포트</p>
-            <p class="ps-sub">3개 보험사 · 5건</p>
-            <div style="margin-bottom:12px;">
-              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:#4e5968;">암 보장</span><span style="color:#03b26c;font-weight:700;">충분</span></div>
-              <div class="ps-bar"><div class="ps-bar-fill ps-bar-fill--green" style="width:90%;"></div></div>
-            </div>
-            <div style="margin-bottom:12px;">
-              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:#4e5968;">실손 보장</span><span style="color:#3182f6;font-weight:700;">적정</span></div>
-              <div class="ps-bar"><div class="ps-bar-fill ps-bar-fill--blue" style="width:65%;"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span style="color:#4e5968;">사고 보장</span><span style="color:#fe9800;font-weight:700;">부족</span></div>
-              <div class="ps-bar"><div class="ps-bar-fill ps-bar-fill--orange" style="width:30%;"></div></div>
+      <!-- Phone mockup — centered, large -->
+      <div class="reveal flex justify-center" style="transition-delay:600ms;">
+        <div class="phone-float spring-bounce">
+          <div class="phone-frame">
+            <div class="phone-screen bg-white hero-task-check">
+              <div class="px-5 pt-1">
+                <!-- App header -->
+                <div class="flex items-center justify-between mb-5">
+                  <div>
+                    <p class="text-[10px] text-t-muted font-medium">3월 20일 목요일</p>
+                    <p class="font-bold text-base text-t-text mt-0.5">오늘의 태스크</p>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-t-blue/10 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-t-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                  </div>
+                </div>
+                <!-- Progress bar -->
+                <div class="mb-5 relative">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-semibold text-t-sub">진행률</span>
+                    <span class="text-[11px] font-bold text-t-blue" id="hero-progress-count">3/5</span>
+                  </div>
+                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-t-blue rounded-full hero-progress-bar" id="hero-progress-bar" style="width:60%"></div>
+                  </div>
+                  <!-- Confetti container -->
+                  <div id="confetti-container" style="position:relative;">
+                    <div class="confetti-dot" style="left:20%; bottom:0;"></div>
+                    <div class="confetti-dot" style="left:45%; bottom:0;"></div>
+                    <div class="confetti-dot" style="left:70%; bottom:0;"></div>
+                    <div class="confetti-dot" style="left:90%; bottom:0;"></div>
+                  </div>
+                </div>
+                <!-- Task list -->
+                <div class="space-y-2.5">
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-t-blue bg-t-blue flex items-center justify-center">
+                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-muted line-through">디자인 시안 리뷰</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-pink-100"></div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-t-blue bg-t-blue flex items-center justify-center">
+                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-muted line-through">API 연동 테스트</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-blue-100"></div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
+                    <div class="w-5 h-5 rounded-full border-2 border-t-blue bg-t-blue flex items-center justify-center">
+                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-t-muted line-through">스프린트 회고 정리</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-green-100"></div>
+                  </div>
+                  <!-- Task 4: unchecked, will animate -->
+                  <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl" id="hero-task-4">
+                    <div class="task-checkbox w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center">
+                      <svg class="check-icon w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="task-label text-xs font-medium text-t-text">배포 스크립트 작성</p>
+                      <p class="text-[10px] text-t-muted mt-0.5">오늘 6시 마감</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-amber-100"></div>
+                  </div>
+                  <!-- Task 5: unchecked, will animate -->
+                  <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl" id="hero-task-5">
+                    <div class="task-checkbox w-5 h-5 rounded-full border-2 border-gray-200 flex items-center justify-center">
+                      <svg class="check-icon w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="task-label text-xs font-medium text-t-text">주간 보고서 작성</p>
+                      <p class="text-[10px] text-t-muted mt-0.5">내일 오전</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-purple-100"></div>
+                  </div>
+                </div>
+                <!-- Bottom nav -->
+                <div class="flex items-center justify-around mt-4 pt-3 border-t border-gray-100">
+                  <div class="text-center">
+                    <div class="w-5 h-5 mx-auto rounded-md bg-t-blue/10"></div>
+                    <span class="text-[9px] font-medium text-t-blue mt-1 block">태스크</span>
+                  </div>
+                  <div class="text-center">
+                    <div class="w-5 h-5 mx-auto rounded-md bg-gray-100"></div>
+                    <span class="text-[9px] text-t-muted mt-1 block">일정</span>
+                  </div>
+                  <div class="text-center">
+                    <div class="w-5 h-5 mx-auto rounded-md bg-gray-100"></div>
+                    <span class="text-[9px] text-t-muted mt-1 block">문서</span>
+                  </div>
+                  <div class="text-center">
+                    <div class="w-5 h-5 mx-auto rounded-md bg-gray-100"></div>
+                    <span class="text-[9px] text-t-muted mt-1 block">설정</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- Spacer to let phone breathe -->
+  <div class="h-24 md:h-32"></div>
 
-<!-- Stats -->
-<section class="stats reveal">
-  <div class="stats-inner">
-    <h2 class="stats-title">대한민국 3명 중 1명이<br>핀플러스를 사용합니다</h2>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <p class="stat-number">1,800<span class="stat-unit">만</span></p>
-        <p class="stat-label">월간 활성 사용자</p>
+  <!-- ===== FEATURE 1 — Task Management ===== -->
+  <section class="py-32 md:py-40" id="kanban-section">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+        <p class="reveal inline-block text-t-blue text-base font-bold mb-4 bg-blue-50 px-4 py-1.5 rounded-full" style="transition-delay:0ms;">태스크 관리</p>
+        <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.12] text-t-text mb-5" style="transition-delay:100ms;">
+          할 일을 한눈에.<br>놓치는 건 없게.
+        </h2>
+        <p class="reveal text-t-muted text-lg" style="transition-delay:200ms;">
+          드래그 한 번으로 우선순위를 바꾸고, 마감일 알림까지 자동으로.
+        </p>
       </div>
-      <div class="stat-card">
-        <p class="stat-number">120<span class="stat-unit">조원</span></p>
-        <p class="stat-label">누적 송금액</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-number">4.8<span class="stat-unit">점</span></p>
-        <p class="stat-label">앱스토어 평점</p>
+      <!-- Wide mockup: Kanban board -->
+      <div class="reveal mockup-wide p-6 md:p-10" style="transition-delay:300ms;" id="kanban-board">
+        <div class="grid grid-cols-3 gap-4 md:gap-6">
+          <!-- Column: To Do -->
+          <div class="kanban-col" style="transition-delay:0ms;">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+              <span class="text-sm font-semibold text-t-sub">할 일</span>
+              <span class="text-xs text-t-muted ml-auto">3</span>
+            </div>
+            <div class="space-y-3">
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm stagger-item" style="transition-delay:0ms;">
+                <p class="text-sm font-medium text-t-text mb-2">온보딩 플로우 설계</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-t-blue font-medium">디자인</span>
+                  <div class="w-4 h-4 rounded-full bg-pink-100 ml-auto"></div>
+                </div>
+              </div>
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm stagger-item" style="transition-delay:100ms;">
+                <p class="text-sm font-medium text-t-text mb-2">에러 핸들링 개선</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-red-50 text-red-500 font-medium">버그</span>
+                  <div class="w-4 h-4 rounded-full bg-blue-100 ml-auto"></div>
+                </div>
+              </div>
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm opacity-60" style="transition-delay:200ms;">
+                <p class="text-sm font-medium text-t-text mb-2">주간 회의 안건</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-gray-100 text-t-muted font-medium">기타</span>
+                  <div class="w-4 h-4 rounded-full bg-green-100 ml-auto"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Column: In Progress -->
+          <div class="kanban-col" style="transition-delay:200ms;">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-2.5 h-2.5 rounded-full bg-t-blue"></div>
+              <span class="text-sm font-semibold text-t-sub">진행 중</span>
+              <span class="text-xs text-t-muted ml-auto">2</span>
+            </div>
+            <div class="space-y-3">
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm border-l-2 border-t-blue" style="transition-delay:200ms;">
+                <p class="text-sm font-medium text-t-text mb-2">결제 모듈 연동</p>
+                <div class="h-1 bg-gray-100 rounded-full mb-2 overflow-hidden">
+                  <div class="kanban-progress h-full bg-t-blue rounded-full" style="--target-width:70%"></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-t-blue font-medium">개발</span>
+                  <div class="flex -space-x-1 ml-auto">
+                    <div class="w-4 h-4 rounded-full bg-amber-100 border border-white"></div>
+                    <div class="w-4 h-4 rounded-full bg-blue-100 border border-white"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm border-l-2 border-t-blue" style="transition-delay:300ms;">
+                <p class="text-sm font-medium text-t-text mb-2">푸시 알림 기획</p>
+                <div class="h-1 bg-gray-100 rounded-full mb-2 overflow-hidden">
+                  <div class="kanban-progress h-full bg-t-blue rounded-full" style="--target-width:40%; transition-delay:300ms;"></div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-t-blue font-medium">기획</span>
+                  <div class="w-4 h-4 rounded-full bg-purple-100 ml-auto"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Column: Done -->
+          <div class="kanban-col" style="transition-delay:400ms;">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+              <span class="text-sm font-semibold text-t-sub">완료</span>
+              <span class="text-xs text-t-muted ml-auto">4</span>
+            </div>
+            <div class="space-y-3">
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm opacity-50" style="transition-delay:400ms;">
+                <p class="text-sm font-medium text-t-text line-through mb-2">랜딩페이지 배포</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-green-50 text-emerald-600 font-medium">완료</span>
+                  <div class="done-check ml-auto" style="animation-delay:600ms;">
+                    <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm opacity-50" style="transition-delay:500ms;">
+                <p class="text-sm font-medium text-t-text line-through mb-2">DB 스키마 설계</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-green-50 text-emerald-600 font-medium">완료</span>
+                  <div class="done-check ml-auto" style="animation-delay:800ms;">
+                    <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="kanban-card bg-white rounded-xl p-4 shadow-sm opacity-50" style="transition-delay:600ms;">
+                <p class="text-sm font-medium text-t-text line-through mb-2">GA 이벤트 세팅</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded-md bg-green-50 text-emerald-600 font-medium">완료</span>
+                  <div class="done-check ml-auto" style="animation-delay:1000ms;">
+                    <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Download CTA -->
-<section class="download-cta reveal">
-  <h2>지금 핀플러스를<br>시작하세요</h2>
-  <p>가입부터 송금까지, 3분이면 충분합니다.</p>
-  <div class="hero-buttons">
-    <a href="#" class="hero-btn hero-btn--dark" aria-label="App Store에서 다운로드">
-      <svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M12.7 1.5c.1.8-.2 1.6-.7 2.2-.5.6-1.3 1-2.1.9-.1-.8.3-1.6.7-2.1.5-.6 1.4-1 2.1-1zm2.6 3.8c-.1.1-1.5.9-1.5 2.6 0 2 1.8 2.7 1.8 2.7 0 .1-.3 1-.9 2-.6.8-1.2 1.7-2.1 1.7-.9 0-1.2-.5-2.2-.5s-1.3.5-2.2.5c-.9 0-1.5-.9-2.1-1.7C5.2 10.8 4.5 8.6 5.5 7c.5-.8 1.4-1.4 2.3-1.4.9 0 1.4.5 2.2.5.7 0 1.2-.5 2.2-.5.8 0 1.6.4 2.1 1.1l1 .6z"/></svg>
-      App Store
-    </a>
-    <a href="#" class="hero-btn hero-btn--white" aria-label="Google Play에서 다운로드">
-      <svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M3.5 1.3c-.3.2-.5.5-.5.9v13.6c0 .4.2.7.5.9l.1.1L9.3 9v-.1L3.6 1.2l-.1.1zM11.2 10.9L9.3 9v-.1l1.9-1.9 2.1 1.2c.6.4.6.9 0 1.3l-2.1 1.4zM11.2 10.9l-1.9-1.9-5.7 5.8c.2.2.5.2.8 0l6.8-3.9zM11.2 7.1L4.4 3.2c-.3-.2-.6-.2-.8 0L9.3 9l1.9-1.9z"/></svg>
-      Google Play
-    </a>
-  </div>
-</section>
+  <!-- ===== FEATURE 2 — Real-time Collab ===== -->
+  <section class="bg-t-bg py-32 md:py-40" id="collab-section">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+        <p class="reveal text-t-blue text-sm font-semibold mb-4" style="transition-delay:0ms;">실시간 협업</p>
+        <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.12] text-t-text mb-5" style="transition-delay:100ms;">
+          같이 보고,<br>같이 만들고.
+        </h2>
+        <p class="reveal text-t-muted text-lg" style="transition-delay:200ms;">
+          문서와 시트를 동시에 편집하고, 변경사항을 실시간으로 확인하세요.
+        </p>
+      </div>
+      <!-- Wide mockup: Document editor -->
+      <div class="reveal mockup-wide bg-white p-6 md:p-10" style="transition-delay:300ms;" id="doc-editor">
+        <div class="max-w-2xl mx-auto">
+          <!-- Doc toolbar -->
+          <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-300"></div>
+              <div class="w-3 h-3 rounded-full bg-amber-300"></div>
+              <div class="w-3 h-3 rounded-full bg-green-300"></div>
+            </div>
+            <div class="flex-1"></div>
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-2">
+                <div class="w-6 h-6 rounded-full bg-t-blue border-2 border-white"></div>
+                <div class="w-6 h-6 rounded-full bg-rose-400 border-2 border-white"></div>
+                <div class="w-6 h-6 rounded-full bg-amber-400 border-2 border-white"></div>
+              </div>
+              <span class="text-xs text-t-muted font-medium">3명 편집 중</span>
+            </div>
+          </div>
+          <!-- Document content -->
+          <div class="space-y-4">
+            <div class="h-6 bg-t-text rounded w-64"></div>
+            <div class="space-y-2.5">
+              <div class="h-3.5 bg-gray-200 rounded-full w-full doc-shimmer"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-11/12 doc-shimmer"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-4/5 relative">
+                <!-- Cursor 1: 민수 -->
+                <div class="absolute -top-1 cursor-mover" id="cursor-minsu" style="left:60%;">
+                  <div class="w-0.5 h-5 bg-t-blue animate-pulse"></div>
+                  <div class="absolute -top-4 left-0 text-[9px] bg-t-blue text-white px-1.5 py-0.5 rounded font-medium whitespace-nowrap">민수</div>
+                </div>
+              </div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-full doc-shimmer"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-3/4 relative">
+                <!-- Cursor 2: 지은 -->
+                <div class="absolute -top-1 cursor-mover" id="cursor-jieun" style="left:40%;">
+                  <div class="w-0.5 h-5 bg-rose-400 animate-pulse"></div>
+                  <div class="absolute -top-4 left-0 text-[9px] bg-rose-400 text-white px-1.5 py-0.5 rounded font-medium whitespace-nowrap">지은</div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+              <div class="h-3.5 bg-gray-200 rounded-full w-2/3 mb-2 doc-shimmer"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-1/2 doc-shimmer"></div>
+            </div>
+            <div class="space-y-2.5">
+              <div class="h-3.5 bg-gray-200 rounded-full w-full doc-shimmer"></div>
+              <div class="h-3.5 bg-gray-200 rounded-full w-5/6 doc-shimmer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- Footer -->
-<footer class="footer" role="contentinfo">
-  <div class="footer-inner">
-    <div>
-      <p class="footer-brand">핀플러스</p>
-      <div class="footer-info">
-        핀플러스 주식회사 | 대표이사 홍길동<br>
-        서울특별시 강남구 테헤란로 123, 핀플러스타워<br>
-        사업자등록번호 123-45-67890<br>
-        고객센터 1234-5678
+  <!-- ===== FEATURE 3 — Smart Notifications ===== -->
+  <section class="py-32 md:py-40" id="notif-section">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+        <p class="reveal text-t-blue text-sm font-semibold mb-4" style="transition-delay:0ms;">스마트 알림</p>
+        <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight leading-[1.12] text-t-text mb-5" style="transition-delay:100ms;">
+          중요한 건 바로.<br>나머진 조용히.
+        </h2>
+        <p class="reveal text-t-muted text-lg" style="transition-delay:200ms;">
+          AI가 알림을 분류해서 정말 필요한 것만 즉시 전달합니다.
+        </p>
+      </div>
+      <!-- Wide mockup: Notification center -->
+      <div class="reveal mockup-wide p-6 md:p-10" style="transition-delay:300ms;" id="notif-center">
+        <div class="max-w-xl mx-auto">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-sm font-bold text-t-text">알림 센터</span>
+            <span class="text-[11px] text-t-muted ml-auto">지금</span>
+          </div>
+          <!-- Urgent notification -->
+          <div class="notif-item bg-white rounded-2xl p-5 mb-3 shadow-sm border border-gray-100" style="transition-delay:0ms;">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-red-50 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-t-text mb-0.5">서버 응답 속도 저하 감지</p>
+                <p class="text-xs text-t-muted">p95 레이턴시 800ms 초과 -- 확인이 필요합니다</p>
+              </div>
+              <span class="text-[10px] text-red-500 font-semibold bg-red-50 px-2 py-1 rounded-md flex-shrink-0">긴급</span>
+            </div>
+          </div>
+          <!-- Normal notification -->
+          <div class="notif-item bg-white rounded-2xl p-5 mb-3 shadow-sm border border-gray-100" style="transition-delay:200ms;">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-5 h-5 text-t-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-t-text mb-0.5">민수님이 댓글을 남겼습니다</p>
+                <p class="text-xs text-t-muted">"결제 모듈 연동" 태스크에 새 코멘트</p>
+              </div>
+              <span class="text-[10px] text-t-muted flex-shrink-0">5분 전</span>
+            </div>
+          </div>
+          <!-- Muted notifications -->
+          <div class="notif-item notif-muted bg-gray-50 rounded-2xl p-5" style="transition-delay:400ms;">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-gray-100 flex-shrink-0 flex items-center justify-center">
+                <svg class="w-5 h-5 text-t-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-t-sub mb-0.5">조용한 알림 2건</p>
+                <p class="text-xs text-t-muted">팀 채팅, 주간 리포트 생성 -- 나중에 확인</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <h4>서비스</h4>
-        <a href="#">송금</a>
-        <a href="#">투자</a>
-        <a href="#">보험</a>
-        <a href="#">대출</a>
-      </div>
-      <div class="footer-col">
-        <h4>회사</h4>
-        <a href="#">회사 소개</a>
-        <a href="#">채용</a>
-        <a href="#">블로그</a>
-        <a href="#">공지사항</a>
-      </div>
-      <div class="footer-col">
-        <h4>고객지원</h4>
-        <a href="#">고객센터</a>
-        <a href="#">자주 묻는 질문</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="footer-legal">
-      <a href="#" class="bold">개인정보처리방침</a>
-      <a href="#">이용약관</a>
-      <a href="#">위치기반서비스 이용약관</a>
-    </div>
-    <div class="footer-social">
-      <a href="#" aria-label="블로그">
-        <svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2" fill="#8b95a1"/><text x="8" y="11" text-anchor="middle" font-size="7" font-weight="700" fill="#000">B</text></svg>
-      </a>
-      <a href="#" aria-label="인스타그램">
-        <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3" stroke="#8b95a1" stroke-width="1.5" fill="none"/><circle cx="8" cy="8" r="3" stroke="#8b95a1" stroke-width="1.3" fill="none"/><circle cx="12" cy="4" r="1" fill="#8b95a1"/></svg>
-      </a>
-    </div>
-  </div>
-</footer>
+  </section>
 
-<script>
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+  <!-- ===== Social Proof — one line ===== -->
+  <section class="pb-8">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <p class="reveal text-center text-t-muted text-sm">사전 등록 3일 만에 대기자 [N]명</p>
+    </div>
+  </section>
+
+  <!-- ===== Reviews ===== -->
+  <section class="py-24 md:py-32">
+    <div class="max-w-[900px] mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+        <div class="reveal" style="transition-delay:0ms;">
+          <p class="text-xl md:text-2xl font-medium text-t-text leading-relaxed mb-6">
+            "3주 만에 스프린트 속도 27% 올랐어요. 칸반 뷰에서 서브태스크 바로 만드는 게 핵심인데, 캘린더 싱크는 아직 구글만 돼서 아쉬움."
+          </p>
+          <div>
+            <p class="text-sm font-semibold text-t-text">@jpark</p>
+            <p class="text-sm text-t-muted">시리즈A 스타트업 PM -- Product Hunt</p>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay:150ms;">
+          <p class="text-xl md:text-2xl font-medium text-t-text leading-relaxed mb-6">
+            "클라이언트별 워크스페이스 분리가 되니까 6개 프로젝트 동시에 돌려도 안 헷갈려요. 무료 플랜으로도 꽤 많이 됩니다."
+          </p>
+          <div>
+            <p class="text-sm font-semibold text-t-text">은지 L.</p>
+            <p class="text-sm text-t-muted">마케팅 에이전시 팀장 -- 앱스토어</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="bg-t-dark py-24 md:py-32">
+    <div class="max-w-[800px] mx-auto px-6 text-center">
+      <h2 class="reveal font-bold text-3xl md:text-5xl tracking-tight text-white leading-[1.12] mb-5">
+        지금 시작하세요
+      </h2>
+      <p class="reveal text-gray-400 text-lg mb-12" style="transition-delay:100ms;">
+        무료 플랜으로 시작하고, 팀이 커지면 업그레이드하세요.
+      </p>
+      <div class="reveal mb-10" style="transition-delay:200ms;">
+        <a href="#" class="cta-primary inline-block bg-white text-t-text font-semibold text-lg px-10 py-4 rounded-xl hover:bg-gray-100">
+          무료로 시작하기
+        </a>
+      </div>
+      <div class="reveal flex justify-center gap-4" style="transition-delay:300ms;">
+        <a href="#" class="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm font-medium transition-colors">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          App Store
+        </a>
+        <span class="text-gray-600">|</span>
+        <a href="#" class="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm font-medium transition-colors">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 1.328c.864.5.864 1.828 0 2.328l-2.302 1.328-2.536-2.536 2.536-2.448zM5.864 3.458L16.8 9.79l-2.302 2.302-8.635-8.635z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="bg-t-dark py-12 border-t border-gray-800">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <a href="#" class="font-extrabold text-lg text-white tracking-tight">태스크플로우</a>
+        <div class="flex gap-6 text-sm text-gray-400">
+          <a href="#" class="hover:text-white transition-colors">이용약관</a>
+          <a href="#" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <a href="#" class="hover:text-white transition-colors">고객센터</a>
+        </div>
+      </div>
+      <div class="mt-8 text-sm text-gray-600 text-center md:text-left">
+        &copy; 2026 태스크플로우 주식회사
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll reveal + internal animations script -->
+  <script>
+    (function() {
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (prefersReduced) {
+        document.querySelectorAll('.reveal').forEach(function(el) {
+          el.classList.add('is-visible');
+        });
+        document.querySelectorAll('.kanban-col, .kanban-card').forEach(function(el) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+        document.querySelectorAll('.kanban-progress').forEach(function(el) {
+          el.style.width = el.style.getPropertyValue('--target-width');
+        });
+        document.querySelectorAll('.notif-item').forEach(function(el) {
+          el.style.opacity = el.classList.contains('notif-muted') ? '0.5' : '1';
+          el.style.transform = 'none';
+        });
+        return;
+      }
+
+      // === Scroll reveal (repeating) ===
+      var revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          } else {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+      document.querySelectorAll('.reveal').forEach(function(el) {
+        revealObserver.observe(el);
       });
-    },
-    { threshold: 0.15 }
-  );
 
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-</script>
+      // === Helper: reset hero phone state ===
+      function resetHeroPhone() {
+        ['hero-task-4','hero-task-5'].forEach(function(id) {
+          var task = document.getElementById(id);
+          if (!task) return;
+          var cb = task.querySelector('.task-checkbox');
+          var label = task.querySelector('.task-label');
+          if (cb) cb.classList.remove('checked');
+          if (label) label.classList.remove('checked');
+        });
+        var bar = document.getElementById('hero-progress-bar');
+        var count = document.getElementById('hero-progress-count');
+        if (bar) bar.style.width = '60%';
+        if (count) count.textContent = '3/5';
+        document.querySelectorAll('.confetti-dot').forEach(function(d) { d.classList.remove('active'); });
+      }
+
+      // === ANIMATION 3: Hero phone checkbox (repeating) ===
+      var heroTimers = [];
+      var heroObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            resetHeroPhone();
+            heroTimers.push(setTimeout(function() {
+              var task4 = document.getElementById('hero-task-4');
+              var cb4 = task4.querySelector('.task-checkbox');
+              var label4 = task4.querySelector('.task-label');
+              cb4.classList.add('checked');
+              label4.classList.add('checked');
+              document.getElementById('hero-progress-bar').style.width = '80%';
+              document.getElementById('hero-progress-count').textContent = '4/5';
+            }, 3000));
+            heroTimers.push(setTimeout(function() {
+              var task5 = document.getElementById('hero-task-5');
+              var cb5 = task5.querySelector('.task-checkbox');
+              var label5 = task5.querySelector('.task-label');
+              cb5.classList.add('checked');
+              label5.classList.add('checked');
+              document.getElementById('hero-progress-bar').style.width = '100%';
+              document.getElementById('hero-progress-count').textContent = '5/5';
+              heroTimers.push(setTimeout(function() {
+                document.querySelectorAll('.confetti-dot').forEach(function(dot, i) {
+                  setTimeout(function() { dot.classList.add('active'); }, i * 120);
+                });
+              }, 400));
+            }, 4500));
+          } else {
+            heroTimers.forEach(clearTimeout);
+            heroTimers = [];
+            resetHeroPhone();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      var heroSection = document.getElementById('hero-section');
+      if (heroSection) heroObserver.observe(heroSection);
+
+      // === ANIMATION 2: Kanban board (repeating) ===
+      var kanbanObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('kanban-animated');
+          } else {
+            entry.target.classList.remove('kanban-animated');
+          }
+        });
+      }, { threshold: 0.15 });
+
+      var kanbanBoard = document.getElementById('kanban-board');
+      if (kanbanBoard) kanbanObserver.observe(kanbanBoard);
+
+      // === ANIMATION 4: Document cursor movement (repeating) ===
+      var docTimers = [];
+      var docObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          var cursorMinsu = document.getElementById('cursor-minsu');
+          var cursorJieun = document.getElementById('cursor-jieun');
+          if (entry.isIntersecting) {
+            entry.target.classList.add('doc-animated');
+            docTimers.push(setTimeout(function() {
+              if (cursorMinsu) cursorMinsu.style.left = '75%';
+              if (cursorJieun) cursorJieun.style.left = '30%';
+            }, 500));
+          } else {
+            entry.target.classList.remove('doc-animated');
+            docTimers.forEach(clearTimeout);
+            docTimers = [];
+            if (cursorMinsu) cursorMinsu.style.left = '60%';
+            if (cursorJieun) cursorJieun.style.left = '40%';
+          }
+        });
+      }, { threshold: 0.2 });
+
+      var docEditor = document.getElementById('doc-editor');
+      if (docEditor) docObserver.observe(docEditor);
+
+      // === ANIMATION 5: Notification entrance (repeating) ===
+      var notifObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('notif-animated');
+          } else {
+            entry.target.classList.remove('notif-animated');
+          }
+        });
+      }, { threshold: 0.15 });
+
+      var notifCenter = document.getElementById('notif-center');
+      if (notifCenter) notifObserver.observe(notifCenter);
+
+    })();
+  
+
+      // Staggered Grid Reveal
+      (function(){
+        var staggerEls = document.querySelectorAll('.stagger-item');
+        if(!staggerEls.length) return;
+        var staggerObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var items = entry.target.closest('.stagger-container') ? entry.target.closest('.stagger-container').querySelectorAll('.stagger-item') : [entry.target];
+              items.forEach(function(item, i){
+                var row = Math.floor(i / 3);
+                var col = i % 3;
+                var delay = (row + col) * 100;
+                setTimeout(function(){ item.classList.add('stagger-visible'); }, delay);
+              });
+            } else {
+              entry.target.classList.remove('stagger-visible');
+            }
+          });
+        }, {threshold:0.1});
+        staggerEls.forEach(function(el){ staggerObs.observe(el); });
+      })();
+  
+
+      // Smooth Number Counters (smooth interpolation)
+      (function(){
+        var counters = document.querySelectorAll('.smooth-counter');
+        if(!counters.length) return;
+        var counterObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              var el = entry.target;
+              var target = parseFloat(el.getAttribute('data-target'));
+              var suffix = el.getAttribute('data-suffix') || '';
+              var decimals = parseInt(el.getAttribute('data-decimals') || '0');
+              var duration = 2000;
+              var startTime = null;
+              var startVal = 0;
+              function step(ts){
+                if(!startTime) startTime = ts;
+                var progress = Math.min((ts - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 4);
+                var current = startVal + (target - startVal) * eased;
+                el.textContent = current.toFixed(decimals) + suffix;
+                if(progress < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            } else {
+              var suffix = entry.target.getAttribute('data-suffix') || '';
+              entry.target.textContent = '0' + suffix;
+            }
+          });
+        }, {threshold:0.3});
+        counters.forEach(function(el){ counterObs.observe(el); });
+      })();
+  
+  </script>
 
 </body>
 </html>

@@ -165,7 +165,14 @@ function ReferenceCard({ reference: r }: { reference: Reference }) {
       <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-accent-50 group-hover:shadow-lg group-hover:shadow-accent-5">
         {/* Preview section */}
         {r.sampleFile ? (
-          <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
+          <div className="relative h-52 w-full overflow-hidden border-b border-zinc-800 bg-white">
+            <img
+              src={`/thumbnails/${r.sampleFile.replace('.html', '.png')}`}
+              alt={r.name}
+              className="h-full w-full object-cover object-top"
+              loading="lazy"
+            />
+          </div>
         ) : (
           <div className="flex h-52 w-full items-center justify-center border-b border-zinc-800 bg-zinc-900">
             <div className="text-center">

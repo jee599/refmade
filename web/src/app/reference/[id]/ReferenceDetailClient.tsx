@@ -4,6 +4,18 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import type { Reference } from "@/app/data/references";
 import type { DesignPalette } from "@/app/data/designPalettes";
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setMobile(mq.matches);
+    const h = (e: MediaQueryListEvent) => setMobile(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
+  return mobile;
+}
+
 function CopyableSwatch({
   color,
   label,
@@ -133,7 +145,7 @@ function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: 
       accent: s.accent,
       bg: s.bg,
       text: s.text,
-      category: "generated" as any,
+      category: "modern" as const,
     });
   });
 
@@ -147,6 +159,7 @@ export default function ReferenceDetailClient({
   reference: Reference;
   sampleExists: boolean;
 }) {
+  const isMobile = useIsMobile();
   const r = reference;
   const defaultTextColor = r.tone === "dark" ? "#fafafa" : "#09090b";
   const textColor = defaultTextColor;
@@ -222,24 +235,51 @@ export default function ReferenceDetailClient({
       {/* Left: Preview */}
       <div className="flex min-h-[70vh] flex-1 flex-col border-b border-zinc-800 p-4 lg:border-b-0 lg:border-r lg:p-6">
         {sampleExists && samplePath ? (
-          <div className="flex-1 overflow-hidden rounded-lg border border-zinc-800 bg-white">
-            {hasCustomChanges && customizedHtml ? (
-              <iframe
-                srcDoc={customizedHtml}
-                className="block w-full"
-                title={`${r.name} customized preview`}
-                style={{ height: "100%", minHeight: "60vh" }}
-                sandbox="allow-scripts allow-same-origin"
-              />
-            ) : (
-              <iframe
-                src={samplePath}
-                className="block w-full"
-                title={`${r.name} preview`}
-                style={{ height: "100%", minHeight: "60vh" }}
-              />
-            )}
-          </div>
+          isMobile ? (
+            <div className="flex-1 overflow-hidden rounded-lg border border-zinc-800" style={{ backgroundColor: r.bg }}>
+              <div className="flex min-h-[40vh] flex-col items-center justify-center p-8 text-center">
+                <div className="mb-4 flex gap-1">
+                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: r.accent, opacity: 0.8 }} />
+                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: r.accent, opacity: 0.5 }} />
+                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: r.accent, opacity: 0.3 }} />
+                </div>
+                <h3 className="mb-2 font-[family-name:var(--font-space-grotesk)] text-lg font-semibold" style={{ color: r.tone === "dark" ? "#fafafa" : "#09090b" }}>
+                  {r.name}
+                </h3>
+                <p className="mb-4 font-[family-name:var(--font-jetbrains-mono)] text-xs" style={{ color: r.tone === "dark" ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)" }}>
+                  Preview optimized for desktop
+                </p>
+                <a
+                  href={samplePath}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-lg px-4 py-2 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium text-white transition-opacity hover:opacity-80"
+                  style={{ backgroundColor: r.accent }}
+                >
+                  Open full preview ↗
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 overflow-hidden rounded-lg border border-zinc-800 bg-white">
+              {hasCustomChanges && customizedHtml ? (
+                <iframe
+                  srcDoc={customizedHtml}
+                  className="block w-full"
+                  title={`${r.name} customized preview`}
+                  style={{ height: "100%", minHeight: "60vh" }}
+                  sandbox="allow-scripts allow-same-origin"
+                />
+              ) : (
+                <iframe
+                  src={samplePath}
+                  className="block w-full"
+                  title={`${r.name} preview`}
+                  style={{ height: "100%", minHeight: "60vh" }}
+                />
+              )}
+            </div>
+          )
         ) : (
           <div className="flex min-h-[60vh] flex-1 items-center justify-center rounded-lg border border-dashed border-zinc-800 bg-zinc-900/50">
             <div className="text-center">

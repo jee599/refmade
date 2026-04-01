@@ -4,10 +4,24 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { Reference } from "@/app/data/references";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return isMobile;
+}
+
 function IframePreview({ src, title }: { src: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.25);
   const [hovered, setHovered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const el = containerRef.current;
@@ -19,9 +33,30 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
+  // Lazy-load iframes only when in viewport (with margin for pre-loading)
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   // 스크롤 가능한 최대 오프셋 (scaled 기준으로 전체 페이지 높이 - 컨테이너 높이)
   const scrollDistance = 3000 * scale - 208; // 3000px of iframe content * scale - 208px container height
   const maxScroll = Math.max(0, scrollDistance);
+
+  // On mobile: use reduced iframe size to save memory
+  const iframeWidth = isMobile ? 800 : 1440;
+  const iframeHeight = isMobile ? 1200 : 4000;
 
   return (
     <div
@@ -30,22 +65,28 @@ function IframePreview({ src, title }: { src: string; title: string }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <iframe
-        src={src}
-        className="pointer-events-none absolute left-0 top-0 border-0"
-        style={{
-          width: "1440px",
-          height: "4000px",
-          transform: `scale(${scale}) translateY(${hovered ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
-          transformOrigin: "top left",
-          transition: hovered
-            ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)"
-            : "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
-        }}
-        title={title}
-        loading="lazy"
-        sandbox="allow-scripts allow-same-origin"
-      />
+      {isInView ? (
+        <iframe
+          src={src}
+          className="pointer-events-none absolute left-0 top-0 border-0"
+          style={{
+            width: `${iframeWidth}px`,
+            height: `${iframeHeight}px`,
+            transform: `scale(${isMobile ? containerRef.current ? containerRef.current.offsetWidth / iframeWidth : scale : scale}) translateY(${hovered && !isMobile ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
+            transformOrigin: "top left",
+            transition: hovered
+              ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)"
+              : "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
+          }}
+          title={title}
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-700">loading...</div>
+        </div>
+      )}
       {/* 호버 시 스크롤 힌트 */}
       <div
         className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-zinc-900/80 to-transparent transition-opacity duration-300"

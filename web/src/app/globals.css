@@ -131,6 +131,12 @@ body {
   color: var(--text);
   background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
   background-size: 24px 24px;
+  /* Prevent pull-to-refresh on mobile browsers */
+  overscroll-behavior-y: none;
+}
+
+html {
+  overscroll-behavior-y: none;
 }
 
 /* ── Accent utility classes ── */

@@ -332,24 +332,22 @@ export default function HeroSection({
   const heroRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  const handleVisibility = useCallback((entries: IntersectionObserverEntry[]) => {
-    const entry = entries[0];
-    if (entry.isIntersecting) {
-      setIsVisible(false);
-      requestAnimationFrame(() => setIsVisible(true));
-    }
-  }, []);
-
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(handleVisibility, {
-      threshold: 0.3,
-    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Only trigger once
+        }
+      },
+      { threshold: 0.1 }
+    );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [handleVisibility]);
+  }, []);
 
   const titleLines = [
     "Design References",

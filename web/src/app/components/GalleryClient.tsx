@@ -5,7 +5,9 @@ import Link from "next/link";
 import type { Reference } from "@/app/data/references";
 
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
+  // Default true (mobile-safe): prevents iframes from rendering on first paint
+  // which causes instant OOM crash on mobile browsers (especially Naver app)
+  const [isMobile, setIsMobile] = useState(true);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
     setIsMobile(mq.matches);
@@ -247,6 +249,7 @@ export default function GalleryClient({
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("views");
   const [search, setSearch] = useState("");
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const filtered = useMemo(() => {
     let result = [...references];
@@ -320,11 +323,21 @@ export default function GalleryClient({
           <span className="text-accent-50">[ERR]</span> No references match your filters.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((r) => (
-            <ReferenceCard key={r.id} reference={r} isMobile={isMobile} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {(isMobile ? filtered.slice(0, visibleCount) : filtered).map((r) => (
+              <ReferenceCard key={r.id} reference={r} isMobile={isMobile} />
+            ))}
+          </div>
+          {isMobile && visibleCount < filtered.length && (
+            <button
+              onClick={() => setVisibleCount((c) => c + 6)}
+              className="mx-auto mt-6 block rounded-lg border border-zinc-700 bg-zinc-900 px-6 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-400 transition-colors hover:border-zinc-600 hover:text-zinc-300"
+            >
+              more ({filtered.length - visibleCount} remaining)
+            </button>
+          )}
+        </>
       )}
     </div>
   );

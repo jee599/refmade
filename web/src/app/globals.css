@@ -139,6 +139,18 @@ html {
   overscroll-behavior-y: none;
 }
 
+/* Mobile: disable GPU-heavy effects to prevent OOM crashes */
+@media (max-width: 768px) {
+  body {
+    background-image: none;
+  }
+  .backdrop-blur-xl,
+  .backdrop-blur-sm {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 /* ── Accent utility classes ── */
 .text-accent { color: var(--accent); }
 .text-accent-light { color: var(--accent-light); }

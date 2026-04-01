@@ -324,6 +324,18 @@ function TerminalBlock({ isVisible }: { isVisible: boolean }) {
   );
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return isMobile;
+}
+
 export default function HeroSection({
   referenceCount,
 }: {
@@ -331,6 +343,7 @@ export default function HeroSection({
 }) {
   const heroRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const el = heroRef.current;
@@ -414,9 +427,27 @@ export default function HeroSection({
           </div>
         </div>
 
-        {/* Right: Terminal — continuously cycles through commands */}
+        {/* Right: Terminal — desktop only; mobile gets static version to save memory */}
         <div>
-          <TerminalBlock isVisible={isVisible} />
+          {isMobile ? (
+            <div className="overflow-hidden rounded-lg border border-zinc-700/50 bg-zinc-950/80">
+              <div className="flex items-center gap-1.5 border-b border-zinc-800 px-3 py-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
+                <span className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
+                <span className={`ml-2 text-xs text-zinc-600 ${MONO}`}>refmade</span>
+              </div>
+              <div className={`space-y-1 p-4 text-xs leading-relaxed ${MONO}`}>
+                <div><span className="text-accent">$</span> <span className="text-zinc-300">refmade --scan</span></div>
+                <div className="text-zinc-400">  palette: 847 unique colors → 42 clusters</div>
+                <div className="text-zinc-400">  typography: 156 font pairs analyzed</div>
+                <div className="text-zinc-400">  layout: 23 grid patterns classified</div>
+                <div className="text-accent-light">[✓] 42 references generated</div>
+              </div>
+            </div>
+          ) : (
+            <TerminalBlock isVisible={isVisible} />
+          )}
         </div>
       </div>
     </div>

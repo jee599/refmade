@@ -133,7 +133,7 @@ function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: 
       accent: s.accent,
       bg: s.bg,
       text: s.text,
-      category: "generated" as any,
+      category: "modern" as const,
     });
   });
 

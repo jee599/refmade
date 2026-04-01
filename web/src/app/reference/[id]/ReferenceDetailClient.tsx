@@ -140,18 +140,6 @@ function generateHarmonicPalettes(baseAccent: string, baseBg: string, baseText: 
   return palettes;
 }
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(true);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return isMobile;
-}
-
 export default function ReferenceDetailClient({
   reference,
   sampleExists,
@@ -160,7 +148,6 @@ export default function ReferenceDetailClient({
   sampleExists: boolean;
 }) {
   const r = reference;
-  const isMobile = useIsMobile();
   const defaultTextColor = r.tone === "dark" ? "#fafafa" : "#09090b";
   const textColor = defaultTextColor;
   const mutedColor = r.tone === "dark" ? "#71717a" : "#a1a1aa";
@@ -188,14 +175,13 @@ export default function ReferenceDetailClient({
   );
 
   useEffect(() => {
-    // Skip fetching HTML on mobile — no iframe to display it
-    if (r.sampleFile && !isMobile) {
+    if (r.sampleFile) {
       fetch(`/samples/${r.sampleFile}`)
         .then((res) => res.text())
         .then((html) => setHtmlContent(html))
         .catch(() => setHtmlContent(""));
     }
-  }, [r.sampleFile, isMobile]);
+  }, [r.sampleFile]);
 
   const applyPalette = useCallback(
     (palette: DesignPalette) => {
@@ -234,49 +220,28 @@ export default function ReferenceDetailClient({
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
       {/* Left: Preview */}
-      <div className="flex min-h-[40vh] flex-1 flex-col border-b border-zinc-800 p-4 lg:min-h-[70vh] lg:border-b-0 lg:border-r lg:p-6">
+      <div className="flex min-h-[70vh] flex-1 flex-col border-b border-zinc-800 p-4 lg:border-b-0 lg:border-r lg:p-6">
         {sampleExists && samplePath ? (
-          isMobile ? (
-            /* Mobile: no iframe, show color preview + link */
-            <div className="flex flex-1 flex-col items-center justify-center rounded-lg border border-zinc-800 overflow-hidden" style={{ backgroundColor: r.bg }}>
-              <div className="flex-1 w-full p-6 flex flex-col items-center justify-center">
-                <div className="h-4 w-3/4 rounded-full mb-3" style={{ backgroundColor: r.tone === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)" }} />
-                <div className="h-4 w-1/2 rounded-full mb-4" style={{ backgroundColor: r.tone === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.03)" }} />
-                <div className="h-8 w-24 rounded-lg mb-6" style={{ backgroundColor: r.accent }} />
-                <a
-                  href={samplePath}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg border border-zinc-600 px-6 py-3 font-[family-name:var(--font-jetbrains-mono)] text-sm font-medium transition-colors"
-                  style={{ color: r.tone === "dark" ? "#e4e4e7" : "#27272a", borderColor: r.accent }}
-                >
-                  Preview →
-                </a>
-              </div>
-              <div className="h-1 w-full" style={{ backgroundColor: r.accent }} />
-            </div>
-          ) : (
-            <div className="flex-1 overflow-hidden rounded-lg border border-zinc-800 bg-white">
-              {hasCustomChanges && customizedHtml ? (
-                <iframe
-                  srcDoc={customizedHtml}
-                  className="block w-full"
-                  title={`${r.name} customized preview`}
-                  style={{ height: "100%", minHeight: "60vh" }}
-                  sandbox="allow-scripts allow-same-origin"
-                />
-              ) : (
-                <iframe
-                  src={samplePath}
-                  className="block w-full"
-                  title={`${r.name} preview`}
-                  style={{ height: "100%", minHeight: "60vh" }}
-                />
-              )}
-            </div>
-          )
+          <div className="flex-1 overflow-hidden rounded-lg border border-zinc-800 bg-white">
+            {hasCustomChanges && customizedHtml ? (
+              <iframe
+                srcDoc={customizedHtml}
+                className="block w-full"
+                title={`${r.name} customized preview`}
+                style={{ height: "100%", minHeight: "60vh" }}
+                sandbox="allow-scripts allow-same-origin"
+              />
+            ) : (
+              <iframe
+                src={samplePath}
+                className="block w-full"
+                title={`${r.name} preview`}
+                style={{ height: "100%", minHeight: "60vh" }}
+              />
+            )}
+          </div>
         ) : (
-          <div className="flex min-h-[40vh] flex-1 items-center justify-center rounded-lg border border-dashed border-zinc-800 bg-zinc-900/50 lg:min-h-[60vh]">
+          <div className="flex min-h-[60vh] flex-1 items-center justify-center rounded-lg border border-dashed border-zinc-800 bg-zinc-900/50">
             <div className="text-center">
               <div className="mb-2 font-[family-name:var(--font-jetbrains-mono)] text-4xl text-zinc-700">&gt;_</div>
               <p className="font-[family-name:var(--font-jetbrains-mono)] text-lg font-medium text-zinc-500">

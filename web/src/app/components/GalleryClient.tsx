@@ -4,62 +4,10 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { Reference } from "@/app/data/references";
 
-function useIsMobile() {
-  // Default true (mobile-safe): prevents iframes from rendering on first paint
-  // which causes instant OOM crash on mobile browsers (especially Naver app)
-  const [isMobile, setIsMobile] = useState(true);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return isMobile;
-}
-
-/** Static color-based preview for mobile — zero iframes, zero memory cost */
-function StaticPreview({ bg, accent, tone }: { bg: string; accent: string; tone: string }) {
-  return (
-    <div
-      className="relative h-52 w-full overflow-hidden border-b border-zinc-800"
-      style={{ backgroundColor: bg }}
-    >
-      {/* Simulated nav bar */}
-      <div className="flex items-center gap-2 px-4 pt-4">
-        <div className="h-2 w-12 rounded-full" style={{ backgroundColor: accent, opacity: 0.8 }} />
-        <div className="ml-auto flex gap-2">
-          <div className="h-2 w-8 rounded-full" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)" }} />
-          <div className="h-2 w-8 rounded-full" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)" }} />
-          <div className="h-2 w-8 rounded-full" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)" }} />
-        </div>
-      </div>
-      {/* Hero headline block */}
-      <div className="mt-6 px-4">
-        <div className="h-3 w-3/4 rounded-full mb-2" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)" }} />
-        <div className="h-3 w-1/2 rounded-full mb-4" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)" }} />
-        <div className="h-6 w-20 rounded" style={{ backgroundColor: accent, opacity: 0.9 }} />
-      </div>
-      {/* Bento blocks */}
-      <div className="mt-4 flex gap-2 px-4">
-        <div className="h-14 flex-1 rounded" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)" }} />
-        <div className="h-14 flex-1 rounded" style={{ backgroundColor: tone === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)" }} />
-        <div className="h-14 flex-1 rounded" style={{ backgroundColor: `${accent}20` }} />
-      </div>
-      {/* Bottom gradient fade */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-12"
-        style={{ background: `linear-gradient(to top, ${bg}, transparent)` }}
-      />
-    </div>
-  );
-}
-
 function IframePreview({ src, title }: { src: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.25);
   const [hovered, setHovered] = useState(false);
-  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -71,24 +19,8 @@ function IframePreview({ src, title }: { src: string; title: string }) {
     return () => observer.disconnect();
   }, []);
 
-  // Lazy-load iframes only when in viewport
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollDistance = 3000 * scale - 208;
+  // 스크롤 가능한 최대 오프셋 (scaled 기준으로 전체 페이지 높이 - 컨테이너 높이)
+  const scrollDistance = 3000 * scale - 208; // 3000px of iframe content * scale - 208px container height
   const maxScroll = Math.max(0, scrollDistance);
 
   return (
@@ -98,28 +30,22 @@ function IframePreview({ src, title }: { src: string; title: string }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {isInView ? (
-        <iframe
-          src={src}
-          className="pointer-events-none absolute left-0 top-0 border-0"
-          style={{
-            width: "1440px",
-            height: "4000px",
-            transform: `scale(${scale}) translateY(${hovered ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
-            transformOrigin: "top left",
-            transition: hovered
-              ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)"
-              : "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
-          }}
-          title={title}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin"
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <div className="font-[family-name:var(--font-jetbrains-mono)] text-xs text-zinc-700">loading...</div>
-        </div>
-      )}
+      <iframe
+        src={src}
+        className="pointer-events-none absolute left-0 top-0 border-0"
+        style={{
+          width: "1440px",
+          height: "4000px",
+          transform: `scale(${scale}) translateY(${hovered ? `-${Math.min(maxScroll / scale, 2400)}px` : "0px"})`,
+          transformOrigin: "top left",
+          transition: hovered
+            ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)"
+            : "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
+        }}
+        title={title}
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin"
+      />
       {/* 호버 시 스크롤 힌트 */}
       <div
         className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-zinc-900/80 to-transparent transition-opacity duration-300"
@@ -160,17 +86,13 @@ function StatusBadge({ status }: { status: Reference["status"] }) {
   );
 }
 
-function ReferenceCard({ reference: r, isMobile }: { reference: Reference; isMobile: boolean }) {
+function ReferenceCard({ reference: r }: { reference: Reference }) {
   return (
     <Link href={`/reference/${r.id}`} className="group block">
       <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-accent-50 group-hover:shadow-lg group-hover:shadow-accent-5">
-        {/* Preview section — mobile uses static preview to avoid memory crash */}
+        {/* Preview section */}
         {r.sampleFile ? (
-          isMobile ? (
-            <StaticPreview bg={r.bg} accent={r.accent} tone={r.tone} />
-          ) : (
-            <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
-          )
+          <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
         ) : (
           <div className="flex h-52 w-full items-center justify-center border-b border-zinc-800 bg-zinc-900">
             <div className="text-center">
@@ -245,11 +167,9 @@ export default function GalleryClient({
 }: {
   references: Reference[];
 }) {
-  const isMobile = useIsMobile();
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("views");
   const [search, setSearch] = useState("");
-  const [visibleCount, setVisibleCount] = useState(6);
 
   const filtered = useMemo(() => {
     let result = [...references];
@@ -323,21 +243,11 @@ export default function GalleryClient({
           <span className="text-accent-50">[ERR]</span> No references match your filters.
         </div>
       ) : (
-        <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {(isMobile ? filtered.slice(0, visibleCount) : filtered).map((r) => (
-              <ReferenceCard key={r.id} reference={r} isMobile={isMobile} />
-            ))}
-          </div>
-          {isMobile && visibleCount < filtered.length && (
-            <button
-              onClick={() => setVisibleCount((c) => c + 6)}
-              className="mx-auto mt-6 block rounded-lg border border-zinc-700 bg-zinc-900 px-6 py-2.5 font-[family-name:var(--font-jetbrains-mono)] text-sm text-zinc-400 transition-colors hover:border-zinc-600 hover:text-zinc-300"
-            >
-              more ({filtered.length - visibleCount} remaining)
-            </button>
-          )}
-        </>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((r) => (
+            <ReferenceCard key={r.id} reference={r} />
+          ))}
+        </div>
       )}
     </div>
   );

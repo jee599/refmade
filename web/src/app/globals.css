@@ -131,24 +131,6 @@ body {
   color: var(--text);
   background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
   background-size: 24px 24px;
-  /* Prevent pull-to-refresh on mobile browsers */
-  overscroll-behavior-y: none;
-}
-
-html {
-  overscroll-behavior-y: none;
-}
-
-/* Mobile: disable GPU-heavy effects to prevent OOM crashes */
-@media (max-width: 768px) {
-  body {
-    background-image: none;
-  }
-  .backdrop-blur-xl,
-  .backdrop-blur-sm {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
 }
 
 /* ── Accent utility classes ── */
@@ -202,4 +184,20 @@ html {
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
+}
+
+/* ── Mobile: prevent OOM crash ── */
+@media (max-width: 767px) {
+  /* Hide all iframes on mobile to prevent memory crash */
+  iframe {
+    display: none !important;
+  }
+  /* Disable pull-to-refresh */
+  html, body {
+    overscroll-behavior-y: none;
+  }
+  /* Disable GPU-heavy background */
+  body {
+    background-image: none;
+  }
 }

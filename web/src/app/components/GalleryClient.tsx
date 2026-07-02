@@ -4,6 +4,46 @@ import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { Reference } from "@/app/data/references";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(true);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
+const V2_THUMBNAILS = new Set([
+  "001-clean-minimal", "002-professional-blue", "003-developer-terminal",
+  "006-ai-product", "007-korean-modern", "014-mobile-app-landing",
+  "019-space-dataviz", "023-glassmorphism-light", "025-neon-dark",
+  "027-gradient-saas", "029-ai-chat", "030-racing-dynamic",
+  "031-minimal-product", "039-retro-pixel", "043-horizontal-scroll",
+  "048-pastel-gradient-card", "049-monochrome-brutalist", "052-grain-texture-earth",
+]);
+
+function getThumbnailPath(sampleFile: string) {
+  const base = sampleFile.replace(".html", "");
+  return V2_THUMBNAILS.has(base)
+    ? `/thumbnails/${base}-v2.png`
+    : `/thumbnails/${base}.png`;
+}
+
+function ThumbnailPreview({ sampleFile, title }: { sampleFile: string; title: string }) {
+  return (
+    <div className="relative h-52 w-full overflow-hidden border-b border-zinc-800 bg-zinc-900">
+      <img
+        src={getThumbnailPath(sampleFile)}
+        alt={title}
+        className="h-full w-full object-cover object-top"
+        loading="lazy"
+      />
+    </div>
+  );
+}
+
 function IframePreview({ src, title }: { src: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -159,13 +199,17 @@ function StatusBadge({ status }: { status: Reference["status"] }) {
   );
 }
 
-function ReferenceCard({ reference: r }: { reference: Reference }) {
+function ReferenceCard({ reference: r, isMobile }: { reference: Reference; isMobile: boolean }) {
   return (
     <Link href={`/reference/${r.id}`} className="group block">
       <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-accent-50 group-hover:shadow-lg group-hover:shadow-accent-5">
-        {/* Preview section */}
+        {/* Preview section — mobile uses thumbnail to avoid iframe memory crash */}
         {r.sampleFile ? (
-          <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
+          isMobile ? (
+            <ThumbnailPreview sampleFile={r.sampleFile} title={r.name} />
+          ) : (
+            <IframePreview src={`/samples/${r.sampleFile}`} title={r.name} />
+          )
         ) : (
           <div className="flex h-52 w-full items-center justify-center border-b border-zinc-800 bg-zinc-900">
             <div className="text-center">
@@ -240,6 +284,7 @@ export default function GalleryClient({
 }: {
   references: Reference[];
 }) {
+  const isMobile = useIsMobile();
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("views");
   const [search, setSearch] = useState("");
@@ -318,7 +363,7 @@ export default function GalleryClient({
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((r) => (
-            <ReferenceCard key={r.id} reference={r} />
+            <ReferenceCard key={r.id} reference={r} isMobile={isMobile} />
           ))}
         </div>
       )}

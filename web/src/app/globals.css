@@ -185,3 +185,19 @@ body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
+
+/* ── Mobile: prevent OOM crash ── */
+@media (max-width: 767px) {
+  /* Hide all iframes on mobile to prevent memory crash */
+  iframe {
+    display: none !important;
+  }
+  /* Disable pull-to-refresh */
+  html, body {
+    overscroll-behavior-y: none;
+  }
+  /* Disable GPU-heavy background */
+  body {
+    background-image: none;
+  }
+}
